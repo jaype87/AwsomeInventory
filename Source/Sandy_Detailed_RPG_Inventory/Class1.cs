@@ -15,5 +15,6 @@ namespace Sandy_Detailed_RPG_Inventory
     	public static BodyPartGroupDef Hands;
     	public static BodyPartGroupDef Waist;
     	public static BodyPartGroupDef Feet;
+        public static BodyPartGroupDef LeftArm;
     }
 }

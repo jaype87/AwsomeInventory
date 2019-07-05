@@ -331,6 +331,10 @@ namespace Sandy_Detailed_RPG_Inventory
                         Rect newRect = new Rect(224f, 178f, 64f, 64f);
                         this.DrawThingRow1(newRect, current2, false);
                     }
+                    if (current2.def.apparel.layers.Contains(ApparelLayerDefOf.Belt) && current2.def.apparel.bodyPartGroups.Contains(Sandy_Gear_DefOf.LeftArm)) {
+                        Rect newRect = new Rect(320f, 338f, 72f, 72f);
+                        this.DrawThingRow1(newRect, current2, false);
+                    }
                     if (current2.def.apparel.bodyPartGroups.Contains(BodyPartGroupDefOf.RightHand) && !current2.def.apparel.bodyPartGroups.Contains(Sandy_Gear_DefOf.Hands)
 					    && current2.def.apparel.layers.Contains(ApparelLayerDefOf.Middle) && !current2.def.apparel.bodyPartGroups.Contains(BodyPartGroupDefOf.Torso)
 					    && !current2.def.apparel.layers.Contains(ApparelLayerDefOf.Shell))
