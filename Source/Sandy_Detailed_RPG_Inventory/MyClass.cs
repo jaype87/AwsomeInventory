@@ -318,12 +318,20 @@ namespace Sandy_Detailed_RPG_Inventory
 						GUI.DrawTexture(newRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
 						this.DrawThingRow1(newRect, current2, false);
 					}
-					if (current2.def.apparel.layers.Contains(ApparelLayerDefOf.Belt))
+					if (current2.def.apparel.layers.Contains(ApparelLayerDefOf.Belt) && current2.def.apparel.bodyPartGroups.Contains(Sandy_Gear_DefOf.Shoulders))
 					{
-						Rect newRect = new Rect(150f, 178f, 64f, 64f);
+						Rect newRect = new Rect(76f, 178f, 64f, 64f);
 						this.DrawThingRow1(newRect, current2, false);
 					}
-					if (current2.def.apparel.bodyPartGroups.Contains(BodyPartGroupDefOf.RightHand) && !current2.def.apparel.bodyPartGroups.Contains(Sandy_Gear_DefOf.Hands)
+                    if (current2.def.apparel.layers.Contains(ApparelLayerDefOf.Belt) && current2.def.apparel.bodyPartGroups.Contains(Sandy_Gear_DefOf.Waist)) {
+                        Rect newRect = new Rect(150f, 178f, 64f, 64f);
+                        this.DrawThingRow1(newRect, current2, false);
+                    }
+                    if (current2.def.apparel.layers.Contains(ApparelLayerDefOf.Belt) && current2.def.apparel.bodyPartGroups.Contains(BodyPartGroupDefOf.Torso)) {
+                        Rect newRect = new Rect(224f, 178f, 64f, 64f);
+                        this.DrawThingRow1(newRect, current2, false);
+                    }
+                    if (current2.def.apparel.bodyPartGroups.Contains(BodyPartGroupDefOf.RightHand) && !current2.def.apparel.bodyPartGroups.Contains(Sandy_Gear_DefOf.Hands)
 					    && current2.def.apparel.layers.Contains(ApparelLayerDefOf.Middle) && !current2.def.apparel.bodyPartGroups.Contains(BodyPartGroupDefOf.Torso)
 					    && !current2.def.apparel.layers.Contains(ApparelLayerDefOf.Shell))
 					{
@@ -444,16 +452,15 @@ namespace Sandy_Detailed_RPG_Inventory
 				Sandy_Detailed_RPG_GearTab.workingInvList.Clear();
 			}
 
-            TryDrawCEloadout(num, viewRect.width);
+            if (ModsConfig.ActiveModsInLoadOrder.Any(m => m.Name == "Combat Extended")){
+                TryDrawCEloadout(num, viewRect.width);
+            }
             num += 30;
 
             if (Event.current.type == EventType.Layout)
 			{
 				this.scrollViewHeight = num + 30f;
 			}
-
-
-
 
 			Widgets.EndScrollView();
 			GUI.EndGroup();
