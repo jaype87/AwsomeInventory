@@ -7,6 +7,7 @@ using UnityEngine;
 using Verse;
 using Verse.AI;
 using Verse.Sound;
+using CombatExtended;
 
 namespace Sandy_Detailed_RPG_Inventory
 {
@@ -33,8 +34,20 @@ namespace Sandy_Detailed_RPG_Inventory
 		private static List<Thing> workingInvList = new List<Thing>();
 		
 		public static readonly Vector3 PawnTextureCameraOffset = new Vector3(0f, 0f, 0f);
-		
-		private bool viewlist = false;
+
+        #region CE_Field
+        private const float _barHeight = 20f;
+        private const float _margin = 15f;
+        private const float _thingIconSize = 28f;
+        private const float _thingLeftX = 36f;
+        private const float _thingRowHeight = 28f;
+        private const float _topPadding = 20f;
+        private const float _standardLineHeight = 22f;
+        private static readonly Color _highlightColor = new Color(0.5f, 0.5f, 0.5f, 1f);
+        private static readonly Color _thingLabelColor = new Color(0.9f, 0.9f, 0.9f, 1f);
+        #endregion CE_Field
+
+        private bool viewlist = false;
 
 		public Sandy_Detailed_RPG_GearTab()
 		{
@@ -430,10 +443,18 @@ namespace Sandy_Detailed_RPG_Inventory
 				}
 				Sandy_Detailed_RPG_GearTab.workingInvList.Clear();
 			}
-			if (Event.current.type == EventType.Layout)
+
+            TryDrawCEloadout(num, viewRect.width);
+            num += 30;
+
+            if (Event.current.type == EventType.Layout)
 			{
 				this.scrollViewHeight = num + 30f;
 			}
+
+
+
+
 			Widgets.EndScrollView();
 			GUI.EndGroup();
 			GUI.color = Color.white;
@@ -804,5 +825,34 @@ namespace Sandy_Detailed_RPG_Inventory
 		{
 			return p.RaceProps.Humanlike || this.ShouldShowApparel(p) || p.GetStatValue(StatDefOf.ArmorRating_Sharp, true) > 0f || p.GetStatValue(StatDefOf.ArmorRating_Blunt, true) > 0f || p.GetStatValue(StatDefOf.ArmorRating_Heat, true) > 0f;
 		}
+
+        private void TryDrawCEloadout(float y, float width) {
+            CompInventory comp = SelPawn.TryGetComp<CompInventory>();
+            if (comp != null) {
+
+                PlayerKnowledgeDatabase.KnowledgeDemonstrated(CE_ConceptDefOf.CE_InventoryWeightBulk, KnowledgeAmount.FrameDisplayed);
+                // adjust rects if comp found
+                Rect weightRect = new Rect(_margin, y + _margin / 2, width, _barHeight);
+                Rect bulkRect = new Rect(_margin, weightRect.yMax + _margin / 2, width, _barHeight);
+
+                // draw bars
+                Utility_Loadouts.DrawBar(bulkRect, comp.currentBulk, comp.capacityBulk, "CE_Bulk".Translate(), SelPawn.GetBulkTip());
+                Utility_Loadouts.DrawBar(weightRect, comp.currentWeight, comp.capacityWeight, "CE_Weight".Translate(), SelPawn.GetWeightTip());
+
+                // draw text overlays on bars
+                Text.Font = GameFont.Small;
+                Text.Anchor = TextAnchor.MiddleCenter;
+
+                string currentBulk = CE_StatDefOf.CarryBulk.ValueToString(comp.currentBulk, CE_StatDefOf.CarryBulk.toStringNumberSense);
+                string capacityBulk = CE_StatDefOf.CarryBulk.ValueToString(comp.capacityBulk, CE_StatDefOf.CarryBulk.toStringNumberSense);
+                Widgets.Label(bulkRect, currentBulk + "/" + capacityBulk);
+
+                string currentWeight = comp.currentWeight.ToString("0.#");
+                string capacityWeight = CE_StatDefOf.CarryWeight.ValueToString(comp.capacityWeight, CE_StatDefOf.CarryWeight.toStringNumberSense);
+                Widgets.Label(weightRect, currentWeight + "/" + capacityWeight);
+
+                Text.Anchor = TextAnchor.UpperLeft;
+            }
+        }
 	}
 }

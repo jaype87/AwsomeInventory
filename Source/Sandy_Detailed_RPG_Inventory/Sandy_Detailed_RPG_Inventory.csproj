@@ -49,8 +49,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\..\..\Core\Assembly-CSharp.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>M:\Games\Rimworld_dev\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="CombatExtended">
+      <HintPath>..\..\..\CombatExtended\Assemblies\CombatExtended.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -61,8 +63,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\Core\UnityEngine.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>M:\Games\Rimworld_dev\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
