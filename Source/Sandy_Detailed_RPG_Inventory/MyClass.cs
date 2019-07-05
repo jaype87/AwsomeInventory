@@ -119,7 +119,7 @@ namespace Sandy_Detailed_RPG_Inventory
 			GUI.BeginGroup(position);
 			Text.Font = GameFont.Small;
 			GUI.color = Color.white;
-			Rect outRect = new Rect(0f, 0f, position.width, position.height);
+			Rect outRect = new Rect(0f, 0f, position.width, position.height - 60);
 			Rect viewRect = new Rect(0f, 0f, position.width - 20f, this.scrollViewHeight);
 			Widgets.BeginScrollView(outRect, ref this.scrollPosition, viewRect, true);
 			float num = 0f;
@@ -452,18 +452,14 @@ namespace Sandy_Detailed_RPG_Inventory
 				Sandy_Detailed_RPG_GearTab.workingInvList.Clear();
 			}
 
-            if (ModsConfig.ActiveModsInLoadOrder.Any(m => m.Name == "Combat Extended")){
-                TryDrawCEloadout(num, viewRect.width);
-            }
-            num += 30;
-
             if (Event.current.type == EventType.Layout)
 			{
 				this.scrollViewHeight = num + 30f;
 			}
 
 			Widgets.EndScrollView();
-			GUI.EndGroup();
+            TryDrawCEloadout(position.height - 60, viewRect.width);
+            GUI.EndGroup();
 			GUI.color = Color.white;
 			Text.Anchor = TextAnchor.UpperLeft;
 		}
