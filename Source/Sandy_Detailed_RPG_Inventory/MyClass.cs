@@ -19,9 +19,6 @@ namespace Sandy_Detailed_RPG_Inventory
 
 		private const float TopPadding = 20f;
 
-		public static readonly Color ThingLabelColor = new Color(0.9f, 0.9f, 0.9f, 1f);
-
-		public static readonly Color HighlightColor = new Color(0.5f, 0.5f, 0.5f, 1f);
 
 		private const float ThingIconSize = 28f;
 
@@ -38,13 +35,6 @@ namespace Sandy_Detailed_RPG_Inventory
         #region CE_Field
         private const float _barHeight = 20f;
         private const float _margin = 15f;
-        private const float _thingIconSize = 28f;
-        private const float _thingLeftX = 36f;
-        private const float _thingRowHeight = 28f;
-        private const float _topPadding = 20f;
-        private const float _standardLineHeight = 22f;
-        private static readonly Color _highlightColor = new Color(0.5f, 0.5f, 0.5f, 1f);
-        private static readonly Color _thingLabelColor = new Color(0.9f, 0.9f, 0.9f, 1f);
         #endregion CE_Field
 
         private bool viewlist = false;
@@ -444,7 +434,7 @@ namespace Sandy_Detailed_RPG_Inventory
 				}
 				else if (!this.SelPawnForGear.RaceProps.Humanlike && !viewlist)
 				{
-					num = 44f;
+					num += StandardLineHeight;
 				}
 				Widgets.ListSeparator(ref num, viewRect.width, "Inventory".Translate());
 				Sandy_Detailed_RPG_GearTab.workingInvList.Clear();
@@ -587,31 +577,36 @@ namespace Sandy_Detailed_RPG_Inventory
 		private void TryDrawOverallArmor1(Rect rect, StatDef stat, string label, Texture image)
 		{
 			float num = 0f;
-			float num2 = Mathf.Clamp01(this.SelPawnForGear.GetStatValue(stat, true) / 2f);
-			List<BodyPartRecord> allParts = this.SelPawnForGear.RaceProps.body.AllParts;
-			List<Apparel> list = (this.SelPawnForGear.apparel == null) ? null : this.SelPawnForGear.apparel.WornApparel;
-			for (int i = 0; i < allParts.Count; i++)
-			{
-				float num3 = 1f - num2;
-				if (list != null)
-				{
-					for (int j = 0; j < list.Count; j++)
-					{
-						if (list[j].def.apparel.CoversBodyPart(allParts[i]))
-						{
-							float num4 = Mathf.Clamp01(list[j].GetStatValue(stat, true) / 2f);
-							num3 *= 1f - num4;
-						}
-					}
-				}
-				num += allParts[i].coverageAbs * (1f - num3);
-			}
-			num = Mathf.Clamp(num * 2f, 0f, 2f);
-			Rect rect1 = new Rect(rect.x, rect.y, 24f, 27f);
-			GUI.DrawTexture(rect1, image);
-			TooltipHandler.TipRegion(rect1, label);
-			Rect rect2 = new Rect(rect.x + 60f, rect.y + 3f, 104f, 24f);
-			Widgets.Label(rect2, num.ToStringPercent());
+            List<Apparel> wornApparel = SelPawnForGear.apparel.WornApparel;
+            for (int i = 0; i < wornApparel.Count; i++) {
+                num += Mathf.Clamp01(wornApparel[i].GetStatValue(stat, true)) * wornApparel[i].def.apparel.HumanBodyCoverage;
+            }
+            num = Mathf.Clamp01(num);
+            if (num > 0.005f) {
+                BodyPartRecord bpr = new BodyPartRecord();
+                List<BodyPartRecord> bpList = SelPawnForGear.RaceProps.body.AllParts;
+                string text = "";
+                for (int i = 0; i < bpList.Count; i++) {
+                    float armorValue = 0f;
+                    BodyPartRecord part = bpList[i];
+                    if (part.depth == BodyPartDepth.Outside && (part.coverage >= 0.1 || (part.def == BodyPartDefOf.Eye || part.def == BodyPartDefOf.Neck))) {
+                        text += part.LabelCap + ": ";
+                        for (int j = wornApparel.Count - 1; j >= 0; j--) {
+                            Apparel apparel = wornApparel[j];
+                            if (apparel.def.apparel.CoversBodyPart(part)) {
+                                armorValue += Mathf.Clamp01(apparel.GetStatValue(stat, true));
+                            }
+                        }
+                        text += Mathf.Clamp01(armorValue).ToStringPercent() + "\n";
+                    }
+                }
+                TooltipHandler.TipRegion(rect, text);
+                Rect rect1 = new Rect(rect.x, rect.y, 24f, 27f);
+                GUI.DrawTexture(rect1, image);
+                TooltipHandler.TipRegion(rect1, label);
+                Rect rect2 = new Rect(rect.x + 60f, rect.y + 3f, 104f, 24f);
+                Widgets.Label(rect2, num.ToStringPercent());
+            }
 		}
 
 		private void TryDrawMassInfo1(Rect rect)
@@ -720,40 +715,106 @@ namespace Sandy_Detailed_RPG_Inventory
 				});
 			}
 			TooltipHandler.TipRegion(rect, text2);
-			y += 28f;
-		}
+            Rect thingLabelRect = new Rect(ThingLeftX, y, rect.width - ThingLeftX, ThingRowHeight);
+            y += 28f;
 
-		private void TryDrawOverallArmor(ref float curY, float width, StatDef stat, string label)
-		{
-			float num = 0f;
-			float num2 = Mathf.Clamp01(this.SelPawnForGear.GetStatValue(stat, true) / 2f);
-			List<BodyPartRecord> allParts = this.SelPawnForGear.RaceProps.body.AllParts;
-			List<Apparel> list = (this.SelPawnForGear.apparel == null) ? null : this.SelPawnForGear.apparel.WornApparel;
-			for (int i = 0; i < allParts.Count; i++)
-			{
-				float num3 = 1f - num2;
-				if (list != null)
-				{
-					for (int j = 0; j < list.Count; j++)
-					{
-						if (list[j].def.apparel.CoversBodyPart(allParts[i]))
-						{
-							float num4 = Mathf.Clamp01(list[j].GetStatValue(stat, true) / 2f);
-							num3 *= 1f - num4;
-						}
-					}
-				}
-				num += allParts[i].coverageAbs * (1f - num3);
-			}
-			num = Mathf.Clamp(num * 2f, 0f, 2f);
-			Rect rect = new Rect(0f, curY, width, 100f);
-			Widgets.Label(rect, label.Truncate(120f, null));
-			rect.xMin += 120f;
-			Widgets.Label(rect, num.ToStringPercent());
-			curY += 22f;
-		}
-		
-		private void TryDrawMassInfo(ref float curY, float width)
+            // RMB menu
+            if (Widgets.ButtonInvisible(thingLabelRect) && Event.current.button == 1) {
+                List<FloatMenuOption> floatOptionList = new List<FloatMenuOption>();
+                floatOptionList.Add(new FloatMenuOption("ThingInfo".Translate(), delegate {
+                    Find.WindowStack.Add(new Dialog_InfoCard(thing));
+                }, MenuOptionPriority.Default, null, null));
+                if (CanControl) {
+                    // Equip option
+                    ThingWithComps eq = thing as ThingWithComps;
+                    if (eq != null && eq.TryGetComp<CompEquippable>() != null) {
+                        CompInventory compInventory = SelPawnForGear.TryGetComp<CompInventory>();
+                        if (compInventory != null) {
+                            FloatMenuOption equipOption;
+                            string eqLabel = GenLabel.ThingLabel(eq.def, eq.Stuff, 1);
+                            if (SelPawnForGear.equipment.AllEquipmentListForReading.Contains(eq) && SelPawnForGear.inventory != null) {
+                                equipOption = new FloatMenuOption("CE_PutAway".Translate(eqLabel),
+                                    new Action(delegate {
+                                        SelPawnForGear.equipment.TryTransferEquipmentToContainer(SelPawnForGear.equipment.Primary, SelPawnForGear.inventory.innerContainer);
+                                    }));
+                            } else if (!SelPawnForGear.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation)) {
+                                equipOption = new FloatMenuOption("CannotEquip".Translate(eqLabel), null);
+                            } else {
+                                string equipOptionLabel = "Equip".Translate(eqLabel);
+                                if (eq.def.IsRangedWeapon && SelPawnForGear.story != null && SelPawnForGear.story.traits.HasTrait(TraitDefOf.Brawler)) {
+                                    equipOptionLabel = equipOptionLabel + " " + "EquipWarningBrawler".Translate();
+                                }
+                                equipOption = new FloatMenuOption(
+                                    equipOptionLabel,
+                                    (SelPawnForGear.story != null && SelPawnForGear.story.WorkTagIsDisabled(WorkTags.Violent))
+                                    ? null
+                                    : new Action(delegate {
+                                        compInventory.TrySwitchToWeapon(eq);
+                                    }));
+                            }
+                            floatOptionList.Add(equipOption);
+                        }
+                    }
+                    // Drop option
+                    Action dropApparel = delegate {
+                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                        InterfaceDrop(thing);
+                    };
+                    if (CanControl && thing.IngestibleNow && base.SelPawn.RaceProps.CanEverEat(thing)) {
+                        Action eatFood = delegate {
+                            SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                            InterfaceIngest(thing);
+                        };
+                        string label = thing.def.ingestible.ingestCommandString.NullOrEmpty() ? "ConsumeThing".Translate(thing.LabelShort, thing) : string.Format(thing.def.ingestible.ingestCommandString, thing.LabelShort);
+                        floatOptionList.Add(new FloatMenuOption(label, eatFood));
+                    }
+                    floatOptionList.Add(new FloatMenuOption("DropThing".Translate(), dropApparel));
+                }
+                FloatMenu window = new FloatMenu(floatOptionList, thing.LabelCap, false);
+                Find.WindowStack.Add(window);
+            }
+            // end menu
+        }
+
+        private void TryDrawOverallArmor(ref float curY, float width, StatDef stat, string label) {
+            if (SelPawnForGear.RaceProps.body != BodyDefOf.Human) {
+                return;
+            }
+            float num = 0f;
+            List<Apparel> wornApparel = SelPawnForGear.apparel.WornApparel;
+            for (int i = 0; i < wornApparel.Count; i++) {
+                num += Mathf.Clamp01(wornApparel[i].GetStatValue(stat, true)) * wornApparel[i].def.apparel.HumanBodyCoverage;
+            }
+            num = Mathf.Clamp01(num);
+            if (num > 0.005f) {
+                Rect rect = new Rect(0f, curY, width, StandardLineHeight);
+                BodyPartRecord bpr = new BodyPartRecord();
+                List<BodyPartRecord> bpList = SelPawnForGear.RaceProps.body.AllParts;
+                string text = "";
+                for (int i = 0; i < bpList.Count; i++) {
+                    float armorValue = 0f;
+                    BodyPartRecord part = bpList[i];
+                    if (part.depth == BodyPartDepth.Outside && (part.coverage >= 0.1 || (part.def == BodyPartDefOf.Eye || part.def == BodyPartDefOf.Neck))) {
+                        text += part.LabelCap + ": ";
+                        for (int j = wornApparel.Count - 1; j >= 0; j--) {
+                            Apparel apparel = wornApparel[j];
+                            if (apparel.def.apparel.CoversBodyPart(part)) {
+                                armorValue += Mathf.Clamp01(apparel.GetStatValue(stat, true));
+                            }
+                        }
+                        text += Mathf.Clamp01(armorValue).ToStringPercent() + "\n";
+                    }
+                }
+                TooltipHandler.TipRegion(rect, text);
+
+                Widgets.Label(rect, label.Truncate(200f, null));
+                rect.xMin += 200;
+                Widgets.Label(rect, num.ToStringPercent());
+            }
+            curY += StandardLineHeight;
+        }
+
+        private void TryDrawMassInfo(ref float curY, float width)
 		{
 			if (this.SelPawnForGear.Dead || !this.ShouldShowInventory(this.SelPawnForGear))
 			{
@@ -861,5 +922,5 @@ namespace Sandy_Detailed_RPG_Inventory
                 Text.Anchor = TextAnchor.UpperLeft;
             }
         }
-	}
+    }
 }
