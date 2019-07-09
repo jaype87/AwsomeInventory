@@ -1,0 +1,14 @@
+E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Source\Sandy_Detailed_RPG_Inventory\bin\Release\RPG_Inventory_for_CE.dll
+E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Source\Sandy_Detailed_RPG_Inventory\bin\Release\Assembly-CSharp.dll
+E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Source\Sandy_Detailed_RPG_Inventory\bin\Release\CombatExtended.dll
+E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Source\Sandy_Detailed_RPG_Inventory\bin\Release\UnityEngine.dll
+E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Source\Sandy_Detailed_RPG_Inventory\bin\Release\TextMeshPro-1.0.55.56.0b11.dll
+E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Source\Sandy_Detailed_RPG_Inventory\bin\Release\Assembly-CSharp-firstpass.dll
+E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Source\Sandy_Detailed_RPG_Inventory\bin\Release\NAudio.dll
+E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Source\Sandy_Detailed_RPG_Inventory\bin\Release\NVorbis.dll
+E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Source\Sandy_Detailed_RPG_Inventory\bin\Release\UnityEngine.UI.dll
+E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Source\Sandy_Detailed_RPG_Inventory\bin\Release\0Harmony.dll
+E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Source\Sandy_Detailed_RPG_Inventory\obj\Release\RPG_Inventory_for_CE.csproj.CoreCompileInputs.cache
+E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Source\Sandy_Detailed_RPG_Inventory\obj\Release\RPG_Inventory_for_CE.csproj.CopyComplete
+E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Source\Sandy_Detailed_RPG_Inventory\obj\Release\RPG_Inventory_for_CE.dll
+E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Assemblies\RPG_Inventory_for_CE.dll

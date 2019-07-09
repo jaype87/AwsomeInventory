@@ -9,9 +9,9 @@ using Verse.AI;
 using Verse.Sound;
 using CombatExtended;
 
-namespace Sandy_Detailed_RPG_Inventory
+namespace RPG_Inventory_for_CE
 {
-	public class Sandy_Detailed_RPG_GearTab : ITab_Pawn_Gear
+	public class RPG_GearTab_for_CE : ITab_Pawn_Gear
 	{
 		private Vector2 scrollPosition = Vector2.zero;
 
@@ -32,6 +32,7 @@ namespace Sandy_Detailed_RPG_Inventory
 		
 		public static readonly Vector3 PawnTextureCameraOffset = new Vector3(0f, 0f, 0f);
 
+        //some variables CE used
         #region CE_Field
         private const float _barHeight = 20f;
         private const float _margin = 15f;
@@ -39,7 +40,7 @@ namespace Sandy_Detailed_RPG_Inventory
 
         private bool viewlist = false;
 
-		public Sandy_Detailed_RPG_GearTab()
+		public RPG_GearTab_for_CE()
 		{
 			this.size = new Vector2(550f, 500f);
 			this.labelKey = "TabGear";
@@ -134,7 +135,7 @@ namespace Sandy_Detailed_RPG_Inventory
 			}
 			if (this.ShouldShowOverallArmor(this.SelPawnForGear) && !viewlist && this.SelPawnForGear.RaceProps.Humanlike)
 			{
-				Rect rectarmor = new Rect(374f, 60f, 128f, 85f);
+				Rect rectarmor = new Rect(374f, 84f, 128f, 85f);
 				TooltipHandler.TipRegion(rectarmor, "OverallArmor".Translate());
 				Rect rectsharp = new Rect(rectarmor.x, rectarmor.y, rectarmor.width, 27f);
 				this.TryDrawOverallArmor1(rectsharp, StatDefOf.ArmorRating_Sharp, "ArmorSharp".Translate(),
@@ -308,23 +309,32 @@ namespace Sandy_Detailed_RPG_Inventory
 						GUI.DrawTexture(newRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
 						this.DrawThingRow1(newRect, current2, false);
 					}
-					if (current2.def.apparel.layers.Contains(ApparelLayerDefOf.Belt) && current2.def.apparel.bodyPartGroups.Contains(Sandy_Gear_DefOf.Shoulders))
+
+                    #region CE_equipment
+                    //this part display CE equipment
+                    //CE tatical vest
+                    if (current2.def.apparel.layers.Contains(ApparelLayerDefOf.Belt) && current2.def.apparel.bodyPartGroups.Contains(Sandy_Gear_DefOf.Shoulders))
 					{
 						Rect newRect = new Rect(76f, 178f, 64f, 64f);
 						this.DrawThingRow1(newRect, current2, false);
 					}
+                    //vanila shield belt
                     if (current2.def.apparel.layers.Contains(ApparelLayerDefOf.Belt) && current2.def.apparel.bodyPartGroups.Contains(Sandy_Gear_DefOf.Waist)) {
                         Rect newRect = new Rect(150f, 178f, 64f, 64f);
                         this.DrawThingRow1(newRect, current2, false);
                     }
+                    //CE back pack
                     if (current2.def.apparel.layers.Contains(ApparelLayerDefOf.Belt) && current2.def.apparel.bodyPartGroups.Contains(BodyPartGroupDefOf.Torso)) {
                         Rect newRect = new Rect(224f, 178f, 64f, 64f);
                         this.DrawThingRow1(newRect, current2, false);
                     }
+                    //CE shield
                     if (current2.def.apparel.layers.Contains(ApparelLayerDefOf.Belt) && current2.def.apparel.bodyPartGroups.Contains(Sandy_Gear_DefOf.LeftArm)) {
                         Rect newRect = new Rect(320f, 338f, 72f, 72f);
                         this.DrawThingRow1(newRect, current2, false);
                     }
+                    #region CE_equipment
+
                     if (current2.def.apparel.bodyPartGroups.Contains(BodyPartGroupDefOf.RightHand) && !current2.def.apparel.bodyPartGroups.Contains(Sandy_Gear_DefOf.Hands)
 					    && current2.def.apparel.layers.Contains(ApparelLayerDefOf.Middle) && !current2.def.apparel.bodyPartGroups.Contains(BodyPartGroupDefOf.Torso)
 					    && !current2.def.apparel.layers.Contains(ApparelLayerDefOf.Shell))
@@ -414,8 +424,28 @@ namespace Sandy_Detailed_RPG_Inventory
 						GUI.DrawTexture(newRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
 						this.DrawThingRow1(newRect, current2, false);
 					}
-				}
-			}
+
+                    #region Jewelry_support
+                    //this part add jewelry support
+                    //They currently overlape with some appearoll 2 stuff
+                    if (current2.def.apparel.bodyPartGroups.Contains(Sandy_Gear_DefOf.Neck) && (current2.def.apparel.layers.Contains(Sandy_Gear_DefOf.Accessories))) {
+                        Rect newRect = new Rect(298f, 76f, 56f, 56f);
+                        GUI.DrawTexture(newRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
+                        this.DrawThingRow1(newRect, current2, false);
+                    }
+                    if (current2.def.apparel.bodyPartGroups.Contains(Sandy_Gear_DefOf.Ears) && (current2.def.apparel.layers.Contains(Sandy_Gear_DefOf.Accessories))) {
+                        Rect newRect = new Rect(298f, 10f, 56f, 56f);
+                        GUI.DrawTexture(newRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
+                        this.DrawThingRow1(newRect, current2, false);
+                    }
+                    if (current2.def.apparel.bodyPartGroups.Contains(BodyPartGroupDefOf.LeftHand) && (current2.def.apparel.layers.Contains(Sandy_Gear_DefOf.Accessories))) {
+                        Rect newRect = new Rect(298f, 142f, 56f, 56f);
+                        GUI.DrawTexture(newRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
+                        this.DrawThingRow1(newRect, current2, false);
+                    }
+                    #endregion Jewelry_support
+                }
+            }
 			else if (this.ShouldShowApparel(this.SelPawnForGear))
 			{
 				Widgets.ListSeparator(ref num, viewRect.width, "Apparel".Translate());
@@ -437,13 +467,13 @@ namespace Sandy_Detailed_RPG_Inventory
 					num += StandardLineHeight;
 				}
 				Widgets.ListSeparator(ref num, viewRect.width, "Inventory".Translate());
-				Sandy_Detailed_RPG_GearTab.workingInvList.Clear();
-				Sandy_Detailed_RPG_GearTab.workingInvList.AddRange(this.SelPawnForGear.inventory.innerContainer);
-				for (int i = 0; i < Sandy_Detailed_RPG_GearTab.workingInvList.Count; i++)
+				RPG_GearTab_for_CE.workingInvList.Clear();
+				RPG_GearTab_for_CE.workingInvList.AddRange(this.SelPawnForGear.inventory.innerContainer);
+				for (int i = 0; i < RPG_GearTab_for_CE.workingInvList.Count; i++)
 				{
-					this.DrawThingRow(ref num, viewRect.width, Sandy_Detailed_RPG_GearTab.workingInvList[i], true);
+					this.DrawThingRow(ref num, viewRect.width, RPG_GearTab_for_CE.workingInvList[i], true);
 				}
-				Sandy_Detailed_RPG_GearTab.workingInvList.Clear();
+				RPG_GearTab_for_CE.workingInvList.Clear();
 			}
 
             if (Event.current.type == EventType.Layout)
@@ -452,6 +482,9 @@ namespace Sandy_Detailed_RPG_Inventory
 			}
 
 			Widgets.EndScrollView();
+
+            //This line draws CE bulk and mass bar
+            //It can also be called inside scroll view
             TryDrawCEloadout(position.height - 60, viewRect.width);
             GUI.EndGroup();
 			GUI.color = Color.white;
@@ -528,7 +561,7 @@ namespace Sandy_Detailed_RPG_Inventory
 			}
 			if (Mouse.IsOver(rect))
 			{
-				GUI.color = Sandy_Detailed_RPG_GearTab.HighlightColor;
+				GUI.color = RPG_GearTab_for_CE.HighlightColor;
 				GUI.DrawTexture(rect, TexUI.HighlightTex);
 				Widgets.InfoCardButton(rect.x, rect.y, thing);
 				if (this.CanControl && (inventory || this.CanControlColonist || (this.SelPawnForGear.Spawned && !this.SelPawnForGear.Map.IsPlayerHome)))
@@ -574,6 +607,9 @@ namespace Sandy_Detailed_RPG_Inventory
 			TooltipHandler.TipRegion(rect, text3);
 		}
 
+        //This function was changed
+        //CE has a tool tip that, when mouseover overall armor value, it will display armor by body parts
+        //It doesnot call CE function, just vanila funcions
 		private void TryDrawOverallArmor1(Rect rect, StatDef stat, string label, Texture image)
 		{
 			float num = 0f;
@@ -597,15 +633,17 @@ namespace Sandy_Detailed_RPG_Inventory
                                 armorValue += Mathf.Clamp01(apparel.GetStatValue(stat, true));
                             }
                         }
-                        text += Mathf.Clamp01(armorValue).ToStringPercent() + "\n";
+                        //note: CE change the armor value from percentage to a flat value
+                        text += Mathf.Clamp01(armorValue).ToString("0.##") + "\n";
                     }
                 }
                 TooltipHandler.TipRegion(rect, text);
                 Rect rect1 = new Rect(rect.x, rect.y, 24f, 27f);
                 GUI.DrawTexture(rect1, image);
                 TooltipHandler.TipRegion(rect1, label);
-                Rect rect2 = new Rect(rect.x + 60f, rect.y + 3f, 104f, 24f);
-                Widgets.Label(rect2, num.ToStringPercent());
+                Rect rect2 = new Rect(rect.x + 30f, rect.y + 3f, 104f, 24f);
+                //note: CE change the armor value from percentage to a flat value
+                Widgets.Label(rect2, Mathf.Clamp01(num).ToString("0.##"));
             }
 		}
 
@@ -624,28 +662,41 @@ namespace Sandy_Detailed_RPG_Inventory
 			Widgets.Label(rect2, "SandyMassValue".Translate(num.ToString("0.##"), num2.ToString("0.##")));
 		}
 
-		private void TryDrawComfyTemperatureRange1(Rect rect)
+        //This function was changed to add Celcius and Farenheight support
+        //Simplly changed the temperaure display into 2 lines
+        //I used some free art from the internet, you might want to change that
+        private void TryDrawComfyTemperatureRange1(Rect rect)
 		{
 			if (this.SelPawnForGear.Dead)
 			{
 				return;
 			}
 			Rect rect1 = new Rect(rect.x, rect.y + 26f, 24f, 24f);
-			GUI.DrawTexture(rect1, ContentFinder<Texture2D>.Get("UI/Icons/Sandy_Temperature_Icon", true));
+			GUI.DrawTexture(rect1, ContentFinder<Texture2D>.Get("UI/Icons/minumun_temperature", true));
 			TooltipHandler.TipRegion(rect1, "ComfyTemperatureRange".Translate());
 			float statValue = this.SelPawnForGear.GetStatValue(StatDefOf.ComfyTemperatureMin, true);
-			float statValue2 = this.SelPawnForGear.GetStatValue(StatDefOf.ComfyTemperatureMax, true);
 			Rect rect2 = new Rect(rect.x + 30f, rect.y + 28f, 104f, 24f);
 			Widgets.Label(rect2, string.Concat(new string[]
 			{
 				" ",
-				statValue.ToStringTemperature("F0"),
-				" ~ ",
-				statValue2.ToStringTemperature("F0")
+				statValue.ToStringTemperature("F0")
 			}));
 
-		}
+            rect1 = new Rect(rect.x, rect.y + 52f, 24f, 24f);
+            GUI.DrawTexture(rect1, ContentFinder<Texture2D>.Get("UI/Icons/max_temperature", true));
+            TooltipHandler.TipRegion(rect1, "ComfyTemperatureRange".Translate());
+            float statValue2 = this.SelPawnForGear.GetStatValue(StatDefOf.ComfyTemperatureMax, true);
+            rect2 = new Rect(rect.x + 30f, rect.y + 56f, 104f, 24f);
+            Widgets.Label(rect2, string.Concat(new string[]
+            {
+                " ",
+                statValue2.ToStringTemperature("F0")
+            }));
+
+        }
 		
+        // This function was changed to add CE RMB menu
+        // The RMB menu allows player to equip weapons and appeals from inventory
 		private void DrawThingRow(ref float y, float width, Thing thing, bool inventory = false)
 		{
 			Rect rect = new Rect(0f, y, width, 28f);
@@ -682,7 +733,7 @@ namespace Sandy_Detailed_RPG_Inventory
 			rect.width -= 60f;
 			if (Mouse.IsOver(rect))
 			{
-				GUI.color = Sandy_Detailed_RPG_GearTab.HighlightColor;
+				GUI.color = RPG_GearTab_for_CE.HighlightColor;
 				GUI.DrawTexture(rect, TexUI.HighlightTex);
 			}
 			if (thing.def.DrawMatSingle != null && thing.def.DrawMatSingle.mainTexture != null)
@@ -690,7 +741,7 @@ namespace Sandy_Detailed_RPG_Inventory
 				Widgets.ThingIcon(new Rect(4f, y, 28f, 28f), thing, 1f);
 			}
 			Text.Anchor = TextAnchor.MiddleLeft;
-			GUI.color = Sandy_Detailed_RPG_GearTab.ThingLabelColor;
+			GUI.color = RPG_GearTab_for_CE.ThingLabelColor;
 			Rect rect5 = new Rect(36f, y, rect.width - 36f, rect.height);
 			string text = thing.LabelCap;
 			Apparel apparel = thing as Apparel;
@@ -776,6 +827,9 @@ namespace Sandy_Detailed_RPG_Inventory
             // end menu
         }
 
+        //This function was changed
+        //CE has a tool tip that, when mouseover overall armor value, it will display armor by body parts
+        //It doesnot call CE function, just vanila funcions
         private void TryDrawOverallArmor(ref float curY, float width, StatDef stat, string label) {
             if (SelPawnForGear.RaceProps.body != BodyDefOf.Human) {
                 return;
@@ -802,14 +856,14 @@ namespace Sandy_Detailed_RPG_Inventory
                                 armorValue += Mathf.Clamp01(apparel.GetStatValue(stat, true));
                             }
                         }
-                        text += Mathf.Clamp01(armorValue).ToStringPercent() + "\n";
+                        text += Mathf.Clamp01(armorValue).ToString("0.###") + "\n";
                     }
                 }
                 TooltipHandler.TipRegion(rect, text);
 
                 Widgets.Label(rect, label.Truncate(200f, null));
                 rect.xMin += 200;
-                Widgets.Label(rect, num.ToStringPercent());
+                Widgets.Label(rect, Mathf.Clamp01(num).ToString("F3"));
             }
             curY += StandardLineHeight;
         }
@@ -835,17 +889,17 @@ namespace Sandy_Detailed_RPG_Inventory
 			}
 			Rect rect = new Rect(0f, curY, width, 22f);
 			float statValue = this.SelPawnForGear.GetStatValue(StatDefOf.ComfyTemperatureMin, true);
-			float statValue2 = this.SelPawnForGear.GetStatValue(StatDefOf.ComfyTemperatureMax, true);
-			Widgets.Label(rect, string.Concat(new string[]
+            float statValue2 = this.SelPawnForGear.GetStatValue(StatDefOf.ComfyTemperatureMax, true);
+            Widgets.Label(rect, string.Concat(new string[]
 			{
 				"ComfyTemperatureRange".Translate(),
 				": ",
 				statValue.ToStringTemperature("F0"),
-				" ~ ",
-				statValue2.ToStringTemperature("F0")
-			}));
+                "~",
+                statValue2.ToStringTemperature("F0")
+            }));
 			curY += 22f;
-		}
+        }
 
 		private void InterfaceDrop(Thing t)
 		{
@@ -894,6 +948,9 @@ namespace Sandy_Detailed_RPG_Inventory
 			return p.RaceProps.Humanlike || this.ShouldShowApparel(p) || p.GetStatValue(StatDefOf.ArmorRating_Sharp, true) > 0f || p.GetStatValue(StatDefOf.ArmorRating_Blunt, true) > 0f || p.GetStatValue(StatDefOf.ArmorRating_Heat, true) > 0f;
 		}
 
+        //This function draw CE bulk and mass bar
+        //It can be called inside or ouside the scroll
+        //This function need to call CE
         private void TryDrawCEloadout(float y, float width) {
             CompInventory comp = SelPawn.TryGetComp<CompInventory>();
             if (comp != null) {

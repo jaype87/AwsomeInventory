@@ -4,7 +4,7 @@
 	<Operation Class="PatchOperationReplace">
 		<xpath>Defs/ThingDef[@Name="BasePawn"]/inspectorTabs/li[text()="CombatExtended.ITab_Inventory"]</xpath>
 		<value>
-			<li>Sandy_Detailed_RPG_Inventory.Sandy_Detailed_RPG_GearTab</li>
+			<li>RPG_Inventory_for_CE.RPG_GearTab_for_CE</li>
 		</value>
 	</Operation>
 </Patch>
