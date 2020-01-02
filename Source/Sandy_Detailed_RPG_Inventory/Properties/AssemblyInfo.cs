@@ -7,11 +7,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle ("Sandy_Detailed_RPG_Inventory")]
+[assembly: AssemblyTitle ("RPG_Inventory_Corgi")]
 [assembly: AssemblyDescription ("")]
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("")]
-[assembly: AssemblyProduct ("Sandy_Detailed_RPG_Inventory")]
+[assembly: AssemblyProduct ("RPG_Inventory_Corgi")]
 [assembly: AssemblyCopyright ("Copyright 2018")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]

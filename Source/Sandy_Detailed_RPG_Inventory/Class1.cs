@@ -23,5 +23,10 @@ namespace RPG_Inventory_for_CE
         //Two defs file was added, they are in Defs\Jewelry_compat
         public static BodyPartGroupDef Ears;
         public static ApparelLayerDef Accessories;
+
+        static Sandy_Gear_DefOf()
+        {
+            DefOfHelper.EnsureInitializedInCtor(typeof(Sandy_Gear_DefOf));
+        }
     }
-}
+}    

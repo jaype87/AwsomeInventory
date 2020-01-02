@@ -54,7 +54,8 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>M:\Games\Rimworld_dev\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="CombatExtended">
+    <Reference Include="CombatExtended, Version=0.18.1.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\CombatExtended\Assemblies\CombatExtended.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -71,8 +72,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
-    <Compile Include="MyClass.cs" />
+    <Compile Include="FillTabOperations.cs" />
+    <Compile Include="RPG_Inventory_CE_Corgi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RPG_Pawn.cs" />
+    <Compile Include="TextButton.cs" />
+    <Compile Include="Utility.cs" />
+    <Compile Include="Utility_HoldTracker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

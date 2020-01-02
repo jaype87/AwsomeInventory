@@ -1,5 +1,0 @@
-E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Assemblies\Sandy_Detailed_RPG_Inventory.dll
-E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Source\Sandy_Detailed_RPG_Inventory\obj\Debug\RPG_Inventory_for_CE.csprojAssemblyReference.cache
-E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Source\Sandy_Detailed_RPG_Inventory\obj\Debug\RPG_Inventory_for_CE.csproj.CoreCompileInputs.cache
-E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Source\Sandy_Detailed_RPG_Inventory\obj\Debug\RPG_Inventory_for_CE.csproj.CopyComplete
-E:\Workstation\-1.0-RPG-Style-Inventory-V3.0-\Source\Sandy_Detailed_RPG_Inventory\obj\Debug\Sandy_Detailed_RPG_Inventory.dll
