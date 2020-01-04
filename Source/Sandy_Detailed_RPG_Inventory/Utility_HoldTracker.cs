@@ -6,7 +6,7 @@ using Verse;
 using Verse.AI;
 using CombatExtended;
 
-namespace RPG_Inventory_for_CE
+namespace RPG_Inventory_Remake
 {
 
     /// <summary>

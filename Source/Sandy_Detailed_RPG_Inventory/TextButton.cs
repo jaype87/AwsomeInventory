@@ -2,7 +2,7 @@
 using UnityEngine;
 using Verse;
 
-namespace RPG_Inventory_for_CE
+namespace RPG_Inventory_Remake
 {
     // Exact copy of the TexButton which is internal for no reason
     [StaticConstructorOnStartup]

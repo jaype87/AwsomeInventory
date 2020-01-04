@@ -5,19 +5,24 @@ using System.Text;
 using Verse;
 using RimWorld;
 
-namespace RPG_Inventory_for_CE
+namespace RPG_Inventory_Remake
 {
     public class RPG_Pawn
     {
         public bool CanControl;
         public bool CanControlColonist;
         public Pawn Pawn;
+        public IEnumerable<BodyPartGroupDef> bpgroups;
 
         public RPG_Pawn(Pawn selPawn, Thing selThing)
         {
             this.Pawn = SelectPawnForGear(selPawn, selThing);
             CanControl = CheckControl(selPawn);
             CanControlColonist = CheckControlColonist(selPawn);
+            bpgroups = selPawn.RaceProps.body.AllParts
+                .SelectMany(r => r.groups)
+                .Distinct()
+                .OrderByDescending(p => p.listOrder);
         }
 
         private bool CheckControl(Pawn selPawn)
