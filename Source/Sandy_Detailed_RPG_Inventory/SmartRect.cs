@@ -100,7 +100,14 @@ namespace RPG_Inventory_Remake
 
         public Rect NextAvailableRect()
         {
-            return NextAvailableRect(~LastDirection);
+            // Return the first rect on the row
+            if (x_leftCurPosition == x_rightCurPosition)
+            {
+                x_rightCurPosition += width;
+                return new Rect(x_leftCurPosition, y, width, height);
+            }
+            LastDirection = ~LastDirection;
+            return NextAvailableRect(LastDirection);
         }
 
 
@@ -116,10 +123,11 @@ namespace RPG_Inventory_Remake
                 Log.Warning("Failed to draw rect on the left.");
             }
 
-            if (x_rightEdge < x_rightCurPosition + WidthGap + width)
+            if (x_rightEdge > x_rightCurPosition + WidthGap + width)
             {
+                float x_temp = x_rightCurPosition + WidthGap;
                 x_rightCurPosition += (WidthGap + width);
-                return new Rect(x_rightCurPosition, y, width, height);
+                return new Rect(x_temp, y, width, height);
             }
             Log.Warning("Failed to draw rect on the right.");
             return default;
@@ -137,6 +145,5 @@ namespace RPG_Inventory_Remake
             return new SmartRect(newRect, bodyPartGroup, leftCurPosition, rightCurPosition,
                                  List, x_leftEdge, x_rightEdge);
         }
-
     }
 }

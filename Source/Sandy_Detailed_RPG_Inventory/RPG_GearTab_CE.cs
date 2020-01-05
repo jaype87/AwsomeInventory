@@ -45,6 +45,12 @@ namespace RPG_Inventory_Remake
             tutorTag = "Gear";
         }
 
+        // It is called right before the tab is drawn
+        protected override void UpdateSize()
+        {
+            
+        }
+
         public override bool IsVisible
         {
             get

@@ -487,7 +487,6 @@ namespace RPG_Inventory_Remake
                 float heat = app.GetStatValue(StatDefOf.ArmorRating_Heat);
                 if (sharp > 0.005)
                 {
-                    Log.Message("sharp: " + sharp.ToString());
                     text3 = string.Concat(text3, "\n", "ArmorSharp".Translate(), ":", sharp.ToStringPercent());
                 }
                 if (blunt > 0.005)
@@ -569,6 +568,7 @@ namespace RPG_Inventory_Remake
                     float eArmorForPart = allParts[i].coverageAbs * (1 - effectivePen);
                     if (eArmorForPart > 0.005)
                     {
+                        // UNDONE: Armor values for part are off
                         text += allParts[i].LabelCap + ": ";
                         text += FormatArmorValue(eArmorForPart * 2, unit) + "\n";
                     }

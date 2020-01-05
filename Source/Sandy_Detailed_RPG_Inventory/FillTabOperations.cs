@@ -19,6 +19,7 @@ namespace RPG_Inventory_Remake
         private const float _topPadding = 50f;
         private const float _apparelRectWidth = 56f;
         private const float _apparelRectHeight = 56f;
+        private const float _startingXforRect = 150f;
 
 
         private static readonly Color _highlightColor = new Color(0.5f, 0.5f, 0.5f, 1f);
@@ -28,7 +29,7 @@ namespace RPG_Inventory_Remake
         private static SmartRect _smartRectCurrent;
 
         private static List<Thing> workingInvList = new List<Thing>();
-        private static List<Apparel> _apparelOverflow = new List<Apparel>();
+        private static List<ThingWithComps> _apparelOverflow = new List<ThingWithComps>();
         private static List<SmartRect> _smartRects = new List<SmartRect>();
 
 
@@ -56,7 +57,7 @@ namespace RPG_Inventory_Remake
             Rect outRect = new Rect(0f, 0f, listRect.width, listRect.height);
             Rect viewRect = new Rect(0f, 0f, listRect.width - 16f, _scrollViewHeight);
             Widgets.BeginScrollView(outRect, ref _scrollPosition, viewRect);
-
+            
             // draw Mass info and Temperature on the side
             Vector2 rectStat = new Vector2(374, 0);
             Utility.TryDrawMassInfoWithImage(selPawn.Pawn, rectStat);
@@ -81,6 +82,31 @@ namespace RPG_Inventory_Remake
             Rect PawnRect = new Rect(374f, 172f, 128f, 128f);
             Utility.DrawColonist(PawnRect, selPawn.Pawn);
 
+            // draw equipment (equipment means barrel that can shoot bullets, plank that can slice flesh in half)
+            // It is weapon.
+            SmartRect rectForEquipment = new SmartRect(new Rect(), CorgiBodyPartGroupDefOf.Arse,
+                                                       PawnRect.x, PawnRect.x, null, PawnRect.x, size.x - 20f);
+            rectForEquipment.y = PawnRect.yMax;
+            rectForEquipment.width = _apparelRectWidth;
+            rectForEquipment.height = _apparelRectHeight;
+            if (Utility.ShouldShowEquipment(selPawn.Pawn) && (selPawn.Pawn.RaceProps.body == BodyDefOf.Human))
+            {
+                Rect primaryRect = rectForEquipment.NextAvailableRect();
+                GUI.DrawTexture(primaryRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
+                TooltipHandler.TipRegion(primaryRect, "Corgi_PrimaryWeapon".Translate());
+                foreach (ThingWithComps fireShootingBarrel in selPawn.Pawn.equipment.AllEquipmentListForReading)
+                {
+                    if (fireShootingBarrel == selPawn.Pawn.equipment.Primary)
+                    {
+                        Utility.DrawThingRowWithImage(selPawn, primaryRect, fireShootingBarrel);
+                    }
+                    else
+                    {
+                        DrawThumbnails(selPawn, rectForEquipment, fireShootingBarrel);
+                    }
+                }
+            }
+
             // Head:200-181, Neck:180-101, Torso:100-51, Waist:50-11, Legs:10-0
 
             IEnumerable<Apparel> apparels = from ap in selPawn.Pawn.apparel.WornApparel
@@ -90,32 +116,40 @@ namespace RPG_Inventory_Remake
             IEnumerator<Apparel> apparelCounter = apparels.GetEnumerator();
 
             //Hats. BodyGroup: Fullhead; Layer: Overhead
-            Rect HeadOverRect = new Rect(150f, 0f, _apparelRectWidth, _apparelRectHeight);
-            GUI.DrawTexture(HeadOverRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
-            Rect tipRect1 = HeadOverRect.ContractedBy(12f);
-            TooltipHandler.TipRegion(tipRect1, "Sandy_Head".Translate());
             _smartRectHead = _smartRectCurrent =
-                new SmartRect(HeadOverRect, BodyPartGroupDefOf.FullHead,
-                              HeadOverRect.x, HeadOverRect.x + HeadOverRect.width,
+                new SmartRect(new Rect(0, 0, _apparelRectWidth, _apparelRectHeight),
+                              BodyPartGroupDefOf.FullHead,
+                              _startingXforRect, _startingXforRect,
                               _smartRects, 10, rectStat.x);
+            Rect HeadOverRect = _smartRectCurrent.NextAvailableRect();
+            GUI.DrawTexture(HeadOverRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
+            //Rect tipRect1 = HeadOverRect.ContractedBy(12f);
+            Rect tipRect1 = HeadOverRect;
+            TooltipHandler.TipRegion(tipRect1, "Sandy_Head".Translate());
 
+            // Check if there is more apparel in the list
             bool cont = false;
+            bool hatDrawn = false;
             // Draw apparels on the head
             while (apparelCounter.MoveNext())
             {
                 Apparel apparel = apparelCounter.Current;
                 if (apparel.def.apparel.bodyPartGroups[0].listOrder > CorgiBodyPartGroupDefOf.Neck.listOrder)
                 {
-                    if (apparel.def.apparel.bodyPartGroups[0] == CorgiBodyPartGroupDefOf.FullHead)
+                    // Check RimWorld.Pawn_ApparelTracker.Wear() for more information on wearing rules
+                    if ((apparel.def.apparel.bodyPartGroups.Contains(CorgiBodyPartGroupDefOf.FullHead) ||
+                         apparel.def.apparel.bodyPartGroups.Contains(CorgiBodyPartGroupDefOf.UpperHead)) &&
+                         hatDrawn == false)
                     {
                         Utility.DrawThingRowWithImage(selPawn, HeadOverRect, apparel);
+                        hatDrawn = true;
                     }
                     else
                     {
                         _smartRectCurrent = _smartRectCurrent
                                             .GetWorkingRect(CorgiBodyPartGroupDefOf.FullHead,
-                                                            HeadOverRect.x,
-                                                            HeadOverRect.x);
+                                                            _startingXforRect,
+                                                            _startingXforRect);
                         DrawThumbnails(selPawn, _smartRectCurrent, apparel);
                     }
                 }
@@ -138,8 +172,7 @@ namespace RPG_Inventory_Remake
                     {
                         _smartRectCurrent = _smartRectCurrent
                                                 .GetWorkingRect(CorgiBodyPartGroupDefOf.Neck,
-                                                                HeadOverRect.x,
-                                                                HeadOverRect.x);
+                                                                _startingXforRect, _startingXforRect);
                         DrawThumbnails(selPawn, _smartRectCurrent, apparel);
                     }
                     else
@@ -150,20 +183,24 @@ namespace RPG_Inventory_Remake
                 } while (apparelCounter.MoveNext());
             }
 
-            //Vests. BodyGroup: Torso; Layer: Middle
-            Rect TorsoMidRect = new Rect(76f, 148f, _apparelRectWidth, _apparelRectHeight);
-            GUI.DrawTexture(TorsoMidRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
-            Rect tipRect2 = TorsoMidRect.ContractedBy(12f);
-            TooltipHandler.TipRegion(tipRect2, "Sandy_TorsoMiddle".Translate());
+            _smartRectCurrent = _smartRectCurrent
+                                    .GetWorkingRect(CorgiBodyPartGroupDefOf.Torso,
+                                                    _startingXforRect, _startingXforRect);
 
             //Shirts. BodyGroup: Torso; Layer: OnSkin
-            Rect TorsoSkinRect = new Rect(150f, 148f, _apparelRectWidth, _apparelRectHeight);
+            Rect TorsoSkinRect = _smartRectCurrent.NextAvailableRect();
             GUI.DrawTexture(TorsoSkinRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
             Rect tipRect3 = TorsoSkinRect.ContractedBy(12f);
             TooltipHandler.TipRegion(tipRect3, "Sandy_TorsoOnSkin".Translate());
 
+            //Vests. BodyGroup: Torso; Layer: Middle
+            Rect TorsoMidRect = _smartRectCurrent.NextAvailableRect();
+            GUI.DrawTexture(TorsoMidRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
+            Rect tipRect2 = TorsoMidRect.ContractedBy(12f);
+            TooltipHandler.TipRegion(tipRect2, "Sandy_TorsoMiddle".Translate());
+
             //Dusters. BodyGroup: Torso; Layer: Shell
-            Rect TorsoShellRect = new Rect(224f, 148f, _apparelRectWidth, _apparelRectHeight);
+            Rect TorsoShellRect = _smartRectCurrent.NextAvailableRect();
             GUI.DrawTexture(TorsoShellRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
             Rect tipRect4 = TorsoShellRect.ContractedBy(12f);
             TooltipHandler.TipRegion(tipRect4, "Sandy_TorsoShell".Translate());
@@ -192,14 +229,14 @@ namespace RPG_Inventory_Remake
                             {
                                 Utility.DrawThingRowWithImage(selPawn, TorsoSkinRect, apparel);
                             }
-                            else
-                            {
-                                _smartRectCurrent = _smartRectCurrent
-                                                .GetWorkingRect(CorgiBodyPartGroupDefOf.Torso,
-                                                                HeadOverRect.x,
-                                                                HeadOverRect.x);
-                                DrawThumbnails(selPawn, _smartRectCurrent, apparel);
-                            }
+                        }
+                        else
+                        {
+                            _smartRectCurrent = _smartRectCurrent
+                                            .GetWorkingRect(CorgiBodyPartGroupDefOf.Torso,
+                                                            _startingXforRect,
+                                                            _startingXforRect);
+                            DrawThumbnails(selPawn, _smartRectCurrent, apparel);
                         }
                     }
                     else
@@ -210,8 +247,13 @@ namespace RPG_Inventory_Remake
                 } while (apparelCounter.MoveNext());
             }
 
+            _smartRectCurrent = _smartRectCurrent
+                                    .GetWorkingRect(CorgiBodyPartGroupDefOf.Waist,
+                                                    _startingXforRect,
+                                                    _startingXforRect);
+
             //Belts. BodyGroup: Waist; Layer: Belt
-            Rect WaistBeltRect = new Rect(150f, 222f, _apparelRectWidth, _apparelRectHeight);
+            Rect WaistBeltRect = _smartRectCurrent.NextAvailableRect();
             GUI.DrawTexture(WaistBeltRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
             Rect tipRect5 = WaistBeltRect.ContractedBy(12f);
             TooltipHandler.TipRegion(tipRect5, "Sandy_Belt".Translate());
@@ -234,8 +276,8 @@ namespace RPG_Inventory_Remake
                         {
                             _smartRectCurrent = _smartRectCurrent
                                                 .GetWorkingRect(CorgiBodyPartGroupDefOf.Waist,
-                                                                HeadOverRect.x,
-                                                                HeadOverRect.x);
+                                                                _startingXforRect,
+                                                                _startingXforRect);
                             DrawThumbnails(selPawn, _smartRectCurrent, apparel);
                         }
                     }
@@ -248,14 +290,20 @@ namespace RPG_Inventory_Remake
                 } while (apparelCounter.MoveNext());
             }
 
+
+            _smartRectCurrent = _smartRectCurrent
+                                    .GetWorkingRect(CorgiBodyPartGroupDefOf.Legs,
+                                                    _startingXforRect,
+                                                    _startingXforRect);
             //Pants. BodyGroup: Legs; Layer: OnSkin
-            Rect LegSkinRect = new Rect(150f, 296f, _apparelRectWidth, _apparelRectHeight);
+            Rect LegSkinRect = _smartRectCurrent.NextAvailableRect();
             GUI.DrawTexture(LegSkinRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
             Rect tipRect6 = LegSkinRect.ContractedBy(12f);
             TooltipHandler.TipRegion(tipRect6, "Sandy_Pants".Translate());
 
             if (cont)
             {
+                bool pantWore = false;
                 cont = false;
                 do
                 {
@@ -263,16 +311,17 @@ namespace RPG_Inventory_Remake
                     if (apparel.def.apparel.bodyPartGroups[0].listOrder <= CorgiBodyPartGroupDefOf.Legs.listOrder &&
                         apparel.def.apparel.bodyPartGroups[0].listOrder > 0)
                     {
-                        if (apparel.def.apparel.LastLayer == ApparelLayerDefOf.OnSkin)
+                        if (apparel.def.apparel.LastLayer == ApparelLayerDefOf.OnSkin && pantWore == false)
                         {
                             Utility.DrawThingRowWithImage(selPawn, LegSkinRect, apparel);
+                            pantWore = true;
                         }
                         else
                         {
                             _smartRectCurrent = _smartRectCurrent
                                                 .GetWorkingRect(CorgiBodyPartGroupDefOf.Legs,
-                                                                HeadOverRect.x,
-                                                                HeadOverRect.x);
+                                                                _startingXforRect,
+                                                                _startingXforRect);
                             DrawThumbnails(selPawn, _smartRectCurrent, apparel);
                         }
                     }
@@ -295,13 +344,13 @@ namespace RPG_Inventory_Remake
             if (_apparelOverflow.Count > 0)
             {
                 float rollingY = _smartRectCurrent.y + _smartRectCurrent.height + Utility.StandardLineHeight;
-                Widgets.ListSeparator(ref rollingY, viewRect.width, "Extra Apparels".Translate());
-                _smartRectCurrent = _smartRectCurrent.GetWorkingRect(CorgiBodyPartGroupDefOf.Arse, 0, 0);
-                _smartRectCurrent.y = rollingY;
+                Widgets.ListSeparator(ref rollingY, viewRect.width, "Corgi_ExtraApparels".Translate());
+                _smartRectCurrent = _smartRectCurrent.GetWorkingRect(CorgiBodyPartGroupDefOf.Arse, _margin, _margin);
+                _smartRectCurrent.y = rollingY + Utility.StandardLineHeight;
 
                 do
                 {
-                    List<Apparel> tempList = _apparelOverflow;
+                    List<ThingWithComps> tempList = new List<ThingWithComps>(_apparelOverflow);
                     _apparelOverflow.Clear();
                     foreach (Apparel apparel in tempList)
                     {
@@ -313,9 +362,12 @@ namespace RPG_Inventory_Remake
                         temp.PreviousSibling = _smartRectCurrent;
                         _smartRectCurrent.NextSibling = temp;
                         _smartRectCurrent = temp;
+                        continue;
                     }
                 } while (_apparelOverflow.Count > 0);
             }
+
+
 
             float rollingY1 = _smartRectCurrent.y + _smartRectCurrent.height;
             if (Event.current.type == EventType.Layout)
@@ -526,18 +578,18 @@ namespace RPG_Inventory_Remake
         //    Text.Anchor = TextAnchor.UpperLeft;
 
         //}
-        public static bool DrawThumbnails(RPG_Pawn pawn, SmartRect smartRect, Apparel apparel)
+        public static bool DrawThumbnails(RPG_Pawn pawn, SmartRect smartRect, ThingWithComps thing)
         {
             Rect newRect = smartRect.NextAvailableRect();
             if (newRect == default)
             {
-                _apparelOverflow.Add(apparel);
+                _apparelOverflow.Add(thing);
                 return false;
             }
             else
             {
                 GUI.DrawTexture(newRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
-                Utility.DrawThingRowWithImage(pawn, newRect, apparel);
+                Utility.DrawThingRowWithImage(pawn, newRect, thing);
             }
             return true;
         }

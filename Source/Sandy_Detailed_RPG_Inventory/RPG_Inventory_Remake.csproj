@@ -83,5 +83,14 @@
     <Compile Include="Utility.cs" />
     <None Include="Utility_HoldTracker.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\Languages\English\Keyed\Sandy_Detailed_RPG_Gear.xml">
+      <Link>Language\Sandy_Detailed_RPG_Gear.xml</Link>
+    </Content>
+    <Content Include="Dressing Code in Rimworld.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
