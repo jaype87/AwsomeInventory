@@ -12,8 +12,6 @@ namespace RPG_Inventory_Remake
     {
         private Vector2 scrollPosition = Vector2.zero;
 
-        private float scrollViewHeight;
-
         private const float TopPadding = 20f;
 
 
@@ -95,7 +93,7 @@ namespace RPG_Inventory_Remake
             }
             else if (_isGreedy)
             {
-                //FillTabOperations.DrawGreedy(_selPawn, this.size);
+                FillTabOperations.DrawGreedy(_selPawn, this.size);
             }
             else if (_isAscetic)
             {

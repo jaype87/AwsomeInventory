@@ -8,7 +8,7 @@ using Verse.AI;
 using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
-using CombatExtended;
+//using CombatExtended;
 
 namespace RPG_Inventory_Remake
 {
@@ -152,7 +152,25 @@ namespace RPG_Inventory_Remake
             selPawn.jobs.TryTakeOrderedJob(job, JobTag.Misc);
         }
 
-        //private static void InterfaceDrop(Thing t, Pawn selPawn)
+        public static void InterfaceDrop(Thing t, Pawn pawn)
+        {
+            ThingWithComps thingWithComps = t as ThingWithComps;
+            Apparel apparel = t as Apparel;
+            if (apparel != null && pawn.apparel != null && pawn.apparel.WornApparel.Contains(apparel))
+            {
+                pawn.jobs.TryTakeOrderedJob(new Job(JobDefOf.RemoveApparel, apparel));
+            }
+            else if (thingWithComps != null && pawn.equipment != null && pawn.equipment.AllEquipmentListForReading.Contains(thingWithComps))
+            {
+                pawn.jobs.TryTakeOrderedJob(new Job(JobDefOf.DropEquipment, thingWithComps));
+            }
+            else if (!t.def.destroyOnDrop)
+            {
+                pawn.inventory.innerContainer.TryDrop(t, pawn.Position, pawn.Map, ThingPlaceMode.Near, out Thing _);
+            }
+        }
+
+        //public static void InterfaceDropCE(Thing t, Pawn selPawn)
         //{
         //    if (selPawn.HoldTrackerIsHeld(t))
         //        selPawn.HoldTrackerForget(t);
@@ -197,8 +215,73 @@ namespace RPG_Inventory_Remake
         //    }
         //}
 
+        // Serve straight up from source, no idea why it is made private
+        public static void DrawThingRow(RPG_Pawn selPawn, ref float y, float width, Thing thing, bool inventory = false)
+        {
+            Rect rect = new Rect(0f, y, width, 28f);
+            Widgets.InfoCardButton(rect.width - 24f, y, thing);
+            rect.width -= 24f;
+            if (selPawn.CanControl && (inventory || selPawn.CanControlColonist || (selPawn.Pawn.Spawned && !selPawn.Pawn.Map.IsPlayerHome)))
+            {
+                Rect rect2 = new Rect(rect.width - 24f, y, 24f, 24f);
+                TooltipHandler.TipRegion(rect2, "DropThing".Translate());
+                if (Widgets.ButtonImage(rect2, TexButton.Drop))
+                {
+                    SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                    InterfaceDrop(thing, selPawn.Pawn);
+                }
+                rect.width -= 24f;
+            }
+            if (selPawn.CanControlColonist)
+            {
+                if ((thing.def.IsNutritionGivingIngestible || thing.def.IsNonMedicalDrug) && thing.IngestibleNow && selPawn.Pawn.WillEat(thing))
+                {
+                    Rect rect3 = new Rect(rect.width - 24f, y, 24f, 24f);
+                    TooltipHandler.TipRegion(rect3, "ConsumeThing".Translate(thing.LabelNoCount, thing));
+                    if (Widgets.ButtonImage(rect3, TexButton.Ingest))
+                    {
+                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                        InterfaceIngest(thing, selPawn.Pawn);
+                    }
+                }
+                rect.width -= 24f;
+            }
+            Rect rect4 = rect;
+            rect4.xMin = rect4.xMax - 60f;
+            CaravanThingsTabUtility.DrawMass(thing, rect4);
+            rect.width -= 60f;
+            if (Mouse.IsOver(rect))
+            {
+                GUI.color = ITab_Pawn_Gear.HighlightColor;
+                GUI.DrawTexture(rect, TexUI.HighlightTex);
+            }
+            if (thing.def.DrawMatSingle != null && thing.def.DrawMatSingle.mainTexture != null)
+            {
+                Widgets.ThingIcon(new Rect(4f, y, 28f, 28f), thing);
+            }
+            Text.Anchor = TextAnchor.MiddleLeft;
+            GUI.color = ITab_Pawn_Gear.ThingLabelColor;
+            Rect rect5 = new Rect(36f, y, rect.width - 36f, rect.height);
+            string text = thing.LabelCap;
+            Apparel apparel = thing as Apparel;
+            if (apparel != null && selPawn.Pawn.outfits != null && selPawn.Pawn.outfits.forcedHandler.IsForced(apparel))
+            {
+                text = text + ", " + "ApparelForcedLower".Translate();
+            }
+            Text.WordWrap = false;
+            Widgets.Label(rect5, text.Truncate(rect5.width));
+            Text.WordWrap = true;
+            string text2 = thing.DescriptionDetailed;
+            if (thing.def.useHitPoints)
+            {
+                string text3 = text2;
+                text2 = text3 + "\n" + thing.HitPoints + " / " + thing.MaxHitPoints;
+            }
+            TooltipHandler.TipRegion(rect, text2);
+            y += 28f;
+        }
 
-        //public static void DrawThingRow(RPG_Pawn selPawn, ref float y, float width, Thing thing, bool showDropButtonIfPrisoner = false)
+        //public static void DrawThingRowCE(RPG_Pawn selPawn, ref float y, float width, Thing thing, bool showDropButtonIfPrisoner = false)
         //{
 
         //    Rect rect = new Rect(0f, y, width, _thingRowHeight);
@@ -447,7 +530,7 @@ namespace RPG_Inventory_Remake
                     if (Widgets.ButtonImage(rect2, ContentFinder<Texture2D>.Get("UI/Buttons/Drop", true)))
                     {
                         SoundDefOf.Tick_High.PlayOneShotOnCamera(null);
-                        //InterfaceDrop(thing, selPawn.Pawn);
+                        InterfaceDrop(thing, selPawn.Pawn);
                     }
                 }
             }
@@ -497,10 +580,6 @@ namespace RPG_Inventory_Remake
                 {
                     text3 = string.Concat(text3, "\n", "ArmorHeat".Translate(), ":", heat.ToStringPercent());
                 }
-            }
-            else
-            {
-                Log.Message("thing is not Apparel");
             }
             TooltipHandler.TipRegion(rect, text3);
         }
