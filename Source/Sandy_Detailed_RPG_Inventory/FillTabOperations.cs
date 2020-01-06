@@ -22,6 +22,8 @@ namespace RPG_Inventory_Remake
         private const float _startingXforRect = 150f;
 
 
+
+
         private static readonly Color _highlightColor = new Color(0.5f, 0.5f, 0.5f, 1f);
         private static readonly Color _thingLabelColor = new Color(0.9f, 0.9f, 0.9f, 1f);
         private static Vector2 _scrollPosition = Vector2.zero;
@@ -94,8 +96,6 @@ namespace RPG_Inventory_Remake
                 Rect primaryRect = rectForEquipment.NextAvailableRect();
                 GUI.DrawTexture(primaryRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
                 TooltipHandler.TipRegion(primaryRect, "Corgi_PrimaryWeapon".Translate());
-                // TODO remove log.message
-                Log.Message("# of weapons: " + selPawn.Pawn.equipment.AllEquipmentListForReading.Count);
                 foreach (ThingWithComps fireShootingBarrel in selPawn.Pawn.equipment.AllEquipmentListForReading)
                 {
                     if (fireShootingBarrel == selPawn.Pawn.equipment.Primary)
@@ -109,7 +109,8 @@ namespace RPG_Inventory_Remake
                 }
             }
 
-            // Head:200-181, Neck:180-101, Torso:100-51, Waist:50-11, Legs:10-0
+            // List order: Head:200-181, Neck:180-101, Torso:100-51, Waist:50-11, Legs:10-0
+            // Check \steamapps\common\RimWorld\Mods\Core\Defs\Bodies\BodyPartGroups.xml
 
             IEnumerable<Apparel> apparels = from ap in selPawn.Pawn.apparel.WornApparel
                                             orderby ap.def.apparel.bodyPartGroups[0].listOrder descending
@@ -430,8 +431,8 @@ namespace RPG_Inventory_Remake
             if (Utility.ShouldShowOverallArmor(selPawn.Pawn))
             {
                 Widgets.ListSeparator(ref rollingY, viewRect.width, "OverallArmor".Translate());
-                Utility.TryDrawOverallArmor(selPawn.Pawn, ref rollingY, viewRect.width, StatDefOf.ArmorRating_Blunt, "ArmorBlunt".Translate(), " " + "CE_MPa".Translate());
-                Utility.TryDrawOverallArmor(selPawn.Pawn, ref rollingY, viewRect.width, StatDefOf.ArmorRating_Sharp, "ArmorSharp".Translate(), "CE_mmRHA".Translate());
+                Utility.TryDrawOverallArmor(selPawn.Pawn, ref rollingY, viewRect.width, StatDefOf.ArmorRating_Sharp, "ArmorSharp".Translate(), "%");
+                Utility.TryDrawOverallArmor(selPawn.Pawn, ref rollingY, viewRect.width, StatDefOf.ArmorRating_Blunt, "ArmorBlunt".Translate(), "%");
                 Utility.TryDrawOverallArmor(selPawn.Pawn, ref rollingY, viewRect.width, StatDefOf.ArmorRating_Heat, "ArmorHeat".Translate(), "%");
             }
             if (Utility.ShouldShowEquipment(selPawn.Pawn))
@@ -472,6 +473,7 @@ namespace RPG_Inventory_Remake
             GUI.color = Color.white;
             Text.Anchor = TextAnchor.UpperLeft;
         }
+
         public static void DrawGreedy_CE(RPG_Pawn selPawn, Vector2 size)
         {
             // get the inventory comp

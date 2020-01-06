@@ -101,7 +101,7 @@ namespace RPG_Inventory_Remake
             Rect rect = new Rect(0f, curY, width, StandardLineHeight);
             string toolTipText = "";
             float armorRating = CalculateArmorByParts(selPawn, stat, ref toolTipText, unit);
-            if (toolTipText.NullOrEmpty())
+            if (!toolTipText.NullOrEmpty())
             {
                 TooltipHandler.TipRegion(rect, toolTipText);
             }
@@ -262,22 +262,18 @@ namespace RPG_Inventory_Remake
             Text.Anchor = TextAnchor.MiddleLeft;
             GUI.color = ITab_Pawn_Gear.ThingLabelColor;
             Rect rect5 = new Rect(36f, y, rect.width - 36f, rect.height);
+
+            // Draw label for thing in a row
             string text = thing.LabelCap;
             Apparel apparel = thing as Apparel;
-            if (apparel != null && selPawn.Pawn.outfits != null && selPawn.Pawn.outfits.forcedHandler.IsForced(apparel))
-            {
-                text = text + ", " + "ApparelForcedLower".Translate();
-            }
+            bool isForced = apparel != null && selPawn.Pawn.outfits != null &&
+                                       selPawn.Pawn.outfits.forcedHandler.IsForced(apparel);
             Text.WordWrap = false;
             Widgets.Label(rect5, text.Truncate(rect5.width));
             Text.WordWrap = true;
-            string text2 = thing.DescriptionDetailed;
-            if (thing.def.useHitPoints)
-            {
-                string text3 = text2;
-                text2 = text3 + "\n" + thing.HitPoints + " / " + thing.MaxHitPoints;
-            }
-            TooltipHandler.TipRegion(rect, text2);
+
+            string tooltipText = TooltipTextForThing(thing, false, isForced);
+            TooltipHandler.TipRegion(rect, tooltipText);
             y += 28f;
         }
 
@@ -500,9 +496,7 @@ namespace RPG_Inventory_Remake
                 }
             }
 
-            float mass = thing.GetStatValue(StatDefOf.Mass, true) * (float)thing.stackCount;
-            string smass = mass.ToString("G") + " kg";
-            string text = thing.LabelCap;
+            
             Rect rect5 = rect.ContractedBy(2f);
             float num2 = rect5.height * ((float)thing.HitPoints / (float)thing.MaxHitPoints);
             rect5.yMin = rect5.yMax - num2;
@@ -541,47 +535,15 @@ namespace RPG_Inventory_Remake
                 GUI.DrawTexture(rect3, ContentFinder<Texture2D>.Get("UI/Icons/Sandy_Tainted_Icon", true));
                 TooltipHandler.TipRegion(rect3, "WasWornByCorpse".Translate());
             }
-            if (apparel != null && selPawn.Pawn.outfits != null && selPawn.Pawn.outfits.forcedHandler.IsForced(apparel))
+            bool isForced = apparel != null && selPawn.Pawn.outfits != null && selPawn.Pawn.outfits.forcedHandler.IsForced(apparel);
+            if (isForced)
             {
-                text = text + ", " + "ApparelForcedLower".Translate();
                 Rect rect4 = new Rect(rect.x, rect.yMax - 20f, 20f, 20f);
                 GUI.DrawTexture(rect4, ContentFinder<Texture2D>.Get("UI/Icons/Sandy_Forced_Icon", true));
                 TooltipHandler.TipRegion(rect4, "ForcedApparel".Translate());
             }
             Text.WordWrap = true;
-            string text2 = thing.DescriptionDetailed;
-            string text3 = text + "\n" + text2 + "\n" + smass;
-            if (thing.def.useHitPoints)
-            {
-                string text4 = text3;
-                text3 = string.Concat(new object[]
-                {
-                    text4,
-                    "\n",
-                    thing.HitPoints,
-                    " / ",
-                    thing.MaxHitPoints
-                });
-            }
-            if (thing is Apparel app)
-            {
-                float sharp = app.GetStatValue(StatDefOf.ArmorRating_Sharp);
-                float blunt = app.GetStatValue(StatDefOf.ArmorRating_Blunt);
-                float heat = app.GetStatValue(StatDefOf.ArmorRating_Heat);
-                if (sharp > 0.005)
-                {
-                    text3 = string.Concat(text3, "\n", "ArmorSharp".Translate(), ":", sharp.ToStringPercent());
-                }
-                if (blunt > 0.005)
-                {
-                    text3 = string.Concat(text3, "\n", "ArmorBlunt".Translate(), ":", blunt.ToStringPercent());
-                }
-                if (heat > 0.005)
-                {
-                    text3 = string.Concat(text3, "\n", "ArmorHeat".Translate(), ":", heat.ToStringPercent());
-                }
-            }
-            TooltipHandler.TipRegion(rect, text3);
+            TooltipHandler.TipRegion(rect, TooltipTextForThing(thing, true, isForced));
         }
 
         public static void TryDrawComfyTemperatureRange(Pawn pawn, Rect rect)
@@ -645,11 +607,14 @@ namespace RPG_Inventory_Remake
                         }
                     }
                     float eArmorForPart = allParts[i].coverageAbs * (1 - effectivePen);
-                    if (eArmorForPart > 0.005)
+                    if (allParts[i].depth == BodyPartDepth.Outside &&
+                                            (allParts[i].coverage >= 0.1 ||
+                                             allParts[i].def == BodyPartDefOf.Eye ||
+                                             allParts[i].def == BodyPartDefOf.Neck))
                     {
                         // UNDONE: Armor values for part are off
                         text += allParts[i].LabelCap + ": ";
-                        text += FormatArmorValue(eArmorForPart * 2, unit) + "\n";
+                        text += FormatArmorValue((1 - effectivePen) * 2, unit) + "\n";
                     }
                     effectiveArmor += eArmorForPart;
                 }
@@ -760,6 +725,53 @@ namespace RPG_Inventory_Remake
                 return temp;
             }
             return curr;
+        }
+
+        public static string TooltipTextForThing(Thing thing, bool labelCap, bool isForced)
+        {
+            string text = "";
+            if (labelCap)
+            {
+                text = thing.LabelCap;
+                if (isForced)
+                {
+                    text += ", " + "ApparelForcedLower".Translate();
+                }
+            }
+            text += thing.DescriptionDetailed;
+
+             // hit points
+            if (thing.def.useHitPoints)
+            {
+                text += "\n" + thing.HitPoints + " / " + thing.MaxHitPoints;
+            }
+            // mass
+            string mass = (thing.GetStatValue(StatDefOf.Mass, true) * (float)thing.stackCount)
+                            .ToString("G") + " kg";
+            text += "\n" + mass;
+
+            if (thing is Apparel app)
+            {
+                text += "\n";
+                float sharp = app.GetStatValue(StatDefOf.ArmorRating_Sharp);
+                float blunt = app.GetStatValue(StatDefOf.ArmorRating_Blunt);
+                float heat = app.GetStatValue(StatDefOf.ArmorRating_Heat);
+                if (sharp > 0.005)
+                {
+                    // string.Concat has a minor performance advantage over the good old fashion +
+                    // no need for premature optimization, just a note
+                    text = string.Concat(text, "\n", "ArmorSharp".Translate(), ":", sharp.ToStringPercent());
+                }
+                if (blunt > 0.005)
+                {
+                    text = string.Concat(text, "\n", "ArmorBlunt".Translate(), ":", blunt.ToStringPercent());
+                }
+                if (heat > 0.005)
+                {
+                    text = string.Concat(text, "\n", "ArmorHeat".Translate(), ":", heat.ToStringPercent());
+                }
+            }
+            return text;
         }
     }
 }
