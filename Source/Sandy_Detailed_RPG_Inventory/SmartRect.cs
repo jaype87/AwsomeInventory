@@ -120,7 +120,7 @@ namespace RPG_Inventory_Remake
                     x_leftCurPosition -= (WidthGap + width);
                     return new Rect(x_leftCurPosition, y, width, height);
                 }
-                Log.Warning("Failed to draw rect on the left.");
+                //Log.Warning("Failed to draw rect on the left.");
             }
 
             if (x_rightEdge > x_rightCurPosition + WidthGap + width)
@@ -129,7 +129,7 @@ namespace RPG_Inventory_Remake
                 x_rightCurPosition += (WidthGap + width);
                 return new Rect(x_temp, y, width, height);
             }
-            Log.Warning("Failed to draw rect on the right.");
+            //Log.Warning("Failed to draw rect on the right.");
             return default;
         }
 

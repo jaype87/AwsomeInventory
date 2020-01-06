@@ -219,6 +219,7 @@ namespace RPG_Inventory_Remake
         public static void DrawThingRow(RPG_Pawn selPawn, ref float y, float width, Thing thing, bool inventory = false)
         {
             Rect rect = new Rect(0f, y, width, 28f);
+
             Widgets.InfoCardButton(rect.width - 24f, y, thing);
             rect.width -= 24f;
             if (selPawn.CanControl && (inventory || selPawn.CanControlColonist || (selPawn.Pawn.Spawned && !selPawn.Pawn.Map.IsPlayerHome)))
@@ -273,7 +274,10 @@ namespace RPG_Inventory_Remake
             Text.WordWrap = true;
 
             string tooltipText = TooltipTextForThing(thing, false, isForced);
+
+            RM_ContextualMenu(selPawn, thing, rect);
             TooltipHandler.TipRegion(rect, tooltipText);
+
             y += 28f;
         }
 
@@ -496,7 +500,7 @@ namespace RPG_Inventory_Remake
                 }
             }
 
-            
+
             Rect rect5 = rect.ContractedBy(2f);
             float num2 = rect5.height * ((float)thing.HitPoints / (float)thing.MaxHitPoints);
             rect5.yMin = rect5.yMax - num2;
@@ -544,6 +548,8 @@ namespace RPG_Inventory_Remake
             }
             Text.WordWrap = true;
             TooltipHandler.TipRegion(rect, TooltipTextForThing(thing, true, isForced));
+
+            RM_ContextualMenu(selPawn, thing, rect);
         }
 
         public static void TryDrawComfyTemperatureRange(Pawn pawn, Rect rect)
@@ -740,7 +746,7 @@ namespace RPG_Inventory_Remake
             }
             text += thing.DescriptionDetailed;
 
-             // hit points
+            // hit points
             if (thing.def.useHitPoints)
             {
                 text += "\n" + thing.HitPoints + " / " + thing.MaxHitPoints;
@@ -772,6 +778,79 @@ namespace RPG_Inventory_Remake
                 }
             }
             return text;
+        }
+
+        // Right mouse contextual menu when click on item
+        public static bool RM_ContextualMenu(RPG_Pawn selPawn, Thing thing, Rect rect)
+        {
+            if (Widgets.ButtonInvisible(rect) && Event.current.button == 1)
+            {
+                List<FloatMenuOption> floatOptionList = new List<FloatMenuOption>();
+
+                // Equip option
+                if (thing.TryGetComp<CompEquippable>() != null)
+                {
+                    if (thing is ThingWithComps equipment)
+                    {
+                        if (equipment != null)
+                        {
+                            string labelShort = equipment.LabelShort;
+                            FloatMenuOption equipOption;
+                            // Add put away option
+                            if (selPawn.Pawn.equipment.AllEquipmentListForReading.Contains(equipment) && selPawn.Pawn.inventory != null)
+                            {
+                                // TODO Add translation
+                                equipOption = new FloatMenuOption("Corgi_PutAway".Translate(labelShort),
+                                    new Action(delegate
+                                    {
+                                        selPawn.Pawn.equipment.TryTransferEquipmentToContainer(selPawn.Pawn.equipment.Primary, selPawn.Pawn.inventory.innerContainer);
+                                    }));
+                            }
+
+                            else if (equipment.def.IsWeapon && selPawn.Pawn.story.WorkTagIsDisabled(WorkTags.Violent))
+                            {
+                                equipOption = new FloatMenuOption("CannotEquip".Translate(labelShort) + " (" + "IsIncapableOfViolenceLower".Translate(selPawn.Pawn.LabelShort, selPawn.Pawn) + ")", null);
+                            }
+                            else if (!selPawn.Pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
+                            {
+                                equipOption = new FloatMenuOption("CannotEquip".Translate(labelShort) + " (" + "Incapable".Translate() + ")", null);
+                            }
+                            // Add equip option
+                            else
+                            {
+                                string text5 = "Equip".Translate(labelShort);
+                                if (equipment.def.IsRangedWeapon && selPawn.Pawn.story != null && selPawn.Pawn.story.traits.HasTrait(TraitDefOf.Brawler))
+                                {
+                                    text5 = text5 + " " + "EquipWarningBrawler".Translate();
+                                }
+                                equipOption = new FloatMenuOption(text5, delegate
+                                {
+                                    if (selPawn.Pawn.CurJob != null) { selPawn.Pawn.jobs.StopAll(); }
+                                    // put away equiped weapon first
+                                    if (selPawn.Pawn.equipment.Primary != null)
+                                    {
+                                        if (!selPawn.Pawn.equipment.TryTransferEquipmentToContainer(selPawn.Pawn.equipment.Primary, selPawn.Pawn.inventory.innerContainer))
+                                        {
+                                            // if failed, drop the weapon
+                                            selPawn.Pawn.equipment.MakeRoomFor(equipment);
+                                        }
+                                    }
+
+                                    // unregister new weapon in the inventory list and register it in equipment list 
+                                    selPawn.Pawn.equipment.GetDirectlyHeldThings().TryAddOrTransfer(equipment);
+                                });
+                            }
+                            floatOptionList.Add(equipOption);
+                        }
+                    }
+                }
+
+
+                FloatMenu window = new FloatMenu(floatOptionList, "", false);
+                Find.WindowStack.Add(window);
+                return true;
+            }
+            return false;
         }
     }
 }
