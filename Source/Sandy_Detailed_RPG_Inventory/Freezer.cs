@@ -64,5 +64,69 @@ namespace RPG_Inventory_for_CE
                 curY += _standardLineHeight;
             }
         }
+
+        Toil TaskCounts = new Toil()
+        {
+            initAction = delegate ()
+            {
+                List<ThingWithComps> eqList = new List<ThingWithComps>();
+                List<Apparel> appList = new List<Apparel>();
+                List<Thing> itemList = new List<Thing>();
+
+                if (pawn.equipment != null)
+                {
+                    eqList = pawn.equipment.AllEquipmentListForReading.FindAll(
+                        eq =>
+                        {
+                            RPGI_Unload temp = eq.TryGetComp<RPGI_Unload>();
+                            if (temp != null && temp.UnloadUrgently == true)
+                            {
+                                return true;
+                            }
+                            return false;
+                        });
+                }
+
+                if (pawn.apparel != null)
+                {
+                    appList = pawn.apparel.WornApparel.FindAll(
+                        a =>
+                        {
+                            RPGI_Unload temp = a.TryGetComp<RPGI_Unload>();
+                            if (temp != null && temp.UnloadUrgently == true)
+                            {
+                                return true;
+                            }
+                            return false;
+                        });
+                }
+
+                if (pawn.inventory != null)
+                {
+                    itemList = pawn.inventory.innerContainer.InnerListForReading.FindAll(
+                        a =>
+                        {
+                            RPGI_Unload temp = a.TryGetComp<RPGI_Unload>();
+                            if (temp != null && temp.UnloadUrgently == true)
+                            {
+                                return true;
+                            }
+                            return false;
+                        });
+                }
+
+                if (eqList.Count != 0 || appList.Count != 0 || itemList.Count != 0)
+                {
+                    eqRoller = eqList.GetEnumerator();
+                    appRoller = appList.GetEnumerator();
+                    itemRoller = itemList.GetEnumerator();
+                    JumpToToil(Reserve);
+                }
+                else
+                {
+                    pawn.jobs.EndCurrentJob(JobCondition.Succeeded);
+                }
+            }
+            };
     }
 }

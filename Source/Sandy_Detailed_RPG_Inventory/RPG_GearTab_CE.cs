@@ -10,6 +10,7 @@ namespace RPG_Inventory_Remake
 {
     public class RPG_GearTab_CE : ITab_Pawn_Gear
     {
+        // TODO set a static constructor to queue up unload jobs after game restarts
         private Vector2 scrollPosition = Vector2.zero;
         private const float TopPadding = 20f;
         private const float ThingIconSize = 28f;

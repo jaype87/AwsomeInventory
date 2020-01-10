@@ -51,6 +51,10 @@
     <OutputPath>..\..\Assemblies\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Harmony\net35\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>M:\Games\Rimworld_dev\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
@@ -72,8 +76,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CorgiBodyPartGroupsDefOf.cs" />
+    <Compile Include="HarmonyPatches\Game_FinalizeInit_RPGI_Patch.cs" />
+    <Compile Include="HarmonyPatches\JobDriver_Cleanup_RPGI_Patch.cs" />
+    <Compile Include="HarmonyPatches\Pawn_CarryTracker_CarriedThing_RPGI_Patch.cs" />
+    <Compile Include="Jobs\CompRPGIUnload.cs" />
+    <Compile Include="Jobs\JobDriver_RPGI_Unload.cs" />
+    <Compile Include="Jobs\RPG_JobDefOf.cs" />
     <Compile Include="FillTabOperations.cs" />
     <None Include="Freezer.cs" />
+    <Compile Include="Jobs\JobGiver_Unload.cs" />
     <Compile Include="RPG_GearTab_CE.cs" />
     <None Include="RPG_GearTab.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -87,10 +98,14 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\Defs\JobDefs\Jobs_RPGInventory.xml">
+      <Link>Defs\Jobs_RPGInventory.xml</Link>
+    </Content>
     <Content Include="..\..\Languages\English\Keyed\Sandy_Detailed_RPG_Gear.xml">
       <Link>Language\Sandy_Detailed_RPG_Gear.xml</Link>
     </Content>
-    <Content Include="Dressing Code in Rimworld.txt" />
+    <Content Include="Documents\Dressing Code in Rimworld.txt" />
+    <Content Include="Documents\Test Plan.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

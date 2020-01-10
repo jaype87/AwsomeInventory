@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using CombatExtended;
 using UnityEngine;
 using RimWorld;
 using Verse;
+using Harmony;
 
 namespace RPG_Inventory_Remake
 {
@@ -397,6 +399,13 @@ namespace RPG_Inventory_Remake
             }
             #endregion Draw Inventory
 
+            // Add support for smart medicine
+            if (AccessTools.TypeByName("SmartMedicine.FillTab_Patch") is Type smartMedicine)
+            {
+                smartMedicine.GetMethod("DrawStockUpButton", BindingFlags.Public | BindingFlags.Static)
+                .Invoke(null, new object[] { selPawn.Pawn, rollingY, viewRect.width });
+            }
+
             if (Event.current.type == EventType.Layout)
             {
                 _scrollViewHeight = rollingY + 30f;
@@ -469,6 +478,14 @@ namespace RPG_Inventory_Remake
                     Utility.DrawThingRow(selPawn, ref rollingY, viewRect.width, workingInvList[i].GetInnerIfMinified(), true);
                 }
             }
+
+            // Add support for smart medicine
+            if (AccessTools.TypeByName("SmartMedicine.FillTab_Patch")is Type smartMedicine)
+            {
+                smartMedicine.GetMethod("DrawStockUpButton", BindingFlags.Public | BindingFlags.Static)
+                .Invoke(null, new object[] { selPawn.Pawn, rollingY, viewRect.width });
+            }
+
             if (Event.current.type == EventType.Layout)
             {
                 _scrollViewHeight = rollingY + 30f;
