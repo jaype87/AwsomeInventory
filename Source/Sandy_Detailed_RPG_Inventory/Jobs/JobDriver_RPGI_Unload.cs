@@ -1,0 +1,148 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Verse;
+using Verse.AI;
+using RimWorld;
+using Harmony;
+
+namespace RPG_Inventory_Remake
+{
+    // Check JobDriver_HaulToCell for more information
+    // TODO Add job cleanup to remove items from carry_tracker
+    public class JobDriver_RPGI_Unload : JobDriver
+    {
+        private int duration;
+
+        public override string GetReport()
+        {
+            Thing thing = null;
+            if (job.def == RPGI_JobDefOf.RPGI_Fake)
+            {
+                return "ReportHauling".Translate(TargetThingA.Label, TargetThingA);
+            }
+            IntVec3 cell = job.targetB.Cell;
+            if (pawn.CurJob == job && pawn.carryTracker.CarriedThing != null)
+            {
+                thing = pawn.carryTracker.CarriedThing;
+            }
+            if (thing == null)
+            {
+                return "ReportHaulingUnknown".Translate();
+            }
+            string text = null;
+            SlotGroup slotGroup = cell.GetSlotGroup(base.Map);
+            if (slotGroup != null)
+            {
+                text = slotGroup.parent.SlotYielderLabel();
+            }
+            if (text != null)
+            {
+                return "ReportHaulingTo".Translate(thing.Label, text.Named("DESTINATION"), thing.Named("THING"));
+            }
+            return "ReportHauling".Translate(thing.Label, thing);
+        }
+
+        public override bool TryMakePreToilReservations(bool errorOnFailed)
+        {
+
+            Pawn pawn = base.pawn;
+            LocalTargetInfo target = base.job.GetTarget(TargetIndex.B);
+            Job job = base.job;
+            bool errorOnFailed2 = errorOnFailed;
+            bool result = false;
+
+            if (!target.Cell.IsValidStorageFor(pawn.Map, pawn.carryTracker.CarriedThing))
+            {
+                StoragePriority currentPriority = StoreUtility.CurrentStoragePriorityOf(TargetThingA);
+                if (!StoreUtility.TryFindBestBetterStorageFor(TargetThingA, pawn, pawn.Map, currentPriority, pawn.Faction, out IntVec3 foundCell, out IHaulDestination haulDestination))
+                {
+                    return false;
+                }
+
+            }
+
+
+            if (pawn.Reserve(target, job, 1, -1, null, errorOnFailed2))
+            {
+                pawn = base.pawn;
+                target = base.job.GetTarget(TargetIndex.A);
+                job = base.job;
+                errorOnFailed2 = errorOnFailed;
+                result = pawn.Reserve(target, job, 1, -1, null, errorOnFailed2);
+            }
+            Log.Message("Make Reservation result: " + result);
+            return result;
+        }
+
+        public override void Notify_Starting()
+        {
+            base.Notify_Starting();
+            AddFinishAction(() => Log.Message("Job finished"));
+            // NOTE remove log
+            Log.Message("Notify Starting");
+            if (TargetThingA is Apparel apparel)
+            {
+                // time needed to unequip
+                duration = (int)(apparel.GetStatValue(StatDefOf.EquipDelay) * 60f);
+            }
+            else if (TargetThingA is ThingWithComps equipment)
+            {
+                if (pawn.equipment.Contains(equipment))
+                {
+                    // vanilla time to drop any equipment
+                    duration = 30;
+                }
+            }
+        }
+
+        private void JobCleanup()
+        {
+            if (TargetThingA is Thing thing)
+            {
+                if (pawn.carryTracker.innerContainer.Remove(thing))
+                {
+                    if (thing is Apparel apparel)
+                    {
+                    }
+                }
+            }
+        }
+
+        protected override IEnumerable<Toil> MakeNewToils()
+        {
+            Log.Message("Make new toils");
+            Log.Message("Carried Thing: " + pawn.carryTracker.CarriedThing.LabelCap);
+            this.FailOnDestroyedOrNull(TargetIndex.A);
+            this.FailOnBurningImmobile(TargetIndex.B);
+
+            Toil carryToCell, timeToUnequip, placeThing;
+            timeToUnequip = placeThing = null;
+
+            // Use CarriedThing to validate state
+            carryToCell = Toils_Haul.CarryHauledThingToCell(TargetIndex.B);
+            // When set true, it allows toils to be execute consecutively in one tick
+            // Check JobDirver.DriverTick() for more information
+            carryToCell.atomicWithPrevious = true;
+            carryToCell.AddPreInitAction(() => Log.Message("Pre Carry to cell"));
+
+            timeToUnequip = Toils_General.Wait(duration).WithProgressBarToilDelay(TargetIndex.A);
+            timeToUnequip.JumpIf(() => duration == 0, placeThing);
+            timeToUnequip.atomicWithPrevious = true;
+
+
+            placeThing = Toils_Haul.PlaceHauledThingInCell(TargetIndex.B, carryToCell, storageMode: true);
+            placeThing.AddPreInitAction(delegate ()
+            {
+                // Move things to carry tracker
+                TargetThingA.holdingOwner.TryTransferToContainer(TargetThingA, pawn.carryTracker.innerContainer);
+            });
+            placeThing.atomicWithPrevious = true;
+
+            yield return carryToCell;
+            yield return timeToUnequip;
+            yield return placeThing;
+        }
+    }
+}

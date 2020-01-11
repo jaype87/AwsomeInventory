@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <JobDef>
+        <defName>RPGI_Unload</defName>
+        <driverClass>RPG_Inventory_Remake.JobDriver_RPGI_Unload</driverClass>
+        <reportString>Unloading TargetA.</reportString>
+        <suspendable>false</suspendable>
+        <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
+    </JobDef>
+
+    <JobDef>
+        <defName>RPGI_Fake</defName>
+        <driverClass>RPG_Inventory_Remake.JobDriver_RPGI_Unload</driverClass>
+        <reportString>Unloading TargetA.</reportString>
+        <suspendable>false</suspendable>
+        <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
+    </JobDef>
+</Defs>
