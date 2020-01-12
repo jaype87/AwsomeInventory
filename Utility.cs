@@ -9,7 +9,7 @@ using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
 using Harmony;
-//using CombatExtended;
+using CombatExtended;
 
 namespace RPG_Inventory_Remake
 {
@@ -300,7 +300,7 @@ namespace RPG_Inventory_Remake
                             InterfaceUnloadNow(thingWithComps, selPawn.Pawn);
                         }
                     }
-                    
+
                 }
             }
             if (selPawn.CanControlColonist)
@@ -501,7 +501,7 @@ namespace RPG_Inventory_Remake
         }
 
         /// <summary>
-        /// Not a very effective way to get armor number, but one with most compatibility. Only if modders add
+        /// Not a very effective way to get armor number, but one with most compatibility, only if modders add
         /// the "ListOrder" tag and correct value to their new "BodyPartGroup" element in xml.
         /// </summary>
         /// <param name="pawn"></param>
@@ -546,6 +546,41 @@ namespace RPG_Inventory_Remake
 
             return effectiveArmor;
         }
+
+        public static float CalculateArmorByPartsCE(Pawn pawn, StatDef stat, ref string text, string unit)
+        {
+            text = "";
+            float num = 0f;
+            List<Apparel> wornApparel = pawn.apparel.WornApparel;
+            for (int i = 0; i < wornApparel.Count; i++)
+            {
+                num += wornApparel[i].GetStatValue(stat, true) * wornApparel[i].def.apparel.HumanBodyCoverage;
+            }
+            if (num > 0.005f)
+            {
+                List<BodyPartRecord> bpList = pawn.RaceProps.body.AllParts;
+                for (int i = 0; i < bpList.Count; i++)
+                {
+                    float armorValue = 0f;
+                    BodyPartRecord part = bpList[i];
+                    if (part.depth == BodyPartDepth.Outside && (part.coverage >= 0.1 || (part.def == BodyPartDefOf.Eye || part.def == BodyPartDefOf.Neck)))
+                    {
+                        text += part.LabelCap + ": ";
+                        for (int j = wornApparel.Count - 1; j >= 0; j--)
+                        {
+                            Apparel apparel = wornApparel[j];
+                            if (apparel.def.apparel.CoversBodyPart(part))
+                            {
+                                armorValue += apparel.GetStatValue(stat, true);
+                            }
+                        }
+                        text += formatArmorValue(armorValue, unit) + "\n";
+                    }
+                }
+            }
+            return num;
+        }
+
 
         public static void DrawArmorRatingWithText(Rect pos, string label, float armorRating, string unit)
         {
@@ -613,17 +648,26 @@ namespace RPG_Inventory_Remake
             }));
         }
 
-        public static void TryDrawOverallArmorWithImage(Pawn pawn, Rect rect, StatDef stat, string label, Texture image)
+        public static void TryDrawOverallArmorWithImage(Pawn pawn, Rect rect, StatDef stat, string label, Texture image, bool CE = false, string unit = "%")
         {
             string text = "";
-            float num = CalculateArmorByParts(pawn, stat, ref text, "%");
+            float num = CE ? CalculateArmorByPartsCE(pawn, stat, ref text, unit)
+                           : CalculateArmorByParts(pawn, stat, ref text, unit);
             // draw thumbmail
             Rect rect1 = new Rect(rect.x, rect.y, 24f, 27f);
             GUI.DrawTexture(rect1, image);
             TooltipHandler.TipRegion(rect1, label);
             // draw values
-            Rect rect2 = new Rect(rect.x + 60f, rect.y + 3f, 104f, 24f);
-            Widgets.Label(rect2, num.ToStringPercent());
+            Rect rect2 = new Rect(rect.x + 34f, rect.y + 3f, 104f, 24f);
+            num = (float)Math.Round(num, 1, MidpointRounding.AwayFromZero);
+            if (CE)
+            {
+                Widgets.Label(rect2, string.Concat(num, unit));
+            }
+            else
+            {
+                Widgets.Label(rect2, num.ToStringPercent());
+            }
             TooltipHandler.TipRegion(rect2, text);
         }
 
@@ -680,19 +724,41 @@ namespace RPG_Inventory_Remake
                 float sharp = app.GetStatValue(StatDefOf.ArmorRating_Sharp);
                 float blunt = app.GetStatValue(StatDefOf.ArmorRating_Blunt);
                 float heat = app.GetStatValue(StatDefOf.ArmorRating_Heat);
-                if (sharp > 0.005)
+                if (!RPG_GearTab_CE.IsCE)
                 {
-                    // string.Concat has a minor performance advantage over the good old fashion +
-                    // no need for premature optimization, just a note
-                    text = string.Concat(text, "\n", "ArmorSharp".Translate(), ":", sharp.ToStringPercent());
+                    if (sharp > 0.005)
+                    {
+                        // string.Concat has a minor performance advantage over the good old fashion +
+                        // no need for premature optimization, just a note
+                        text = string.Concat(text, "\n", "ArmorSharp".Translate(), ":", sharp.ToStringPercent());
+                    }
+                    if (blunt > 0.005)
+                    {
+                        text = string.Concat(text, "\n", "ArmorBlunt".Translate(), ":", blunt.ToStringPercent());
+                    }
+                    if (heat > 0.005)
+                    {
+                        text = string.Concat(text, "\n", "ArmorHeat".Translate(), ":", heat.ToStringPercent());
+                    }
                 }
-                if (blunt > 0.005)
+                else
                 {
-                    text = string.Concat(text, "\n", "ArmorBlunt".Translate(), ":", blunt.ToStringPercent());
-                }
-                if (heat > 0.005)
-                {
-                    text = string.Concat(text, "\n", "ArmorHeat".Translate(), ":", heat.ToStringPercent());
+                    if (blunt > 0.005)
+                    {
+                        // string.Concat has a minor performance advantage over the good old fashion +
+                        // no need for premature optimization, just a note
+                        text = string.Concat(text, "\n", "ArmorBlunt".Translate(), ":",
+                            Math.Round(blunt, 2, MidpointRounding.AwayFromZero), " " + "CE_MPa".Translate());
+                    }
+                    if (sharp > 0.005)
+                    {
+                        text = string.Concat(text, "\n", "ArmorSharp".Translate(), ":",
+                            Math.Round(sharp, 2, MidpointRounding.AwayFromZero), "CE_mmRHA".Translate());
+                    }
+                    if (heat > 0.005)
+                    {
+                        text = string.Concat(text, "\n", "ArmorHeat".Translate(), ":", heat.ToStringPercent());
+                    }
                 }
             }
             return text;
@@ -877,6 +943,16 @@ namespace RPG_Inventory_Remake
             Traverse.Create(pawn).Field("apparel").Field("wornApparel")
                 .Method("TryAdd", new Type[] { typeof(Thing), typeof(bool) }, null)
                 .GetValue(newApparel, false);
+        }
+
+        private static string formatArmorValue(float value, string unit)
+        {
+            var asPercent = unit.Equals("%");
+            if (asPercent)
+            {
+                value *= 100f;
+            }
+            return value.ToStringByStyle(asPercent ? ToStringStyle.FloatMaxOne : ToStringStyle.FloatMaxTwo) + unit;
         }
     }
 }

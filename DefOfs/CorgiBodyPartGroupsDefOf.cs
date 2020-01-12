@@ -9,6 +9,15 @@ namespace RPG_Inventory_Remake
     {
         // Comments below are formatted with "Better Comments" in Visual Studio Marketplace
 
+        //    UpperHead = 200, FullHead = 199, Eyes = 198, Teeth = 197, Mouth = 196,
+        //    Neck = 180,
+        //    Torso = 100, Arms = 90, LeftArm = 89, RightArm = 88,
+        //    Shoulders = 85, LeftShoulder = 84, RightShoulder = 83,
+        //    Hands = 80, LeftHand = 79, RightHand = 78,
+        //    Waist = 50,
+        //    Legs = 10,
+        //    Feet = 9
+
         //! BodyPargGroupDefs below are also declared in C# RimWorld.BodyPartGroupDefOf
         public static BodyPartGroupDef UpperHead;
         public static BodyPartGroupDef FullHead;

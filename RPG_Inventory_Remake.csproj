@@ -75,7 +75,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CorgiBodyPartGroupsDefOf.cs" />
+    <Compile Include="DefOfs\CE_ApparelLayerDefOf.cs" />
+    <Compile Include="DefOfs\CorgiBodyPartGroupsDefOf.cs" />
     <Compile Include="HarmonyPatches\AddHumanlikeOrders_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\Game_FinalizeInit_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\JobDriver_Cleanup_RPGI_Patch.cs" />
@@ -102,14 +103,16 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\Defs\JobDefs\Jobs_RPGInventory.xml">
-      <Link>Defs\Jobs_RPGInventory.xml</Link>
-    </Content>
     <Content Include="..\..\Languages\English\Keyed\Sandy_Detailed_RPG_Gear.xml">
       <Link>Language\Sandy_Detailed_RPG_Gear.xml</Link>
     </Content>
+    <Content Include="Defs\ApparelLayerDefs.xml" />
+    <Content Include="Defs\Jewelry_compat\BodyPartGroups.xml" />
+    <Content Include="Defs\JobDefs\Jobs_RPGInventory.xml" />
     <Content Include="Documents\Dressing Code in Rimworld.txt" />
     <Content Include="Documents\Test Plan.txt" />
+    <Content Include="Patches\Ratkin.xml" />
+    <Content Include="Patches\RPG_Inventory.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

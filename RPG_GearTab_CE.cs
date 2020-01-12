@@ -23,7 +23,7 @@ namespace RPG_Inventory_Remake
 
         //some variables CE used
         #region CE_Field
-
+        public static bool IsCE = false;
         #endregion CE_Field
 
         public RPG_GearTab_CE()
@@ -55,22 +55,23 @@ namespace RPG_Inventory_Remake
             _selPawn = _selPawn ?? new RPG_Pawn(SelPawn, SelThing);
             Text.Font = GameFont.Small;
 
+
             // Draw checkbox option for Jealous
-            Rect rectJealous = new Rect(20f, 0f, 80f, 30f);
+            Rect rectJealous = new Rect(20f, 0f, 160f, 30f);
             if (Widgets.RadioButtonLabeled(rectJealous, "Sandy_Jealous".Translate(), _isJealous))
             {
                 _isGreedy = _isAscetic = false;
                 _isJealous = true;
             }
-            // Draw checkbox option for Greddy
-            Rect rectGreedy = new Rect(140f, 0f, 80f, 30f);
+            // Draw checkbox option for Greedy
+            Rect rectGreedy = new Rect(220f, 0f, 120f, 30f);
             if (Widgets.RadioButtonLabeled(rectGreedy, "Sandy_Greedy".Translate(), _isGreedy))
             {
                 _isJealous = _isAscetic = false;
                 _isGreedy = true;
             }
             // Draw checkbox option for Ascetic
-            Rect rectAscetic = new Rect(260f, 0f, 80f, 30f);
+            Rect rectAscetic = new Rect(380f, 0f, 80f, 30f);
             if (Widgets.RadioButtonLabeled(rectAscetic, "Sandy_Ascetic".Translate(), _isAscetic))
             {
                 _isJealous = _isGreedy = false;
@@ -86,21 +87,43 @@ namespace RPG_Inventory_Remake
             //Rect viewRect = new Rect(0f, 0f, position.width - 20f, this.scrollViewHeight);
             //Widgets.BeginScrollView(outerRect, ref this.scrollPosition, viewRect, true);
 
-            if (_isJealous)
+            if (!IsCE)
             {
-                FillTabOperations.DrawJealous(_selPawn, this.size);
-            }
-            else if (_isGreedy)
-            {
-                FillTabOperations.DrawGreedy(_selPawn, this.size);
-            }
-            else if (_isAscetic)
-            {
-                FillTabOperations.DrawAscetic();
+                if (_isJealous)
+                {
+                    FillTabOperations.DrawJealous(_selPawn, this.size);
+                }
+                else if (_isGreedy)
+                {
+                    FillTabOperations.DrawGreedy(_selPawn, this.size);
+                }
+                else if (_isAscetic)
+                {
+                    FillTabOperations.DrawAscetic();
+                }
+                else
+                {
+                    throw new InvalidOperationException("No Display Option is chosen.");
+                }
             }
             else
             {
-                throw new InvalidOperationException("No Display Option is chosen.");
+                if (_isJealous)
+                {
+                    FillTabOperations.DrawJealousCE(_selPawn, this.size);
+                }
+                else if (_isGreedy)
+                {
+                    FillTabOperations.DrawGreedyCE(_selPawn, this.size);
+                }
+                else if (_isAscetic)
+                {
+                    FillTabOperations.DrawAscetic();
+                }
+                else
+                {
+                    throw new InvalidOperationException("No Display Option is chosen.");
+                }
             }
         }
     }
