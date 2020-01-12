@@ -389,7 +389,7 @@ namespace RPG_Inventory_Remake
                     rollingY = rectForEquipment.Rect.yMax;
                 }
                 rollingY += Utility.StandardLineHeight;
-                Widgets.ListSeparator(ref rollingY, viewRect.width, "Inventory".Translate());
+
                 workingInvList.Clear();
                 workingInvList.AddRange(selPawn.Pawn.inventory.innerContainer);
                 for (int i = 0; i < workingInvList.Count; i++)
@@ -480,7 +480,7 @@ namespace RPG_Inventory_Remake
             }
 
             // Add support for smart medicine
-            if (AccessTools.TypeByName("SmartMedicine.FillTab_Patch")is Type smartMedicine)
+            if (AccessTools.TypeByName("SmartMedicine.FillTab_Patch") is Type smartMedicine)
             {
                 smartMedicine.GetMethod("DrawStockUpButton", BindingFlags.Public | BindingFlags.Static)
                 .Invoke(null, new object[] { selPawn.Pawn, rollingY, viewRect.width });
@@ -526,6 +526,8 @@ namespace RPG_Inventory_Remake
                 // draw bars
                 Utility_Loadouts.DrawBar(bulkRect, comp.currentBulk, comp.capacityBulk, "CE_Bulk".Translate(), selPawn.Pawn.GetBulkTip());
                 Utility_Loadouts.DrawBar(weightRect, comp.currentWeight, comp.capacityWeight, "CE_Weight".Translate(), selPawn.Pawn.GetWeightTip());
+                Utility.DrawBulkBreakdown(selPawn.Pawn, bulkRect);
+                Utility.DrawMassBreakdown(selPawn.Pawn, weightRect);
 
                 // draw text overlays on bars
                 Text.Font = GameFont.Small;
@@ -638,8 +640,6 @@ namespace RPG_Inventory_Remake
                 Apparel apparel = apparelCounter.Current;
                 if (apparel.def.apparel.bodyPartGroups[0].listOrder > CorgiBodyPartGroupDefOf.Neck.listOrder)
                 {
-                    Log.Message("apparel listOrder: " + apparel.def.apparel.bodyPartGroups[0].listOrder);
-                    Log.Message("Neck listOrder: " + CorgiBodyPartGroupDefOf.Neck.listOrder);
                     // Check RimWorld.Pawn_ApparelTracker.Wear() for more information on wearing rules
                     if ((apparel.def.apparel.bodyPartGroups.Contains(CorgiBodyPartGroupDefOf.FullHead) ||
                          apparel.def.apparel.bodyPartGroups.Contains(CorgiBodyPartGroupDefOf.UpperHead)) &&
@@ -896,7 +896,68 @@ namespace RPG_Inventory_Remake
                     rollingY = rectForEquipment.Rect.yMax;
                 }
                 rollingY += Utility.StandardLineHeight;
+                rollingY += 3; // Make a little room for the button.
+                float buttonY = rollingY;
                 Widgets.ListSeparator(ref rollingY, viewRect.width, "Inventory".Translate());
+
+                Loadout curLoadout = selPawn.Pawn.GetLoadout();
+                if (!(curLoadout == null || curLoadout.Slots.NullOrEmpty()))
+                {
+                    Widgets.Label(new Rect(viewRect.width / 4, buttonY, viewRect.width / 4, 26f), selPawn.Pawn.GetLoadout().label);
+                }
+                else
+                {
+                    Widgets.Label(new Rect(viewRect.width / 4, buttonY, viewRect.width / 4, 26f), "CE_NoLoadouts".Translate());
+                }
+
+                // Select loadout button
+                if (Widgets.ButtonText(new Rect(viewRect.width / 2, buttonY, viewRect.width / 4, 26f), Translator.Translate("CE_SelectLoadout"), true, false, true))
+                {
+                    List<Loadout> loadouts = (from l in LoadoutManager.Loadouts
+                                              where !l.defaultLoadout
+                                              select l).ToList();
+                    List<FloatMenuOption> list = new List<FloatMenuOption>();
+                    if (loadouts.Count == 0)
+                    {
+                        list.Add(new FloatMenuOption(Translator.Translate("CE_NoLoadouts"), null));
+                    }
+                    else
+                    {
+                        for (int i = 0; i < loadouts.Count; i++)
+                        {
+                            int local_i = i;
+                            list.Add(new FloatMenuOption(loadouts[i].LabelCap, delegate
+                            {
+                                selPawn.Pawn.SetLoadout(loadouts[local_i]);
+                            }));
+                        }
+                    }
+                    Find.WindowStack.Add(new FloatMenu(list));
+                }
+
+                Rect loadoutButtonRect = new Rect(viewRect.width / 4 * 3, buttonY, viewRect.width / 4, 26f); // button is half the available width...
+                if (Widgets.ButtonText(loadoutButtonRect, "Corgi_OpenLoadout".Translate()))
+                {
+
+
+                    if (selPawn.Pawn.IsColonist && (curLoadout == null || curLoadout.Slots.NullOrEmpty()))
+                    {
+                        Loadout loadout = selPawn.Pawn.GenerateLoadoutFromPawn();
+                        LoadoutManager.AddLoadout(loadout);
+                        selPawn.Pawn.SetLoadout(loadout);
+                    }
+
+                    // Original comments
+                    //// UNDONE ideally we'd open the assign (MainTabWindow_OutfitsAndLoadouts) tab as if the user clicked on it here.
+                    //// (ProfoundDarkness) But I have no idea how to do that just yet.  The attempts I made seem to put the RimWorld UI into a bit of a bad state.
+                    ////                     ie opening the tab like the dialog below.
+                    ////                    Need to understand how RimWorld switches tabs and see if something similar can be done here
+                    ////                     (or just remove the unfinished marker).
+
+                    //// Opening this window is the same way as if from the assign tab so should be correct.
+                    Find.WindowStack.Add(new Dialog_ManageLoadouts(selPawn.Pawn.GetLoadout()));
+                }
+
                 workingInvList.Clear();
                 workingInvList.AddRange(selPawn.Pawn.inventory.innerContainer);
                 for (int i = 0; i < workingInvList.Count; i++)
@@ -996,38 +1057,68 @@ namespace RPG_Inventory_Remake
             }
             if (Utility.ShouldShowInventory(selPawn.Pawn))
             {
-                // get the loadout so we can make a decision to show a button.
-                bool showMakeLoadout = false;
-                Loadout curLoadout = selPawn.Pawn.GetLoadout();
-                if (selPawn.Pawn.IsColonist && (curLoadout == null || curLoadout.Slots.NullOrEmpty()) && (selPawn.Pawn.inventory.innerContainer.Any() || selPawn.Pawn.equipment?.Primary != null))
-                    showMakeLoadout = true;
-
-                if (showMakeLoadout) num += 3; // Make a little room for the button.
+                num += 3; // Make a little room for the button.
 
                 float buttonY = num; // Could be accomplished with seperator being after the button...
 
                 Widgets.ListSeparator(ref num, viewRect.width, "Inventory".Translate());
-
-                // only offer this button if the pawn has no loadout or has the default loadout and there are things/equipment...
-                if (showMakeLoadout)
+                Loadout curLoadout = selPawn.Pawn.GetLoadout();
+                if (!(curLoadout == null || curLoadout.Slots.NullOrEmpty()))
                 {
-                    Rect loadoutButtonRect = new Rect(viewRect.width / 2, buttonY, viewRect.width / 2, 26f); // button is half the available width...
-                    if (Widgets.ButtonText(loadoutButtonRect, "CE_MakeLoadout".Translate()))
+                    Widgets.Label(new Rect(viewRect.width / 4, buttonY, viewRect.width / 4, 26f), selPawn.Pawn.GetLoadout().label);
+                }
+                else
+                {
+                    Widgets.Label(new Rect(viewRect.width / 4, buttonY, viewRect.width / 4, 26f), "CE_NoLoadouts".Translate());
+                }
+
+                // Select loadout button
+                if (Widgets.ButtonText(new Rect(viewRect.width / 2, buttonY, viewRect.width / 4, 26f), Translator.Translate("CE_SelectLoadout"), true, false, true))
+                {
+                    List<Loadout> loadouts = (from l in LoadoutManager.Loadouts
+                                              where !l.defaultLoadout
+                                              select l).ToList();
+                    List<FloatMenuOption> list = new List<FloatMenuOption>();
+                    if (loadouts.Count == 0)
+                    {
+                        list.Add(new FloatMenuOption(Translator.Translate("CE_NoLoadouts"), null));
+                    }
+                    else
+                    {
+                        for (int i = 0; i < loadouts.Count; i++)
+                        {
+                            int local_i = i;
+                            list.Add(new FloatMenuOption(loadouts[i].LabelCap, delegate
+                            {
+                                selPawn.Pawn.SetLoadout(loadouts[local_i]);
+                            }));
+                        }
+                    }
+                    Find.WindowStack.Add(new FloatMenu(list));
+                }
+
+                Rect loadoutButtonRect = new Rect(viewRect.width / 4 * 3, buttonY, viewRect.width / 4, 26f); // button is half the available width...
+                if (Widgets.ButtonText(loadoutButtonRect, "Corgi_OpenLoadout".Translate()))
+                {
+
+
+                    if (selPawn.Pawn.IsColonist && (curLoadout == null || curLoadout.Slots.NullOrEmpty()))
                     {
                         Loadout loadout = selPawn.Pawn.GenerateLoadoutFromPawn();
                         LoadoutManager.AddLoadout(loadout);
                         selPawn.Pawn.SetLoadout(loadout);
-
-                        // UNDONE ideally we'd open the assign (MainTabWindow_OutfitsAndLoadouts) tab as if the user clicked on it here.
-                        // (ProfoundDarkness) But I have no idea how to do that just yet.  The attempts I made seem to put the RimWorld UI into a bit of a bad state.
-                        //                     ie opening the tab like the dialog below.
-                        //                    Need to understand how RimWorld switches tabs and see if something similar can be done here
-                        //                     (or just remove the unfinished marker).
-
-                        // Opening this window is the same way as if from the assign tab so should be correct.
-                        Find.WindowStack.Add(new Dialog_ManageLoadouts(selPawn.Pawn.GetLoadout()));
-
                     }
+
+                    // Original comments
+                    //// UNDONE ideally we'd open the assign (MainTabWindow_OutfitsAndLoadouts) tab as if the user clicked on it here.
+                    //// (ProfoundDarkness) But I have no idea how to do that just yet.  The attempts I made seem to put the RimWorld UI into a bit of a bad state.
+                    ////                     ie opening the tab like the dialog below.
+                    ////                    Need to understand how RimWorld switches tabs and see if something similar can be done here
+                    ////                     (or just remove the unfinished marker).
+
+                    //// Opening this window is the same way as if from the assign tab so should be correct.
+                    Find.WindowStack.Add(new Dialog_ManageLoadouts(selPawn.Pawn.GetLoadout()));
+
                 }
 
                 workingInvList.Clear();

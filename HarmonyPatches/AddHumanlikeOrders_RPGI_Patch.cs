@@ -69,16 +69,16 @@ namespace RPG_Inventory_Remake
                     if (pawn.CanReach(apparel, PathEndMode.ClosestTouch, Danger.Deadly) && !apparel.IsBurning() && ApparelUtility.HasPartsToWear(pawn, apparel.def))
                     {
                         FloatMenuOption optionForced = FloatMenuUtility.DecoratePrioritizedTask(
-                            new FloatMenuOption("Corgi_RPGI".Translate() + " " + "ForceWear".Translate(apparel.LabelShort, apparel), delegate
+                            new FloatMenuOption("Corgi_RPGI".Translate() + " " + "ForceWear".Translate(apparel.LabelShort, apparel) + " " + "Corgi_KeepOldApparel".Translate(), delegate
                             {
                                 apparel.SetForbidden(value: false);
-                                Job jobForced = new Job(RPGI_JobDefOf.RPGI_ApparelOptions, apparel) { count = 1};
+                                Job jobForced = new Job(RPGI_JobDefOf.RPGI_ApparelOptions, apparel) { count = 1 };
                                 pawn.jobs.TryTakeOrderedJob(jobForced);
                             }, MenuOptionPriority.High), pawn, apparel);
                         opts.Add(optionForced);
 
                         FloatMenuOption option = FloatMenuUtility.DecoratePrioritizedTask(
-                            new FloatMenuOption("Corgi_RPGI".Translate() + " " + "Corgi_Wear".Translate(apparel.LabelShort, apparel), delegate
+                            new FloatMenuOption("Corgi_RPGI".Translate() + " " + "Corgi_Wear".Translate(apparel.LabelShort, apparel) + " " + "Corgi_KeepOldApparel".Translate(), delegate
                             {
                                 apparel.SetForbidden(value: false);
                                 Job jobForced = new Job(RPGI_JobDefOf.RPGI_ApparelOptions, apparel) { count = 0 };

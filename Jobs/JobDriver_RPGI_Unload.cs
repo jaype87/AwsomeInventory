@@ -105,6 +105,9 @@ namespace RPG_Inventory_Remake
             timeToUnequip = placeThing = null;
 
             // Use CarriedThing to validate state
+            // There is a Harmony patch to trick the validation to think
+            // the pawn has Carryied Thing on it.
+            // Check Pawn_CarryTracker_CarriedThing_RPGI_Patch.cs
             carryToCell = Toils_Haul.CarryHauledThingToCell(TargetIndex.B);
             // When set true, it allows toils to be execute consecutively in one tick
             // Check JobDirver.DriverTick() for more information
@@ -119,6 +122,7 @@ namespace RPG_Inventory_Remake
             placeThing.AddPreInitAction(delegate ()
             {
                 // Move things to carry tracker
+                // Where things are actually transfered to CarryTracker
                 TargetThingA.holdingOwner.TryTransferToContainer(TargetThingA, pawn.carryTracker.innerContainer);
             });
             placeThing.atomicWithPrevious = true;

@@ -75,10 +75,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\GameComponent_RPGI_Main.cs" />
     <Compile Include="DefOfs\CE_ApparelLayerDefOf.cs" />
     <Compile Include="DefOfs\CorgiBodyPartGroupsDefOf.cs" />
     <Compile Include="HarmonyPatches\AddHumanlikeOrders_RPGI_Patch.cs" />
-    <Compile Include="HarmonyPatches\Game_FinalizeInit_RPGI_Patch.cs" />
+    <None Include="HarmonyPatches\Game_FinalizeInit_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\JobDriver_Cleanup_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\Pawn_CarryTracker_CarriedThing_RPGI_Patch.cs" />
     <Compile Include="Jobs\CompRPGIUnload.cs" />

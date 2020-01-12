@@ -22,19 +22,18 @@ namespace RPG_Inventory_Remake
 
         public static void Postfix(JobCondition condition, JobDriver __instance)
         {
+            // Change item's compProperties unload to false
+            CompRPGIUnload comp = __instance.job.targetA.Thing?.TryGetComp<CompRPGIUnload>();
+            if (comp != null)
+            {
+                comp.Unload = false;
+            }
             if (__instance.job.def == RPGI_JobDefOf.RPGI_Unload)
             {
                 JobGiver_RPGIUnload.JobInProgress = false;
                 Pawn pawn = __instance.pawn;
                 if (condition == JobCondition.Succeeded || condition == JobCondition.Incompletable)
                 {
-                    // Change unloaded item's compProperties unload to false
-                    CompRPGIUnload comp = __instance.job.targetA.Thing?.TryGetComp<CompRPGIUnload>();
-                    if (comp != null)
-                    {
-                        comp.Unload = false;
-                    }
-
                     for (QueuedJob qj = pawn.jobs.jobQueue.FirstOrDefault(j => j.job.def == RPGI_JobDefOf.RPGI_Fake); qj != null;)
                     {
                         pawn.jobs.jobQueue.Extract(qj.job);
@@ -61,10 +60,10 @@ namespace RPG_Inventory_Remake
                         if (qj != null)
                         {
                             Log.Message("In for loop");
-                            CompRPGIUnload comp = qj.job.targetA.Thing?.TryGetComp<CompRPGIUnload>();
-                            if (comp != null)
+                            CompRPGIUnload comp1 = qj.job.targetA.Thing?.TryGetComp<CompRPGIUnload>();
+                            if (comp1 != null)
                             {
-                                comp.Unload = false;
+                                comp1.Unload = false;
                             }
                             pawn.jobs.jobQueue.Extract(qj.job);
                         }
