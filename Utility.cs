@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using Verse;
 using Verse.Sound;
 using Verse.AI;
@@ -21,10 +21,12 @@ namespace RPG_Inventory_Remake
         private const float _margin = 15f;
         private const float _smallIconSize = 20f;
         private const float _thingLeftX = 36f;
-        private const float _thingRowHeight = 28f; 
+        private const float _thingRowHeight = 28f;
         private const float _topPadding = 20f;
         public const float StandardLineHeight = 22f;
         private static readonly Color _highlightColor = new Color(0.5f, 0.5f, 0.5f, 1f);
+        private static readonly Color _highlightGreen = new Color(134 / 255f, 206 / 255f, 0, 1);
+        private static readonly Color _highlightBrown = new Color(212 / 255f, 141 / 255f, 0, 1);
         private static readonly Color _thingLabelColor = new Color(0.9f, 0.9f, 0.9f, 1f);
         private static Vector2 _scrollPosition = Vector2.zero;
         public static readonly Vector3 PawnTextureCameraOffset = new Vector3(0f, 0f, 0f);
@@ -280,23 +282,25 @@ namespace RPG_Inventory_Remake
                     // Draw unload now button
                     rect.width -= 24f;
                     Rect rect3 = new Rect(rect.width, y, 24f, 24f);
-                    // TODO Add translation
-                    TooltipHandler.TipRegion(rect3, "UnloadNow".Translate());
-                    GUI.color = Color.white;
-                    Texture2D image;
+                    TooltipHandler.TipRegion(rect3, "Corgi_UnloadNow".Translate());
+                    Texture2D image = ContentFinder<Texture2D>.Get("UI/Icons/DoubleDownArrow", true);
                     if (thingWithComps.GetComp<CompRPGIUnload>()?.Unload ?? false)
                     {
-                        image = ContentFinder<Texture2D>.Get("UI/Icons/Truck_Brown", true);
+                        if (Widgets.ButtonImage(rect3, image, _highlightBrown, _highlightGreen))
+                        {
+                            SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                            InterfaceUnloadNow(thingWithComps, selPawn.Pawn);
+                        }
                     }
                     else
                     {
-                        image = ContentFinder<Texture2D>.Get("UI/Icons/Truck_White", true);
+                        if (Widgets.ButtonImage(rect3, image, Color.white, _highlightGreen))
+                        {
+                            SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                            InterfaceUnloadNow(thingWithComps, selPawn.Pawn);
+                        }
                     }
-                    if (Widgets.ButtonImage(rect3, image))
-                    {
-                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                        InterfaceUnloadNow(thingWithComps, selPawn.Pawn);
-                    }
+                    
                 }
             }
             if (selPawn.CanControlColonist)
@@ -346,180 +350,6 @@ namespace RPG_Inventory_Remake
 
             y += 28f;
         }
-
-        //public static void DrawThingRowCE(RPG_Pawn selPawn, ref float y, float width, Thing thing, bool showDropButtonIfPrisoner = false)
-        //{
-
-        //    Rect rect = new Rect(0f, y, width, _thingRowHeight);
-        //    Widgets.InfoCardButton(rect.width - 24f, y, thing);
-        //    rect.width -= 24f;
-        //    if (selPawn.CanControl ||
-        //       (selPawn.Pawn.Faction == Faction.OfPlayer && selPawn.Pawn.RaceProps.packAnimal) ||
-        //       (showDropButtonIfPrisoner && selPawn.Pawn.IsPrisonerOfColony))
-        //    {
-        //        Rect dropRect = new Rect(rect.width - 24f, y, 24f, 24f);
-        //        TooltipHandler.TipRegion(dropRect, "DropThing".Translate());
-        //        if (Widgets.ButtonImage(dropRect, TexButton.Drop))
-        //        {
-        //            SoundDefOf.Tick_High.PlayOneShotOnCamera();
-        //            InterfaceDrop(thing, selPawn.Pawn);
-        //        }
-        //        rect.width -= 24f;
-        //    }
-        //    if (selPawn.CanControlColonist)
-        //    {
-        //        if ((thing.def.IsNutritionGivingIngestible || thing.def.IsNonMedicalDrug) && thing.IngestibleNow && selPawn.Pawn.WillEat(thing, null))
-        //        {
-        //            Rect rect3 = new Rect(rect.width - 24f, y, 24f, 24f);
-        //            TooltipHandler.TipRegion(rect3, "ConsumeThing".Translate(thing.LabelNoCount, thing));
-        //            if (Widgets.ButtonImage(rect3, TexButton.Ingest))
-        //            {
-        //                SoundDefOf.Tick_High.PlayOneShotOnCamera(null);
-        //                InterfaceIngest(thing, selPawn.Pawn);
-        //            }
-        //        }
-        //        rect.width -= 24f;
-        //    }
-        //    Rect rect4 = rect;
-        //    rect4.xMin = rect4.xMax - 60f;
-        //    CaravanThingsTabUtility.DrawMass(thing, rect4);
-        //    rect.width -= 60f;
-        //    if (Mouse.IsOver(rect))
-        //    {
-        //        GUI.color = _highlightColor;
-        //        GUI.DrawTexture(rect, TexUI.HighlightTex);
-        //    }
-
-        //    if (thing.def.DrawMatSingle != null && thing.def.DrawMatSingle.mainTexture != null)
-        //    {
-        //        Widgets.ThingIcon(new Rect(4f, y, _thingIconSize, _thingIconSize), thing, 1f);
-        //    }
-        //    Text.Anchor = TextAnchor.MiddleLeft;
-        //    GUI.color = ITab_Pawn_Gear.ThingLabelColor;
-        //    Rect thingLabelRect = new Rect(_thingLeftX, y, rect.width - _thingLeftX, _thingRowHeight);
-        //    string thingLabel = thing.LabelCap;
-        //    if ((thing is Apparel && selPawn.Pawn.outfits != null && selPawn.Pawn.outfits.forcedHandler.IsForced((Apparel)thing))
-        //        || (selPawn.Pawn.inventory != null && selPawn.Pawn.HoldTrackerIsHeld(thing)))
-        //    {
-        //        thingLabel = thingLabel + ", " + "ApparelForcedLower".Translate();
-        //    }
-
-        //    Text.WordWrap = false;
-        //    Widgets.Label(thingLabelRect, thingLabel.Truncate(thingLabelRect.width, null));
-        //    Text.WordWrap = true;
-        //    string text2 = string.Concat(new object[]
-        //    {
-        //        thing.LabelCap,
-        //        "\n",
-        //        thing.DescriptionDetailed,
-        //        "\n",
-        //        thing.GetWeightAndBulkTip()
-        //    });
-        //    if (thing.def.useHitPoints)
-        //    {
-        //        string text3 = text2;
-        //        text2 = string.Concat(new object[]
-        //        {
-        //            text3,
-        //            "\n",
-        //            "HitPointsBasic".Translate().CapitalizeFirst(),
-        //            ": ",
-        //            thing.HitPoints,
-        //            " / ",
-        //            thing.MaxHitPoints
-        //        });
-        //    }
-        //    TooltipHandler.TipRegion(thingLabelRect, text2);
-        //    y += 28f;
-
-        //    // RMB menu
-        //    if (Widgets.ButtonInvisible(thingLabelRect) && Event.current.button == 1)
-        //    {
-        //        List<FloatMenuOption> floatOptionList = new List<FloatMenuOption>();
-        //        floatOptionList.Add(new FloatMenuOption("ThingInfo".Translate(), delegate
-        //        {
-        //            Find.WindowStack.Add(new Dialog_InfoCard(thing));
-        //        }, MenuOptionPriority.Default, null, null));
-        //        if (selPawn.CanControl)
-        //        {
-        //            // Equip option
-        //            ThingWithComps eq = thing as ThingWithComps;
-        //            if (eq != null && eq.TryGetComp<CompEquippable>() != null)
-        //            {
-        //                CompInventory compInventory = selPawn.Pawn.TryGetComp<CompInventory>();
-        //                if (compInventory != null)
-        //                {
-        //                    FloatMenuOption equipOption;
-        //                    string eqLabel = GenLabel.ThingLabel(eq.def, eq.Stuff, 1);
-        //                    if (selPawn.Pawn.equipment.AllEquipmentListForReading.Contains(eq) && selPawn.Pawn.inventory != null)
-        //                    {
-        //                        equipOption = new FloatMenuOption("CE_PutAway".Translate(eqLabel),
-        //                            new Action(delegate
-        //                            {
-        //                                selPawn.Pawn.equipment.TryTransferEquipmentToContainer(selPawn.Pawn.equipment.Primary, selPawn.Pawn.inventory.innerContainer);
-        //                            }));
-        //                    }
-        //                    else if (!selPawn.Pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
-        //                    {
-        //                        equipOption = new FloatMenuOption("CannotEquip".Translate(eqLabel), null);
-        //                    }
-        //                    else
-        //                    {
-        //                        string equipOptionLabel = "Equip".Translate(eqLabel);
-        //                        if (eq.def.IsRangedWeapon && selPawn.Pawn.story != null && selPawn.Pawn.story.traits.HasTrait(TraitDefOf.Brawler))
-        //                        {
-        //                            equipOptionLabel = equipOptionLabel + " " + "EquipWarningBrawler".Translate();
-        //                        }
-        //                        equipOption = new FloatMenuOption(
-        //                            equipOptionLabel,
-        //                            (selPawn.Pawn.story != null && selPawn.Pawn.story.WorkTagIsDisabled(WorkTags.Violent))
-        //                            ? null
-        //                            : new Action(delegate
-        //                            {
-        //                                compInventory.TrySwitchToWeapon(eq);
-        //                            }));
-        //                    }
-        //                    floatOptionList.Add(equipOption);
-        //                }
-        //            }
-        //            // Drop option
-        //            Action dropApparel = delegate
-        //            {
-        //                SoundDefOf.Tick_High.PlayOneShotOnCamera();
-        //                InterfaceDrop(thing, selPawn.Pawn);
-        //            };
-        //            Action dropApparelHaul = delegate
-        //            {
-        //                SoundDefOf.Tick_High.PlayOneShotOnCamera();
-        //                InterfaceDropHaul(thing, selPawn.Pawn);
-        //            };
-        //            if (selPawn.CanControl && thing.IngestibleNow && selPawn.Pawn.RaceProps.CanEverEat(thing))
-        //            {
-        //                Action eatFood = delegate
-        //                {
-        //                    SoundDefOf.Tick_High.PlayOneShotOnCamera();
-        //                    InterfaceIngest(thing, selPawn.Pawn);
-        //                };
-        //                string label = thing.def.ingestible.ingestCommandString.NullOrEmpty() ? "ConsumeThing".Translate(thing.LabelShort, thing) : string.Format(thing.def.ingestible.ingestCommandString, thing.LabelShort);
-        //                floatOptionList.Add(new FloatMenuOption(label, eatFood));
-        //            }
-        //            floatOptionList.Add(new FloatMenuOption("DropThing".Translate(), dropApparel));
-        //            floatOptionList.Add(new FloatMenuOption("CE_DropThingHaul".Translate(), dropApparelHaul));
-        //            if (selPawn.CanControl && selPawn.Pawn.HoldTrackerIsHeld(thing))
-        //            {
-        //                Action forgetHoldTracker = delegate
-        //                {
-        //                    SoundDefOf.Tick_High.PlayOneShotOnCamera();
-        //                    selPawn.Pawn.HoldTrackerForget(thing);
-        //                };
-        //                floatOptionList.Add(new FloatMenuOption("CE_HoldTrackerForget".Translate(), forgetHoldTracker));
-        //            }
-        //        }
-        //        FloatMenu window = new FloatMenu(floatOptionList, thing.LabelCap, false);
-        //        Find.WindowStack.Add(window);
-        //    }
-        //    // end menu
-        //}
 
         public static void DrawThingRowWithImage(RPG_Pawn selPawn, Rect rect, ThingWithComps thing, bool inventory = false)
         {
@@ -598,22 +428,26 @@ namespace RPG_Inventory_Remake
                         InterfaceDrop(thing, selPawn.Pawn);
                     }
                     // Draw Unload Now button
-                    rect2 = new Rect(rect.x, rect.yMax - _smallIconSize, _smallIconSize, _smallIconSize);
+                    rect2 = new Rect(rect.xMax - _smallIconSize, rect.yMax - _smallIconSize, _smallIconSize, _smallIconSize);
                     TooltipHandler.TipRegion(rect2, "Corgi_UnloadNow".Translate());
-                    Texture2D image;
+                    Texture2D image = ContentFinder<Texture2D>.Get("UI/Icons/DoubleDownArrow", true);
                     if (thing.GetComp<CompRPGIUnload>()?.Unload ?? false)
                     {
-                        image = ContentFinder<Texture2D>.Get("UI/Icons/Truck_Brown", true);
+                        if (Widgets.ButtonImage(rect2, image, _highlightBrown, _highlightGreen))
+                        {
+                            SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                            InterfaceUnloadNow(thing, selPawn.Pawn);
+                        }
                     }
                     else
                     {
-                        image = ContentFinder<Texture2D>.Get("UI/Icons/Truck_White", true);
+                        if (Widgets.ButtonImage(rect2, image, Color.white, _highlightGreen))
+                        {
+                            SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                            InterfaceUnloadNow(thing, selPawn.Pawn);
+                        }
                     }
-                    if (Widgets.ButtonImage(rect2, image))
-                    {
-                        SoundDefOf.Tick_High.PlayOneShotOnCamera(null);
-                        InterfaceUnloadNow(thing, selPawn.Pawn);
-                    }
+                    GUI.color = Color.white;
                 }
             }
             Apparel apparel = thing as Apparel;
@@ -869,11 +703,12 @@ namespace RPG_Inventory_Remake
         {
             if (Widgets.ButtonInvisible(rect) && Event.current.button == 1)
             {
+                // Check if pawn is under control
                 if (selPawn.CanControlColonist)
                 {
                     List<FloatMenuOption> floatOptionList = new List<FloatMenuOption>();
 
-                    // Equip option
+                    // Equipment option
                     if (thing.TryGetComp<CompEquippable>() != null)
                     {
                         if (thing is ThingWithComps equipment)
@@ -891,8 +726,6 @@ namespace RPG_Inventory_Remake
                                             selPawn.Pawn.equipment.TryTransferEquipmentToContainer(selPawn.Pawn.equipment.Primary, selPawn.Pawn.inventory.innerContainer);
                                         }));
                                 }
-
-                                if (selPawn.Pawn.apparel.)
 
                                 else if (equipment.def.IsWeapon && selPawn.Pawn.story.WorkTagIsDisabled(WorkTags.Violent))
                                 {
@@ -931,11 +764,63 @@ namespace RPG_Inventory_Remake
                                         {
                                             Messages.Message("CannotEquip".Translate(labelShort), MessageTypeDefOf.NeutralEvent);
                                         }
-                                        
+
                                     });
                                 }
                                 floatOptionList.Add(equipOption);
                             }
+                        }
+                    }
+                    // Apparel option
+                    if (thing is Apparel apparel)
+                    {
+                        Pawn pawn = selPawn.Pawn;
+                        string labelShort = apparel.LabelShort;
+                        FloatMenuOption equipOption = null;
+
+                        // Equip option
+                        if (pawn.inventory.Contains(thing))
+                        {
+                            equipOption = new FloatMenuOption("Equip".Translate(labelShort),
+                                new Action(delegate
+                                {
+                                    pawn.jobs.TryTakeOrderedJob
+                                        (
+                                            // Check JobDriver_RPGI_ApparelOptions for more information
+                                            new Job(RPGI_JobDefOf.RPGI_ApparelOptions, thing)
+                                            { playerForced = true, count = 0 }
+                                        );
+                                }));
+                            floatOptionList.Add(equipOption);
+                            // Forced equip option
+                            equipOption = new FloatMenuOption("ApparelForcedLower".Translate() + " " + "Equip".Translate(labelShort),
+                                new Action(delegate
+                                {
+                                    pawn.jobs.TryTakeOrderedJob
+                                        (
+                                            new Job(RPGI_JobDefOf.RPGI_ApparelOptions, thing)
+                                            { playerForced = true, count = 1 }
+                                        );
+                                }));
+                            floatOptionList.Add(equipOption);
+                        }
+
+
+
+                        // Put away option
+                        if (pawn.apparel.Contains(thing) && pawn.inventory != null)
+                        {
+                            equipOption = new FloatMenuOption("Corgi_PutAway".Translate(labelShort),
+                                new Action(delegate
+                                {
+                                    pawn.jobs.TryTakeOrderedJob
+                                        (
+                                            new Job(RPGI_JobDefOf.RPGI_ApparelOptions, thing)
+                                            { playerForced = true, count = -1 },
+                                            JobTag.ChangingApparel
+                                        );
+                                }));
+                            floatOptionList.Add(equipOption);
                         }
                     }
 
@@ -950,5 +835,48 @@ namespace RPG_Inventory_Remake
             return false;
         }
 
+        // Most part is from the source code
+        public static void Wear(Pawn pawn, Apparel newApparel, bool dropReplacedApparel = true)
+        {
+            if (newApparel.Spawned)
+            {
+                newApparel.DeSpawn();
+            }
+            if (!ApparelUtility.HasPartsToWear(pawn, newApparel.def))
+            {
+                Log.Warning(pawn + " tried to wear " + newApparel + " but he has no body parts required to wear it.");
+                return;
+            }
+            for (int num = pawn.apparel.WornApparelCount - 1; num >= 0; num--)
+            {
+                Apparel apparel = pawn.apparel.WornApparel[num];
+                if (!ApparelUtility.CanWearTogether(newApparel.def, apparel.def, pawn.RaceProps.body))
+                {
+                    if (dropReplacedApparel)
+                    {
+                        bool forbid = pawn.Faction != null && pawn.Faction.HostileTo(Faction.OfPlayer);
+                        if (!pawn.apparel.TryDrop(apparel, out Apparel _, pawn.PositionHeld, forbid))
+                        {
+                            Log.Error(pawn + " could not drop " + apparel);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        pawn.apparel.Remove(apparel);
+                        // New code
+                        pawn.inventory.innerContainer.TryAdd(apparel);
+                    }
+                }
+            }
+            if (newApparel.Wearer != null)
+            {
+                Log.Warning(pawn + " is trying to wear " + newApparel + " but this apparel already has a wearer (" + newApparel.Wearer + "). This may or may not cause bugs.");
+            }
+            // Extra spice
+            Traverse.Create(pawn).Field("apparel").Field("wornApparel")
+                .Method("TryAdd", new Type[] { typeof(Thing), typeof(bool) }, null)
+                .GetValue(newApparel, false);
+        }
     }
 }

@@ -495,8 +495,54 @@ namespace RPG_Inventory_Remake
             GUI.color = Color.white;
             Text.Anchor = TextAnchor.UpperLeft;
         }
+        public static void DrawJealousCE(RPG_Pawn selPawn, Vector2 size)
+        {
+            // Races that don't have a humanoid body will fall back to Greedy tab
+            if (selPawn.Pawn.RaceProps.body != BodyDefOf.Human)
+            {
+                DrawGreedyCE(selPawn, size);
+                return;
+            }
 
-        public static void DrawGreedy_CE(RPG_Pawn selPawn, Vector2 size)
+            // set up rects
+            Rect listRect = new Rect(
+                _margin,
+                _topPadding,
+                size.x - 2 * _margin,
+                size.y - _topPadding - _margin);
+
+            // get the inventory comp
+            CompInventory comp = selPawn.Pawn.TryGetComp<CompInventory>();
+            if (comp != null)
+            {
+                PlayerKnowledgeDatabase.KnowledgeDemonstrated(CE_ConceptDefOf.CE_InventoryWeightBulk, KnowledgeAmount.FrameDisplayed);
+
+                // adjust rects if comp found
+                listRect.height -= (_margin / 2 + _barHeight) * 2;
+                Rect weightRect = new Rect(_margin, listRect.yMax + _margin / 2, listRect.width, _barHeight);
+                Rect bulkRect = new Rect(_margin, weightRect.yMax + _margin / 2, listRect.width, _barHeight);
+
+                // draw bars
+                Utility_Loadouts.DrawBar(bulkRect, comp.currentBulk, comp.capacityBulk, "CE_Bulk".Translate(), selPawn.Pawn.GetBulkTip());
+                Utility_Loadouts.DrawBar(weightRect, comp.currentWeight, comp.capacityWeight, "CE_Weight".Translate(), selPawn.Pawn.GetWeightTip());
+
+                // draw text overlays on bars
+                Text.Font = GameFont.Small;
+                Text.Anchor = TextAnchor.MiddleCenter;
+
+                string currentBulk = CE_StatDefOf.CarryBulk.ValueToString(comp.currentBulk, CE_StatDefOf.CarryBulk.toStringNumberSense);
+                string capacityBulk = CE_StatDefOf.CarryBulk.ValueToString(comp.capacityBulk, CE_StatDefOf.CarryBulk.toStringNumberSense);
+                Widgets.Label(bulkRect, currentBulk + "/" + capacityBulk);
+
+                string currentWeight = comp.currentWeight.ToString("0.#");
+                string capacityWeight = CE_StatDefOf.CarryWeight.ValueToString(comp.capacityWeight, CE_StatDefOf.CarryWeight.toStringNumberSense);
+                Widgets.Label(weightRect, currentWeight + "/" + capacityWeight);
+
+                Text.Anchor = TextAnchor.UpperLeft;
+            }
+        }
+
+        public static void DrawGreedyCE(RPG_Pawn selPawn, Vector2 size)
         {
             // get the inventory comp
             CompInventory comp = selPawn.Pawn.TryGetComp<CompInventory>();

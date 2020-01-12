@@ -8,7 +8,7 @@ using RimWorld;
 
 namespace RPG_Inventory_Remake
 {
-    public class JobGiver_RPGIPutAwayApparel : ThinkNode_JobGiver
+    public class JobGiver_RPGI_ApparelOptions : ThinkNode_JobGiver
     {
         protected override Job TryGiveJob(Pawn pawn)
         {
@@ -19,7 +19,7 @@ namespace RPG_Inventory_Remake
         {
             if (pawn.inventory != null && apparel != null)
             {
-                Job job = new Job(RPGI_JobDefOf.RPGI_PutAwayApparel)
+                Job job = new Job(RPGI_JobDefOf.RPGI_ApparelOptions)
                 {
                     playerForced = true
                 };

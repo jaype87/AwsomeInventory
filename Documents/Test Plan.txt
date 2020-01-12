@@ -6,3 +6,9 @@
 5. Follow step 2 and select new item(s)
 6. Select multiple item(s), quit to main menu and repeat selection
 7. Select multiple item(s), save, reload and repeat step 1 to 6
+
+######### Mouse Right Click Menu ###########
+1. Test Apparel put away
+2. Test Weapon put away
+3. Test Apparel forced equip
+4. Test Apparel equip

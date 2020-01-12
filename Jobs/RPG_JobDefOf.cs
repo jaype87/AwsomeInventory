@@ -12,7 +12,8 @@ namespace RPG_Inventory_Remake
     {
         public static JobDef RPGI_Unload;
         public static JobDef RPGI_Fake;
-        public static JobDef RPGI_PutAwayApparel;
+        public static JobDef RPGI_ApparelOptions;
+        public static JobDef RPGI_Map_Equip;
 
 
         static RPGI_JobDefOf()

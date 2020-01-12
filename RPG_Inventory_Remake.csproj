@@ -76,12 +76,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CorgiBodyPartGroupsDefOf.cs" />
+    <Compile Include="HarmonyPatches\AddHumanlikeOrders_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\Game_FinalizeInit_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\JobDriver_Cleanup_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\Pawn_CarryTracker_CarriedThing_RPGI_Patch.cs" />
     <Compile Include="Jobs\CompRPGIUnload.cs" />
+    <Compile Include="Jobs\JobDriver_Map_Equip.cs" />
+    <Compile Include="Jobs\JobDriver_RPGI_ApparelOptions.cs" />
     <Compile Include="Jobs\JobDriver_RPGI_Unload.cs" />
-    <Compile Include="Jobs\JobGiver_RPGIPutAwayApparel.cs" />
+    <Compile Include="Jobs\JobGiver_RPGI_ApparelOptions.cs" />
     <Compile Include="Jobs\RPG_JobDefOf.cs" />
     <Compile Include="FillTabOperations.cs" />
     <None Include="Freezer.cs" />
