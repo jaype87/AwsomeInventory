@@ -15,11 +15,11 @@ namespace RPG_Inventory_Remake
         }
         public override void FinalizeInit()
         {
-            JobGiver_RPGIUnload.JobInProgress = false;
-            if (LoadedModManager.RunningModsListForReading.Any(m => m.Name == "Combat Extended"))
-            {
-                RPG_GearTab_CE.IsCE = true;
-            }
+            //JobGiver_RPGIUnload.JobInProgress = false;
+            //if (LoadedModManager.RunningModsListForReading.Any(m => m.Name == "Combat Extended"))
+            //{
+            //    RPG_GearTab_CE.IsCE = true;
+            //}
         }
     }
 }

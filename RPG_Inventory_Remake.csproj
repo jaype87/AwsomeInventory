@@ -75,9 +75,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bootstrap\Setting.cs" />
+    <Compile Include="Components\CompProperties_Inventory.cs" />
+    <Compile Include="Components\CompInventory.cs" />
     <Compile Include="Components\GameComponent_RPGI_Main.cs" />
     <Compile Include="DefOfs\CE_ApparelLayerDefOf.cs" />
+    <Compile Include="DefOfs\CE_StatDefOf.cs" />
     <Compile Include="DefOfs\CorgiBodyPartGroupsDefOf.cs" />
+    <Compile Include="Defs\Loadout\LoadoutGenericDef.cs" />
+    <Compile Include="Enum\LoadoutCountType.cs" />
     <Compile Include="HarmonyPatches\AddHumanlikeOrders_RPGI_Patch.cs" />
     <None Include="HarmonyPatches\Game_FinalizeInit_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\JobDriver_Cleanup_RPGI_Patch.cs" />
@@ -91,6 +97,18 @@
     <Compile Include="FillTabOperations.cs" />
     <None Include="Freezer.cs" />
     <Compile Include="Jobs\JobGiver_Unload.cs" />
+    <Compile Include="Loadout\Dialog_ManageLoadouts.cs" />
+    <Compile Include="Loadout\GameComp_LoadoutManager.cs" />
+    <Compile Include="Loadout\HoldRecord.cs" />
+    <Compile Include="Loadout\Loadout.cs" />
+    <Compile Include="Loadout\LoadoutSlot.cs" />
+    <Compile Include="Loadout\PawnColumnWorker_Loadout.cs" />
+    <Compile Include="Loadout\PawnColumnWorker_MassBulkBars.cs" />
+    <Compile Include="Loadout\Tracker.cs" />
+    <Compile Include="Loadout\Utility_HoldTracker.cs" />
+    <Compile Include="Loadout\Utility_Loadouts.cs" />
+    <Compile Include="MassBulkUtility.cs" />
+    <Compile Include="Bootstrap\ModStarter.cs" />
     <Compile Include="RPG_GearTab_CE.cs" />
     <None Include="RPG_GearTab.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -107,6 +125,8 @@
     <Content Include="..\..\Languages\English\Keyed\Sandy_Detailed_RPG_Gear.xml">
       <Link>Language\Sandy_Detailed_RPG_Gear.xml</Link>
     </Content>
+    <Content Include="About\About.xml" />
+    <Content Include="About\preview.png" />
     <Content Include="Defs\ApparelLayerDefs.xml" />
     <Content Include="Defs\Jewelry_compat\BodyPartGroups.xml" />
     <Content Include="Defs\JobDefs\Jobs_RPGInventory.xml" />
@@ -115,5 +135,6 @@
     <Content Include="Patches\Ratkin.xml" />
     <Content Include="Patches\RPG_Inventory.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
