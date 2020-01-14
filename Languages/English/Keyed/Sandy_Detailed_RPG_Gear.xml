@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+    <SandyMassCarried>Mass carried</SandyMassCarried>
+    <SandyMassValue> {0} / {1} kg</SandyMassValue>
+    <Sandy_ViewList>Show list</Sandy_ViewList>
+    <Sandy_Head>Head Overhead</Sandy_Head>
+    <Sandy_TorsoMiddle>Torso Middle</Sandy_TorsoMiddle>
+    <Sandy_TorsoOnSkin>Torso OnSkin</Sandy_TorsoOnSkin>
+    <Sandy_TorsoShell>Torso Shell</Sandy_TorsoShell>
+    <Sandy_Belt>Belt</Sandy_Belt>
+    <Sandy_Pants>Legs OnSkin</Sandy_Pants>
+    <Sandy_Greedy>Greedy (List)</Sandy_Greedy>
+    <Sandy_Jealous>Jealous (RPG Style)</Sandy_Jealous>
+    <Sandy_Ascetic>Ascetic</Sandy_Ascetic>
+    <Corgi_PrimaryWeapon>Primary Weapon</Corgi_PrimaryWeapon>
+    <Corgi_ExtraApparels>Extra Apparels</Corgi_ExtraApparels>
+    <Corgi_PutAway>Put Away</Corgi_PutAway>
+    <Corgi_UnloadNow>Unload Now</Corgi_UnloadNow>
+    <Corgi_RPGI>RPGI</Corgi_RPGI>
+    <Corgi_Wear>Wear {1_labelShort}</Corgi_Wear>
+    <Corgi_KeepOldApparel>and keep old apparel</Corgi_KeepOldApparel>
+    <Corgi_OpenLoadout>Open Loadout</Corgi_OpenLoadout>
+    <Corgi_NoLoadout>No Loadout</Corgi_NoLoadout>
+    <Corgi_UseLoadout>Use Loadout</Corgi_UseLoadout>
+    <Corgi_RPGStyleInventoryRemake>RPG Style Inventory Remake</Corgi_RPGStyleInventoryRemake>
+
+</LanguageData>

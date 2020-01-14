@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ModMetaData>
+	<name>RPG Style Inventory Remake</name>
+	<author>NotooShabby</author>
+	<supportedVersions>
+		<li>1.0</li>
+	</supportedVersions>
+	<description>This is a fork of RPG Style Inventory made for Combat Extended. 
+	All credit goes to the author of RPG Style Inventory and Combat Extended, as all codes are ripped from their mods and duct tapped together.
+	If you like it, go to the original mod page and leave an upvote.
+	
+	I will maintain this fork until original mod is made compatible with combat extended.
+	
+	Load Order:
+	Core
+	Combat Extended
+	This Mod
+	
+	(Since this is a fork of RPG style inventory, you don't need the original mod)
+	</description>
+</ModMetaData>
