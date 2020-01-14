@@ -1,0 +1,47 @@
+﻿The process behind wearing apparels in Rimworld as follows
+
+1. Check if a pawn has the part to wear. However, there is a logic hole in the source code.
+   If the pawn does not have any parts missing due to injuries, etc., the function will return true.
+   It means if the pawn does not have the required part to begin with(a pawn without legs), it
+   always "have" the required part to wear.
+
+2. Next, it checks the apparel to wear against worn apparels on the pawn. If they are on different
+   layers, they can wear together.
+
+3. If they are on the same layers, the code will check if they are interfering each other.
+   There are two entities involved in the check, body part group and body parts. For example,
+   a head is a body part, which belongs to FullHead and UpperHead body part group. 
+
+   In the code, body part groups don't carry any information on what body parts they have.
+   It is in the defintion of body parts that make clear which body part group they belong.
+   That's to say, FullHead has no idea it has a head. It is the head's responsibility to tell
+   the code it should be attached to the FullHead body part group. Contrary to popular belief,
+   apparels only indicate which body part group they cover but not which body part(s).
+
+   This is what the does for the check. First, it will run through all body parts a pawn has.
+   For each body part, it return the body part groups it attaches to(FullHead and UpperHead for the head).
+   If an apparel covers any of these body part groups, not only the group that is covered,
+   but all the groups are added to a list of interfering body part groups. For example, a hat only
+   covers UpperHead body part group, which a head attached to, but both UpperHead and FullHead are
+   added to the list. In that sense, if an apparel only covers FullHead cannot be wore together with
+   a hat.
+
+   There is one more caveat in this check. The code uses the list of body part groups apparel A covers
+   to check if any group is in the list of interfering body part groups of apparel B, but not the
+   list of body part groups apparel B covers. For example, two apparels both cover body part group
+   legs and a race that has no legs. Because the race has no legs, when the code running through body
+   parts to generate the interfering body part group list, "legs" will never be added to the list.
+   After the interfering list is generated, let's say for apparel B, the list will be used to see
+   if any group in the list is also covered by A, and vice versa. Because group legs is not in the
+   interfering list, it will never be in conflict with A. Hence, the check is passed.
+
+   In short, a race without legs can wear as many footware as they want.
+
+   Another example, which more concerns modders: A body part is added to be a body part group.
+   Say, "Ear" is added as a body part group. In vanilla, ear is a body part that attached to body
+   part group UpperHead and FullHead. If a modder adds a new body part group "Ear", so a pawn can
+   wearing earrings, but they forget to amend the body part ear to make it attach to the new body
+   part group. What will happen is body part group "Ear" will never show up in the interfering list,
+   so the check is always passed.
+
+   This is the end of it.
