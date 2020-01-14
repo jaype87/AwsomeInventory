@@ -31,5 +31,16 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <ItemGroup>
+    <Content Include="..\..\Languages\English\Keyed\Sandy_Detailed_RPG_Gear.xml">
+      <Link>Languages\Sandy_Detailed_RPG_Gear.xml</Link>
+    </Content>
+    <Content Include="Defs\ApparelLayerDefs.xml" />
+    <Content Include="Defs\Jewelry_compat\BodyPartGroups.xml" />
+    <Content Include="Defs\JobDefs\Jobs_RPGInventory.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DefOfs\CorgiBodyPartGroupsDefOf.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

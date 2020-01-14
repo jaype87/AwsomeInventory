@@ -31,5 +31,44 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Bootstrap\ModStarter.cs" />
+    <Compile Include="Bootstrap\Setting.cs" />
+    <Compile Include="Components\CompInventory.cs" />
+    <Compile Include="Components\CompProperties_Inventory.cs" />
+    <Compile Include="Components\GameComponent_RPGI_Main.cs" />
+    <Compile Include="Loadout\Dialog_ManageLoadouts.cs" />
+    <Compile Include="Loadout\GameComp_LoadoutManager.cs" />
+    <Compile Include="Loadout\HoldRecord.cs" />
+    <Compile Include="Loadout\Loadout.cs" />
+    <Compile Include="Loadout\LoadoutGenericDef.cs" />
+    <Compile Include="Loadout\LoadoutSlot.cs" />
+    <Compile Include="Loadout\PawnColumnWorker_Loadout.cs" />
+    <Compile Include="Loadout\PawnColumnWorker_MassBulkBars.cs" />
+    <Compile Include="Loadout\Tracker.cs" />
+    <Compile Include="Loadout\Utility_HoldTracker.cs" />
+    <Compile Include="Loadout\Utility_Loadouts.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="About\About.xml" />
+    <Content Include="About\preview.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\..\Harmony\net35\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\RW-Decompile\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\RW-Decompile\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Defs\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
