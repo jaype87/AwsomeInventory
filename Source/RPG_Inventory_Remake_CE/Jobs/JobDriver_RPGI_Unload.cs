@@ -6,8 +6,9 @@ using Verse;
 using Verse.AI;
 using RimWorld;
 using Harmony;
+using RPG_Inventory_Remake_Common;
 
-namespace RPG_Inventory_Remake
+namespace RPG_Inventory_Remake_CE
 {
     // Check JobDriver_HaulToCell for more information
     public class JobDriver_RPGI_Unload : JobDriver

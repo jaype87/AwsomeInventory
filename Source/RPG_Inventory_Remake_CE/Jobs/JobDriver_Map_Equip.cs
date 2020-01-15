@@ -6,7 +6,7 @@ using Verse;
 using Verse.AI;
 using RimWorld;
 
-namespace RPG_Inventory_Remake
+namespace RPG_Inventory_Remake_CE
 {
     public class JobDriver_Map_Equip : JobDriver
     {

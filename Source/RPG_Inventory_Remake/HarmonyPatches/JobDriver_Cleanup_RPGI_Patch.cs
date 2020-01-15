@@ -7,6 +7,7 @@ using Harmony;
 using Verse;
 using Verse.AI;
 using System.Reflection;
+using RPG_Inventory_Remake_Common;
 
 namespace RPG_Inventory_Remake
 {

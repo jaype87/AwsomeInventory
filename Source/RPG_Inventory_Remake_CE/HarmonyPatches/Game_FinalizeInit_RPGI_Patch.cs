@@ -6,7 +6,7 @@ using Harmony;
 using System.Reflection;
 using Verse;
 
-namespace RPG_Inventory_Remake
+namespace RPG_Inventory_Remake_CE
 {
     [StaticConstructorOnStartup]
     public class Game_FinalizeInit_RPGI_Patch

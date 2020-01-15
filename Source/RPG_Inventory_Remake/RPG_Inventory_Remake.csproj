@@ -35,20 +35,26 @@
     <OutputPath>bin\CE Build\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Vanilla Build|AnyCPU'">
-    <OutputPath>bin\Vanilla Build\</OutputPath>
+    <OutputPath>..\..\..\RPG_Style_Inventory\Assemblies\</OutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Common\Components\CompRPGIUnload.cs">
+      <Link>Components\CompRPGIUnload.cs</Link>
+    </Compile>
     <Compile Include="..\Common\DefOfs\CorgiBodyPartGroupsDefOf.cs">
       <Link>Defs\CorgiBodyPartGroupsDefOf.cs</Link>
     </Compile>
+    <Compile Include="..\Common\DefOfs\RPG_JobDefOf.cs">
+      <Link>DefOfs\RPG_JobDefOf.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Gizmos\ToggleGearTab.cs">
+      <Link>Gizmos\ToggleGearTab.cs</Link>
+    </Compile>
     <Compile Include="..\Common\Jobs\JobGiver_Unload.cs">
       <Link>Jobs\JobGiver_Unload.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Jobs\RPG_JobDefOf.cs">
-      <Link>Jobs\RPG_JobDefOf.cs</Link>
     </Compile>
     <Compile Include="..\Common\RPG_Pawn.cs">
       <Link>RPG_Pawn.cs</Link>
@@ -56,14 +62,14 @@
     <Compile Include="..\Common\SmartRect.cs">
       <Link>SmartRect.cs</Link>
     </Compile>
+    <Compile Include="..\Common\TextButton.cs">
+      <Link>TextButton.cs</Link>
+    </Compile>
     <Compile Include="..\Common\Utilities\Utility.cs">
       <Link>Utilities\Utility.cs</Link>
     </Compile>
     <Compile Include="..\Common\Utilities\Utility_Draw.cs">
       <Link>Utilities\Utility_Draw.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Utilities\Utility_HoldTracker.cs">
-      <Link>Utilities\Utility_HoldTracker.cs</Link>
     </Compile>
     <Compile Include="Bootstrap\ModStarter.cs" />
     <Compile Include="Bootstrap\Setting.cs" />
@@ -73,6 +79,12 @@
     <Compile Include="Enum\LoadoutCountType.cs" />
     <Compile Include="FillTabOperations.cs" />
     <Compile Include="HarmonyPatches\AddHumanlikeOrders_RPGI_Patch.cs" />
+    <Compile Include="HarmonyPatches\Pawn_GetGizmos.cs" />
+    <Compile Include="Jobs\JobDriver_Map_Equip.cs" />
+    <Compile Include="Jobs\JobDriver_RPGI_ApparelOptions.cs" />
+    <Compile Include="Jobs\JobDriver_RPGI_Unload.cs" />
+    <Compile Include="Jobs\JobGiver_RPGI_ApparelOptions.cs" />
+    <Compile Include="RPG_GearTab.cs" />
     <None Include="HarmonyPatches\Game_FinalizeInit_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\JobDriver_Cleanup_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\Pawn_CarryTracker_CarriedThing_RPGI_Patch.cs" />
@@ -82,6 +94,7 @@
     <Compile Include="Loadout\Loadout.cs" />
     <Compile Include="Loadout\LoadoutGenericDef.cs" />
     <Compile Include="Loadout\LoadoutSlot.cs" />
+    <Compile Include="Loadout\MassBulkUtility.cs" />
     <Compile Include="Loadout\PawnColumnWorker_Loadout.cs" />
     <Compile Include="Loadout\PawnColumnWorker_MassBulkBars.cs" />
     <Compile Include="Loadout\Tracker.cs" />
@@ -89,13 +102,16 @@
     <Compile Include="Loadout\Utility_Loadouts.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\..\RPG_Style_Inventory\Languages\English\Keyed\Sandy_Detailed_RPG_Gear.xml">
+      <Link>Languages\Sandy_Detailed_RPG_Gear.xml</Link>
+    </Content>
     <Content Include="About\About.xml" />
     <Content Include="About\preview.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>..\..\..\Harmony\net35\0Harmony.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\RW-Decompile\Managed\Assembly-CSharp.dll</HintPath>

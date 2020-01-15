@@ -7,8 +7,9 @@ using Harmony;
 using Verse;
 using Verse.AI;
 using System.Reflection;
+using RPG_Inventory_Remake_Common;
 
-namespace RPG_Inventory_Remake
+namespace RPG_Inventory_Remake_CE
 {
     [StaticConstructorOnStartup]
     public class JobDriver_Cleanup_RPGI_Patch

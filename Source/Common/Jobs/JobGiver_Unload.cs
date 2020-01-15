@@ -3,14 +3,14 @@ using Verse;
 using Verse.AI;
 using RimWorld;
 
-namespace RPG_Inventory_Remake
+namespace RPG_Inventory_Remake_Common
 {
     public class JobGiver_RPGIUnload : ThinkNode_JobGiver
     {
         private Thing _thing;
         public static bool JobInProgress = false;
 
-        // need to add code for thing with count
+        // TODO need to add code for thing with count
         private JobGiver_RPGIUnload(Thing t)
         {
             _thing = t;

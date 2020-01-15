@@ -8,7 +8,7 @@ using Verse;
 using Harmony;
 
 
-namespace RPG_Inventory_Remake
+namespace RPG_Inventory_Remake_Common
 {
     public static class Utility_Draw
     {

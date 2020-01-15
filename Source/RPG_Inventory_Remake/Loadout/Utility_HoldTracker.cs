@@ -10,14 +10,14 @@ namespace RPG_Inventory_Remake.RPGLoadout
     /// <summary>
     /// Just wraps an int so that the counts can be modified in the Dictionary without ending up modifying the Dictionary.
     /// </summary>
-    public class Integer
-    {
-    	public int value;
-    	public Integer(int num)
-    	{
-    		value = num;
-    	}
-    }
+    //public class int
+    //{
+    //	public int value;
+    //	public int(int num)
+    //	{
+    //		value = num;
+    //	}
+    //}
 
     /// <summary>
 	/// Primary responsibility of HoldTracker concept is to remember any items that the Pawn was instructed (forced) to pickup while having a loadout.
@@ -281,21 +281,21 @@ namespace RPG_Inventory_Remake.RPGLoadout
         /// </summary>
         /// <param name="pawn">Pawn to get the storage information from.</param>
         /// <returns>Dictionary containing keys of ThingDef and values of InventoryCount.</returns>
-        public static Dictionary<ThingDef, Integer> GetStorageByThingDef(this Pawn pawn)
+        public static Dictionary<ThingDef, int> GetStorageByThingDef(this Pawn pawn)
         {
-        	Dictionary<ThingDef, Integer> storage = new Dictionary<ThingDef, Integer>();
+        	Dictionary<ThingDef, int> storage = new Dictionary<ThingDef, int>();
 			// get the pawn's weapon.  Also want ammo in the weapon.
         	if (pawn.equipment?.Primary != null)
         	{
-				storage.Add(pawn.equipment.Primary.def, new Integer(1));
+				storage.Add(pawn.equipment.Primary.def, 1);
         	}
 			// get the pawn's inventory
         	foreach (Thing thing in pawn.inventory.innerContainer)
 			{
                 Thing thing2 = thing.GetInnerIfMinified();
 				if (!storage.ContainsKey(thing2.def))
-					storage.Add(thing2.def, new Integer(0));
-				storage[thing2.def].value += thing2.stackCount;
+					storage.Add(thing2.def, 0);
+				storage[thing2.def] += thing2.stackCount;
 			}
         	
 			return storage;
@@ -322,15 +322,15 @@ namespace RPG_Inventory_Remake.RPGLoadout
         	if (inventory == null || inventory.container == null || loadout == null || loadout.Slots.NullOrEmpty())
         		return false;
         	
-        	Dictionary<ThingDef, Integer> listing = GetStorageByThingDef(pawn);
+        	Dictionary<ThingDef, int> listing = GetStorageByThingDef(pawn);
         	
         	// iterate over specifics and generics and Chip away at the dictionary.
         	foreach (LoadoutSlot slot in loadout.Slots)
         	{
         		if (slot.thingDef != null && listing.ContainsKey(slot.thingDef))
         		{
-					listing[slot.thingDef].value -= slot.count;
-					if (listing[slot.thingDef].value <= 0)
+					listing[slot.thingDef] -= slot.count;
+					if (listing[slot.thingDef] <= 0)
 						listing.Remove(slot.thingDef);
         		}
         		if (slot.genericDef != null)
@@ -340,10 +340,10 @@ namespace RPG_Inventory_Remake.RPGLoadout
 					// find dictionary entries which corespond to covered slot.
 					foreach (ThingDef def in listing.Keys.Where(td => slot.genericDef.lambda(td)))
         			{
-        				listing[def].value -= desiredCount;
-        				if (listing[def].value <= 0)
+        				listing[def] -= desiredCount;
+        				if (listing[def] <= 0)
         				{
-        					desiredCount = 0 - listing[def].value;
+        					desiredCount = 0 - listing[def];
         					killKeys.Add(def); // the thing in inventory is exausted, forget about it.
         				} else {
         					break; // we have satisifed this loadout so no need to keep enumerating.
@@ -371,17 +371,17 @@ namespace RPG_Inventory_Remake.RPGLoadout
                             dropThing = inventory.container.FirstOrDefault(t => t.def == def);
                             if (dropThing != null)
                             {
-                                dropCount = listing[def].value > dropThing.stackCount ? dropThing.stackCount : listing[def].value;
+                                dropCount = listing[def] > dropThing.stackCount ? dropThing.stackCount : listing[def];
                                 return true;
                             }
                         }
-                        else if (rec.count < listing[def].value)
+                        else if (rec.count < listing[def])
                         {
                             // the item we have extra of HAS a HoldRecord but the amount carried is above the limit of the HoldRecord, drop extra.
                             dropThing = pawn.inventory.innerContainer.FirstOrDefault(t => t.def == def);
                             if (dropThing != null)
                             {
-                                dropCount = listing[def].value - rec.count;
+                                dropCount = listing[def] - rec.count;
                                 dropCount = dropCount > dropThing.stackCount ? dropThing.stackCount : dropCount;
                                 return true;
                             }
@@ -393,7 +393,7 @@ namespace RPG_Inventory_Remake.RPGLoadout
 		        		dropThing = inventory.container.FirstOrDefault(t => t.GetInnerIfMinified().def == def);
 		        		if (dropThing != null)
 		        		{
-			        		dropCount = listing[def].value > dropThing.stackCount ? dropThing.stackCount : listing[def].value;
+			        		dropCount = listing[def] > dropThing.stackCount ? dropThing.stackCount : listing[def];
 			        		return true;
 	        			}
         			}

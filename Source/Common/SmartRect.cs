@@ -6,7 +6,7 @@ using UnityEngine;
 using Verse;
 using RimWorld;
 
-namespace RPG_Inventory_Remake
+namespace RPG_Inventory_Remake_Common
 {
     /// <summary>
     /// Keep track of space usage in the Gear Tab and return the next available rect for drawing

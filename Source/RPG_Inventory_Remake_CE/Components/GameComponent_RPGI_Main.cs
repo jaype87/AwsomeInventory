@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using RPG_Inventory_Remake_Common;
 using Verse;
-using RimWorld;
 
-namespace RPG_Inventory_Remake
+
+namespace RPG_Inventory_Remake_CE
 {
     public class GameComponent_RPGI_Main : GameComponent
     {

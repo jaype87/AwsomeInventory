@@ -1,20 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using RimWorld;
+using System;
 using System.Linq;
-using System.Text;
+using UnityEngine;
 using Verse;
 using Verse.Sound;
-using RimWorld;
-using UnityEngine;
 
-namespace RPG_Inventory_Remake
+namespace RPG_Inventory_Remake_Common
 {
     public class ToggleGearTab : Command_Action
     {
-        public ToggleGearTab()
+        private Type _tabType;
+        // Gear_Helmet.png Designed By nickfz from <a href="https://pngtree.com/">Pngtree.com</a>
+        private static readonly Texture2D _icon = ContentFinder<Texture2D>.Get("UI/Icons/Gear_Helmet_Colored", true);
+        public ToggleGearTab(Type tabType)
         {
             hotKey = KeyBindingDefOf.Misc12;
             action = ToggleTab;
+            icon = _icon;
+            _tabType = tabType;
         }
 
         public override string Desc => string.Concat("Corgi_ToggleGearTab".Translate()
@@ -23,9 +26,9 @@ namespace RPG_Inventory_Remake
 
         private void ToggleTab()
         {
-            Type inspectTabType = typeof(RPG_GearTab_CE);
+            Type inspectTabType = _tabType;
             MainTabWindow_Inspect mainTabWindow_Inspect = (MainTabWindow_Inspect)MainButtonDefOf.Inspect.TabWindow;
-			
+
             if (inspectTabType == mainTabWindow_Inspect.OpenTabType)
             {
                 mainTabWindow_Inspect.OpenTabType = null;

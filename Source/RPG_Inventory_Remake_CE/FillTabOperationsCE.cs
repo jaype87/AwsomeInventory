@@ -1,16 +1,14 @@
-﻿using System;
+﻿using CombatExtended;
+using RimWorld;
+using RPG_Inventory_Remake_Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using CombatExtended;
 using UnityEngine;
-using RimWorld;
 using Verse;
-using Harmony;
-using System.Runtime.CompilerServices;
 
 
-namespace RPG_Inventory_Remake
+namespace RPG_Inventory_Remake_CE
 {
     [RequireComponent(typeof(Loadout))]
     public class FillTabOperationsCE
@@ -225,7 +223,7 @@ namespace RPG_Inventory_Remake
                 // draw bars
                 Utility_Loadouts.DrawBar(bulkRect, comp.currentBulk, comp.capacityBulk, "CE_Bulk".Translate(), selPawn.Pawn.GetBulkTip());
                 Utility_Loadouts.DrawBar(weightRect, comp.currentWeight, comp.capacityWeight, "CE_Weight".Translate(), selPawn.Pawn.GetWeightTip());
-                Utility.DrawBulkBreakdown(selPawn.Pawn, bulkRect);
+                Utility_DrawCE.DrawBulkBreakdown(selPawn.Pawn, bulkRect);
                 Utility.DrawMassBreakdown(selPawn.Pawn, weightRect);
 
                 // draw text overlays on bars

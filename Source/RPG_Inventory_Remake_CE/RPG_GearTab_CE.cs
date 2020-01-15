@@ -5,8 +5,9 @@ using System.Text;
 using RimWorld;
 using UnityEngine;
 using Verse;
+using RPG_Inventory_Remake_Common;
 
-namespace RPG_Inventory_Remake
+namespace RPG_Inventory_Remake_CE
 {
     public class RPG_GearTab_CE : ITab_Pawn_Gear
     {
@@ -36,7 +37,7 @@ namespace RPG_Inventory_Remake
         // It is called right before the tab is drawn
         protected override void UpdateSize()
         {
-            
+
         }
 
         public override bool IsVisible
@@ -87,26 +88,21 @@ namespace RPG_Inventory_Remake
             //Rect viewRect = new Rect(0f, 0f, position.width - 20f, this.scrollViewHeight);
             //Widgets.BeginScrollView(outerRect, ref this.scrollPosition, viewRect, true);
 
-            if (!IsCE)
+
+            if (_isJealous)
+            {
+                FillTabOperationsCE.DrawJealousCE(_selPawn, this.size);
+            }
+            else if (_isGreedy)
+            {
+                FillTabOperationsCE.DrawGreedyCE(_selPawn, this.size);
+            }
+            else if (_isAscetic)
             {
             }
             else
             {
-                if (_isJealous)
-                {
-                    FillTabOperationsCE.DrawJealousCE(_selPawn, this.size);
-                }
-                else if (_isGreedy)
-                {
-                    FillTabOperationsCE.DrawGreedyCE(_selPawn, this.size);
-                }
-                else if (_isAscetic)
-                {
-                }
-                else
-                {
-                    throw new InvalidOperationException("No Display Option is chosen.");
-                }
+                throw new InvalidOperationException("No Display Option is chosen.");
             }
         }
     }

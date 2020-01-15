@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ModMetaData>
-	<name>RPG Style Inventory Remake</name>
+	<name>RPG Style Inventory Remake[CE]</name>
 	<author>NotooShabby</author>
 	<supportedVersions>
 		<li>1.0</li>
 	</supportedVersions>
-	<description>This is a fork of RPG Style Inventory made for Combat Extended. 
-	All credit goes to the author of RPG Style Inventory and Combat Extended, as all codes are ripped from their mods and duct tapped together.
-	If you like it, go to the original mod page and leave an upvote.
-	
-	I will maintain this fork until original mod is made compatible with combat extended.
-	
-	Load Order:
+	<description>
+        &lt;size=16&gt;An overhaul of the orginal mod plus CE support.&lt;/size&gt;
+        
+        &lt;size=24&gt;Features:&lt;/size&gt;
+	Maximum compatibility for modded apparels
+	Immediate unload inventory on command.
+	Hotkey to open gear tab.
+	Show traits in gear tab.
+	Swap equipements from your inventory
+	Equip weapons and apparels from the map without dropping the old one!
+
+        &lt;size=24&gt;Load Order:&lt;/size&gt;
 	Core
 	Combat Extended
 	This Mod
-	
-	(Since this is a fork of RPG style inventory, you don't need the original mod)
-	</description>
+    
+        &lt;size=24&gt;Credits:&lt;/size&gt;
+	Sandy (Original mod)
+	Yithend21 (Previous CE version)
+	nickfz (Helmet Icon)
+
+    </description>
 </ModMetaData>

@@ -5,7 +5,7 @@ using System.Text;
 using Verse;
 using RimWorld;
 
-namespace RPG_Inventory_Remake
+namespace RPG_Inventory_Remake_Common
 {
     public class RPG_Pawn
     {

@@ -5,8 +5,9 @@ using System.Text;
 using Verse;
 using Verse.AI;
 using RimWorld;
+using RPG_Inventory_Remake_Common;
 
-namespace RPG_Inventory_Remake
+namespace RPG_Inventory_Remake_CE
 {
     public class JobGiver_RPGI_ApparelOptions : ThinkNode_JobGiver
     {

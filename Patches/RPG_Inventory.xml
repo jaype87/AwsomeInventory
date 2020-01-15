@@ -8,13 +8,13 @@
         <match Class="PatchOperationReplace">
             <xpath>Defs/ThingDef[@Name="BasePawn"]/inspectorTabs/li[text()="CombatExtended.ITab_Inventory"]</xpath>
             <value>
-                <li>RPG_Inventory_Remake.RPG_GearTab_CE</li>
+                <li>RPG_Inventory_Remake_CE.RPG_GearTab_CE</li>
             </value>
         </match>
         <nomatch Class="PatchOperationReplace">
             <xpath>Defs/ThingDef[@Name="BasePawn"]/inspectorTabs/li[text()="ITab_Pawn_Gear"]</xpath>
             <value>
-                <li>RPG_Inventory_Remake.RPG_GearTab_CE</li>
+                <li>RPG_Inventory_Remake.RPG_GearTab</li>
             </value>
         </nomatch>
     </Operation>

@@ -9,8 +9,9 @@ using Verse.AI;
 using RimWorld;
 using UnityEngine;
 using CombatExtended;
+using RPG_Inventory_Remake_Common;
 
-namespace RPG_Inventory_Remake
+namespace RPG_Inventory_Remake_CE
 {
     [StaticConstructorOnStartup]
     public class AddHumanlikeOrders_RPGI_Patch

@@ -9,9 +9,8 @@ using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
 using Harmony;
-using CombatExtended;
 
-namespace RPG_Inventory_Remake
+namespace RPG_Inventory_Remake_Common
 {
     public static class Utility
     {
@@ -31,7 +30,7 @@ namespace RPG_Inventory_Remake
         private static Vector2 _scrollPosition = Vector2.zero;
         public static readonly Vector3 PawnTextureCameraOffset = new Vector3(0f, 0f, 0f);
 
-        internal static HarmonyInstance _harmony =
+        public static HarmonyInstance _harmony =
             HarmonyInstance.Create("NotoShabby.rimworld.mod.RPGInventoryRemake");
 
 
@@ -724,42 +723,21 @@ namespace RPG_Inventory_Remake
                 float sharp = app.GetStatValue(StatDefOf.ArmorRating_Sharp);
                 float blunt = app.GetStatValue(StatDefOf.ArmorRating_Blunt);
                 float heat = app.GetStatValue(StatDefOf.ArmorRating_Heat);
-                if (!RPG_GearTab_CE.IsCE)
+                if (sharp > 0.005)
                 {
-                    if (sharp > 0.005)
-                    {
-                        // string.Concat has a minor performance advantage over the good old fashion +
-                        // no need for premature optimization, just a note
-                        text = string.Concat(text, "\n", "ArmorSharp".Translate(), ":", sharp.ToStringPercent());
-                    }
-                    if (blunt > 0.005)
-                    {
-                        text = string.Concat(text, "\n", "ArmorBlunt".Translate(), ":", blunt.ToStringPercent());
-                    }
-                    if (heat > 0.005)
-                    {
-                        text = string.Concat(text, "\n", "ArmorHeat".Translate(), ":", heat.ToStringPercent());
-                    }
+                    // string.Concat has a minor performance advantage over the good old fashion +
+                    // no need for premature optimization, just a note
+                    text = string.Concat(text, "\n", "ArmorSharp".Translate(), ":", sharp.ToStringPercent());
                 }
-                else
+                if (blunt > 0.005)
                 {
-                    if (blunt > 0.005)
-                    {
-                        // string.Concat has a minor performance advantage over the good old fashion +
-                        // no need for premature optimization, just a note
-                        text = string.Concat(text, "\n", "ArmorBlunt".Translate(), ":",
-                            Math.Round(blunt, 2, MidpointRounding.AwayFromZero), " " + "CE_MPa".Translate());
-                    }
-                    if (sharp > 0.005)
-                    {
-                        text = string.Concat(text, "\n", "ArmorSharp".Translate(), ":",
-                            Math.Round(sharp, 2, MidpointRounding.AwayFromZero), "CE_mmRHA".Translate());
-                    }
-                    if (heat > 0.005)
-                    {
-                        text = string.Concat(text, "\n", "ArmorHeat".Translate(), ":", heat.ToStringPercent());
-                    }
+                    text = string.Concat(text, "\n", "ArmorBlunt".Translate(), ":", blunt.ToStringPercent());
                 }
+                if (heat > 0.005)
+                {
+                    text = string.Concat(text, "\n", "ArmorHeat".Translate(), ":", heat.ToStringPercent());
+                }
+
             }
             return text;
         }
@@ -955,36 +933,7 @@ namespace RPG_Inventory_Remake
             return value.ToStringByStyle(asPercent ? ToStringStyle.FloatMaxOne : ToStringStyle.FloatMaxTwo) + unit;
         }
 
-        public static void DrawBulkBreakdown(Pawn pawn, Rect rect)
-        {
-            string text = "";
-            float value;
-            foreach(ThingWithComps eq in pawn.equipment.AllEquipmentListForReading)
-            {
-                value = eq.GetStatValue(CE_StatDefOf.Bulk) * eq.stackCount;
-                if (value > 0.1)
-                {
-                    text += string.Concat(eq.LabelShortCap, ": ", value, "\n");
-                }
-            }
-            foreach(Apparel apparel in pawn.apparel.WornApparel)
-            {
-                value = apparel.GetStatValue(CE_StatDefOf.Bulk) * apparel.stackCount;
-                if (value > 0.1)
-                {
-                    text += string.Concat(apparel.LabelShortCap, ": ", value, "\n");
-                }
-            }
-            foreach(Thing thing in pawn.inventory.innerContainer)
-            {
-                value = thing.GetStatValue(CE_StatDefOf.Bulk) * thing.stackCount;
-                if (value > 0.1)
-                {
-                    text += string.Concat(thing.LabelShortCap, ": ", value, "\n");
-                }
-            }
-            TooltipHandler.TipRegion(rect, text);
-        }
+
 
         public static void DrawMassBreakdown(Pawn pawn, Rect rect)
         {

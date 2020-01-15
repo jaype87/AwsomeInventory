@@ -2,8 +2,9 @@
 using Verse.AI;
 using Harmony;
 using System.Reflection;
+using RPG_Inventory_Remake_Common;
 
-namespace RPG_Inventory_Remake
+namespace RPG_Inventory_Remake_CE
 {
     [StaticConstructorOnStartup]
     public class Pawn_CarryTracker_CarriedThing_RPGI_Patch

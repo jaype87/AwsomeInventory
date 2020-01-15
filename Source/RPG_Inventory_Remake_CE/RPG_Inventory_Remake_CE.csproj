@@ -6,8 +6,8 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Library</OutputType>
-    <RootNamespace>RPG_Inventory_Remake</RootNamespace>
-    <AssemblyName>RPG_Inventory_Remake</AssemblyName>
+    <RootNamespace>RPG_Inventory_Remake_CE</RootNamespace>
+    <AssemblyName>RPG_Inventory_Remake_CE</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <NoWin32Manifest>False</NoWin32Manifest>
@@ -89,14 +89,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Common\Components\CompRPGIUnload.cs">
+      <Link>Components\CompRPGIUnload.cs</Link>
+    </Compile>
     <Compile Include="..\Common\DefOfs\CorgiBodyPartGroupsDefOf.cs">
       <Link>DefOfs\CorgiBodyPartGroupsDefOf.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DefOfs\RPG_JobDefOf.cs">
+      <Link>DefOfs\RPG_JobDefOf.cs</Link>
     </Compile>
     <Compile Include="..\Common\Gizmos\ToggleGearTab.cs">
       <Link>Gizmos\ToggleGearTab.cs</Link>
     </Compile>
-    <Compile Include="..\Common\HarmonyPatches\Pawn_GetGizmos.cs">
-      <Link>HarmonyPatches\Pawn_GetGizmos.cs</Link>
+    <Compile Include="..\Common\Jobs\JobGiver_Unload.cs">
+      <Link>Jobs\JobGiver_Unload.cs</Link>
     </Compile>
     <Compile Include="..\Common\RPG_Pawn.cs">
       <Link>RPG_Pawn.cs</Link>
@@ -104,48 +110,56 @@
     <Compile Include="..\Common\SmartRect.cs">
       <Link>SmartRect.cs</Link>
     </Compile>
+    <None Include="Bootstrap\Setting.cs" />
+    <Compile Include="..\Common\TextButton.cs">
+      <Link>TextButton.cs</Link>
+    </Compile>
     <Compile Include="..\Common\Utilities\Utility.cs">
       <Link>Utilities\Utility.cs</Link>
     </Compile>
     <Compile Include="..\Common\Utilities\Utility_Draw.cs">
       <Link>Utilities\Utility_Draw.cs</Link>
     </Compile>
-    <Compile Include="Bootstrap\Setting.cs" />
-    <Compile Include="Test.cs" />
     <Compile Include="Components\GameComponent_RPGI_Main.cs" />
     <Compile Include="DefOfs\CE_ApparelLayerDefOf.cs" />
     <Compile Include="FillTabOperationsCE.cs" />
     <Compile Include="HarmonyPatches\AddHumanlikeOrders_RPGI_Patch.cs" />
+    <Compile Include="HarmonyPatches\Pawn_GetGizmos.cs" />
+    <Compile Include="Utilities\Utility_DrawCE.cs" />
     <None Include="HarmonyPatches\Game_FinalizeInit_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\JobDriver_Cleanup_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\Pawn_CarryTracker_CarriedThing_RPGI_Patch.cs" />
-    <Compile Include="Jobs\CompRPGIUnload.cs" />
     <Compile Include="Jobs\JobDriver_Map_Equip.cs" />
     <Compile Include="Jobs\JobDriver_RPGI_ApparelOptions.cs" />
     <Compile Include="Jobs\JobDriver_RPGI_Unload.cs" />
     <Compile Include="Jobs\JobGiver_RPGI_ApparelOptions.cs" />
-    <Compile Include="Jobs\RPG_JobDefOf.cs" />
     <None Include="Freezer.cs" />
-    <Compile Include="Jobs\JobGiver_Unload.cs" />
-    <Compile Include="MassBulkUtility.cs" />
-    <Compile Include="Bootstrap\ModStarter.cs" />
+    <None Include="Bootstrap\ModStarter.cs" />
     <Compile Include="RPG_GearTab_CE.cs" />
-    <None Include="RPG_GearTab.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="About\About.xml" />
-    <Content Include="About\preview.png" />
+    <Content Include="..\..\About\About.xml">
+      <Link>ABout\About.xml</Link>
+    </Content>
+    <Content Include="..\..\About\Manifest.xml">
+      <Link>About\Manifest.xml</Link>
+    </Content>
+    <Content Include="..\..\About\preview.png">
+      <Link>ABout\preview.png</Link>
+    </Content>
+    <Content Include="..\..\Defs\JobDefs\Jobs_RPGInventory.xml">
+      <Link>Defs\Jobs_RPGInventory.xml</Link>
+    </Content>
     <Content Include="Documents\Dressing Code in Rimworld.txt" />
     <Content Include="Documents\Test Plan.txt" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "D:\Modding\RPG-Style-Inventory-CE-master" "D:\Modding\RPG_Style_Inventory" /Y /E /I /D /exclude:$(ProjectDir)Post_Build_Events.txt</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

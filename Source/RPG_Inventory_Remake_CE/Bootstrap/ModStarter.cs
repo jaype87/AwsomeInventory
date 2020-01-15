@@ -8,7 +8,7 @@ using UnityEngine;
 using Harmony;
 using RimWorld;
 
-namespace RPG_Inventory_Remake
+namespace RPG_Inventory_Remake_CE
 {
     public class ModStarter : Mod
     {

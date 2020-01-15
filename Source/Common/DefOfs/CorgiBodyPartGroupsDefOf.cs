@@ -2,7 +2,7 @@
 using Verse;
 using RimWorld;
 
-namespace RPG_Inventory_Remake
+namespace RPG_Inventory_Remake_Common
 {
 	[DefOf]
     public static class CorgiBodyPartGroupDefOf
