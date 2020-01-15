@@ -15,7 +15,6 @@ namespace RPG_Inventory_Remake
         private static bool _isJealous = true;
         private static bool _isGreedy = false;
         private static bool _isAscetic = false;
-        public static FillTabOperationsCE OPs;
 
         private RPG_Pawn _selPawn;
 
@@ -90,28 +89,12 @@ namespace RPG_Inventory_Remake
 
             if (!IsCE)
             {
-                if (_isJealous)
-                {
-                    FillTabOperations.DrawJealous(_selPawn, this.size);
-                }
-                else if (_isGreedy)
-                {
-                    FillTabOperations.DrawGreedy(_selPawn, this.size);
-                }
-                else if (_isAscetic)
-                {
-                    FillTabOperations.DrawAscetic();
-                }
-                else
-                {
-                    throw new InvalidOperationException("No Display Option is chosen.");
-                }
             }
             else
             {
                 if (_isJealous)
                 {
-                    OPs.DrawJealousCE(_selPawn, this.size);
+                    FillTabOperationsCE.DrawJealousCE(_selPawn, this.size);
                 }
                 else if (_isGreedy)
                 {
@@ -119,7 +102,6 @@ namespace RPG_Inventory_Remake
                 }
                 else if (_isAscetic)
                 {
-                    FillTabOperations.DrawAscetic();
                 }
                 else
                 {

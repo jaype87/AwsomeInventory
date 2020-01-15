@@ -41,13 +41,8 @@ namespace RPG_Inventory_Remake
             if (mode > 0)
             {
                 List<Apparel> wornApparel = pawn.apparel.WornApparel;
-                int count = wornApparel.Count;
-                Log.Message("wornApparel.Count: " + wornApparel.Count);
-                Log.Message("Count: " + count);
-                for (int num = 0; num < count; ++num)
+                for (int num = wornApparel.Count - 1; num >= 0; num--)
                 {
-                    Log.Message("wornApparel.Count2: " + wornApparel.Count);
-                    Log.Message("num: " + num);
                     if (!ApparelUtility.CanWearTogether(apparel.def, wornApparel[num].def, pawn.RaceProps.body))
                     {
                         duration += (int)(wornApparel[num].GetStatValue(StatDefOf.EquipDelay) * 60f);
@@ -64,7 +59,6 @@ namespace RPG_Inventory_Remake
                 this.FailOnBurningImmobile(TargetIndex.A);
                 yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.ClosestTouch).FailOnDespawnedNullOrForbidden(TargetIndex.A);
             }
-            yield return Toils_General.Wait(10);
             yield return Toils_General.Wait(duration).WithProgressBarToilDelay(TargetIndex.A);
             if (mode == -1)
             {

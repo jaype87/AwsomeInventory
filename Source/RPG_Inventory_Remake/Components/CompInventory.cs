@@ -68,21 +68,6 @@ namespace RPG_Inventory_Remake.RPGLoadout
                 return parentPawnInt;
             }
         }
-        public float moveSpeedFactor
-        {
-            get
-            {
-                return MassBulkUtility.MoveSpeedFactor(currentWeight, capacityWeight);
-            }
-        }
-
-        public float encumberPenalty
-        {
-            get
-            {
-                return MassBulkUtility.EncumberPenalty(currentWeight, capacityWeight);
-            }
-        }
         public ThingOwner container
         {
             get

@@ -5,8 +5,8 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6629105C-6BED-491B-A49A-EB12B0710CF3}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Common</RootNamespace>
+    <OutputType>Library</OutputType>
+    <RootNamespace>RPG_Inventory_Remake</RootNamespace>
     <AssemblyName>Common</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -31,16 +31,62 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CE Build|AnyCPU'">
+    <OutputPath>bin\CE Build\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Vanilla Build|AnyCPU'">
+    <OutputPath>bin\Vanilla Build\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
+    <Content Include="..\..\Defs\ApparelLayerDefs.xml">
+      <Link>Defs\ApparelLayerDefs.xml</Link>
+    </Content>
+    <Content Include="..\..\Defs\BodyPartGroups.xml">
+      <Link>Defs\BodyPartGroups.xml</Link>
+    </Content>
+    <Content Include="..\..\Defs\Jewelry_compat\ApparelLayerDefs.xml">
+      <Link>Defs\Jewelry\ApparelLayerDefs.xml</Link>
+    </Content>
+    <Content Include="..\..\Defs\JobDefs\Jobs_RPGInventory.xml">
+      <Link>Defs\JobDefs\Jobs_RPGInventory.xml</Link>
+    </Content>
     <Content Include="..\..\Languages\English\Keyed\Sandy_Detailed_RPG_Gear.xml">
       <Link>Languages\Sandy_Detailed_RPG_Gear.xml</Link>
     </Content>
-    <Content Include="Defs\ApparelLayerDefs.xml" />
-    <Content Include="Defs\Jewelry_compat\BodyPartGroups.xml" />
-    <Content Include="Defs\JobDefs\Jobs_RPGInventory.xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefOfs\CorgiBodyPartGroupsDefOf.cs" />
+    <Compile Include="Gizmos\ToggleGearTab.cs" />
+    <Compile Include="HarmonyPatches\Pawn_GetGizmos.cs" />
+    <Compile Include="Jobs\CompRPGIUnload.cs" />
+    <Compile Include="Jobs\JobDriver_Map_Equip.cs" />
+    <Compile Include="Jobs\JobDriver_RPGI_ApparelOptions.cs" />
+    <Compile Include="Jobs\JobDriver_RPGI_Unload.cs" />
+    <Compile Include="Jobs\JobGiver_RPGI_ApparelOptions.cs" />
+    <Compile Include="Jobs\JobGiver_Unload.cs" />
+    <Compile Include="Jobs\RPG_JobDefOf.cs" />
+    <Compile Include="RPG_Pawn.cs" />
+    <Compile Include="SmartRect.cs" />
+    <Compile Include="Utilities\Utility.cs" />
+    <Compile Include="Utilities\Utility_Draw.cs" />
+    <None Include="Utilities\Utility_HoldTracker.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\..\Harmony\net35\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\RW-Decompile\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="CombatExtended">
+      <HintPath>..\..\..\CombatExtended\Assemblies\CombatExtended.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\RW-Decompile\Managed\UnityEngine.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

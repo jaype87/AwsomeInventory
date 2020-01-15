@@ -8,7 +8,6 @@ using Verse;
 using Verse.AI;
 using RimWorld;
 using UnityEngine;
-using CombatExtended;
 
 namespace RPG_Inventory_Remake
 {
@@ -25,7 +24,6 @@ namespace RPG_Inventory_Remake
         public static void Postfix(Vector3 clickPos, Pawn pawn, List<FloatMenuOption> opts)
         {
             IntVec3 c = IntVec3.FromVector3(clickPos);
-            CompInventory compInventory = pawn.TryGetComp<CompInventory>();
             if (pawn.equipment != null)
             {
                 ThingWithComps equipment = null;
@@ -42,11 +40,9 @@ namespace RPG_Inventory_Remake
                 {
                     string labelShort = equipment.LabelShort;
                     FloatMenuOption menuOption;
-                    int count = 1;
                     if (!(equipment.def.IsWeapon && pawn.story.WorkTagIsDisabled(WorkTags.Violent)
                         && !pawn.CanReach(equipment, PathEndMode.ClosestTouch, Danger.Deadly)
                         && !pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation)
-                        && compInventory.CanFitInInventory(equipment, out count)
                         && equipment.IsBurning()))
                     {
                         string text5 = "Corgi_RPGI".Translate() + " " + "Equip".Translate(labelShort);
@@ -57,7 +53,7 @@ namespace RPG_Inventory_Remake
                         menuOption = FloatMenuUtility.DecoratePrioritizedTask(new FloatMenuOption(text5, delegate
                         {
                             equipment.SetForbidden(value: false);
-                            pawn.jobs.TryTakeOrderedJob(new Job(RPGI_JobDefOf.RPGI_Map_Equip, equipment) { count = count});
+                            pawn.jobs.TryTakeOrderedJob(new Job(RPGI_JobDefOf.RPGI_Map_Equip, equipment));
                             MoteMaker.MakeStaticMote(equipment.DrawPos, equipment.Map, ThingDefOf.Mote_FeedbackEquip);
                             PlayerKnowledgeDatabase.KnowledgeDemonstrated(ConceptDefOf.EquippingWeapons, KnowledgeAmount.Total);
                         }, MenuOptionPriority.High), pawn, equipment);
@@ -70,10 +66,7 @@ namespace RPG_Inventory_Remake
                 Apparel apparel = pawn.Map.thingGrid.ThingAt<Apparel>(c);
                 if (apparel != null)
                 {
-                    if (pawn.CanReach(apparel, PathEndMode.ClosestTouch, Danger.Deadly)
-                        && compInventory.CanFitInInventory(apparel, out _)
-                        && !apparel.IsBurning()
-                        && ApparelUtility.HasPartsToWear(pawn, apparel.def))
+                    if (pawn.CanReach(apparel, PathEndMode.ClosestTouch, Danger.Deadly) && !apparel.IsBurning() && ApparelUtility.HasPartsToWear(pawn, apparel.def))
                     {
                         FloatMenuOption optionForced = FloatMenuUtility.DecoratePrioritizedTask(
                             new FloatMenuOption("Corgi_RPGI".Translate() + " " + "ForceWear".Translate(apparel.LabelShort, apparel) + " " + "Corgi_KeepOldApparel".Translate(), delegate

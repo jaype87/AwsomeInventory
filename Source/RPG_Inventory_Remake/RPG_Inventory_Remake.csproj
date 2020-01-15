@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9C99FF79-7175-48EC-A407-9D72950F2BC4}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>RPG_Inventory_Remake</RootNamespace>
     <AssemblyName>RPG_Inventory_Remake</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
@@ -31,12 +31,51 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CE Build|AnyCPU'">
+    <OutputPath>bin\CE Build\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Vanilla Build|AnyCPU'">
+    <OutputPath>bin\Vanilla Build\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Common\DefOfs\CorgiBodyPartGroupsDefOf.cs">
+      <Link>Defs\CorgiBodyPartGroupsDefOf.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Jobs\JobGiver_Unload.cs">
+      <Link>Jobs\JobGiver_Unload.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Jobs\RPG_JobDefOf.cs">
+      <Link>Jobs\RPG_JobDefOf.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\RPG_Pawn.cs">
+      <Link>RPG_Pawn.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\SmartRect.cs">
+      <Link>SmartRect.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Utilities\Utility.cs">
+      <Link>Utilities\Utility.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Utilities\Utility_Draw.cs">
+      <Link>Utilities\Utility_Draw.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Utilities\Utility_HoldTracker.cs">
+      <Link>Utilities\Utility_HoldTracker.cs</Link>
+    </Compile>
     <Compile Include="Bootstrap\ModStarter.cs" />
     <Compile Include="Bootstrap\Setting.cs" />
     <Compile Include="Components\CompInventory.cs" />
     <Compile Include="Components\CompProperties_Inventory.cs" />
     <Compile Include="Components\GameComponent_RPGI_Main.cs" />
+    <Compile Include="Enum\LoadoutCountType.cs" />
+    <Compile Include="FillTabOperations.cs" />
+    <Compile Include="HarmonyPatches\AddHumanlikeOrders_RPGI_Patch.cs" />
+    <None Include="HarmonyPatches\Game_FinalizeInit_RPGI_Patch.cs" />
+    <Compile Include="HarmonyPatches\JobDriver_Cleanup_RPGI_Patch.cs" />
+    <Compile Include="HarmonyPatches\Pawn_CarryTracker_CarriedThing_RPGI_Patch.cs" />
     <Compile Include="Loadout\Dialog_ManageLoadouts.cs" />
     <Compile Include="Loadout\GameComp_LoadoutManager.cs" />
     <Compile Include="Loadout\HoldRecord.cs" />
@@ -62,13 +101,12 @@
       <HintPath>..\..\..\RW-Decompile\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System" />
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\RW-Decompile\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Defs\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

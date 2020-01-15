@@ -78,6 +78,9 @@ namespace RPG_Inventory_Remake
         public override void Notify_Starting()
         {
             base.Notify_Starting();
+            AddFinishAction(() => Log.Message("Job finished"));
+            // NOTE remove log
+            Log.Message("Notify Starting");
             if (TargetThingA is Apparel apparel && pawn.apparel.Contains(apparel))
             {
                 // time needed to unequip

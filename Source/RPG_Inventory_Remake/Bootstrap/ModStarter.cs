@@ -19,11 +19,6 @@ namespace RPG_Inventory_Remake
         public ModStarter(ModContentPack content) : base(content)
         {
             settings = GetSettings<Setting>();
-            if (LoadedModManager.RunningModsListForReading.Any(m => m.Name == "Combat Extended"))
-            {
-                RPG_GearTab_CE.IsCE = true;
-                // typeof(DefOfHelper).GetMethod("BindDefsFor", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { typeof(RPGLoadout.CE_StatDefOf) });
-            }
         }
 
         public override void DoSettingsWindowContents(Rect inRect)

@@ -12,3 +12,5 @@
 2. Test Weapon put away
 3. Test Apparel forced equip
 4. Test Apparel equip
+5. Test equip apparels and weapons on map
+6. Pick up weapons with count greater than 1
