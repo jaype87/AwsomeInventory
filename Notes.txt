@@ -1,0 +1,18 @@
+Check KeybindingCategories.xml
+Check keybindings.xml
+Command inherit gizmo
+Check InspectPaneUtility.ToggleTab() and OpenTab()
+Check Rimworld.UIRoot_Play.UIRootOnGUI()
+
+Root level exception in OnGUI(): System.NullReferenceException: Object reference not set to an instance of an object
+  at Verse.WindowStack.Add (Verse.Window window) [0x00000] in <filename unknown>:0 
+  at RimWorld.MainTabsRoot.ToggleTab (RimWorld.MainButtonDef newTab, Boolean playSound) [0x00000] in <filename unknown>:0 
+  at RimWorld.MainButtonWorker_ToggleTab.Activate () [0x00000] in <filename unknown>:0 
+  at RimWorld.MainButtonWorker.InterfaceTryActivate () [0x00000] in <filename unknown>:0 
+  at RimWorld.MainButtonsRoot.MainButtonsOnGUI () [0x00000] in <filename unknown>:0 
+  at RimWorld.UIRoot_Play.UIRootOnGUI () [0x00000] in <filename unknown>:0 
+  at Verse.Root.OnGUI () [0x00000] in <filename unknown>:0 
+Verse.Log:Error(String, Boolean)
+Verse.Root:OnGUI()
+
+Check GenUI for UI helper function
