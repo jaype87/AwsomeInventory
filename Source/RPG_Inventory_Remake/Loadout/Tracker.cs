@@ -7,7 +7,7 @@ using System.Text;
 using UnityEngine;
 using Verse;
 
-namespace RPG_Inventory_Remake.RPGLoadout
+namespace RPG_Inventory_Remake.RPGILoadout
 {
 	/// <summary>
 	/// Contains a series of HoldRecord items.  Functionally not that different from a List of HoldRecord but that list cannot be saved, this can be.

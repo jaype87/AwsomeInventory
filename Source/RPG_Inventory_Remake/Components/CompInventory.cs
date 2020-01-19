@@ -7,7 +7,7 @@ using Verse;
 using Verse.Sound;
 using UnityEngine;
 
-namespace RPG_Inventory_Remake.RPGLoadout
+namespace RPG_Inventory_Remake.RPGILoadout
 {
     public class CompInventory : ThingComp
     {
@@ -17,7 +17,6 @@ namespace RPG_Inventory_Remake.RPGLoadout
         private const int CLEANUPTICKINTERVAL = GenTicks.TickLongInterval;
         private int ticksToNextCleanUp = GenTicks.TicksAbs;
         private float currentWeightCached;
-        private List<Thing> ammoListCached = new List<Thing>();
         private List<ThingWithComps> meleeWeaponListCached = new List<ThingWithComps>();
         private List<ThingWithComps> rangedWeaponListCached = new List<ThingWithComps>();
 
@@ -79,7 +78,6 @@ namespace RPG_Inventory_Remake.RPGLoadout
                 return null;
             }
         }
-        public List<Thing> ammoList => ammoListCached;
         public List<ThingWithComps> meleeWeaponList => meleeWeaponListCached;
         public List<ThingWithComps> rangedWeaponList => rangedWeaponListCached;
 
@@ -125,7 +123,6 @@ namespace RPG_Inventory_Remake.RPGLoadout
             // Add inventory items
             if (parentPawn.inventory != null && parentPawn.inventory.innerContainer != null)
             {
-                ammoListCached.Clear();
                 meleeWeaponListCached.Clear();
                 rangedWeaponListCached.Clear();
 

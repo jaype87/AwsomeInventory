@@ -7,7 +7,7 @@ using System.Text;
 using UnityEngine;
 using Verse;
 
-namespace RPG_Inventory_Remake.RPGLoadout
+namespace RPG_Inventory_Remake.RPGILoadout
 {
     [StaticConstructorOnStartup]
     public static class Utility_Loadouts

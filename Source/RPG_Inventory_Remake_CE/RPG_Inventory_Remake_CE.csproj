@@ -110,6 +110,9 @@
     <Compile Include="..\Common\SmartRect.cs">
       <Link>SmartRect.cs</Link>
     </Compile>
+    <None Include="..\..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="Bootstrap\Setting.cs" />
     <Compile Include="..\Common\TextButton.cs">
       <Link>TextButton.cs</Link>

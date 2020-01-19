@@ -6,13 +6,14 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using Verse;
+using System.Collections;
 
-namespace RPG_Inventory_Remake.RPGLoadout
+namespace RPG_Inventory_Remake.RPGILoadout
 {
 	/// <summary>
 	/// Contains a series of LoadoutSlot slots which define what a pawn using this loadout should try to keep in their inventory.
 	/// </summary>
-    public class Loadout : IExposable, ILoadReferenceable, IComparable
+    public class Loadout : IExposable, ILoadReferenceable, IComparable, IEnumerable
     {
         #region Fields
 
@@ -235,6 +236,11 @@ namespace RPG_Inventory_Remake.RPGLoadout
 			return this.label.CompareTo(other.label);
 		}
 
-		#endregion
+        public IEnumerator GetEnumerator()
+        {
+            return _slots.GetEnumerator();
+        }
+
+        #endregion
     }
 }

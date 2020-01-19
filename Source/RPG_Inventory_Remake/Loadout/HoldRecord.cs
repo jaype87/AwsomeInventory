@@ -1,7 +1,7 @@
 ﻿using RimWorld;
 using Verse;
 
-namespace RPG_Inventory_Remake.RPGLoadout
+namespace RPG_Inventory_Remake.RPGILoadout
 {
 	/// <summary>
 	/// HoldRecord stores key information for an individual element of HoldTracker.

@@ -1,6 +1,6 @@
 ﻿using Verse;
 
-namespace RPG_Inventory_Remake.RPGLoadout
+namespace RPG_Inventory_Remake.RPGILoadout
 {
     public class CompProperties_Inventory : CompProperties
     {

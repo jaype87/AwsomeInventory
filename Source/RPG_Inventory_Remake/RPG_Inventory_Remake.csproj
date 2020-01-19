@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
+  <Import Project="..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props')" />
+  <Import Project="..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props')" />
+  <Import Project="..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props')" />
+  <Import Project="..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -11,6 +16,8 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -80,30 +87,44 @@
     <Compile Include="FillTabOperations.cs" />
     <Compile Include="HarmonyPatches\AddHumanlikeOrders_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\Pawn_GetGizmos.cs" />
+    <Compile Include="HarmonyPatches\ThingOwner_RPGI_Patch.cs" />
     <Compile Include="Jobs\JobDriver_Map_Equip.cs" />
     <Compile Include="Jobs\JobDriver_RPGI_ApparelOptions.cs" />
     <Compile Include="Jobs\JobDriver_RPGI_Unload.cs" />
     <Compile Include="Jobs\JobGiver_RPGI_ApparelOptions.cs" />
+    <Compile Include="Jobs\JobGiver_TakeAndEquip.cs" />
+    <Compile Include="Jobs\JobGiver_UpdateLoadout.cs" />
+    <Compile Include="Loadout\compRPGILoudout.cs" />
+    <Compile Include="Loadout\GameComponent_DefManager.cs" />
+    <Compile Include="Loadout\LoadoutModExtension.cs" />
+    <Compile Include="Loadout\LoadoutComparer.cs" />
+    <Compile Include="Loadout\RPGILoadout.cs" />
     <Compile Include="RPG_GearTab.cs" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="HarmonyPatches\Game_FinalizeInit_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\JobDriver_Cleanup_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\Pawn_CarryTracker_CarriedThing_RPGI_Patch.cs" />
     <Compile Include="Loadout\Dialog_ManageLoadouts.cs" />
-    <Compile Include="Loadout\GameComp_LoadoutManager.cs" />
+    <Compile Include="Loadout\GameComponent_LoadoutManager.cs" />
     <Compile Include="Loadout\HoldRecord.cs" />
     <Compile Include="Loadout\Loadout.cs" />
     <Compile Include="Loadout\LoadoutGenericDef.cs" />
     <Compile Include="Loadout\LoadoutSlot.cs" />
     <Compile Include="Loadout\MassBulkUtility.cs" />
-    <Compile Include="Loadout\PawnColumnWorker_Loadout.cs" />
-    <Compile Include="Loadout\PawnColumnWorker_MassBulkBars.cs" />
     <Compile Include="Loadout\Tracker.cs" />
     <Compile Include="Loadout\Utility_HoldTracker.cs" />
     <Compile Include="Loadout\Utility_Loadouts.cs" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\..\RPG_Style_Inventory\Languages\English\Keyed\Sandy_Detailed_RPG_Gear.xml">
       <Link>Languages\Sandy_Detailed_RPG_Gear.xml</Link>
+    </Content>
+    <Content Include="..\..\..\RPG_Style_Inventory\Patches\LoadoutDefModExtention.xml">
+      <Link>Patches\LoadoutDefModExtention.xml</Link>
+    </Content>
+    <Content Include="..\..\..\RPG_Style_Inventory\Patches\RPG_Inventory.xml">
+      <Link>Patches\RPG_Inventory.xml</Link>
     </Content>
     <Content Include="About\About.xml" />
     <Content Include="About\preview.png" />
@@ -123,6 +144,26 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />
+    <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />
+    <Analyzer Include="..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\analyzers\dotnet\cs\Humanizer.dll" />
+    <Analyzer Include="..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeQuality.Analyzers.dll" />
+    <Analyzer Include="..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeQuality.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetCore.Analyzers.dll" />
+    <Analyzer Include="..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
+    <Analyzer Include="..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
+  </Target>
 </Project>

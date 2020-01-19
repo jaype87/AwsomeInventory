@@ -2,12 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using Verse;
 
-namespace RPG_Inventory_Remake.RPGLoadout
+namespace RPG_Inventory_Remake.RPGILoadout
 {
     public enum SourceSelection
     {
@@ -44,7 +43,9 @@ namespace RPG_Inventory_Remake.RPGLoadout
             _iconPickupDrop = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/loadoutPickupDrop"),
             _iconDropExcess = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/loadoutDropExcess");
 
+        private static List<LoadoutGenericDef> _allDefsGenericInstance;
         private static Regex validNameRegex = Outfit.ValidNameRegex;
+
         private Vector2 _availableScrollPosition = Vector2.zero;
         private const float _barHeight = 24f;
         private Vector2 _countFieldSize = new Vector2(40f, 24f);
@@ -60,29 +61,35 @@ namespace RPG_Inventory_Remake.RPGLoadout
         private List<SelectableItem> _source;
         private List<LoadoutGenericDef> _sourceGeneric;
         private SourceSelection _sourceType = SourceSelection.Ranged;
-        private readonly List<ThingDef> _allSuitableDefs;
-        private readonly List<LoadoutGenericDef> _allDefsGeneric;
         private readonly List<SelectableItem> _selectableItems;
 
         #endregion Fields
 
         #region Constructors
 
+        static Dialog_ManageLoadouts()
+        {
+        }
+
         public Dialog_ManageLoadouts(Loadout loadout)
         {
-        	CurrentLoadout = null;
-        	if (loadout != null && !loadout.defaultLoadout)
-            	CurrentLoadout = loadout;
-            _allSuitableDefs = DefDatabase<ThingDef>.AllDefs.Where(td => !td.menuHidden && IsSuitableThingDef(td)).ToList();
-            _allDefsGeneric = DefDatabase<LoadoutGenericDef>.AllDefs.OrderBy(g => g.label).ToList();
+            CurrentLoadout = null;
+            if (loadout != null && !loadout.defaultLoadout)
+                CurrentLoadout = loadout;
+
+
+            HashSet<ThingDef> allSuitableDefs = GameComponent_DefManager.GetSuitableDefs();
+            HashSet<ThingDef> visibleDefs = GameComponent_DefManager.GetSuitableDefs();
+            visibleDefs.IntersectWith(Find.CurrentMap.listerThings.ThingsInGroup(ThingRequestGroup.HaulableEverOrMinifiable).Select(t => t.def));
+            
             _selectableItems = new List<SelectableItem>();
-            foreach (var td in _allSuitableDefs)
+            foreach (ThingDef td in allSuitableDefs)
             {
                 _selectableItems.Add(new SelectableItem()
                 {
                     thingDef = td,
-                    isGreyedOut = (Find.CurrentMap.listerThings.AllThings.Find(thing => thing.GetInnerIfMinified().def == td && !thing.def.Minifiable) == null)
-                        //!thing.PositionHeld.Fogged(thing.MapHeld) //check Thing is visible on map. CPU expensive!
+                    isGreyedOut = !visibleDefs.Contains(td)
+                    //!thing.PositionHeld.Fogged(thing.MapHeld) //check Thing is visible on map. CPU expensive!
                 });
             }
             SetSource(SourceSelection.Ranged);
@@ -96,18 +103,28 @@ namespace RPG_Inventory_Remake.RPGLoadout
 
         #endregion Constructors
 
+        #region Nested Class
+
+        #endregion
+
         #region Properties
 
-        public Loadout CurrentLoadout
+        private static List<LoadoutGenericDef> _allDefsGeneric
         {
             get
             {
-                return _currentLoadout;
+                if (_allDefsGenericInstance == null)
+                {
+                    _allDefsGenericInstance = DefDatabase<LoadoutGenericDef>.AllDefs.OrderBy(g => g.label).ToList();
+                }
+                return _allDefsGenericInstance;
             }
-            set
-            {
-                _currentLoadout = value;
-            }
+        }
+
+        public Loadout CurrentLoadout
+        {
+            get => _currentLoadout;
+            set => _currentLoadout = value;
         }
 
         public LoadoutSlot Dragging
@@ -140,18 +157,6 @@ namespace RPG_Inventory_Remake.RPGLoadout
 
         #region Methods
 
-        private bool IsSuitableThingDef(ThingDef td)
-        {
-            return (td.thingClass != typeof(Corpse) &&
-                    !td.IsBlueprint && !td.IsFrame &&
-                    td != ThingDefOf.ActiveDropPod &&
-                    td.thingClass != typeof(MinifiedThing) &&
-                    td.thingClass != typeof(UnfinishedThing) &&
-                    !td.destroyOnDrop &&
-                    td.category == ThingCategory.Item) 
-                    ||
-                    td.Minifiable;
-        }
         public override void DoWindowContents(Rect canvas)
         {
             // fix weird zooming bug
@@ -192,33 +197,33 @@ namespace RPG_Inventory_Remake.RPGLoadout
                 (canvas.width - _margin) / 2f,
                 canvas.height - 24f - _topAreaHeight - _margin * 3);
 
-        	LoadoutManager.SortLoadouts();
+            LoadoutManager.SortLoadouts();
             List<Loadout> loadouts = LoadoutManager.Loadouts.Where(l => !l.defaultLoadout).ToList();
 
             // DRAW CONTENTS
             // buttons
             // select loadout
-            if (Widgets.ButtonText(selectRect, "CE_SelectLoadout".Translate()))
+            if (Widgets.ButtonText(selectRect, "Corgi_SelectLoadout".Translate()))
             {
-            	
+
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
 
                 if (loadouts.Count == 0)
-                    options.Add(new FloatMenuOption("CE_NoLoadouts".Translate(), null));
+                    options.Add(new FloatMenuOption("Corgi_NoLoadouts".Translate(), null));
                 else
                 {
                     for (int i = 0; i < loadouts.Count; i++)
                     {
                         int local_i = i;
-                    	options.Add(new FloatMenuOption(loadouts[i].LabelCap, delegate
-                    	{ CurrentLoadout = loadouts[local_i]; }));
+                        options.Add(new FloatMenuOption(loadouts[i].LabelCap, delegate
+                        { CurrentLoadout = loadouts[local_i]; }));
                     }
                 }
 
                 Find.WindowStack.Add(new FloatMenu(options));
             }
             // create loadout
-            if (Widgets.ButtonText(newRect, "CE_NewLoadout".Translate()))
+            if (Widgets.ButtonText(newRect, "Corgi_NewLoadout".Translate()))
             {
                 Loadout loadout = new Loadout();
                 loadout.AddBasicSlots();
@@ -226,13 +231,13 @@ namespace RPG_Inventory_Remake.RPGLoadout
                 CurrentLoadout = loadout;
             }
             // copy loadout
-            if (CurrentLoadout != null && Widgets.ButtonText(copyRect, "CE_CopyLoadout".Translate()))
+            if (CurrentLoadout != null && Widgets.ButtonText(copyRect, "Corgi_CopyLoadout".Translate()))
             {
-            	CurrentLoadout = CurrentLoadout.Copy();
-            	LoadoutManager.AddLoadout(CurrentLoadout);
+                CurrentLoadout = CurrentLoadout.Copy();
+                LoadoutManager.AddLoadout(CurrentLoadout);
             }
             // delete loadout
-            if (loadouts.Any(l => l.canBeDeleted) && Widgets.ButtonText(deleteRect, "CE_DeleteLoadout".Translate()))
+            if (loadouts.Any(l => l.canBeDeleted) && Widgets.ButtonText(deleteRect, "Corgi_DeleteLoadout".Translate()))
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
 
@@ -260,14 +265,14 @@ namespace RPG_Inventory_Remake.RPGLoadout
             {
                 Text.Anchor = TextAnchor.MiddleCenter;
                 GUI.color = Color.grey;
-                Widgets.Label(canvas, "CE_NoLoadoutSelected".Translate());
+                Widgets.Label(canvas, "Corgi_NoLoadoutSelected".Translate());
                 GUI.color = Color.white;
                 Text.Anchor = TextAnchor.UpperLeft;
 
                 // and stop further drawing
                 return;
             }
-            
+
             // name
             DrawNameField(nameRect);
 
@@ -283,7 +288,7 @@ namespace RPG_Inventory_Remake.RPGLoadout
             // bars
             if (CurrentLoadout != null)
             {
-                Utility_Loadouts.DrawBar(weightBarRect, CurrentLoadout.Weight, Utility_Loadouts.medianWeightCapacity, "CE_Weight".Translate(), null);
+                Utility_Loadouts.DrawBar(weightBarRect, CurrentLoadout.Weight, Utility_Loadouts.medianWeightCapacity, "Corgi_Weight".Translate(), null);
                 // draw text overlays on bars
                 Text.Font = GameFont.Small;
                 Text.Anchor = TextAnchor.MiddleCenter;
@@ -302,52 +307,45 @@ namespace RPG_Inventory_Remake.RPGLoadout
             GUI.color = _sourceType == SourceSelection.Ranged ? GenUI.MouseoverColor : Color.white;
             if (Widgets.ButtonImage(button, _iconRanged))
                 SetSource(SourceSelection.Ranged);
-            TooltipHandler.TipRegion(button, "CE_SourceRangedTip".Translate());
+            TooltipHandler.TipRegion(button, "Corgi_SourceRangedTip".Translate());
             button.x += 24f + _margin;
 
             // Melee weapons
             GUI.color = _sourceType == SourceSelection.Melee ? GenUI.MouseoverColor : Color.white;
             if (Widgets.ButtonImage(button, _iconMelee))
                 SetSource(SourceSelection.Melee);
-            TooltipHandler.TipRegion(button, "CE_SourceMeleeTip".Translate());
+            TooltipHandler.TipRegion(button, "Corgi_SourceMeleeTip".Translate());
             button.x += 24f + _margin;
 
-            // Ammo
-            GUI.color = _sourceType == SourceSelection.Ammo ? GenUI.MouseoverColor : Color.white;
-            if (Widgets.ButtonImage(button, _iconAmmo))
-                SetSource(SourceSelection.Ammo);
-            TooltipHandler.TipRegion(button, "CE_SourceAmmoTip".Translate());
-            button.x += 24f + _margin;
-            
             // Minified
             GUI.color = _sourceType == SourceSelection.Minified ? GenUI.MouseoverColor : Color.white;
             if (Widgets.ButtonImage(button, _iconMinified))
-            	SetSource(SourceSelection.Minified);
-            TooltipHandler.TipRegion(button, "CE_SourceMinifiedTip".Translate());
+                SetSource(SourceSelection.Minified);
+            TooltipHandler.TipRegion(button, "Corgi_SourceMinifiedTip".Translate());
             button.x += 24f + _margin;
-            
+
             // Generic
             GUI.color = _sourceType == SourceSelection.Generic ? GenUI.MouseoverColor : Color.white;
             if (Widgets.ButtonImage(button, _iconGeneric))
-            	SetSource(SourceSelection.Generic);
-            TooltipHandler.TipRegion(button, "CE_SourceGenericTip".Translate());
+                SetSource(SourceSelection.Generic);
+            TooltipHandler.TipRegion(button, "Corgi_SourceGenericTip".Translate());
             button.x += 24f + _margin;
 
             // All
             GUI.color = _sourceType == SourceSelection.All ? GenUI.MouseoverColor : Color.white;
             if (Widgets.ButtonImage(button, _iconAll))
                 SetSource(SourceSelection.All);
-            TooltipHandler.TipRegion(button, "CE_SourceAllTip".Translate());
+            TooltipHandler.TipRegion(button, "Corgi_SourceAllTip".Translate());
 
             // filter input field
             Rect filter = new Rect(canvas.xMax - 75f, canvas.yMin + (canvas.height - 24f) / 2f, 75f, 24f);
             DrawFilterField(filter);
-            TooltipHandler.TipRegion(filter, "CE_SourceFilterTip".Translate());
+            TooltipHandler.TipRegion(filter, "Corgi_SourceFilterTip".Translate());
 
             // search icon
             button.x = filter.xMin - _margin * 2 - _iconSize;
             GUI.DrawTexture(button, _iconSearch);
-            TooltipHandler.TipRegion(button, "CE_SourceFilterTip".Translate());
+            TooltipHandler.TipRegion(button, "Corgi_SourceFilterTip".Translate());
 
             // reset color
             GUI.color = Color.white;
@@ -372,7 +370,7 @@ namespace RPG_Inventory_Remake.RPGLoadout
             {
                 case SourceSelection.Ranged:
                     _source = _selectableItems.Where(row => row.thingDef.IsRangedWeapon).ToList();
-                    _sourceType = SourceSelection.Ranged;                   
+                    _sourceType = SourceSelection.Ranged;
                     break;
 
                 case SourceSelection.Melee:
@@ -384,7 +382,7 @@ namespace RPG_Inventory_Remake.RPGLoadout
                     _source = _selectableItems.Where(row => row.thingDef.Minifiable).ToList();
                     _sourceType = SourceSelection.Minified;
                     break;
-                
+
                 case SourceSelection.Generic:
                     _sourceType = SourceSelection.Generic;
                     initGenericVisibilityDictionary();
@@ -400,7 +398,7 @@ namespace RPG_Inventory_Remake.RPGLoadout
             if (!_source.NullOrEmpty())
             {
                 _source = _source.OrderBy(td => td.thingDef.label).ToList();
-            }            
+            }
         }
 
         private void DrawCountField(Rect canvas, LoadoutSlot slot)
@@ -411,7 +409,7 @@ namespace RPG_Inventory_Remake.RPGLoadout
             int countInt = slot.count;
             string buffer = countInt.ToString();
             Widgets.TextFieldNumeric<int>(canvas, ref countInt, ref buffer);
-            TooltipHandler.TipRegion(canvas, "CE_CountFieldTip".Translate(slot.count));
+            TooltipHandler.TipRegion(canvas, "Corgi_CountFieldTip".Translate(slot.count));
             slot.count = countInt;
         }
 
@@ -456,18 +454,18 @@ namespace RPG_Inventory_Remake.RPGLoadout
                 countRect.xMin - _iconSize - _margin,
                 row.yMin + (row.height - _iconSize) / 2f,
                 _iconSize, _iconSize);
-            
+
             Rect countModeRect = new Rect(
-            	ammoRect.xMin - _iconSize - _margin,
-            	row.yMin + (row.height - _iconSize) / 2f,
-            	_iconSize, _iconSize);
+                ammoRect.xMin - _iconSize - _margin,
+                row.yMin + (row.height - _iconSize) / 2f,
+                _iconSize, _iconSize);
 
             Rect deleteRect = new Rect(countRect.xMax + _margin, row.yMin + (row.height - _iconSize) / 2f, _iconSize, _iconSize);
 
             // dragging on dragHandle
             if (slotDraggable)
             {
-                TooltipHandler.TipRegion(draggingHandle, "CE_DragToReorder".Translate());
+                TooltipHandler.TipRegion(draggingHandle, "Corgi_DragToReorder".Translate());
                 GUI.DrawTexture(draggingHandle, _iconMove);
 
                 if (Mouse.IsOver(draggingHandle) && Input.GetMouseButtonDown(0))
@@ -490,15 +488,15 @@ namespace RPG_Inventory_Remake.RPGLoadout
 
             // count
             DrawCountField(countRect, slot);
-            
+
             // toggle count mode
             if (slot.genericDef != null)
             {
-	            Texture2D curModeIcon = slot.countType == LoadoutCountType.dropExcess ? _iconDropExcess : _iconPickupDrop;
-	            string tipString = slot.countType == LoadoutCountType.dropExcess ? "CE_DropExcess".Translate() : "CE_PickupMissingAndDropExcess".Translate();
-	            if (Widgets.ButtonImage(countModeRect, curModeIcon))
-	            	slot.countType = slot.countType == LoadoutCountType.dropExcess ? LoadoutCountType.pickupDrop : LoadoutCountType.dropExcess;
-	            TooltipHandler.TipRegion(countModeRect, tipString);
+                Texture2D curModeIcon = slot.countType == LoadoutCountType.dropExcess ? _iconDropExcess : _iconPickupDrop;
+                string tipString = slot.countType == LoadoutCountType.dropExcess ? "Corgi_DropExcess".Translate() : "Corgi_PickupMissingAndDropExcess".Translate();
+                if (Widgets.ButtonImage(countModeRect, curModeIcon))
+                    slot.countType = slot.countType == LoadoutCountType.dropExcess ? LoadoutCountType.pickupDrop : LoadoutCountType.dropExcess;
+                TooltipHandler.TipRegion(countModeRect, tipString);
             }
 
             // delete
@@ -506,7 +504,7 @@ namespace RPG_Inventory_Remake.RPGLoadout
                 GUI.DrawTexture(row, TexUI.HighlightTex);
             if (Widgets.ButtonImage(deleteRect, _iconClear))
                 CurrentLoadout.RemoveSlot(slot);
-            TooltipHandler.TipRegion(deleteRect, "CE_DeleteFilter".Translate());
+            TooltipHandler.TipRegion(deleteRect, "Corgi_DeleteFilter".Translate());
         }
 
         //TODO: Research if the UI list of items can be cached (That's the Unity UI list)...
@@ -596,12 +594,12 @@ namespace RPG_Inventory_Remake.RPGLoadout
 
         private void DrawSlotSelection(Rect canvas)
         {
-        	int count = _sourceType == SourceSelection.Generic ? _sourceGeneric.Count : _source.Count;
+            int count = _sourceType == SourceSelection.Generic ? _sourceGeneric.Count : _source.Count;
             GUI.DrawTexture(canvas, _darkBackground);
-            
+
             if ((_sourceType != SourceSelection.Generic && _source.NullOrEmpty()) || (_sourceType == SourceSelection.Generic && _sourceGeneric.NullOrEmpty()))
                 return;
-            
+
             Rect viewRect = new Rect(canvas);
             viewRect.width -= 16f;
             viewRect.height = count * _rowHeight;
@@ -617,19 +615,21 @@ namespace RPG_Inventory_Remake.RPGLoadout
                 Color baseColor = GUI.color;
                 if (_sourceType == SourceSelection.Generic)
                 {
-                	if (GetVisibleGeneric(_sourceGeneric[i]))
-                		GUI.color = Color.gray;
-                } else {
-                    if(_source[i].isGreyedOut)
+                    if (GetVisibleGeneric(_sourceGeneric[i]))
+                        GUI.color = Color.gray;
+                }
+                else
+                {
+                    if (_source[i].isGreyedOut)
                         GUI.color = Color.gray;
                 }
 
                 Rect row = new Rect(0f, i * _rowHeight, canvas.width, _rowHeight);
                 Rect labelRect = new Rect(row);
                 if (_sourceType == SourceSelection.Generic)
-                	TooltipHandler.TipRegion(row, _sourceGeneric[i].GetWeightAndBulkTip());
+                    TooltipHandler.TipRegion(row, _sourceGeneric[i].GetWeightAndBulkTip());
                 else
-                	TooltipHandler.TipRegion(row, _source[i].thingDef.GetWeightAndBulkTip());
+                    TooltipHandler.TipRegion(row, _source[i].thingDef.GetWeightAndBulkTip());
 
                 labelRect.xMin += _margin;
                 if (i % 2 == 0)
@@ -638,20 +638,20 @@ namespace RPG_Inventory_Remake.RPGLoadout
                 Text.Anchor = TextAnchor.MiddleLeft;
                 Text.WordWrap = false;
                 if (_sourceType == SourceSelection.Generic)
-                	Widgets.Label(labelRect, _sourceGeneric[i].LabelCap);
+                    Widgets.Label(labelRect, _sourceGeneric[i].LabelCap);
                 else
-	                Widgets.Label(labelRect, _source[i].thingDef.LabelCap);
+                    Widgets.Label(labelRect, _source[i].thingDef.LabelCap);
                 Text.WordWrap = true;
                 Text.Anchor = TextAnchor.UpperLeft;
 
                 Widgets.DrawHighlightIfMouseover(row);
                 if (Widgets.ButtonInvisible(row))
                 {
-                	LoadoutSlot slot;
-                	if (_sourceType == SourceSelection.Generic)
-                		slot = new LoadoutSlot(_sourceGeneric[i]);
-                	else
-                    	slot = new LoadoutSlot(_source[i].thingDef);
+                    LoadoutSlot slot;
+                    if (_sourceType == SourceSelection.Generic)
+                        slot = new LoadoutSlot(_sourceGeneric[i]);
+                    else
+                        slot = new LoadoutSlot(_source[i].thingDef);
                     CurrentLoadout.AddSlot(slot);
                 }
                 // revert to original color
@@ -659,22 +659,24 @@ namespace RPG_Inventory_Remake.RPGLoadout
             }
             Widgets.EndScrollView();
         }
-        
+
+
+
         #endregion Methods
-        
-		#region ListDrawOptimization        
-        
-		/* This region is used by DrawSlotSelection and setup by SetSource when Generics type is chosen.
+
+        #region ListDrawOptimization        
+
+        /* This region is used by DrawSlotSelection and setup by SetSource when Generics type is chosen.
 		 * Purpose is to spread the load out over time, instead of checking the state of every generic per frame, only one generic is tested in a given frame.
          * and then some time (frames) are allowed to pass before the next check.
          * 
          * The reason is that checking the existence of a generic requires that we consider all possible things.
          * A well written generic won't be too hard to test on a given frame.
          */
-		
+
         static readonly Dictionary<LoadoutGenericDef, VisibilityCache> genericVisibility = new Dictionary<LoadoutGenericDef, VisibilityCache>();
         const int advanceTicks = 1; //	GenTicks.TicksPerRealSecond / 4;
-        
+
         /// <summary>
         /// Purpose is to handle deciding if a generic's state (something on the map or not) should be checked or not based on current frame.
         /// </summary>
@@ -682,39 +684,39 @@ namespace RPG_Inventory_Remake.RPGLoadout
         /// <returns></returns>
         private bool GetVisibleGeneric(LoadoutGenericDef def)
         {
-        	if (GenTicks.TicksAbs >= genericVisibility[def].ticksToRecheck)
-        	{
-        		genericVisibility[def].ticksToRecheck = GenTicks.TicksAbs + (advanceTicks * genericVisibility[def].position);
-        		genericVisibility[def].check = Find.CurrentMap.listerThings.AllThings.Find(x => def.lambda(x.GetInnerIfMinified().def) && !x.def.Minifiable) == null;
-        	}
-        	
-        	return genericVisibility[def].check;
+            if (GenTicks.TicksAbs >= genericVisibility[def].ticksToRecheck)
+            {
+                genericVisibility[def].ticksToRecheck = GenTicks.TicksAbs + (advanceTicks * genericVisibility[def].position);
+                genericVisibility[def].check = Find.CurrentMap.listerThings.AllThings.Find(x => def.lambda(x.GetInnerIfMinified().def) && !x.def.Minifiable) == null;
+            }
+
+            return genericVisibility[def].check;
         }
-        
+
         private void initGenericVisibilityDictionary()
         {
-        	int tick = GenTicks.TicksAbs;
-        	int position = 1;
-        	foreach (LoadoutGenericDef def in _sourceGeneric)
-        	{
-        		if (!genericVisibility.ContainsKey(def)) genericVisibility.Add(def, new VisibilityCache());
-        		genericVisibility[def].ticksToRecheck = tick;
-        		genericVisibility[def].check = Find.CurrentMap.listerThings.AllThings.Find(x => def.lambda(x.GetInnerIfMinified().def) && !x.def.Minifiable) == null;
-        		genericVisibility[def].position = position;
-        		position++;
-        		tick += advanceTicks;
-        	}
+            int tick = GenTicks.TicksAbs;
+            int position = 1;
+            foreach (LoadoutGenericDef def in _sourceGeneric)
+            {
+                if (!genericVisibility.ContainsKey(def)) genericVisibility.Add(def, new VisibilityCache());
+                genericVisibility[def].ticksToRecheck = tick;
+                genericVisibility[def].check = Find.CurrentMap.listerThings.AllThings.Find(x => def.lambda(x.GetInnerIfMinified().def) && !x.def.Minifiable) == null;
+                genericVisibility[def].position = position;
+                position++;
+                tick += advanceTicks;
+            }
         }
-        
+
         private class VisibilityCache
         {
-        	public int ticksToRecheck = 0;
-        	public bool check = true;
-        	public int position = 0;
+            public int ticksToRecheck = 0;
+            public bool check = true;
+            public int position = 0;
         }
-        	
-		#endregion GenericDrawOptimization     
-        
+
+        #endregion GenericDrawOptimization     
+
         private class SelectableItem
         {
             public ThingDef thingDef;

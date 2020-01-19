@@ -7,7 +7,7 @@ using UnityEngine;
 using RimWorld;
 using Verse;
 using Harmony;
-using RPG_Inventory_Remake.RPGLoadout;
+using RPG_Inventory_Remake.RPGILoadout;
 using RPG_Inventory_Remake_Common;
 
 namespace RPG_Inventory_Remake
