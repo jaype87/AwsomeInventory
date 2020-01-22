@@ -11,13 +11,13 @@ using Verse;
  * -for Drugs - Pawns can auto fetch drugs to fit a schedule.
  */
  // TODO Map generic type to ThingRequestGroup so to get rid of querying ListerThing.AllThings
-namespace RPG_Inventory_Remake.RPGILoadout
+namespace RPG_Inventory_Remake.Loadout
 {
 	/// <summary>
 	/// LoadoutGenericDef handles Generic LoadoutSlots.
 	/// </summary>
 	[StaticConstructorOnStartup]
-	public class LoadoutGenericDef : Verse.Def
+	public class LoadoutGenericDef : ThingDef
 	{
 		#region Fields
 		public LoadoutCountType defaultCountType = LoadoutCountType.dropExcess; // default: drop anything more than (default)Count.
@@ -29,6 +29,7 @@ namespace RPG_Inventory_Remake.RPGILoadout
 		// The following group are intentionally left unsaved so that if the game state changes between saves the new value is calculated.
 		private float _mass;
 		private bool _cachedVars = false;
+		private static List<LoadoutGenericDef> _genericDefs = new List<LoadoutGenericDef>();
 
 		#endregion
 
@@ -51,7 +52,6 @@ namespace RPG_Inventory_Remake.RPGILoadout
 			IEnumerable<ThingDef> everything = DefDatabase<ThingDef>.AllDefs;
 
 			// need to generate a list as that's how new defs are taken by DefDatabase.
-			List<LoadoutGenericDef> defs = new List<LoadoutGenericDef>();
 
 
 			LoadoutGenericDef generic = new LoadoutGenericDef();
@@ -62,7 +62,7 @@ namespace RPG_Inventory_Remake.RPGILoadout
 			generic._lambda = td => td.IsNutritionGivingIngestible && td.ingestible.preferability >= FoodPreferability.MealAwful && td.GetCompProperties<CompProperties_Rottable>()?.daysToRotStart <= 5 && !td.IsDrug;
 			generic.isBasic = true;
 
-			defs.Add(generic);
+			_genericDefs.Add(generic);
 			//Log.Message(string.Concat("CombatExtended :: LoadoutGenericDef :: ", generic.LabelCap, " list: ", string.Join(", ", DefDatabase<ThingDef>.AllDefs.Where(t => generic.lambda(t)).Select(t => t.label).ToArray())));
 
 
@@ -78,7 +78,7 @@ namespace RPG_Inventory_Remake.RPGILoadout
 			generic.isBasic = false; // doesn't need to be in loadouts by default as animal interaction talks to HoldTracker now.
 									 //TODO: Test pawns fetching raw food if no meal is available, if so then add a patch to have that talk to HoldTracker too.
 
-			defs.Add(generic);
+			_genericDefs.Add(generic);
 			//Log.Message(string.Concat("CombatExtended :: LoadoutGenericDef :: ", generic.LabelCap, " list: ", string.Join(", ", DefDatabase<ThingDef>.AllDefs.Where(t => generic.lambda(t)).Select(t => t.label + " B(" + t.GetStatValueAbstract(CE_StatDefOf.Bulk) + ") M(" + t.GetStatValueAbstract(StatDefOf.Mass) + ")").ToArray())));
 
 
@@ -90,7 +90,7 @@ namespace RPG_Inventory_Remake.RPGILoadout
 			generic.thingRequestGroup = ThingRequestGroup.Drug;
 			generic.isBasic = true;
 
-			defs.Add(generic);
+			_genericDefs.Add(generic);
 			//Log.Message(string.Concat("CombatExtended :: LoadoutGenericDef :: ", generic.LabelCap, " list: ", string.Join(", ", DefDatabase<ThingDef>.AllDefs.Where(t => generic.lambda(t)).Select(t => t.label).ToArray())));
 
 
@@ -102,10 +102,10 @@ namespace RPG_Inventory_Remake.RPGILoadout
 			generic.label = "Corgi_Generic_Medicine".Translate();
 			generic.thingRequestGroup = ThingRequestGroup.Medicine;
 
-			defs.Add(generic);
+			_genericDefs.Add(generic);
 
 			// finally we add all the defs generated to the DefDatabase.
-			DefDatabase<LoadoutGenericDef>.Add(defs);
+			DefDatabase<LoadoutGenericDef>.Add(_genericDefs);
 		}
 
 		#endregion Constructors
@@ -127,6 +127,22 @@ namespace RPG_Inventory_Remake.RPGILoadout
 				if (!_cachedVars)
 					updateVars();
 				return _mass;
+			}
+		}
+
+		/// <summary>
+		/// Generic defs that are added to DefDatabase
+		/// </summary>
+		public static List<LoadoutGenericDef> GenericDefs
+		{
+			get => _genericDefs;
+		}
+
+		public static List<ThingDef> GenericDefsToThingDefs
+		{
+			get
+			{
+				return _genericDefs.Select(def => (ThingDef)def).ToList();
 			}
 		}
 		#endregion Properties

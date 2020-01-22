@@ -20,146 +20,146 @@ namespace RPG_Inventory_Remake.RPGILoadout
         static private int _tickLastPurge = 0;
         #endregion
 
-        #region HoldTracker Methods
+        //#region HoldTracker Methods
 
-        /// <summary>
-        /// Used when a pawn is about to be ordered to pickup a Thing.
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <param name="job"></param>
-        static public void Notify_HoldTrackerJob(this Pawn pawn, Job job)
-        {
-            // make sure it's the right kind of job.
-            if (job.def != JobDefOf.TakeInventory)
-                throw new ArgumentException();
+        ///// <summary>
+        ///// Used when a pawn is about to be ordered to pickup a Thing.
+        ///// </summary>
+        ///// <param name="pawn"></param>
+        ///// <param name="job"></param>
+        //static public void Notify_HoldTrackerJob(this Pawn pawn, Job job)
+        //{
+        //    // make sure it's the right kind of job.
+        //    if (job.def != JobDefOf.TakeInventory)
+        //        throw new ArgumentException();
 
-            // if the pawn doesn't have a normal loadout, nothing to do...
-            if (pawn.GetLoadout().defaultLoadout)
-                return;
+        //    // if the pawn doesn't have a normal loadout, nothing to do...
+        //    if (pawn.GetLoadout().defaultLoadout)
+        //        return;
 
-            // find out if we are already remembering this thing on this pawn...
-            List<HoldRecord> recs = LoadoutManager.GetHoldRecords(pawn);
+        //    // find out if we are already remembering this thing on this pawn...
+        //    List<HoldRecord> recs = LoadoutManager.GetHoldRecords(pawn);
 
-            if (recs == null)
-            {
-                recs = new List<HoldRecord>();
-                LoadoutManager.AddHoldRecords(pawn, recs);
-            }
+        //    if (recs == null)
+        //    {
+        //        recs = new List<HoldRecord>();
+        //        LoadoutManager.AddHoldRecords(pawn, recs);
+        //    }
 
-            // could check isHeld but that tells us if there is a record AND it's been picked up.
-            HoldRecord rec = recs.FirstOrDefault(hr => hr.thingDef == job.targetA.Thing.def);
-            if (rec != null)
-            {
-                if (rec.pickedUp)
-                {
-                    // modifying a record for which the pawn should have some of that thing in their inventory.
-                    CompInventory inventory = pawn.TryGetComp<CompInventory>();
-                    if (inventory != null)
-                        rec.count = inventory.container.TotalStackCountOfDef(rec.thingDef) + job.count;
-                    else
-                        rec.count += job.count; // probably won't generally follow this code path but good not to throw an error if possible.
-                }
-                else
-                {
-                    // modifying a record that hasn't been picked up... do it blind.
-                    rec.count += job.count;
-                }
-                // useful debug message...
-                //Log.Message(string.Concat("Job was issued to pickup items for this existing record: ", rec));
-                return;
-            }
-            // if we got this far we know that there isn't a record being stored for this thingDef...
-            rec = new HoldRecord(job.targetA.Thing.def, job.count);
-            recs.Add(rec);
-            // useful debug message...
-            //Log.Message(string.Concat("Job was issued to pickup for this new record: ", rec));
-        }
+        //    // could check isHeld but that tells us if there is a record AND it's been picked up.
+        //    HoldRecord rec = recs.FirstOrDefault(hr => hr.thingDef == job.targetA.Thing.def);
+        //    if (rec != null)
+        //    {
+        //        if (rec.pickedUp)
+        //        {
+        //            // modifying a record for which the pawn should have some of that thing in their inventory.
+        //            CompInventory inventory = pawn.TryGetComp<CompInventory>();
+        //            if (inventory != null)
+        //                rec.count = inventory.container.TotalStackCountOfDef(rec.thingDef) + job.count;
+        //            else
+        //                rec.count += job.count; // probably won't generally follow this code path but good not to throw an error if possible.
+        //        }
+        //        else
+        //        {
+        //            // modifying a record that hasn't been picked up... do it blind.
+        //            rec.count += job.count;
+        //        }
+        //        // useful debug message...
+        //        //Log.Message(string.Concat("Job was issued to pickup items for this existing record: ", rec));
+        //        return;
+        //    }
+        //    // if we got this far we know that there isn't a record being stored for this thingDef...
+        //    rec = new HoldRecord(job.targetA.Thing.def, job.count);
+        //    recs.Add(rec);
+        //    // useful debug message...
+        //    //Log.Message(string.Concat("Job was issued to pickup for this new record: ", rec));
+        //}
 
-        /// <summary>
-        /// Simply reports back if the pawn is tracking an item by ThingDef if it's been picked up.
-        /// </summary>
-        /// <param name="pawn">Pawn to check tracking on.</param>
-        /// <param name="thing">Thing who's def should be checked if being held.</param>
-        /// <returns></returns>
-        public static bool HoldTrackerIsHeld(this Pawn pawn, Thing thing)
-        {
-            List<HoldRecord> recs = LoadoutManager.GetHoldRecords(pawn);
-            if (recs != null && recs.Any(hr => hr.thingDef == thing.def))
-                return true;
-            return false;
-        }
+        ///// <summary>
+        ///// Simply reports back if the pawn is tracking an item by ThingDef if it's been picked up.
+        ///// </summary>
+        ///// <param name="pawn">Pawn to check tracking on.</param>
+        ///// <param name="thing">Thing who's def should be checked if being held.</param>
+        ///// <returns></returns>
+        //public static bool HoldTrackerIsHeld(this Pawn pawn, Thing thing)
+        //{
+        //    List<HoldRecord> recs = LoadoutManager.GetHoldRecords(pawn);
+        //    if (recs != null && recs.Any(hr => hr.thingDef == thing.def))
+        //        return true;
+        //    return false;
+        //}
 
-        /// <summary>
-        /// Is there any hold tracker records for this pawn?  This doesn't care if an item is actually present in the pawn's inventory.
-        /// </summary>
-        /// <param name="pawn">Pawn who's HoldTracker is to be polled</param>
-        /// <returns>bool indicating if the pawn has any HoldTracker records.</returns>
-        public static bool HoldTrackerAnythingHeld(this Pawn pawn)
-        {
-            List<HoldRecord> recs = LoadoutManager.GetHoldRecords(pawn);
-            if (recs == null || recs.NullOrEmpty())
-                return false;
-            return recs.Any(r => r.pickedUp);
-        }
+        ///// <summary>
+        ///// Is there any hold tracker records for this pawn?  This doesn't care if an item is actually present in the pawn's inventory.
+        ///// </summary>
+        ///// <param name="pawn">Pawn who's HoldTracker is to be polled</param>
+        ///// <returns>bool indicating if the pawn has any HoldTracker records.</returns>
+        //public static bool HoldTrackerAnythingHeld(this Pawn pawn)
+        //{
+        //    List<HoldRecord> recs = LoadoutManager.GetHoldRecords(pawn);
+        //    if (recs == null || recs.NullOrEmpty())
+        //        return false;
+        //    return recs.Any(r => r.pickedUp);
+        //}
 
-        public static void HoldTrackerClear(this Pawn pawn)
-        {
-            List<HoldRecord> recs = LoadoutManager.GetHoldRecords(pawn);
-            recs.Clear();
-        }
+        //public static void HoldTrackerClear(this Pawn pawn)
+        //{
+        //    List<HoldRecord> recs = LoadoutManager.GetHoldRecords(pawn);
+        //    recs.Clear();
+        //}
 
-        /// <summary>
-        /// This should be called periodically so that HoldTracker can remove items that are no longer in the inventory via a method which isn't being watched.
-        /// </summary>
-        /// <param name="pawn">The pawn who's tracker should be checked.</param>
-        public static void HoldTrackerCleanUp(this Pawn pawn)
-        {
-            if (_tickLastPurge <= GenTicks.TicksAbs)
-            {
-                LoadoutManager.PurgeHoldTrackerRolls();
-                _tickLastPurge = GenTicks.TicksAbs + GenDate.TicksPerDay;
-            }
-            List<HoldRecord> recs = LoadoutManager.GetHoldRecords(pawn);
-            CompInventory inventory = pawn.TryGetComp<CompInventory>();
-            if (recs == null || inventory == null)
-                return;
+        ///// <summary>
+        ///// This should be called periodically so that HoldTracker can remove items that are no longer in the inventory via a method which isn't being watched.
+        ///// </summary>
+        ///// <param name="pawn">The pawn who's tracker should be checked.</param>
+        //public static void HoldTrackerCleanUp(this Pawn pawn)
+        //{
+        //    if (_tickLastPurge <= GenTicks.TicksAbs)
+        //    {
+        //        LoadoutManager.PurgeHoldTrackerRolls();
+        //        _tickLastPurge = GenTicks.TicksAbs + GenDate.TicksPerDay;
+        //    }
+        //    List<HoldRecord> recs = LoadoutManager.GetHoldRecords(pawn);
+        //    CompInventory inventory = pawn.TryGetComp<CompInventory>();
+        //    if (recs == null || inventory == null)
+        //        return;
 
-            for (int i = recs.Count - 1; i > 0; i--)
-            {
-                if (recs[i].pickedUp && inventory.container.TotalStackCountOfDef(recs[i].thingDef) <= 0)
-                    recs.RemoveAt(i);
-            }
-        }
+        //    for (int i = recs.Count - 1; i > 0; i--)
+        //    {
+        //        if (recs[i].pickedUp && inventory.container.TotalStackCountOfDef(recs[i].thingDef) <= 0)
+        //            recs.RemoveAt(i);
+        //    }
+        //}
 
-        /// <summary>
-        /// Called when a pawn is instructed to drop something as well as if the user explicitly specifies the item should no longer be held onto.
-        /// </summary>
-        /// <param name="pawn"></param>
-        /// <param name="thing">Thing who's def should be forgotten.</param>
-        public static void HoldTrackerForget(this Pawn pawn, Thing thing)
-        {
-            List<HoldRecord> recs = LoadoutManager.GetHoldRecords(pawn);
-            if (recs == null)
-            {
-                Log.Error(string.Concat(pawn.Name, " wasn't being tracked by HoldTracker and tried to forget a ThingDef ", thing.def, "."));
-                return;
-            }
-            HoldRecord rec = recs.FirstOrDefault(hr => hr.thingDef == thing.def);
-            if (rec != null)
-                recs.RemoveAt(recs.IndexOf(rec));
-        }
+        ///// <summary>
+        ///// Called when a pawn is instructed to drop something as well as if the user explicitly specifies the item should no longer be held onto.
+        ///// </summary>
+        ///// <param name="pawn"></param>
+        ///// <param name="thing">Thing who's def should be forgotten.</param>
+        //public static void HoldTrackerForget(this Pawn pawn, Thing thing)
+        //{
+        //    List<HoldRecord> recs = LoadoutManager.GetHoldRecords(pawn);
+        //    if (recs == null)
+        //    {
+        //        Log.Error(string.Concat(pawn.Name, " wasn't being tracked by HoldTracker and tried to forget a ThingDef ", thing.def, "."));
+        //        return;
+        //    }
+        //    HoldRecord rec = recs.FirstOrDefault(hr => hr.thingDef == thing.def);
+        //    if (rec != null)
+        //        recs.RemoveAt(recs.IndexOf(rec));
+        //}
 
-        /// <summary>
-        /// Makes it convenient to fetch a pawn's holdTracker (List of HoldRecords).
-        /// </summary>
-        /// <param name="pawn">Pawn to fetch the records for.</param>
-        /// <returns>List of HoldRecords otherwise known as the Pawn's holdTracker.</returns>
-        public static List<HoldRecord> GetHoldRecords(this Pawn pawn)
-        {
-            return LoadoutManager.GetHoldRecords(pawn);
-        }
+        ///// <summary>
+        ///// Makes it convenient to fetch a pawn's holdTracker (List of HoldRecords).
+        ///// </summary>
+        ///// <param name="pawn">Pawn to fetch the records for.</param>
+        ///// <returns>List of HoldRecords otherwise known as the Pawn's holdTracker.</returns>
+        //public static List<HoldRecord> GetHoldRecords(this Pawn pawn)
+        //{
+        //    return LoadoutManager.GetHoldRecords(pawn);
+        //}
 
-        #endregion
+        //#endregion
 
         #region Loadout/Holdtracker methods.
 

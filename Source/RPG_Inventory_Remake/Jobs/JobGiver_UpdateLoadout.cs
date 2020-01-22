@@ -5,7 +5,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 using Verse.AI;
-using RPG_Inventory_Remake.RPGILoadout;
+using RPG_Inventory_Remake.Loadout;
 
 namespace RPG_Inventory_Remake
 {
@@ -35,10 +35,10 @@ namespace RPG_Inventory_Remake
         /// <returns>float indicating priority of pickup/drop job</returns>
         public override float GetPriority(Pawn pawn)
         {
-            if (pawn.HasExcessThing())
-            {
-                return 9.2f;
-            }
+            //if (pawn.HasExcessThing())
+            //{
+            //    return 9.2f;
+            //}
             ItemPriority priority;
             int i;
             Pawn carriedBy;
@@ -75,68 +75,68 @@ namespace RPG_Inventory_Remake
             CompInventory inventory = pawn.TryGetComp<CompInventory>();
             if (inventory?.container != null)
             {
-                Loadout loadout = pawn.GetLoadout();
-                if (loadout != null && !loadout.Slots.NullOrEmpty())
-                {
-                    // Need to generate a dictionary and nibble like when dropping in order to allow for conflicting loadouts to work properly.
-                    Dictionary<ThingDef, int> listing = pawn.GetStorageByThingDef();
+                //RPGILoadout<Thing> loadout = pawn.GetLoadout();
+                //if (loadout != null && !loadout.Any())
+                //{
+                //    // Need to generate a dictionary and nibble like when dropping in order to allow for conflicting loadouts to work properly.
+                //    Dictionary<ThingDef, int> listing = pawn.GetStorageByThingDef();
 
-                    // process each loadout slot... (While the LoadoutSlot.countType property only really makes sense in the context of genericDef != null, it should be the correct value (pickupDrop) on .thingDef != null.)
-                    foreach (LoadoutSlot curSlot in loadout.Slots.Where(s => s.countType != LoadoutCountType.dropExcess))
-                    {
-                        Thing curThing = null;
-                        ItemPriority curPriority = ItemPriority.None;
-                        Pawn curCarrier = null;
-                        int wantCount = curSlot.count;
+                //    // process each loadout slot... (While the LoadoutSlot.countType property only really makes sense in the context of genericDef != null, it should be the correct value (pickupDrop) on .thingDef != null.)
+                //    foreach (LoadoutSlot curSlot in loadout)
+                //    {
+                //        Thing curThing = null;
+                //        ItemPriority curPriority = ItemPriority.None;
+                //        Pawn curCarrier = null;
+                //        int wantCount = curSlot.count;
 
-                        if (curSlot.thingDef != null)
-                        {
-                            if (listing.ContainsKey(curSlot.thingDef))
-                            {
-                                int amount = listing[curSlot.thingDef] >= wantCount ? wantCount : listing[curSlot.thingDef];
-                                listing[curSlot.thingDef] -= amount;
-                                wantCount -= amount;
-                                if (listing[curSlot.thingDef] <= 0)
-                                    listing.Remove(curSlot.thingDef);
-                            }
-                        }
-                        if (curSlot.genericDef != null)
-                        {
-                            List<ThingDef> killKeys = new List<ThingDef>();
-                            int amount;
-                            foreach (ThingDef def in listing.Keys.Where(td => curSlot.genericDef.lambda(td)))
-                            {
-                                amount = listing[def] >= wantCount ? wantCount : listing[def];
-                                listing[def] -= amount;
-                                wantCount -= amount;
-                                if (listing[def] <= 0)
-                                    killKeys.Add(def);
-                                if (wantCount <= 0)
-                                    break;
-                            }
-                            foreach (ThingDef def in killKeys)
-                                listing.Remove(def);
-                        }
-                        if (wantCount > 0)
-                        {
-                            FindPickup(pawn, curSlot, wantCount, out curPriority, out curThing, out curCarrier);
+                //        if (curSlot.thingDef != null)
+                //        {
+                //            if (listing.ContainsKey(curSlot.thingDef))
+                //            {
+                //                int amount = listing[curSlot.thingDef] >= wantCount ? wantCount : listing[curSlot.thingDef];
+                //                listing[curSlot.thingDef] -= amount;
+                //                wantCount -= amount;
+                //                if (listing[curSlot.thingDef] <= 0)
+                //                    listing.Remove(curSlot.thingDef);
+                //            }
+                //        }
+                //        if (curSlot.genericDef != null)
+                //        {
+                //            List<ThingDef> killKeys = new List<ThingDef>();
+                //            int amount;
+                //            foreach (ThingDef def in listing.Keys.Where(td => curSlot.genericDef.lambda(td)))
+                //            {
+                //                amount = listing[def] >= wantCount ? wantCount : listing[def];
+                //                listing[def] -= amount;
+                //                wantCount -= amount;
+                //                if (listing[def] <= 0)
+                //                    killKeys.Add(def);
+                //                if (wantCount <= 0)
+                //                    break;
+                //            }
+                //            foreach (ThingDef def in killKeys)
+                //                listing.Remove(def);
+                //        }
+                //        if (wantCount > 0)
+                //        {
+                //            FindPickup(pawn, curSlot, wantCount, out curPriority, out curThing, out curCarrier);
 
-                            if (curPriority > priority && curThing != null && inventory.CanFitInInventory(curThing, out count))
-                            {
-                                priority = curPriority;
-                                slot = curSlot;
-                                count = count >= wantCount ? wantCount : count;
-                                closestThing = curThing;
-                                if (curCarrier != null)
-                                    carriedBy = curCarrier;
-                            }
-                            if (priority >= ItemPriority.LowStock)
-                            {
-                                break;
-                            }
-                        }
-                    }
-                }
+                //            if (curPriority > priority && curThing != null && inventory.CanFitInInventory(curThing, out count))
+                //            {
+                //                priority = curPriority;
+                //                slot = curSlot;
+                //                count = count >= wantCount ? wantCount : count;
+                //                closestThing = curThing;
+                //                if (curCarrier != null)
+                //                    carriedBy = curCarrier;
+                //            }
+                //            if (priority >= ItemPriority.LowStock)
+                //            {
+                //                break;
+                //            }
+                //        }
+                //    //}
+                //}
             }
 
             return slot;
@@ -229,23 +229,18 @@ namespace RPG_Inventory_Remake
             CompInventory inventory = pawn.TryGetComp<CompInventory>();
             if (inventory == null) return null;
 
-            Loadout loadout = pawn.GetLoadout();
+            RPGILoadout<Thing> loadout = pawn.GetLoadout();
             if (loadout != null)
             {
                 ThingWithComps dropEq;
-                if (pawn.GetExcessEquipment(out dropEq))
-                {
                     ThingWithComps droppedEq;
                     if (pawn.equipment.TryDropEquipment(pawn.equipment.Primary, out droppedEq, pawn.Position, false))
                     {
                         if (droppedEq != null)
                             return HaulAIUtility.HaulToStorageJob(pawn, droppedEq);
                     }
-                }
-                Thing dropThing;
-                int dropCount;
-                if (pawn.GetExcessThing(out dropThing, out dropCount))
-                {
+                Thing dropThing = new Thing();
+                int dropCount = 0;
                     Thing droppedThing;
                     if (inventory.container.TryDrop(dropThing, pawn.Position, pawn.Map, ThingPlaceMode.Near, dropCount, out droppedThing))
                     {
@@ -255,7 +250,6 @@ namespace RPG_Inventory_Remake
                         }
                         Log.Error(string.Concat(pawn, " tried dropping ", dropThing, " from loadout but resulting thing is null"));
                     }
-                }
 
                 // Find missing items
                 ItemPriority priority;
@@ -270,9 +264,7 @@ namespace RPG_Inventory_Remake
                     if (closestThing.TryGetComp<CompEquippable>() != null
                         && !(pawn.story != null && pawn.story.WorkTagIsDisabled(WorkTags.Violent))
                         && (pawn.health != null && pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
-                        && (pawn.equipment == null || pawn.equipment.Primary == null || !loadout.Slots.Any(s => s.thingDef == pawn.equipment.Primary.def
-                                                                                                           || (s.genericDef != null && s.countType == LoadoutCountType.pickupDrop
-                                                                                                               && s.genericDef.lambda(pawn.equipment.Primary.def)))))
+                        && (pawn.equipment == null || pawn.equipment.Primary == null || !loadout.Any(s => s.def == pawn.equipment.Primary.def)))
                         doEquip = true;
                     if (carriedBy == null)
                     {

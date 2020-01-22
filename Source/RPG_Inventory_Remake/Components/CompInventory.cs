@@ -7,7 +7,7 @@ using Verse;
 using Verse.Sound;
 using UnityEngine;
 
-namespace RPG_Inventory_Remake.RPGILoadout
+namespace RPG_Inventory_Remake.Loadout
 {
     public class CompInventory : ThingComp
     {
@@ -126,7 +126,7 @@ namespace RPG_Inventory_Remake.RPGILoadout
                 meleeWeaponListCached.Clear();
                 rangedWeaponListCached.Clear();
 
-                List<HoldRecord> recs = LoadoutManager.GetHoldRecords(parentPawn);
+                List<HoldRecord> recs = new List<HoldRecord>();
                 foreach (Thing thing in parentPawn.inventory.innerContainer)
                 {
                     // Check for weapons
@@ -291,7 +291,6 @@ namespace RPG_Inventory_Remake.RPGILoadout
             if (GenTicks.TicksAbs >= ticksToNextCleanUp)
             {
 	            // Ask HoldTracker to clean itself up...
-	            parentPawn.HoldTrackerCleanUp();
 	            ticksToNextCleanUp = GenTicks.TicksAbs + CLEANUPTICKINTERVAL;
             }
             base.CompTick();

@@ -7,7 +7,7 @@ using Verse;
 using RimWorld;
 using System.Reflection;
 using RPG_Inventory_Remake_Common;
-using RPG_Inventory_Remake.RPGILoadout;
+using RPG_Inventory_Remake.Loadout;
 
 namespace RPG_Inventory_Remake
 {

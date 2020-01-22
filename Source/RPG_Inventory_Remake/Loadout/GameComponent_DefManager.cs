@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Verse;
 
-namespace RPG_Inventory_Remake.RPGILoadout
+namespace RPG_Inventory_Remake.Loadout
 {
     public class GameComponent_DefManager : GameComponent
     {
@@ -25,8 +25,13 @@ namespace RPG_Inventory_Remake.RPGILoadout
                                                 && IsSuitableThingDef(thingDef))
                                 .ToList();
             _allSuitableDefs = new HashSet<ThingDef>(allSuitableDefs, new CompareThingDef());
+            _allSuitableDefs.AddRange(LoadoutGenericDef.GenericDefsToThingDefs);
         }
 
+        /// <summary>
+        /// Return a copy of a cached AllSuitableDefs
+        /// </summary>
+        /// <returns></returns>
         public static HashSet<ThingDef> GetSuitableDefs()
         {
             return new HashSet<ThingDef>(_allSuitableDefs.AsEnumerable(), _allSuitableDefs.Comparer);

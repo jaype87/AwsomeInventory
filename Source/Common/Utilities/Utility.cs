@@ -137,7 +137,7 @@ namespace RPG_Inventory_Remake_Common
 
         private static string FormatArmorValue(float value, string unit)
         {
-            var asPercent = unit.Equals("%");
+            var asPercent = unit.Equals("%", StringComparison.InvariantCulture);
             if (asPercent)
             {
                 value *= 100f;

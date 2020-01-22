@@ -7,7 +7,7 @@ using UnityEngine;
 using RimWorld;
 using Verse;
 using Harmony;
-using RPG_Inventory_Remake.RPGILoadout;
+using RPG_Inventory_Remake.Loadout;
 using RPG_Inventory_Remake_Common;
 
 namespace RPG_Inventory_Remake
@@ -473,26 +473,17 @@ namespace RPG_Inventory_Remake
             }
             if (Utility.ShouldShowInventory(selPawn.Pawn))
             {
-                if (ModStarter.settings.UseLoadout)
+                if (ModStarter.Settings.UseLoadout)
                 {
                     rollingY += 3;
                     float buttonY = rollingY;
-                    Loadout curLoadout = selPawn.Pawn.GetLoadout();
-                    if (!(curLoadout == null || curLoadout.Slots.NullOrEmpty()))
-                    {
-                        Widgets.Label(new Rect(viewRect.width / 4, buttonY, viewRect.width / 4, 26f), selPawn.Pawn.GetLoadout().label);
-                    }
-                    else
-                    {
-                        Widgets.Label(new Rect(viewRect.width / 4, buttonY, viewRect.width / 4, 26f), "Corgi_NoLoadout".Translate());
-                    }
+
+                    Widgets.Label(new Rect(viewRect.width / 4, buttonY, viewRect.width / 4, 26f), selPawn.Pawn.GetLoadout()?.Label ?? "Corgi_NoLoadout".Translate());
 
                     // Select loadout button
                     if (Widgets.ButtonText(new Rect(viewRect.width / 2, buttonY, viewRect.width / 4, 26f), Translator.Translate("Corgi_SelectLoadout"), true, false, true))
                     {
-                        List<Loadout> loadouts = (from l in LoadoutManager.Loadouts
-                                                  where !l.defaultLoadout
-                                                  select l).ToList();
+                        List<RPGILoadout<Thing>> loadouts = LoadoutManager.Loadouts;
                         List<FloatMenuOption> list = new List<FloatMenuOption>();
                         if (loadouts.Count == 0)
                         {
@@ -503,7 +494,7 @@ namespace RPG_Inventory_Remake
                             for (int i = 0; i < loadouts.Count; i++)
                             {
                                 int local_i = i;
-                                list.Add(new FloatMenuOption(loadouts[i].LabelCap, delegate
+                                list.Add(new FloatMenuOption(loadouts[i].Label, delegate
                                 {
                                     selPawn.Pawn.SetLoadout(loadouts[local_i]);
                                 }));
@@ -515,25 +506,14 @@ namespace RPG_Inventory_Remake
                     Rect loadoutButtonRect = new Rect(viewRect.width / 4 * 3, buttonY, viewRect.width / 4, 26f); // button is half the available width...
                     if (Widgets.ButtonText(loadoutButtonRect, "Corgi_OpenLoadout".Translate()))
                     {
-
-
-                        if (selPawn.Pawn.IsColonist && (curLoadout == null || curLoadout.Slots.NullOrEmpty()))
+                        if (selPawn.Pawn.IsColonist && (selPawn.Pawn.GetLoadout() == null))
                         {
-                            Loadout loadout = selPawn.Pawn.GenerateLoadoutFromPawn();
+                            RPGILoadout<Thing> loadout = new RPGILoadout<Thing>(selPawn.Pawn);
                             LoadoutManager.AddLoadout(loadout);
                             selPawn.Pawn.SetLoadout(loadout);
                         }
 
-                        // Original comments
-                        //// UNDONE ideally we'd open the assign (MainTabWindow_OutfitsAndLoadouts) tab as if the user clicked on it here.
-                        //// (ProfoundDarkness) But I have no idea how to do that just yet.  The attempts I made seem to put the RimWorld UI into a bit of a bad state.
-                        ////                     ie opening the tab like the dialog below.
-                        ////                    Need to understand how RimWorld switches tabs and see if something similar can be done here
-                        ////                     (or just remove the unfinished marker).
-
-                        //// Opening this window is the same way as if from the assign tab so should be correct.
-                        Find.WindowStack.Add(new Dialog_ManageLoadouts(selPawn.Pawn.GetLoadout()));
-
+                        Find.WindowStack.Add(new Dialog_ManageLoadouts(selPawn.Pawn.GetLoadout(), selPawn.Pawn));
                     }
                 }
                 Widgets.ListSeparator(ref rollingY, viewRect.width, "Inventory".Translate());
@@ -566,7 +546,7 @@ namespace RPG_Inventory_Remake
 
 
 
-        
+
         private static void Reset()
         {
             workingInvList.Clear();

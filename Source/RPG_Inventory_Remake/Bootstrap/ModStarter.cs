@@ -13,7 +13,12 @@ namespace RPG_Inventory_Remake
     public class ModStarter : Mod
     {
         // TODO add a getter method to update realtime value
-        public static Setting settings;
+        private static Setting settings;
+
+        public static Setting Settings
+        {
+            get => settings;
+        }
 
         // TODO Revisit ModStarter
         public ModStarter(ModContentPack content) : base(content)

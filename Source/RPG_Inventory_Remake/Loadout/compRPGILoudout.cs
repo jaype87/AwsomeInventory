@@ -7,7 +7,7 @@ using Verse;
 using Verse.AI;
 using System.Reflection;
 
-namespace RPG_Inventory_Remake.RPGILoadout
+namespace RPG_Inventory_Remake.Loadout
 {
     /// <summary>
     /// Save loudout information and its current state
@@ -20,8 +20,7 @@ namespace RPG_Inventory_Remake.RPGILoadout
     {
         #region Fields
 
-        public LoadoutManager LoadoutManager;
-        public RPGILoadout<Thing> Loadout;
+        public RPGILoadout<Thing> Loadout = null;
         /// <summary>
         /// Value in this dictionary acts as a margin. If the amount set in loadout is met, the margin is 0.
         /// Excessive amount has a positive margin, vice versa.
@@ -106,25 +105,48 @@ namespace RPG_Inventory_Remake.RPGILoadout
             InventoryTracker.Remove(thing);
         }
 
-        public void UpdateForNewLoadout(RPGILoadout<Thing> newloadout)
+        public void UpdateForNewLoadout(RPGILoadout<Thing> newLoadout)
         {
-            if (newloadout == null)
+            if (newLoadout == null)
             {
                 return;
             }
 
-            foreach (Thing thing in newloadout)
+            if (Loadout == null)
             {
-                if (Loadout.TryGetValue(thing, out Thing oldLoadout))
-                {
-                    InventoryTracker[thing] += (oldLoadout.stackCount - thing.stackCount);
-                }
-                else
+                Init();
+                foreach (Thing thing in newLoadout)
                 {
                     InventoryTracker[thing] = thing.stackCount;
                 }
             }
-            Loadout = newloadout;
+            else
+            {
+                IEnumerable<Thing> thingRemoved = Loadout.IntersectWith(newLoadout);
+                // Remove deleted items
+                foreach (Thing t in thingRemoved)
+                {
+                    InventoryTracker.Remove(t);
+                }
+                // Add new items or updated the old ones
+                foreach (Thing thing in newLoadout)
+                {
+                    if (Loadout.TryGetValue(thing, out Thing oldThing))
+                    {
+                        InventoryTracker[thing] += (oldThing.stackCount - thing.stackCount);
+                    }
+                    else
+                    {
+                        InventoryTracker[thing] = thing.stackCount;
+                    }
+                }
+            }
+            Loadout = newLoadout;
+        }
+
+        public void Init()
+        {
+            InventoryTracker = new Dictionary<Thing, int>(new LoadoutComparer<Thing>());
         }
 
         #endregion Methods

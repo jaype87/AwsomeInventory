@@ -40,6 +40,9 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <OutputPath>bin\Test\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Content Include="..\..\Defs\ApparelLayerDefs.xml">
       <Link>Defs\ApparelLayerDefs.xml</Link>
@@ -64,9 +67,15 @@
     <Compile Include="HarmonyPatches\Pawn_GetGizmos.cs" />
     <Compile Include="DefOfs\RPG_JobDefOf.cs" />
     <Compile Include="Jobs\JobGiver_Unload.cs" />
+    <Compile Include="ErrorMessage.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ErrorMessage.resx</DependentUpon>
+    </Compile>
     <Compile Include="RPG_Pawn.cs" />
     <Compile Include="SmartRect.cs" />
     <Compile Include="TextButton.cs" />
+    <Compile Include="Utilities\ThrowHelper.cs" />
     <Compile Include="Utilities\Utility.cs" />
     <Compile Include="Utilities\Utility_Draw.cs" />
   </ItemGroup>
@@ -83,6 +92,12 @@
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\RW-Decompile\Managed\UnityEngine.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ErrorMessage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ErrorMessage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

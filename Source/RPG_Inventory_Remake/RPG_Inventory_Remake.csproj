@@ -43,9 +43,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Vanilla Build|AnyCPU'">
     <OutputPath>..\..\..\RPG_Style_Inventory\Assemblies\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <OutputPath>bin\Test\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\Common\Components\CompRPGIUnload.cs">
@@ -56,6 +60,12 @@
     </Compile>
     <Compile Include="..\Common\DefOfs\RPG_JobDefOf.cs">
       <Link>DefOfs\RPG_JobDefOf.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\ErrorMessage.Designer.cs">
+      <Link>ErrorMessage.Designer.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ErrorMessage.resx</DependentUpon>
     </Compile>
     <Compile Include="..\Common\Gizmos\ToggleGearTab.cs">
       <Link>Gizmos\ToggleGearTab.cs</Link>
@@ -71,6 +81,9 @@
     </Compile>
     <Compile Include="..\Common\TextButton.cs">
       <Link>TextButton.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Utilities\ThrowHelper.cs">
+      <Link>Utilities\ThrowHelper.cs</Link>
     </Compile>
     <Compile Include="..\Common\Utilities\Utility.cs">
       <Link>Utilities\Utility.cs</Link>
@@ -95,10 +108,12 @@
     <Compile Include="Jobs\JobGiver_TakeAndEquip.cs" />
     <Compile Include="Jobs\JobGiver_UpdateLoadout.cs" />
     <Compile Include="Loadout\compRPGILoudout.cs" />
+    <Compile Include="Loadout\EqualityComparer.cs" />
     <Compile Include="Loadout\GameComponent_DefManager.cs" />
     <Compile Include="Loadout\LoadoutModExtension.cs" />
     <Compile Include="Loadout\LoadoutComparer.cs" />
     <Compile Include="Loadout\RPGILoadout.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RPG_GearTab.cs" />
     <None Include="ClassDiagram1.cd" />
     <None Include="HarmonyPatches\Game_FinalizeInit_RPGI_Patch.cs" />
@@ -111,8 +126,6 @@
     <Compile Include="Loadout\LoadoutGenericDef.cs" />
     <Compile Include="Loadout\LoadoutSlot.cs" />
     <Compile Include="Loadout\MassBulkUtility.cs" />
-    <Compile Include="Loadout\Tracker.cs" />
-    <Compile Include="Loadout\Utility_HoldTracker.cs" />
     <Compile Include="Loadout\Utility_Loadouts.cs" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -155,6 +168,13 @@
     <Analyzer Include="..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\Common\ErrorMessage.resx">
+      <Link>ErrorMessage.resx</Link>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ErrorMessage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -166,4 +186,8 @@
     <Error Condition="!Exists('..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props'))" />
     <Error Condition="!Exists('..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

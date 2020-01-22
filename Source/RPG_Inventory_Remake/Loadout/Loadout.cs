@@ -8,7 +8,7 @@ using UnityEngine;
 using Verse;
 using System.Collections;
 
-namespace RPG_Inventory_Remake.RPGILoadout
+namespace RPG_Inventory_Remake.Loadout
 {
 	/// <summary>
 	/// Contains a series of LoadoutSlot slots which define what a pawn using this loadout should try to keep in their inventory.
@@ -31,11 +31,6 @@ namespace RPG_Inventory_Remake.RPGILoadout
         {
             // this constructor is also used by the scribe, in which case defaults generated here will get overwritten.
 
-            // create a unique default name.
-            label = LoadoutManager.GetUniqueLabel();
-
-            // create a unique ID.
-            uniqueID = LoadoutManager.GetUniqueLoadoutID();
         }
         
         public Loadout(string label)
@@ -43,7 +38,6 @@ namespace RPG_Inventory_Remake.RPGILoadout
             this.label = label;
 
             // create a unique ID.
-            uniqueID = LoadoutManager.GetUniqueLoadoutID();
         }
 
         /// <summary>
@@ -101,7 +95,7 @@ namespace RPG_Inventory_Remake.RPGILoadout
         	Regex reNum = new Regex(@"^(.*?)\d+$");
         	if (reNum.IsMatch(newName))
         		newName = reNum.Replace(newName, @"$1");
-        	newName = LoadoutManager.GetUniqueLabel(newName);
+        	newName = "";
         	
         	Loadout dest = new Loadout(newName);
         	dest.defaultLoadout = source.defaultLoadout;

@@ -1,5 +1,5 @@
 using RimWorld;
-using RPG_Inventory_Remake.RPGILoadout;
+using RPG_Inventory_Remake.Loadout;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,9 +38,9 @@ namespace RPG_Inventory_Remake
             #region Colonists with primary and a loadout have no work priority
             if (pawn.Faction.IsPlayer)
             {
-                Loadout loadout = pawn.GetLoadout();
+                RPGILoadout<Thing> loadout = pawn.GetLoadout();
                 // if (loadout != null && !loadout.Slots.NullOrEmpty())
-                if (loadout != null && loadout.SlotCount > 0)
+                if (loadout != null && loadout.Any())
                 {
                     return WorkPriority.None;
                 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RPG_Inventory_Remake.RPGILoadout
+namespace RPG_Inventory_Remake.Loadout
 {
 	public enum LoadoutCountType : byte
 	{

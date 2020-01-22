@@ -23,13 +23,11 @@ namespace RPG_Inventory_Remake.RPGILoadout
         public Tracker()
         {
             // this constructor is also used by the scribe.
-            uniqueID = LoadoutManager.GetUniqueTrackerID();
             _recs = new List<HoldRecord>();
         }
 
         public Tracker(List<HoldRecord> newRecs)
         {
-            uniqueID = LoadoutManager.GetUniqueTrackerID();
             _recs = newRecs;
         }
         #endregion Constructors

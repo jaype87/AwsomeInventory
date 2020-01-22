@@ -62,6 +62,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Vanilla Build|AnyCPU'">
     <OutputPath>bin\Vanilla Build\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <OutputPath>bin\Test\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
