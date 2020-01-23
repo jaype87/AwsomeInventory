@@ -8,6 +8,7 @@ using System.Text;
 using UnityEngine;
 using Verse;
 using RPG_Inventory_Remake;
+using RPG_Inventory_Remake.Resources;
 
 namespace RPG_Inventory_Remake.Loadout
 {

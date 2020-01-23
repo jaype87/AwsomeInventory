@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Verse;
+using RPG_Inventory_Remake_Common;
+using RPG_Inventory_Remake.Resources;
 
 namespace RPG_Inventory_Remake.Loadout
 {
@@ -50,6 +52,7 @@ namespace RPG_Inventory_Remake.Loadout
         private static Vector2 _initialSize = new Vector2(650f, 650f);
         private static List<SelectableItem> _selectableItems;
         private readonly static HashSet<ThingDef> _allSuitableDefs;
+        private static float _scrollViewHeight;
 
         #endregion Statis Fields
 
@@ -150,12 +153,14 @@ namespace RPG_Inventory_Remake.Loadout
                     options.Add(new FloatMenuOption("Corgi_NoLoadouts".Translate(), null));
                 else
                 {
-                    for (int i = 0; i < loadouts.Count; i++)
+                    for (int j = 0; j < loadouts.Count; j++)
                     {
+                        int i = j;
                         options.Add(new FloatMenuOption(loadouts[i].Label,
                                                         delegate
                                                         {
                                                             _currentLoadout = loadouts[i];
+                                                            _inventoryListForDrawing = _currentLoadout.ToList();
                                                         }));
                     }
                 }
@@ -171,6 +176,7 @@ namespace RPG_Inventory_Remake.Loadout
                 };
                 LoadoutManager.AddLoadout(loadout);
                 _currentLoadout = loadout;
+                _inventoryListForDrawing = _currentLoadout.ToList();
             }
 
             // copy loadout
@@ -178,6 +184,7 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 _currentLoadout = new RPGILoadout<Thing>(_currentLoadout);
                 LoadoutManager.AddLoadout(_currentLoadout);
+                _inventoryListForDrawing = _currentLoadout.ToList();
             }
 
             // delete loadout
@@ -185,19 +192,36 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
 
-                for (int i = 0; i < loadouts.Count; i++)
+                for (int j = 0; j < loadouts.Count; j++)
                 {
+                    int i = j;
                     options.Add(new FloatMenuOption(loadouts[i].Label,
                         delegate
                         {
-                            if (_currentLoadout == loadouts[i])
+                            if (loadouts.Count > 1)
                             {
-                                _currentLoadout = null;
+                                if (_currentLoadout == loadouts[i])
+                                {
+                                    LoadoutManager.RemoveLoadout(loadouts[i]);
+                                    _currentLoadout = loadouts.First();
+                                    _inventoryListForDrawing = _currentLoadout.ToList();
+                                    return;
+                                }
+                                LoadoutManager.RemoveLoadout(loadouts[i]);
                             }
-                            LoadoutManager.RemoveLoadout(loadouts[i]);
+                            else
+                            {
+                                Rect msgRect = new Rect(Vector2.zero, Text.CalcSize(ErrorMessage.TryToDeleteLastLoadout.Translate()));
+                                msgRect = msgRect.ExpandedBy(50);
+                                Find.WindowStack.Add(
+                                    new Dialog_InstantMessage
+                                        (ErrorMessage.TryToDeleteLastLoadout.Translate(), msgRect.size, UIText.OK.Translate())
+                                    {
+                                        windowRect = msgRect
+                                    });
+                            }
                         }));
                 }
-
                 Find.WindowStack.Add(new FloatMenu(options));
             }
 
@@ -225,7 +249,7 @@ namespace RPG_Inventory_Remake.Loadout
             // bars
             if (_currentLoadout != null)
             {
-                Utility_Loadouts.DrawBar(weightBarRect, _currentLoadout.Weight, MassUtility.Capacity(_pawn), "Corgi_Weight".Translate(), null);
+                UtilityLoadouts.DrawBar(weightBarRect, _currentLoadout.Weight, MassUtility.Capacity(_pawn), "Corgi_Weight".Translate(), null);
                 // draw text overlays on bars
                 Text.Font = GameFont.Small;
                 Text.Anchor = TextAnchor.MiddleCenter;
@@ -384,13 +408,14 @@ namespace RPG_Inventory_Remake.Loadout
             Widgets.TextField(canvas, _currentLoadout.Label, _loadoutNameMaxLength, Outfit.ValidNameRegex);
         }
 
-        private void DrawSlot(Rect row, Thing thing, bool slotDraggable = true)
+        private void DrawSlot(Rect row, Thing thing, int reorderableGroup)
         {
             // set up rects
             // label (fill) | count (50px) | delete (iconSize)
 
             Rect labelRect = new Rect(row);
             labelRect.xMax = row.xMax - _countFieldSize.x - _iconSize - GenUI.GapSmall;
+            ReorderableWidget.Reorderable(reorderableGroup, labelRect);
 
             Rect countRect = new Rect(
                 labelRect.xMax,
@@ -441,19 +466,23 @@ namespace RPG_Inventory_Remake.Loadout
         private void DrawItemsInLoadout(Rect canvas)
         {
             // set up content canvas
-            Rect viewRect = canvas.AtZero();
-            Rect listRect = new Rect(0, 0, canvas.width - GenUI.ScrollBarWidth, canvas.height);
-
+            Rect listRect = new Rect(0, 0, canvas.width - GenUI.ScrollBarWidth, _scrollViewHeight);
             // darken whole area
             GUI.DrawTexture(canvas, _darkBackground);
-
-            Widgets.BeginScrollView(canvas, ref _slotScrollPosition, viewRect);
+            Widgets.BeginScrollView(canvas, ref _slotScrollPosition, listRect);
+            // Set up reorder functionality
+            int reorderableGroup = ReorderableWidget.NewGroup(
+                delegate (int from, int to)
+                {
+                    ReorderItems(from, to);
+                }
+                , ReorderableDirection.Vertical);
 
             float curY = 0f;
             for (int i = 0; i < _inventoryListForDrawing.Count; i++)
             {
                 // create row rect
-                Rect row = new Rect(0f, curY, viewRect.width, GenUI.ListSpacing);
+                Rect row = new Rect(0f, curY, listRect.width, GenUI.ListSpacing);
                 curY += GenUI.ListSpacing;
 
                 //// if we're dragging, and currently on this row, and this row is not the row being dragged - draw a ghost of the slot here
@@ -483,7 +512,7 @@ namespace RPG_Inventory_Remake.Loadout
                 //// draw the slot - grey out if draggin this, but only when dragged over somewhere else
                 //if (Dragging == _currentLoadout.Slots[i] && !Mouse.IsOver(row))
                 //    GUI.color = new Color(.6f, .6f, .6f, .4f);
-                DrawSlot(row, _inventoryListForDrawing[i]);
+                DrawSlot(row, _inventoryListForDrawing[i], reorderableGroup);
                 GUI.color = Color.white;
             }
 
@@ -512,6 +541,10 @@ namespace RPG_Inventory_Remake.Loadout
             //if (!Mouse.IsOver(viewRect) || Input.GetMouseButtonUp(0))
             //    Dragging = null;
 
+            if (Event.current.type == EventType.Layout)
+            {
+                _scrollViewHeight = curY + GenUI.ListSpacing;
+            }
             Widgets.EndScrollView();
         }
 
@@ -537,8 +570,8 @@ namespace RPG_Inventory_Remake.Loadout
                 // gray out weapons not in stock
                 Color baseColor = GUI.color;
 
-                    if (_source[i].isGreyedOut)
-                        GUI.color = Color.gray;
+                if (_source[i].isGreyedOut)
+                    GUI.color = Color.gray;
 
                 Rect row = new Rect(0f, i * GenUI.ListSpacing, canvas.width, GenUI.ListSpacing);
                 Rect labelRect = new Rect(row);
@@ -569,6 +602,15 @@ namespace RPG_Inventory_Remake.Loadout
                 GUI.color = baseColor;
             }
             Widgets.EndScrollView();
+        }
+
+        private void ReorderItems(int oldIndex, int newIndex)
+        {
+            if (oldIndex != newIndex)
+            {
+                _inventoryListForDrawing.Insert(newIndex, _inventoryListForDrawing[oldIndex]);
+                _inventoryListForDrawing.RemoveAt((oldIndex >= newIndex) ? (oldIndex + 1) : oldIndex);
+            }
         }
 
         #endregion Methods

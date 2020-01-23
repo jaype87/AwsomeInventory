@@ -25,5 +25,6 @@
     <Corgi_UseLoadout>Use Loadout</Corgi_UseLoadout>
     <Corgi_RPGStyleInventoryRemake>RPG Style Inventory Remake</Corgi_RPGStyleInventoryRemake>
     <Corgi_ToggleGearTab>Toggle Gear Tab</Corgi_ToggleGearTab>
+    <Corgi_TryToDeleteLastLoadout>Cannot delete the last loadout</Corgi_TryToDeleteLastLoadout>
 
 </LanguageData>

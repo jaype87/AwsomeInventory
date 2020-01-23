@@ -15,19 +15,20 @@ namespace RPG_Inventory_Remake.Loadout
     /// It holds information about loadout
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class RPGILoadout<T> : IExposable, IEnumerable<T> where T : Thing, new()
+    public class RPGILoadout<T> : IExposable, ILoadout<T>, IEnumerable<T> where T : Thing, new()
     {
+        [Flags]
         enum DirtyBits
         {
             Read = 1,
             ReStash = 2,
-            All = 3
+            All = Read | ReStash
         }
         
-        // Hashset doesn't have TryGetValue() in .Net 3.5, it could get rid of _loadout
-        // It acts as a cache for quick access to enumerator
+        // Sole purpose of the _cachedList is for reordering in loadout window
+        private List<T> _cachedList = new List<T>();
         private HashSet<T> _loadoutHashSet = new HashSet<T>(new LoadoutComparer<T>());
-        private Dictionary<T, T> _loadoutDic = new Dictionary<T, T>(new LoadoutComparer<T>());
+        //private Dictionary<T, T> _loadoutDic = new Dictionary<T, T>(new LoadoutComparer<T>());
         private float _weight = -1;
         private DirtyBits _dirty = DirtyBits.All;
 
@@ -67,8 +68,12 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 throw new ArgumentNullException(nameof(loadout));
             }
-            _loadoutHashSet = new HashSet<T>(loadout, new LoadoutComparer<T>());
-            _loadoutDic = loadout.ToDictionary((t) => t, new LoadoutComparer<T>());
+            _loadoutHashSet = new HashSet<T>(new LoadoutComparer<T>());
+            foreach (Thing thing in loadout)
+            {
+                _loadoutHashSet.Add(thing.DeepCopySimple() as T);
+            }
+            //_loadoutDic = loadout.ToDictionary((t) => t, new LoadoutComparer<T>());
             Label = LoadoutManager.GetIncrementalLabel(loadout.Label);
         }
 
@@ -84,6 +89,8 @@ namespace RPG_Inventory_Remake.Loadout
                 return _weight;
             }
         }
+
+        public List<T> CachedList => _cachedList;
 
         #endregion
 
@@ -110,8 +117,20 @@ namespace RPG_Inventory_Remake.Loadout
 
         public bool TryGetValue(T thing, out T value)
         {
-            return _loadoutDic.TryGetValue(thing, out value);
+            foreach(T item in _loadoutHashSet)
+            {
+                if (LoadoutComparer.isEqual(item, thing))
+                {
+                    value = item;
+                    return true;
+                }
+            }
+            value = null;
+            return false;
+            //return _loadoutDic.TryGetValue(thing, out value);
         }
+
+        #region CRUD operation
 
         /// <summary>
         /// Intersect the current loadout with other loadout
@@ -122,12 +141,13 @@ namespace RPG_Inventory_Remake.Loadout
         {
             HashSet<T> exceptWith = new HashSet<T>(_loadoutHashSet, new LoadoutComparer<T>());
             exceptWith.ExceptWith(other);
-            foreach (T thing in exceptWith)
-            {
-                _loadoutDic.Remove(thing);
-            }
+            //foreach (T thing in exceptWith)
+            //{
+            //    _loadoutDic.Remove(thing);
+            //}
 
             _loadoutHashSet.IntersectWith(other);
+            _cachedList = _loadoutHashSet.ToList();
             return exceptWith;
         }
 
@@ -137,11 +157,7 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 throw new ArgumentNullException(nameof(thingDef));
             }
-            T thing = new T() { def = thingDef };
-            if (thingDef.useHitPoints)
-            {
-                thing.HitPoints = thing.MaxHitPoints;
-            }
+            T thing = UtilityLoadouts.MakeThingSimple(thingDef, null) as T;
             AddItem(thing);
         }
 
@@ -155,7 +171,7 @@ namespace RPG_Inventory_Remake.Loadout
             else
             {
                 _loadoutHashSet.Add(thing);
-                _loadoutDic.Add(thing, thing);
+                _cachedList.Add(thing);
             }
             _dirty = DirtyBits.All;
         }
@@ -163,7 +179,7 @@ namespace RPG_Inventory_Remake.Loadout
         public void RemoveItem(T thing)
         {
             _loadoutHashSet.Remove(thing);
-            _loadoutDic.Remove(thing);
+            _cachedList.Remove(thing);
             _dirty = DirtyBits.All;
         }
 
@@ -179,6 +195,8 @@ namespace RPG_Inventory_Remake.Loadout
                 AddItem(t);
             }
         }
+
+        #endregion CRUD operation
 
         private void CheckDirtyForRead()
         {

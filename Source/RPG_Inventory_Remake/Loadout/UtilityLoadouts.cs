@@ -12,7 +12,7 @@ using Verse;
 namespace RPG_Inventory_Remake.Loadout
 {
     [StaticConstructorOnStartup]
-    public static class Utility_Loadouts
+    public static class UtilityLoadouts
     {
         #region Fields
 
@@ -163,6 +163,41 @@ namespace RPG_Inventory_Remake.Loadout
                 throw new ArgumentNullException(nameof(pawn));
             }
             return string.Concat(pawn.Name.ToStringFull, " ", "Corgi_DefaultLoadoutName".Translate());
+        }
+
+        // Note Revisit for generic stuff
+        public static Thing MakeThingSimple(ThingDef def, ThingDef stuff)
+        {
+            if (stuff != null && !stuff.IsStuff)
+            {
+                Log.Error("MakeThing error: Tried to make " + def + " from " + stuff + " which is not a stuff. Assigning default.");
+                //stuff = GenStuff.DefaultStuffFor(def);
+            }
+            if (def.MadeFromStuff && stuff == null)
+            {
+                //Log.Error("MakeThing error: " + def + " is madeFromStuff but stuff=null. Assigning default.");
+                //stuff = GenStuff.DefaultStuffFor(def);
+            }
+            if (!def.MadeFromStuff && stuff != null)
+            {
+                Log.Error("MakeThing error: " + def + " is not madeFromStuff but stuff=" + stuff + ". Setting to null.");
+                stuff = null;
+            }
+            Thing thing = (Thing)Activator.CreateInstance(def.thingClass);
+            thing.def = def;
+            thing.SetStuffDirect(stuff);
+            if (def.useHitPoints)
+            {
+                thing.HitPoints = thing.MaxHitPoints;
+            }
+            return thing;
+        }
+
+        public static Thing DeepCopySimple(this Thing thing)
+        {
+            Thing copy = MakeThingSimple(thing.def, thing.Stuff);
+            copy.stackCount = thing.stackCount;
+            return copy;
         }
 
         #endregion Methods

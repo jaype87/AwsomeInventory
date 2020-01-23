@@ -61,17 +61,29 @@
     <Compile Include="..\Common\DefOfs\RPG_JobDefOf.cs">
       <Link>DefOfs\RPG_JobDefOf.cs</Link>
     </Compile>
-    <Compile Include="..\Common\ErrorMessage.Designer.cs">
-      <Link>ErrorMessage.Designer.cs</Link>
+    <Compile Include="..\Common\Gizmos\ToggleGearTab.cs">
+      <Link>Gizmos\ToggleGearTab.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Interface\ILoadout.cs">
+      <Link>Interface\ILoadout.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Interface\ILoadoutManager.cs">
+      <Link>Interface\ILoadoutManager.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Jobs\JobGiver_Unload.cs">
+      <Link>Jobs\JobGiver_Unload.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Resources\ErrorMessage1.Designer.cs">
+      <Link>Resources\ErrorMessage1.Designer.cs</Link>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ErrorMessage.resx</DependentUpon>
     </Compile>
-    <Compile Include="..\Common\Gizmos\ToggleGearTab.cs">
-      <Link>Gizmos\ToggleGearTab.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Jobs\JobGiver_Unload.cs">
-      <Link>Jobs\JobGiver_Unload.cs</Link>
+    <Compile Include="..\Common\Resources\UIText.Designer.cs">
+      <Link>Resources\UIText.Designer.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UIText.resx</DependentUpon>
     </Compile>
     <Compile Include="..\Common\RPG_Pawn.cs">
       <Link>RPG_Pawn.cs</Link>
@@ -82,11 +94,17 @@
     <Compile Include="..\Common\TextButton.cs">
       <Link>TextButton.cs</Link>
     </Compile>
+    <Compile Include="..\Common\UI\Dialog_InstantMessage.cs">
+      <Link>UI\Dialog_InstantMessage.cs</Link>
+    </Compile>
     <Compile Include="..\Common\Utilities\ThrowHelper.cs">
       <Link>Utilities\ThrowHelper.cs</Link>
     </Compile>
     <Compile Include="..\Common\Utilities\Utility.cs">
       <Link>Utilities\Utility.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Utilities\UtilityConstant.cs">
+      <Link>Utilities\UtilityConstant.cs</Link>
     </Compile>
     <Compile Include="..\Common\Utilities\Utility_Draw.cs">
       <Link>Utilities\Utility_Draw.cs</Link>
@@ -126,7 +144,7 @@
     <Compile Include="Loadout\LoadoutGenericDef.cs" />
     <Compile Include="Loadout\LoadoutSlot.cs" />
     <Compile Include="Loadout\MassBulkUtility.cs" />
-    <Compile Include="Loadout\Utility_Loadouts.cs" />
+    <Compile Include="Loadout\UtilityLoadouts.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -169,10 +187,15 @@
     <Analyzer Include="..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\Common\ErrorMessage.resx">
-      <Link>ErrorMessage.resx</Link>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ErrorMessage.Designer.cs</LastGenOutput>
+    <EmbeddedResource Include="..\Common\Resources\ErrorMessage.resx">
+      <Link>Resources\ErrorMessage.resx</Link>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ErrorMessage1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Common\Resources\UIText.resx">
+      <Link>Resources\UIText.resx</Link>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UIText.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

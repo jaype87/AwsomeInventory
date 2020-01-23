@@ -56,6 +56,7 @@ namespace RPG_Inventory_Remake.Loadout
 
 			LoadoutGenericDef generic = new LoadoutGenericDef();
 			generic.defName = "GenericMeal";
+			generic.thingClass = typeof(ThingWithComps);
 			generic.description = "Generic Loadout for perishable meals.  Intended for compatibility with pawns automatically picking up a meal for themself.";
 			generic.label = "Corgi_Generic_Meal".Translate();
 			generic.defaultCountType = LoadoutCountType.pickupDrop; // Fits with disabling of RimWorld Pawn behavior of fetching meals themselves.
@@ -69,6 +70,7 @@ namespace RPG_Inventory_Remake.Loadout
 			float targetNutrition = 0.85f;
 			generic = new LoadoutGenericDef();
 			generic.defName = "GenericRawFood";
+			generic.thingClass = typeof(ThingWithComps);
 			generic.description = "Generic Loadout for Raw Food.  Intended for compatibility with pawns automatically picking up raw food to train animals.";
 			generic.label = "Corgi_Generic_RawFood".Translate();
 			// Exclude drugs and corpses.  Also exclude any food worse than RawBad as in testing the pawns would not even pick it up for training.
@@ -84,6 +86,7 @@ namespace RPG_Inventory_Remake.Loadout
 
 			generic = new LoadoutGenericDef();
 			generic.defName = "GenericDrugs";
+			generic.thingClass = typeof(ThingWithComps);
 			generic.defaultCount = 3;
 			generic.description = "Generic Loadout for Drugs.  Intended for compatibility with pawns automatically picking up drugs in compliance with drug policies.";
 			generic.label = "Corgi_Generic_Drugs".Translate();
@@ -96,6 +99,7 @@ namespace RPG_Inventory_Remake.Loadout
 
 			generic = new LoadoutGenericDef();
 			generic.defName = "GenericMedicine";
+			generic.thingClass = typeof(Medicine);
 			generic.defaultCount = 5;
 			generic.defaultCountType = LoadoutCountType.pickupDrop;
 			generic.description = "Generic Loadout for Medicine.  Intended for pawns which will handle triage activities.";
