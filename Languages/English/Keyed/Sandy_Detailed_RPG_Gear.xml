@@ -13,6 +13,7 @@
     <Sandy_Greedy>Greedy (List)</Sandy_Greedy>
     <Sandy_Jealous>Jealous (RPG Style)</Sandy_Jealous>
     <Sandy_Ascetic>Ascetic</Sandy_Ascetic>
+
     <Corgi_PrimaryWeapon>Primary Weapon</Corgi_PrimaryWeapon>
     <Corgi_ExtraApparels>Extra Apparels</Corgi_ExtraApparels>
     <Corgi_PutAway>Put Away</Corgi_PutAway>
@@ -25,6 +26,25 @@
     <Corgi_UseLoadout>Use Loadout</Corgi_UseLoadout>
     <Corgi_RPGStyleInventoryRemake>RPG Style Inventory Remake</Corgi_RPGStyleInventoryRemake>
     <Corgi_ToggleGearTab>Toggle Gear Tab</Corgi_ToggleGearTab>
+    
+    <!-- Loadout Window -->
+    <Corgi_SelectLoadout>Select Loadout</Corgi_SelectLoadout>
+    <Corgi_OpenLoadout>Open Loadout</Corgi_OpenLoadout>
+    <Corgi_NewLoadout>New Loadout</Corgi_NewLoadout>
+    <Corgi_CopyLoadout>Copy Loadout</Corgi_CopyLoadout>
+    <Corgi_DeleteLoadout>Delete Loadout</Corgi_DeleteLoadout>
+    <Corgi_NoLoadout>No Loadout</Corgi_NoLoadout>
+    <Corgi_Weight>Weight</Corgi_Weight>
+    <Corgi_Generic_Meal>Generic Meal</Corgi_Generic_Meal>
+    <Corgi_Generic_RawFood>Generic RawFood</Corgi_Generic_RawFood>
+    <Corgi_Generic_Drugs>Generic Drugs</Corgi_Generic_Drugs>
+    <Corgi_Generic_Medicine>Generic Medicine</Corgi_Generic_Medicine>
+    <Corgi_DefaultLoadoutName>Loadout</Corgi_DefaultLoadoutName>
+    <Corgi_EmptyLoadoutName>Nothing</Corgi_EmptyLoadoutName>
+    <Corgi_ManageLoadouts>Manage Loadouts</Corgi_ManageLoadouts>
+    <Corgi_ForcedHold>Forced holding</Corgi_ForcedHold>
     <Corgi_TryToDeleteLastLoadout>Cannot delete the last loadout</Corgi_TryToDeleteLastLoadout>
+    <Corgi_ChooseMaterialAndQuality>Choose Material and Quality</Corgi_ChooseMaterialAndQuality>
+    <Corgi_Nomaterial>No material</Corgi_Nomaterial>
 
 </LanguageData>

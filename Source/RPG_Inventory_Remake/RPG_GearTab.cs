@@ -32,10 +32,21 @@ namespace RPG_Inventory_Remake
 
         }
 
+        public override void OnOpen()
+        {
+            base.OnOpen();
+            FillTabOperations.ScrollPosition = Vector2.zero;
+
+        }
+
         public override bool IsVisible
         {
             get
             {
+                if (SelPawn != _selPawn?.Pawn)
+                {
+                    FillTabOperations.ScrollPosition = Vector2.zero;
+                }
                 _selPawn = new RPG_Pawn(SelPawn, SelThing);
                 return Utility.ShouldShowInventory(_selPawn.Pawn) ||
                        Utility.ShouldShowApparel(_selPawn.Pawn) ||

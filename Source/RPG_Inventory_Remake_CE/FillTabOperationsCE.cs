@@ -292,7 +292,7 @@ namespace RPG_Inventory_Remake_CE
                     }
                     else
                     {
-                        Utility_Draw.DrawThumbnails(selPawn, rectForEquipment, fireShootingBarrel, _apparelOverflow);
+                        UtilityDraw.DrawThumbnails(selPawn, rectForEquipment, fireShootingBarrel, _apparelOverflow);
                     }
                 }
                 // Draw shield
@@ -304,7 +304,7 @@ namespace RPG_Inventory_Remake_CE
                                             .GetWorkingRect(CorgiBodyPartGroupDefOf.Arse,
                                                             PawnRect.x,
                                                             PawnRect.x);
-                        Utility_Draw.DrawThumbnails(selPawn, rectForEquipment, apparel, _apparelOverflow);
+                        UtilityDraw.DrawThumbnails(selPawn, rectForEquipment, apparel, _apparelOverflow);
                     }
                 }
             }
@@ -352,7 +352,7 @@ namespace RPG_Inventory_Remake_CE
                                             .GetWorkingRect(CorgiBodyPartGroupDefOf.UpperHead,
                                                             _startingXforRect,
                                                             _startingXforRect);
-                        Utility_Draw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
+                        UtilityDraw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
                     }
                 }
                 else
@@ -375,7 +375,7 @@ namespace RPG_Inventory_Remake_CE
                         _smartRectCurrent = _smartRectCurrent
                                                 .GetWorkingRect(CorgiBodyPartGroupDefOf.Neck,
                                                                 _startingXforRect, _startingXforRect);
-                        Utility_Draw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
+                        UtilityDraw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
                     }
                     else
                     {
@@ -439,7 +439,7 @@ namespace RPG_Inventory_Remake_CE
                                             .GetWorkingRect(CorgiBodyPartGroupDefOf.Torso,
                                                             _startingXforRect,
                                                             _startingXforRect);
-                            Utility_Draw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
+                            UtilityDraw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
                         }
                     }
                     else
@@ -482,7 +482,7 @@ namespace RPG_Inventory_Remake_CE
                                                 .GetWorkingRect(CorgiBodyPartGroupDefOf.Waist,
                                                                 _startingXforRect,
                                                                 _startingXforRect);
-                            Utility_Draw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
+                            UtilityDraw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
                         }
                     }
                     else
@@ -527,7 +527,7 @@ namespace RPG_Inventory_Remake_CE
                                                 .GetWorkingRect(CorgiBodyPartGroupDefOf.Legs,
                                                                 _startingXforRect,
                                                                 _startingXforRect);
-                            Utility_Draw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
+                            UtilityDraw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
                         }
                     }
                     else
@@ -572,7 +572,7 @@ namespace RPG_Inventory_Remake_CE
                 } while (apparelCounter.MoveNext());
             }
             // Try to draw the extras
-            Utility_Draw.DrawApparelToNextRow(selPawn, _smartRectHead, _apparelOverflow);
+            UtilityDraw.DrawApparelToNextRow(selPawn, _smartRectHead, _apparelOverflow);
 
             // If there is any more remains, put them into their own category
             if (_apparelOverflow.Count > 0)
@@ -589,7 +589,7 @@ namespace RPG_Inventory_Remake_CE
                     _apparelOverflow.Clear();
                     foreach (Apparel apparel in tempList)
                     {
-                        Utility_Draw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
+                        UtilityDraw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
                     }
                     if (_apparelOverflow.Count > 0)
                     {

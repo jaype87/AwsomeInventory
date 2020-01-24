@@ -126,6 +126,7 @@
     <Compile Include="Jobs\JobGiver_TakeAndEquip.cs" />
     <Compile Include="Jobs\JobGiver_UpdateLoadout.cs" />
     <Compile Include="Loadout\compRPGILoudout.cs" />
+    <Compile Include="Loadout\Dialog_StuffAndQuality.cs" />
     <Compile Include="Loadout\EqualityComparer.cs" />
     <Compile Include="Loadout\GameComponent_DefManager.cs" />
     <Compile Include="Loadout\LoadoutModExtension.cs" />
@@ -148,14 +149,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\RPG_Style_Inventory\Languages\English\Keyed\Sandy_Detailed_RPG_Gear.xml">
-      <Link>Languages\Sandy_Detailed_RPG_Gear.xml</Link>
-    </Content>
     <Content Include="..\..\..\RPG_Style_Inventory\Patches\LoadoutDefModExtention.xml">
       <Link>Patches\LoadoutDefModExtention.xml</Link>
     </Content>
     <Content Include="..\..\..\RPG_Style_Inventory\Patches\RPG_Inventory.xml">
       <Link>Patches\RPG_Inventory.xml</Link>
+    </Content>
+    <Content Include="..\..\Languages\English\Keyed\Sandy_Detailed_RPG_Gear.xml">
+      <Link>Languages\Sandy_Detailed_RPG_Gear.xml</Link>
     </Content>
     <Content Include="About\About.xml" />
     <Content Include="About\preview.png" />
@@ -189,12 +190,12 @@
   <ItemGroup>
     <EmbeddedResource Include="..\Common\Resources\ErrorMessage.resx">
       <Link>Resources\ErrorMessage.resx</Link>
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ErrorMessage1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="..\Common\Resources\UIText.resx">
       <Link>Resources\UIText.resx</Link>
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>UIText.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>

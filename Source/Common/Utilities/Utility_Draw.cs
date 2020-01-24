@@ -10,7 +10,7 @@ using Harmony;
 
 namespace RPG_Inventory_Remake_Common
 {
-    public static class Utility_Draw
+    public static class UtilityDraw
     {
         public static bool DrawThumbnails(RPG_Pawn pawn, SmartRect smartRect, ThingWithComps thing, List<ThingWithComps> apparelOverflow)
         {
@@ -61,6 +61,24 @@ namespace RPG_Inventory_Remake_Common
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Draw title at "position" and return next available Y as rollingY
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="title"></param>
+        /// <param name="rollingY"></param>
+        public static void DrawTitle(Vector2 position, string title, ref float rollingY)
+        {
+            Text.Font = GameFont.Medium;
+            Vector2 titleSize = Text.CalcSize(title);
+            //position.x += GenUI.GapSmall;
+            //position.y += GenUI.GapSmall;
+            Rect rectToDraw = new Rect(position, titleSize);
+            Widgets.Label(rectToDraw, title);
+            Text.Font = GameFont.Small;
+            rollingY = rectToDraw.yMax;
         }
     }
 }

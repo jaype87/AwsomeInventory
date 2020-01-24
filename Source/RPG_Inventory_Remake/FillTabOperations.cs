@@ -23,7 +23,7 @@ namespace RPG_Inventory_Remake
 
         private static readonly Color _highlightColor = new Color(0.5f, 0.5f, 0.5f, 1f);
         private static readonly Color _thingLabelColor = new Color(0.9f, 0.9f, 0.9f, 1f);
-        private static Vector2 _scrollPosition = Vector2.zero;
+        public static Vector2 ScrollPosition = Vector2.zero;
 
         private static SmartRect _smartRectHead;
         private static SmartRect _smartRectCurrent;
@@ -55,7 +55,7 @@ namespace RPG_Inventory_Remake
             GUI.color = Color.white;
             Rect outRect = new Rect(0f, 0f, listRect.width, listRect.height);
             Rect viewRect = new Rect(0f, 0f, listRect.width - 16f, _scrollViewHeight);
-            Widgets.BeginScrollView(outRect, ref _scrollPosition, viewRect);
+            Widgets.BeginScrollView(outRect, ref ScrollPosition, viewRect);
 
             // draw Mass info and Temperature on the side
             Vector2 rectStat = new Vector2(374, 0);
@@ -101,7 +101,7 @@ namespace RPG_Inventory_Remake
                     }
                     else
                     {
-                        Utility_Draw.DrawThumbnails(selPawn, rectForEquipment, fireShootingBarrel, _apparelOverflow);
+                        UtilityDraw.DrawThumbnails(selPawn, rectForEquipment, fireShootingBarrel, _apparelOverflow);
                     }
                 }
             }
@@ -148,7 +148,7 @@ namespace RPG_Inventory_Remake
                                             .GetWorkingRect(CorgiBodyPartGroupDefOf.UpperHead,
                                                             _startingXforRect,
                                                             _startingXforRect);
-                        Utility_Draw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
+                        UtilityDraw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
                     }
                 }
                 else
@@ -171,7 +171,7 @@ namespace RPG_Inventory_Remake
                         _smartRectCurrent = _smartRectCurrent
                                                 .GetWorkingRect(CorgiBodyPartGroupDefOf.Neck,
                                                                 _startingXforRect, _startingXforRect);
-                        Utility_Draw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
+                        UtilityDraw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
                     }
                     else
                     {
@@ -235,7 +235,7 @@ namespace RPG_Inventory_Remake
                                             .GetWorkingRect(CorgiBodyPartGroupDefOf.Torso,
                                                             _startingXforRect,
                                                             _startingXforRect);
-                            Utility_Draw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
+                            UtilityDraw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
                         }
                     }
                     else
@@ -278,7 +278,7 @@ namespace RPG_Inventory_Remake
                                                 .GetWorkingRect(CorgiBodyPartGroupDefOf.Waist,
                                                                 _startingXforRect,
                                                                 _startingXforRect);
-                            Utility_Draw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
+                            UtilityDraw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
                         }
                     }
                     else
@@ -323,7 +323,7 @@ namespace RPG_Inventory_Remake
                                                 .GetWorkingRect(CorgiBodyPartGroupDefOf.Legs,
                                                                 _startingXforRect,
                                                                 _startingXforRect);
-                            Utility_Draw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
+                            UtilityDraw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
                         }
                     }
                     else
@@ -345,7 +345,7 @@ namespace RPG_Inventory_Remake
                 } while (apparelCounter.MoveNext());
             }
             // Try to draw the extras
-            Utility_Draw.DrawApparelToNextRow(selPawn, _smartRectHead, _apparelOverflow);
+            UtilityDraw.DrawApparelToNextRow(selPawn, _smartRectHead, _apparelOverflow);
 
             // If there is any more remains, put them into their own category
             if (_apparelOverflow.Count > 0)
@@ -361,7 +361,7 @@ namespace RPG_Inventory_Remake
                     _apparelOverflow.Clear();
                     foreach (Apparel apparel in tempList)
                     {
-                        Utility_Draw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
+                        UtilityDraw.DrawThumbnails(selPawn, _smartRectCurrent, apparel, _apparelOverflow);
                     }
                     if (_apparelOverflow.Count > 0)
                     {
@@ -438,7 +438,7 @@ namespace RPG_Inventory_Remake
             GUI.color = Color.white;
             Rect outRect = new Rect(0f, 0f, listRect.width, listRect.height);
             Rect viewRect = new Rect(0f, 0f, listRect.width - 16f, _scrollViewHeight);
-            Widgets.BeginScrollView(outRect, ref _scrollPosition, viewRect);
+            Widgets.BeginScrollView(outRect, ref ScrollPosition, viewRect);
 
             float rollingY = 0f;
             // draw mass info and temperature

@@ -11,12 +11,11 @@ namespace RPG_Inventory_Remake_Common
     {
         private Type _tabType;
         // Gear_Helmet.png Designed By nickfz from <a href="https://pngtree.com/">Pngtree.com</a>
-        private static readonly Texture2D _icon = ContentFinder<Texture2D>.Get("UI/Icons/Gear_Helmet_Colored", true);
         public ToggleGearTab(Type tabType)
         {
             hotKey = KeyBindingDefOf.Misc12;
             action = ToggleTab;
-            icon = _icon;
+            icon = TexButton.GearHelmet;
             _tabType = tabType;
         }
 

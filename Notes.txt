@@ -19,3 +19,10 @@ Check GenUI for UI helper function
 Check ColorLibrary for color
 Check DoPlayLoad() for code/assets loading order at game start
 Check ReorderableWidget and Page_ModsConfig for dragging items in list
+Check DrawMouseAttachment for dragging UI
+
+GenText.ToStringMass()
+GenUI.GetWidthCached()
+Text.LineHeight()
+Text.SpaceBetweenLines()
+GenUI.GetMouseAttachedWindowPos

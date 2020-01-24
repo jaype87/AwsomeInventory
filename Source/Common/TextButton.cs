@@ -126,6 +126,10 @@ namespace RPG_Inventory_Remake_Common
 
         public static readonly Texture2D LockNorthUp = ContentFinder<Texture2D>.Get("UI/Buttons/LockNorthUp", true);
 
+        public static readonly Texture2D Gear = ContentFinder<Texture2D>.Get("UI/Icons/Gear", true);
+
+        public static readonly Texture2D GearHelmet = ContentFinder<Texture2D>.Get("UI/Icons/Gear_Helmet_Colored", true);
+
 
     }
 }

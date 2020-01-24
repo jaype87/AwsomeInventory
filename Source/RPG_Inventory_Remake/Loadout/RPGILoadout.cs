@@ -24,7 +24,7 @@ namespace RPG_Inventory_Remake.Loadout
             ReStash = 2,
             All = Read | ReStash
         }
-        
+
         // Sole purpose of the _cachedList is for reordering in loadout window
         private List<T> _cachedList = new List<T>();
         private HashSet<T> _loadoutHashSet = new HashSet<T>(new LoadoutComparer<T>());
@@ -69,11 +69,12 @@ namespace RPG_Inventory_Remake.Loadout
                 throw new ArgumentNullException(nameof(loadout));
             }
             _loadoutHashSet = new HashSet<T>(new LoadoutComparer<T>());
-            foreach (Thing thing in loadout)
+            foreach (Thing thing in loadout.CachedList)
             {
-                _loadoutHashSet.Add(thing.DeepCopySimple() as T);
+                T item = thing.DeepCopySimple() as T;
+                _loadoutHashSet.Add(item);
+                _cachedList.Add(item);
             }
-            //_loadoutDic = loadout.ToDictionary((t) => t, new LoadoutComparer<T>());
             Label = LoadoutManager.GetIncrementalLabel(loadout.Label);
         }
 
@@ -117,7 +118,7 @@ namespace RPG_Inventory_Remake.Loadout
 
         public bool TryGetValue(T thing, out T value)
         {
-            foreach(T item in _loadoutHashSet)
+            foreach (T item in _loadoutHashSet)
             {
                 if (LoadoutComparer.isEqual(item, thing))
                 {
