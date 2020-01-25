@@ -15,6 +15,5 @@ namespace RPG_Inventory_Remake_Common
         void AddItem(T thing);
         void RemoveItem(T thing);
         bool TryGetValue(T thing, out T value);
-        IEnumerable<T> IntersectWith(IEnumerable<T> other);
     }
 }

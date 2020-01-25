@@ -122,11 +122,13 @@ namespace RPG_Inventory_Remake.Loadout
             }
             else
             {
-                IEnumerable<Thing> thingRemoved = Loadout.IntersectWith(newLoadout);
                 // Remove deleted items
-                foreach (Thing t in thingRemoved)
+                foreach (Thing thing in InventoryTracker.Keys)
                 {
-                    InventoryTracker.Remove(t);
+                    if (!newLoadout.Contains(thing))
+                    {
+                        InventoryTracker.Remove(thing);
+                    }
                 }
                 // Add new items or updated the old ones
                 foreach (Thing thing in newLoadout)

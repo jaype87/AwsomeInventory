@@ -12,10 +12,11 @@ using RPG_Inventory_Remake_Common;
 namespace RPG_Inventory_Remake.Loadout
 {
     /// <summary>
-    /// It holds information about loadout
+    /// It inherits from the "Outfit" class, is added to outfitDatabase and holds information about loadout
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class RPGILoadout<T> : IExposable, ILoadout<T>, IEnumerable<T> where T : Thing, new()
+    /// <remarks>It uses LoadoutCaomparer to generate hash value for keys</remarks>
+    public class RPGILoadout<T> : Outfit, IExposable, ILoadout<T>, IEnumerable<T> where T : Thing, new()
     {
         [Flags]
         enum DirtyBits
@@ -27,18 +28,26 @@ namespace RPG_Inventory_Remake.Loadout
 
         // Sole purpose of the _cachedList is for reordering in loadout window
         private List<T> _cachedList = new List<T>();
-        private HashSet<T> _loadoutHashSet = new HashSet<T>(new LoadoutComparer<T>());
-        //private Dictionary<T, T> _loadoutDic = new Dictionary<T, T>(new LoadoutComparer<T>());
+        private Dictionary<T, ThingFilterPackage> _loadoutDic = new Dictionary<T, ThingFilterPackage>(new LoadoutComparer<T>());
+
         private float _weight = -1;
         private DirtyBits _dirty = DirtyBits.All;
 
-        public string Label;
 
         #region Constructor
 
         public RPGILoadout()
         {
+            List<Outfit> outfits = Current.Game.outfitDatabase.AllOutfits;
+            int id = (!outfits.Any()) ? 1 : (outfits.Max((Outfit o) => o.uniqueId) + 1);
+            uniqueId = id;
+            filter.SetAllow(ThingCategoryDefOf.Apparel, allow: true);
+            outfits.Add(this);
+        }
 
+        public RPGILoadout(string oldLabel) : this()
+        {
+            Label = LoadoutManager.GetIncrementalLabel(oldLabel);
         }
 
         /// <summary>
@@ -46,6 +55,7 @@ namespace RPG_Inventory_Remake.Loadout
         /// </summary>
         /// <param name="pawn"></param>
         public RPGILoadout(Pawn pawn)
+            : this(LoadoutManager.GetIncrementalLabel(pawn.GetLoadout() != null ? pawn.GetLoadout().Label : pawn.GetDefaultLoadoutName()))
         {
             if (pawn == null)
             {
@@ -54,28 +64,25 @@ namespace RPG_Inventory_Remake.Loadout
             AddItemFromIEnumerable(pawn.equipment?.AllEquipmentListForReading as IEnumerable<T>);
             AddItemFromIEnumerable(pawn.apparel?.WornApparel as IEnumerable<T>);
             AddItemFromIEnumerable(pawn.inventory?.innerContainer as IEnumerable<T>);
-
-            Label = LoadoutManager.GetIncrementalLabel(pawn.GetLoadout() != null ? pawn.GetLoadout().Label : pawn.GetDefaultLoadoutName());
         }
 
         /// <summary>
         /// Copy constructor, except the label is different.
         /// </summary>
         /// <param name="loadout"></param>
-        public RPGILoadout(RPGILoadout<T> loadout)
+        public RPGILoadout(RPGILoadout<T> loadout) : this(LoadoutManager.GetIncrementalLabel(loadout.Label))
         {
             if (loadout == null)
             {
                 throw new ArgumentNullException(nameof(loadout));
             }
-            _loadoutHashSet = new HashSet<T>(new LoadoutComparer<T>());
+            _loadoutDic = new Dictionary<T, ThingFilterPackage>(new LoadoutComparer<T>());
             foreach (Thing thing in loadout.CachedList)
             {
                 T item = thing.DeepCopySimple() as T;
-                _loadoutHashSet.Add(item);
+                _loadoutDic.Add(item, new ThingFilterPackage(item, new ThingFilter()));
                 _cachedList.Add(item);
             }
-            Label = LoadoutManager.GetIncrementalLabel(loadout.Label);
         }
 
         #endregion
@@ -91,15 +98,16 @@ namespace RPG_Inventory_Remake.Loadout
             }
         }
 
-        public List<T> CachedList => _cachedList;
+        public string Label
+        {
+            get => label;
+            set => label = value;
+        }
 
         #endregion
 
         #region Methods
-
-        [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "<Pending>")]
-        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
-        public static implicit operator HashSet<T>(RPGILoadout<T> t) => t._loadoutHashSet;
+        public List<T> CachedList => _cachedList;
 
         public void ExposeData()
         {
@@ -108,48 +116,32 @@ namespace RPG_Inventory_Remake.Loadout
 
         public IEnumerator<T> GetEnumerator()
         {
-            return _loadoutHashSet.GetEnumerator();
+            return _loadoutDic.Keys.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _loadoutHashSet.GetEnumerator();
+            return _loadoutDic.Keys.GetEnumerator();
         }
 
-        public bool TryGetValue(T thing, out T value)
+        public bool Contains(T thing)
         {
-            foreach (T item in _loadoutHashSet)
-            {
-                if (LoadoutComparer.isEqual(item, thing))
-                {
-                    value = item;
-                    return true;
-                }
-            }
-            value = null;
-            return false;
-            //return _loadoutDic.TryGetValue(thing, out value);
+            return _loadoutDic.ContainsKey(thing);
         }
 
         #region CRUD operation
 
-        /// <summary>
-        /// Intersect the current loadout with other loadout
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns>the ExceptWith result of current hashset to the other</returns>
-        public IEnumerable<T> IntersectWith(IEnumerable<T> other)
+        [SuppressMessage("Design", "CA1043:Use Integral Or String Argument For Indexers", Justification = "<Pending>")]
+        public ThingFilterPackage this[Thing thing]
         {
-            HashSet<T> exceptWith = new HashSet<T>(_loadoutHashSet, new LoadoutComparer<T>());
-            exceptWith.ExceptWith(other);
-            //foreach (T thing in exceptWith)
-            //{
-            //    _loadoutDic.Remove(thing);
-            //}
+            get => _loadoutDic[thing as T];
+        }
 
-            _loadoutHashSet.IntersectWith(other);
-            _cachedList = _loadoutHashSet.ToList();
-            return exceptWith;
+        public bool TryGetValue(T thing, out T value)
+        {
+            bool result = _loadoutDic.TryGetValue(thing, out ThingFilterPackage package);
+            value = package.Thing as T;
+            return result;
         }
 
         public void AddItem(ThingDef thingDef)
@@ -164,22 +156,36 @@ namespace RPG_Inventory_Remake.Loadout
 
         public void AddItem(T thing)
         {
-            T item = _loadoutHashSet.FirstOrDefault(t => LoadoutComparer.isEqual(t, thing));
-            if (item != default)
+            if (_loadoutDic.ContainsKey(thing))
             {
-                ++item.stackCount;
+                _loadoutDic[thing].Thing.stackCount++;
             }
             else
             {
-                _loadoutHashSet.Add(thing);
+                _loadoutDic.Add(thing, new ThingFilterPackage(thing, new ThingFilter()));
                 _cachedList.Add(thing);
             }
             _dirty = DirtyBits.All;
         }
 
+        public void AddPackage(ThingFilterPackage package)
+        {
+            if (package == null)
+            {
+                throw new ArgumentNullException(nameof(package));
+            }
+            if (_loadoutDic.ContainsKey(package.Thing as T))
+            {
+                AddItem(package.Thing as T);
+                return;
+            }
+            _loadoutDic.Add(package.Thing as T, package);
+            _cachedList.Add(package.Thing as T);
+        }
+
         public void RemoveItem(T thing)
         {
-            _loadoutHashSet.Remove(thing);
+            _loadoutDic.Remove(thing);
             _cachedList.Remove(thing);
             _dirty = DirtyBits.All;
         }
@@ -203,11 +209,22 @@ namespace RPG_Inventory_Remake.Loadout
         {
             if ((_dirty & DirtyBits.Read) == DirtyBits.Read)
             {
-                _weight = _loadoutHashSet.Sum(i => i.GetStatValue(StatDefOf.Mass) * i.stackCount);
+                _weight = _loadoutDic.Keys.Sum(i => i.GetStatValue(StatDefOf.Mass) * i.stackCount);
                 _dirty ^= DirtyBits.Read;
             }
         }
 
         #endregion
+    }
+
+    public class ThingFilterPackage
+    {
+        public Thing Thing;
+        public ThingFilter Filter;
+        public ThingFilterPackage(Thing thing, ThingFilter filter)
+        {
+            this.Thing = thing;
+            this.Filter = filter;
+        }
     }
 }

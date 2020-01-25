@@ -965,5 +965,19 @@ namespace RPG_Inventory_Remake_Common
             }
             TooltipHandler.TipRegion(rect, text);
         }
+
+        public static string Times(this string str, int num)
+        {
+            if (str.NullOrEmpty())
+            {
+                return string.Empty;
+            }
+            string result = "";
+            for (int i = 0; i < num; ++i)
+            {
+                result = string.Concat(result, str);
+            }
+            return result;
+        }
     }
 }

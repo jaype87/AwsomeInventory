@@ -14,7 +14,7 @@ namespace RPG_Inventory_Remake.Loadout
     {
         Ranged,
         Melee,
-        Ammo,
+        Apparel,
         Minified,
         Generic,
         All // All things, won't include generics, can include minified/able now.
@@ -50,7 +50,7 @@ namespace RPG_Inventory_Remake.Loadout
         /// <summary>
         /// Controls the window size and position
         /// </summary>
-        private static Vector2 _initialSize = new Vector2(650f, 650f);
+        private static Vector2 _initialSize;
         private static List<SelectableItem> _selectableItems;
         private readonly static HashSet<ThingDef> _allSuitableDefs;
         private static float _scrollViewHeight;
@@ -77,6 +77,9 @@ namespace RPG_Inventory_Remake.Loadout
 
         static Dialog_ManageLoadouts()
         {
+            float width = GenUI.GetWidthCached(UIText.TenCharsString.Times(9));
+            
+            _initialSize = new Vector2(width, UI.screenHeight / 2f);
             _allSuitableDefs = GameComponent_DefManager.GetSuitableDefs();
         }
 
@@ -126,7 +129,7 @@ namespace RPG_Inventory_Remake.Loadout
             Rect slotListRect = new Rect(
                 0f,
                 nameRect.yMax + _margin,
-                (canvas.width - _margin) / 2f,
+                (canvas.width * 5/9 - _margin),
                 canvas.height - _topAreaHeight - nameRect.height - _barHeight * 2 - _margin * 5);
 
             Rect weightBarRect = new Rect(slotListRect.xMin, slotListRect.yMax + _margin, slotListRect.width, _barHeight);
@@ -134,13 +137,13 @@ namespace RPG_Inventory_Remake.Loadout
             Rect sourceButtonRect = new Rect(
                 slotListRect.xMax + _margin,
                 _topAreaHeight + _margin * 2,
-                (canvas.width - _margin) / 2f,
+                (canvas.width * 4/9 - _margin),
                 24f);
 
             Rect selectionRect = new Rect(
                 slotListRect.xMax + _margin,
                 sourceButtonRect.yMax + _margin,
-                (canvas.width - _margin) / 2f,
+                (canvas.width * 4/9 - _margin),
                 canvas.height - 24f - _topAreaHeight - _margin * 3);
 
             List<RPGILoadout<Thing>> loadouts = LoadoutManager.Loadouts;
@@ -287,23 +290,22 @@ namespace RPG_Inventory_Remake.Loadout
 
         public void DrawCategoryIcon(Rect canvas)
         {
-            Rect button = new Rect(canvas.xMin, canvas.yMin + (canvas.height - 24f) / 2f, 24f, 24f);
+            WidgetRow row = new WidgetRow(canvas.x, canvas.y);
+            DrawSourceIcon(SourceSelection.Ranged, _iconRanged, ref row, "Corgi_SourceRangedTip".Translate());
+            DrawSourceIcon(SourceSelection.Melee, _iconMelee, ref row, "Corgi_SourceMeleeTip".Translate());
+            DrawSourceIcon(SourceSelection.Apparel, TexButton.Apparel, ref row, "Corgi_SourceApparelTip".Translate());
+            DrawSourceIcon(SourceSelection.Minified, _iconMinified, ref row, "Corgi_SourceMinifiedTip".Translate());
+            DrawSourceIcon(SourceSelection.Generic, _iconGeneric, ref row, "Corgi_SourceGenericTip".Translate());
+            DrawSourceIcon(SourceSelection.All, _iconAll, ref row, "Corgi_SourceAllTip".Translate());
 
-            DrawSourceIcon(SourceSelection.Ranged, _iconRanged, ref button, "Corgi_SourceRangedTip".Translate());
-            DrawSourceIcon(SourceSelection.Melee, _iconMelee, ref button, "Corgi_SourceMeleeTip".Translate());
-            DrawSourceIcon(SourceSelection.Minified, _iconMinified, ref button, "Corgi_SourceMinifiedTip".Translate());
-            DrawSourceIcon(SourceSelection.Generic, _iconGeneric, ref button, "Corgi_SourceGenericTip".Translate());
-            DrawSourceIcon(SourceSelection.All, _iconAll, ref button, "Corgi_SourceAllTip".Translate());
+            float nameFieldLen = GenUI.GetWidthCached(UIText.TenCharsString);
+            float incrementX = canvas.xMax - row.FinalX - nameFieldLen - WidgetRow.IconSize - WidgetRow.ButtonExtraSpace;
+            row.Gap(incrementX);
+            row.Icon(_iconSearch, "Corgi_SourceFilterTip".Translate());
 
-            // filter input field
-            Rect filterRect = new Rect(canvas.xMax - 75f, canvas.yMin + (canvas.height - 24f) / 2f, 75f, 24f);
+            Rect filterRect = new Rect(row.FinalX, canvas.y, nameFieldLen, canvas.height);
             DrawFilterField(filterRect);
             TooltipHandler.TipRegion(filterRect, "Corgi_SourceFilterTip".Translate());
-
-            // search icon
-            button.x = filterRect.xMin - _margin * 2 - _iconSize;
-            GUI.DrawTexture(button, _iconSearch);
-            TooltipHandler.TipRegion(button, "Corgi_SourceFilterTip".Translate());
 
             // reset color
             GUI.color = Color.white;
@@ -336,6 +338,11 @@ namespace RPG_Inventory_Remake.Loadout
                     _sourceType = SourceSelection.Melee;
                     break;
 
+                case SourceSelection.Apparel:
+                    _source = _selectableItems.Where(row => row.thingDef.IsApparel).ToList();
+                    _sourceType = SourceSelection.Apparel;
+                    break;
+
                 case SourceSelection.Minified:
                     _source = _selectableItems.Where(row => row.thingDef.Minifiable).ToList();
                     _sourceType = SourceSelection.Minified;
@@ -354,7 +361,7 @@ namespace RPG_Inventory_Remake.Loadout
             }
         }
 
-        private void DrawCountField(Rect canvas, Thing thing)
+        private static void DrawCountField(Rect canvas, Thing thing)
         {
             if (thing == null)
                 return;
@@ -415,9 +422,11 @@ namespace RPG_Inventory_Remake.Loadout
             Text.Anchor = TextAnchor.UpperLeft;
 
             // gear icon
-            if (Widgets.ButtonImage(gearIconRect, TexButton.Gear))
+            if ((thing.def.MadeFromStuff || thing.TryGetQuality(out _))
+                && !thing.def.IsArt
+                && Widgets.ButtonImage(gearIconRect, TexButton.Gear))
             {
-                Find.WindowStack.Add(new Dialog_StuffAndQuality(thing.def));
+                Find.WindowStack.Add(new Dialog_StuffAndQuality(thing, _currentLoadout));
             }
 
             // count
@@ -456,61 +465,13 @@ namespace RPG_Inventory_Remake.Loadout
                 Rect row = new Rect(0f, curY, listRect.width, GenUI.ListSpacing);
                 curY += GenUI.ListSpacing;
 
-                //// if we're dragging, and currently on this row, and this row is not the row being dragged - draw a ghost of the slot here
-                //if (Dragging != null && Mouse.IsOver(row) && Dragging != _currentLoadout.Slots[i])
-                //{
-                //    // draw ghost
-                //    GUI.color = new Color(.7f, .7f, .7f, .5f);
-                //    DrawSlot(row, Dragging);
-                //    GUI.color = Color.white;
-
-                //    // catch mouseUp
-                //    if (Input.GetMouseButtonUp(0))
-                //    {
-                //        _currentLoadout.MoveSlot(Dragging, i);
-                //        Dragging = null;
-                //    }
-
-                //    // ofset further slots down
-                //    row.y += GenUI.ListSpacing;
-                //    curY += GenUI.ListSpacing;
-                //}
-
                 // alternate row background
                 if (i % 2 == 0)
                     GUI.DrawTexture(row, _darkBackground);
 
-                //// draw the slot - grey out if draggin this, but only when dragged over somewhere else
-                //if (Dragging == _currentLoadout.Slots[i] && !Mouse.IsOver(row))
-                //    GUI.color = new Color(.6f, .6f, .6f, .4f);
                 DrawSlot(row, _currentLoadout.CachedList[i], reorderableGroup);
                 GUI.color = Color.white;
             }
-
-            // if we're dragging, create an extra invisible row to allow moving stuff to the bottom
-            //if (Dragging != null)
-            //{
-            //    Rect row = new Rect(0f, curY, viewRect.width, GenUI.ListSpacing);
-
-            //    if (Mouse.IsOver(row))
-            //    {
-            //        // draw ghost
-            //        GUI.color = new Color(.7f, .7f, .7f, .5f);
-            //        DrawSlot(row, Dragging);
-            //        GUI.color = Color.white;
-
-            //        // catch mouseUp
-            //        if (Input.GetMouseButtonUp(0))
-            //        {
-            //            _currentLoadout.MoveSlot(Dragging, _currentLoadout.Slots.Count - 1);
-            //            Dragging = null;
-            //        }
-            //    }
-            //}
-
-            //// cancel drag when mouse leaves the area, or on mouseup.
-            //if (!Mouse.IsOver(viewRect) || Input.GetMouseButtonUp(0))
-            //    Dragging = null;
 
             if (Event.current.type == EventType.Layout)
             {
@@ -521,55 +482,36 @@ namespace RPG_Inventory_Remake.Loadout
 
         private void DrawItemsInCategory(Rect canvas)
         {
-            int count = _sourceType == SourceSelection.Generic ? _sourceGeneric.Count : _source.Count;
             GUI.DrawTexture(canvas, _darkBackground);
 
-            if ((_sourceType != SourceSelection.Generic && _source.NullOrEmpty()) || (_sourceType == SourceSelection.Generic && _sourceGeneric.NullOrEmpty()))
-                return;
-
             Rect viewRect = new Rect(canvas);
-            viewRect.width -= 16f;
-            viewRect.height = count * GenUI.ListSpacing;
+            viewRect.height = _source.Count * GenUI.ListSpacing;
+            viewRect.width -= GenUI.GapWide;
 
             Widgets.BeginScrollView(canvas, ref _availableScrollPosition, viewRect.AtZero());
-            int startRow = (int)Math.Floor((decimal)(_availableScrollPosition.y / GenUI.ListSpacing));
-            startRow = (startRow < 0) ? 0 : startRow;
-            int endRow = startRow + (int)(Math.Ceiling((decimal)(canvas.height / GenUI.ListSpacing)));
-            endRow = (endRow > count) ? count : endRow;
-            for (int i = startRow; i < endRow; i++)
+            for (int i = 0; i < _source.Count; i++)
             {
-                // gray out weapons not in stock
                 Color baseColor = GUI.color;
 
+                // gray out weapons not in stock
                 if (_source[i].isGreyedOut)
                     GUI.color = Color.gray;
 
                 Rect row = new Rect(0f, i * GenUI.ListSpacing, canvas.width, GenUI.ListSpacing);
                 Rect labelRect = new Rect(row);
-                if (_sourceType == SourceSelection.Generic)
-                    TooltipHandler.TipRegion(row, (_sourceGeneric[i] as ThingDef).GetWeightAndBulkTip());
-                else
-                    TooltipHandler.TipRegion(row, _source[i].thingDef.GetWeightAndBulkTip());
+                TooltipHandler.TipRegion(row, _source[i].thingDef.GetWeightAndBulkTip());
 
-                labelRect.xMin += _margin;
+                labelRect.xMin += GenUI.GapTiny;
                 if (i % 2 == 0)
                     GUI.DrawTexture(row, _darkBackground);
 
-                Text.Anchor = TextAnchor.MiddleLeft;
-                Text.WordWrap = false;
+                int j = i;
+                UtilityDraw.DrawLineButton
+                    (labelRect
+                    , _source[j].thingDef.LabelCap
+                    , _source[j].thingDef
+                    , (target) => _currentLoadout.AddItem(target));
 
-                Widgets.Label(labelRect, _source[i].thingDef.LabelCap);
-                Text.WordWrap = true;
-                Text.Anchor = TextAnchor.UpperLeft;
-
-                // Draw clickable button
-                Widgets.DrawHighlightIfMouseover(row);
-                if (Widgets.ButtonInvisible(row))
-                {
-                    _currentLoadout.AddItem(_source[i].thingDef);
-                    //_currentLoadout.CachedList = _currentLoadout.ToList();
-                }
-                // revert to original color
                 GUI.color = baseColor;
             }
             Widgets.EndScrollView();
@@ -584,16 +526,13 @@ namespace RPG_Inventory_Remake.Loadout
             }
         }
 
-        private void DrawSourceIcon(SourceSelection sourceSelected, Texture2D texButton, ref Rect button, string tip)
+        private void DrawSourceIcon(SourceSelection sourceSelected, Texture2D texButton, ref WidgetRow row, string tip)
         {
-            GUI.color = _sourceType == sourceSelected ? GenUI.MouseoverColor : Color.white;
-            if (Widgets.ButtonImage(button, texButton))
+            if (row.ButtonIcon(texButton, tip, GenUI.MouseoverColor))
             {
                 SetSource(sourceSelected);
                 _availableScrollPosition = Vector2.zero;
             }
-            TooltipHandler.TipRegion(button, tip);
-            button.x += 24f + _margin;
         }
 
         private void ExtraDraggedItemOnGUI(int index, Vector2 startPos)

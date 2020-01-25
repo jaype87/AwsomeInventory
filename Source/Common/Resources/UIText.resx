@@ -129,4 +129,7 @@
   <data name="OK" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="TenCharsString" xml:space="preserve">
+    <value>AAAAAAAAAA</value>
+  </data>
 </root>

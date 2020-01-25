@@ -211,7 +211,6 @@
     <Error Condition="!Exists('..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>xcopy D:\Modding\RPG-Style-Inventory-CE-master\Textures D:\Modding\RPG_Style_Inventory\Textures /s /i /d /y</PostBuildEvent>
   </PropertyGroup>
 </Project>

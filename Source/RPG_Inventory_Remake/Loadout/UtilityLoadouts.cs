@@ -131,7 +131,8 @@ namespace RPG_Inventory_Remake.Loadout
         {
             if (thing == null) throw new ArgumentNullException(nameof(thing));
             return
-                "Corgi_Weight".Translate() + ": " + StatDefOf.Mass.ValueToString(thing.GetStatValue(StatDefOf.Mass) * thing.stackCount, StatDefOf.Mass.toStringNumberSense);
+                //"Corgi_Weight".Translate() + ": " + StatDefOf.Mass.ValueToString(thing.GetStatValue(StatDefOf.Mass) * thing.stackCount, StatDefOf.Mass.toStringNumberSense);
+                "Corgi_Weight".Translate() + ": " + (thing.GetStatValue(StatDefOf.Mass) * thing.stackCount).ToStringMass();
         }
 
         public static void SetLoadout(this Pawn pawn, RPGILoadout<Thing> loadout)
@@ -168,24 +169,10 @@ namespace RPG_Inventory_Remake.Loadout
         // Note Revisit for generic stuff
         public static Thing MakeThingSimple(ThingDef def, ThingDef stuff)
         {
-            if (stuff != null && !stuff.IsStuff)
-            {
-                Log.Error("MakeThing error: Tried to make " + def + " from " + stuff + " which is not a stuff. Assigning default.");
-                //stuff = GenStuff.DefaultStuffFor(def);
-            }
-            if (def.MadeFromStuff && stuff == null)
-            {
-                //Log.Error("MakeThing error: " + def + " is madeFromStuff but stuff=null. Assigning default.");
-                //stuff = GenStuff.DefaultStuffFor(def);
-            }
-            if (!def.MadeFromStuff && stuff != null)
-            {
-                Log.Error("MakeThing error: " + def + " is not madeFromStuff but stuff=" + stuff + ". Setting to null.");
-                stuff = null;
-            }
             Thing thing = (Thing)Activator.CreateInstance(def.thingClass);
             thing.def = def;
             thing.SetStuffDirect(stuff);
+            (thing as ThingWithComps)?.InitializeComps();
             if (def.useHitPoints)
             {
                 thing.HitPoints = thing.MaxHitPoints;

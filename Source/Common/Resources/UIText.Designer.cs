@@ -95,5 +95,14 @@ namespace RPG_Inventory_Remake.Resources {
                 return ResourceManager.GetString("OK", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AAAAAAAAAA.
+        /// </summary>
+        public static string TenCharsString {
+            get {
+                return ResourceManager.GetString("TenCharsString", resourceCulture);
+            }
+        }
     }
 }

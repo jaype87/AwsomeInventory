@@ -128,8 +128,9 @@ namespace RPG_Inventory_Remake_Common
 
         public static readonly Texture2D Gear = ContentFinder<Texture2D>.Get("UI/Icons/Gear", true);
 
+        // Custom icons
         public static readonly Texture2D GearHelmet = ContentFinder<Texture2D>.Get("UI/Icons/Gear_Helmet_Colored", true);
 
-
+        public static readonly Texture2D Apparel = ContentFinder<Texture2D>.Get("UI/Icons/Apparel", true);
     }
 }

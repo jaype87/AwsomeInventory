@@ -80,5 +80,50 @@ namespace RPG_Inventory_Remake_Common
             Text.Font = GameFont.Small;
             rollingY = rectToDraw.yMax;
         }
+
+        public static void DrawLineButton<Target>(Rect rect, string label, Target target, Action<Target> action)
+        {
+            Text.WordWrap = false;
+            Text.Anchor = TextAnchor.MiddleLeft;
+
+            Widgets.Label(rect, label);
+            Widgets.DrawHighlightIfMouseover(rect);
+            if (Widgets.ButtonInvisible(rect))
+            {
+                action(target);
+            }
+
+            Text.Anchor = TextAnchor.UpperLeft;
+            Text.WordWrap = true;
+        }
+
+        /// <summary>
+        /// Return button size based on the provided rect
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="scale"> size of the button relative to rect </param>
+        /// <param name="ratio"> ratio of the button's length to width. Default is golden ratio. </param>
+        /// <param name="vertical">direction for the length of the button </param>
+        /// <returns></returns>
+        public static Vector2 GetButtonSize(Rect rect, float scale, float ratio = 1.62f, bool vertical = false)
+        {
+            if (rect == null)
+            {
+                throw new ArgumentNullException(nameof(rect));
+            }
+            if (scale <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(scale));
+            }
+            double size = rect.width * rect.height * scale;
+            float width = (float)Math.Sqrt(size / ratio);
+            float length = width * ratio;
+
+            if (vertical)
+            {
+                return new Vector2(width, length);
+            }
+            return new Vector2(length, width);
+        }
     }
 }
