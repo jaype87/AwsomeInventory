@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RPG_Inventory_Remake.Resources {
+namespace RPGIResource {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace RPG_Inventory_Remake.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class ErrorMessage {
+    public class StringConstant {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ErrorMessage() {
+        internal StringConstant() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace RPG_Inventory_Remake.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPG_Inventory_Remake.Resources.ErrorMessage", typeof(ErrorMessage).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPG_Inventory_Remake.Resources.StringConstant", typeof(StringConstant).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,20 +61,38 @@ namespace RPG_Inventory_Remake.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Corgi_TryToDeleteLastLoadout.
+        ///   Looks up a localized string similar to ArmorPenetration.
         /// </summary>
-        public static string TryToDeleteLastLoadout {
+        public static string ArmorPenetration {
             get {
-                return ResourceManager.GetString("TryToDeleteLastLoadout", resourceCulture);
+                return ResourceManager.GetString("ArmorPenetration", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wrong Argument Type.
+        ///   Looks up a localized string similar to Damage.
         /// </summary>
-        public static string WrongArgumentType {
+        public static string Damage {
             get {
-                return ResourceManager.GetString("WrongArgumentType", resourceCulture);
+                return ResourceManager.GetString("Damage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GenericResource.
+        /// </summary>
+        public static string GenericResource {
+            get {
+                return ResourceManager.GetString("GenericResource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MeleeWeapon_AverageArmorPenetration.
+        /// </summary>
+        public static string MeleeWeapon_AverageArmorPenetration {
+            get {
+                return ResourceManager.GetString("MeleeWeapon_AverageArmorPenetration", resourceCulture);
             }
         }
     }

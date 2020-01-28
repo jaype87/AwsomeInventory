@@ -73,11 +73,17 @@
     <Compile Include="..\Common\Jobs\JobGiver_Unload.cs">
       <Link>Jobs\JobGiver_Unload.cs</Link>
     </Compile>
-    <Compile Include="..\Common\Resources\ErrorMessage1.Designer.cs">
-      <Link>Resources\ErrorMessage1.Designer.cs</Link>
+    <Compile Include="..\Common\Resources\ErrorMessage.Designer.cs">
+      <Link>Resources\ErrorMessage.Designer.cs</Link>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ErrorMessage.resx</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\Resources\StringConstant.Designer.cs">
+      <Link>Resources\StringConstant.Designer.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StringConstant.resx</DependentUpon>
     </Compile>
     <Compile Include="..\Common\Resources\UIText.Designer.cs">
       <Link>Resources\UIText.Designer.cs</Link>
@@ -97,6 +103,9 @@
     <Compile Include="..\Common\UI\Dialog_InstantMessage.cs">
       <Link>UI\Dialog_InstantMessage.cs</Link>
     </Compile>
+    <Compile Include="..\Common\UI\WindowOnMouseDrag.cs">
+      <Link>UI\WindowOnMouseDrag.cs</Link>
+    </Compile>
     <Compile Include="..\Common\Utilities\ThrowHelper.cs">
       <Link>Utilities\ThrowHelper.cs</Link>
     </Compile>
@@ -106,8 +115,8 @@
     <Compile Include="..\Common\Utilities\UtilityConstant.cs">
       <Link>Utilities\UtilityConstant.cs</Link>
     </Compile>
-    <Compile Include="..\Common\Utilities\Utility_Draw.cs">
-      <Link>Utilities\Utility_Draw.cs</Link>
+    <Compile Include="..\Common\Utilities\UtilityDraw.cs">
+      <Link>Utilities\UtilityDraw.cs</Link>
     </Compile>
     <Compile Include="Bootstrap\ModStarter.cs" />
     <Compile Include="Bootstrap\Setting.cs" />
@@ -187,16 +196,25 @@
     <Analyzer Include="..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="..\Common\Resources\ErrorMessage.resx">
       <Link>Resources\ErrorMessage.resx</Link>
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ErrorMessage1.Designer.cs</LastGenOutput>
+      <LastGenOutput>ErrorMessage.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>RPGIResource</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Common\Resources\StringConstant.resx">
+      <Link>Resources\StringConstant.resx</Link>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringConstant.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>RPGIResource</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="..\Common\Resources\UIText.resx">
       <Link>Resources\UIText.resx</Link>
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>UIText.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>RPGIResource</CustomToolNamespace>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -211,6 +229,7 @@
     <Error Condition="!Exists('..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>xcopy D:\Modding\RPG-Style-Inventory-CE-master\Textures D:\Modding\RPG_Style_Inventory\Textures /s /i /d /y</PostBuildEvent>
+    <PostBuildEvent>xcopy D:\Modding\RPG-Style-Inventory-CE-master\Textures D:\Modding\RPG_Style_Inventory\Textures /s /i /d /y
+xcopy D:\Modding\RPG-Style-Inventory-CE-master\Languages D:\Modding\RPG_Style_Inventory\Languages /s /i /d /y</PostBuildEvent>
   </PropertyGroup>
 </Project>

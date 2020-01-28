@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using Verse;
 using RPG_Inventory_Remake_Common;
-using RPG_Inventory_Remake.Resources;
+using RPGIResource;
 using System.Diagnostics.CodeAnalysis;
 
 namespace RPG_Inventory_Remake.Loadout
@@ -53,7 +53,6 @@ namespace RPG_Inventory_Remake.Loadout
         private static Vector2 _initialSize;
         private static List<SelectableItem> _selectableItems;
         private readonly static HashSet<ThingDef> _allSuitableDefs;
-        private static float _scrollViewHeight;
 
         #endregion Statis Fields
 
@@ -61,11 +60,12 @@ namespace RPG_Inventory_Remake.Loadout
         private readonly int _loadoutNameMaxLength = 50;
         private const float _barHeight = 24f;
         private Vector2 _countFieldSize = new Vector2(40f, 24f);
-        private RPGILoadout<Thing> _currentLoadout;
+        private RPGILoadout _currentLoadout;
         private string _filter = "";
         private const float _iconSize = 16f;
         private const float _margin = 6f;
         private const float _topAreaHeight = 30f;
+        private float _scrollViewHeight;
         private Vector2 _slotScrollPosition = Vector2.zero;
         private List<SelectableItem> _source;
         private List<LoadoutGenericDef> _sourceGeneric;
@@ -77,25 +77,25 @@ namespace RPG_Inventory_Remake.Loadout
 
         static Dialog_ManageLoadouts()
         {
-            float width = GenUI.GetWidthCached(UIText.TenCharsString.Times(9));
-            
+            float width = GenUI.GetWidthCached(UIText.TenCharsString.Times(10));
+
             _initialSize = new Vector2(width, UI.screenHeight / 2f);
             _allSuitableDefs = GameComponent_DefManager.GetSuitableDefs();
         }
 
         [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
-        public Dialog_ManageLoadouts(RPGILoadout<Thing> loadout, Pawn pawn)
+        public Dialog_ManageLoadouts(RPGILoadout loadout, Pawn pawn)
         {
             ThrowHelper.ArgumentNullException(loadout, pawn);
 
             _currentLoadout = loadout;
             _pawn = pawn;
-            //_currentLoadout.CachedList = _currentLoadout.CachedList;
 
             doCloseX = true;
             forcePause = true;
-            absorbInputAroundWindow = true;
+            absorbInputAroundWindow = false;
             closeOnClickedOutside = true;
+            closeOnAccept = false;
         }
 
         #endregion Constructors
@@ -129,7 +129,7 @@ namespace RPG_Inventory_Remake.Loadout
             Rect slotListRect = new Rect(
                 0f,
                 nameRect.yMax + _margin,
-                (canvas.width * 5/9 - _margin),
+                (canvas.width * 5 / 9 - _margin),
                 canvas.height - _topAreaHeight - nameRect.height - _barHeight * 2 - _margin * 5);
 
             Rect weightBarRect = new Rect(slotListRect.xMin, slotListRect.yMax + _margin, slotListRect.width, _barHeight);
@@ -137,24 +137,24 @@ namespace RPG_Inventory_Remake.Loadout
             Rect sourceButtonRect = new Rect(
                 slotListRect.xMax + _margin,
                 _topAreaHeight + _margin * 2,
-                (canvas.width * 4/9 - _margin),
+                (canvas.width * 4 / 9 - _margin),
                 24f);
 
             Rect selectionRect = new Rect(
                 slotListRect.xMax + _margin,
                 sourceButtonRect.yMax + _margin,
-                (canvas.width * 4/9 - _margin),
+                (canvas.width * 4 / 9 - _margin),
                 canvas.height - 24f - _topAreaHeight - _margin * 3);
 
-            List<RPGILoadout<Thing>> loadouts = LoadoutManager.Loadouts;
+            List<RPGILoadout> loadouts = LoadoutManager.Loadouts;
             // DRAW CONTENTS
             // buttons
             // select loadout
-            if (Widgets.ButtonText(selectRect, "Corgi_SelectLoadout".Translate()))
+            if (Widgets.ButtonText(selectRect, UIText.SelectLoadout.Translate()))
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
                 if (loadouts.Count == 0)
-                    options.Add(new FloatMenuOption("Corgi_NoLoadouts".Translate(), null));
+                    options.Add(new FloatMenuOption(UIText.NoLoadouts.Translate(), null));
                 else
                 {
                     for (int j = 0; j < loadouts.Count; j++)
@@ -172,9 +172,9 @@ namespace RPG_Inventory_Remake.Loadout
             }
 
             // create loadout
-            if (Widgets.ButtonText(newRect, "Corgi_NewLoadout".Translate()))
+            if (Widgets.ButtonText(newRect, UIText.NewLoadout.Translate()))
             {
-                RPGILoadout<Thing> loadout = new RPGILoadout<Thing>()
+                RPGILoadout loadout = new RPGILoadout()
                 {
                     Label = LoadoutManager.GetIncrementalLabel(_currentLoadout.Label)
                 };
@@ -184,15 +184,15 @@ namespace RPG_Inventory_Remake.Loadout
             }
 
             // copy loadout
-            if (_currentLoadout != null && Widgets.ButtonText(copyRect, "Corgi_CopyLoadout".Translate()))
+            if (_currentLoadout != null && Widgets.ButtonText(copyRect, UIText.CopyLoadout.Translate()))
             {
-                _currentLoadout = new RPGILoadout<Thing>(_currentLoadout);
+                _currentLoadout = new RPGILoadout(_currentLoadout);
                 LoadoutManager.AddLoadout(_currentLoadout);
                 //_currentLoadout.CachedList = _currentLoadout.ToList();
             }
 
             // delete loadout
-            if (Widgets.ButtonText(deleteRect, "Corgi_DeleteLoadout".Translate()))
+            if (Widgets.ButtonText(deleteRect, UIText.DeleteLoadout.Translate()))
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
 
@@ -234,7 +234,7 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 Text.Anchor = TextAnchor.MiddleCenter;
                 GUI.color = Color.grey;
-                Widgets.Label(canvas, "Corgi_NoLoadoutSelected".Translate());
+                Widgets.Label(canvas, UIText.NoLoadoutSelected.Translate());
                 GUI.color = Color.white;
                 Text.Anchor = TextAnchor.UpperLeft;
 
@@ -253,7 +253,7 @@ namespace RPG_Inventory_Remake.Loadout
             // bars
             if (_currentLoadout != null)
             {
-                UtilityLoadouts.DrawBar(weightBarRect, _currentLoadout.Weight, MassUtility.Capacity(_pawn), "Corgi_Weight".Translate(), null);
+                UtilityLoadouts.DrawBar(weightBarRect, _currentLoadout.Weight, MassUtility.Capacity(_pawn), UIText.Weight.Translate(), null);
                 // draw text overlays on bars
                 Text.Font = GameFont.Small;
                 Text.Anchor = TextAnchor.MiddleCenter;
@@ -288,24 +288,30 @@ namespace RPG_Inventory_Remake.Loadout
             SetSource(SourceSelection.Ranged);
         }
 
+        public override void PostOpen()
+        {
+            base.PostOpen();
+            windowRect.x += 200;
+        }
+
         public void DrawCategoryIcon(Rect canvas)
         {
             WidgetRow row = new WidgetRow(canvas.x, canvas.y);
-            DrawSourceIcon(SourceSelection.Ranged, _iconRanged, ref row, "Corgi_SourceRangedTip".Translate());
-            DrawSourceIcon(SourceSelection.Melee, _iconMelee, ref row, "Corgi_SourceMeleeTip".Translate());
-            DrawSourceIcon(SourceSelection.Apparel, TexButton.Apparel, ref row, "Corgi_SourceApparelTip".Translate());
-            DrawSourceIcon(SourceSelection.Minified, _iconMinified, ref row, "Corgi_SourceMinifiedTip".Translate());
-            DrawSourceIcon(SourceSelection.Generic, _iconGeneric, ref row, "Corgi_SourceGenericTip".Translate());
-            DrawSourceIcon(SourceSelection.All, _iconAll, ref row, "Corgi_SourceAllTip".Translate());
+            DrawSourceIcon(SourceSelection.Ranged, _iconRanged, ref row, UIText.SourceRangedTip.Translate());
+            DrawSourceIcon(SourceSelection.Melee, _iconMelee, ref row, UIText.SourceMeleeTip.Translate());
+            DrawSourceIcon(SourceSelection.Apparel, TexButton.Apparel, ref row, UIText.SourceApparelTip.Translate());
+            DrawSourceIcon(SourceSelection.Minified, _iconMinified, ref row, UIText.SourceMinifiedTip.Translate());
+            DrawSourceIcon(SourceSelection.Generic, _iconGeneric, ref row, UIText.SourceGenericTip.Translate());
+            DrawSourceIcon(SourceSelection.All, _iconAll, ref row, UIText.SourceAllTip.Translate());
 
             float nameFieldLen = GenUI.GetWidthCached(UIText.TenCharsString);
             float incrementX = canvas.xMax - row.FinalX - nameFieldLen - WidgetRow.IconSize - WidgetRow.ButtonExtraSpace;
             row.Gap(incrementX);
-            row.Icon(_iconSearch, "Corgi_SourceFilterTip".Translate());
+            row.Icon(_iconSearch, UIText.SourceFilterTip.Translate());
 
             Rect filterRect = new Rect(row.FinalX, canvas.y, nameFieldLen, canvas.height);
             DrawFilterField(filterRect);
-            TooltipHandler.TipRegion(filterRect, "Corgi_SourceFilterTip".Translate());
+            TooltipHandler.TipRegion(filterRect, UIText.SourceFilterTip.Translate());
 
             // reset color
             GUI.color = Color.white;
@@ -361,7 +367,7 @@ namespace RPG_Inventory_Remake.Loadout
             }
         }
 
-        private static void DrawCountField(Rect canvas, Thing thing)
+        private void DrawCountField(Rect canvas, Thing thing)
         {
             if (thing == null)
                 return;
@@ -369,7 +375,11 @@ namespace RPG_Inventory_Remake.Loadout
             int countInt = thing.stackCount;
             string buffer = countInt.ToString();
             Widgets.TextFieldNumeric<int>(canvas, ref countInt, ref buffer);
-            TooltipHandler.TipRegion(canvas, "Corgi_CountFieldTip".Translate(thing.stackCount));
+            TooltipHandler.TipRegion(canvas, UIText.CountFieldTip.Translate(thing.stackCount));
+            if (countInt != thing.stackCount)
+            {
+                _currentLoadout.SetDirtyAll();
+            }
             thing.stackCount = countInt;
         }
 
@@ -388,14 +398,18 @@ namespace RPG_Inventory_Remake.Loadout
             Widgets.TextField(canvas, _currentLoadout.Label, _loadoutNameMaxLength, Outfit.ValidNameRegex);
         }
 
-        private void DrawSlot(Rect row, Thing thing, int reorderableGroup)
+        private void DrawItem(Rect row, Thing thing, int reorderableGroup, bool drawShadow = false)
         {
             // set up rects
-            // label (fill) | gear icon | count (50px) | delete (iconSize)
+            // label (fill) | gear icon | count | delete (iconSize)
 
+            // Set up rects
             Rect labelRect = new Rect(row);
             labelRect.xMax = row.xMax - row.height - _countFieldSize.x - _iconSize - GenUI.GapSmall;
-            ReorderableWidget.Reorderable(reorderableGroup, labelRect);
+            if (!drawShadow)
+            {
+                ReorderableWidget.Reorderable(reorderableGroup, labelRect);
+            }
 
             Rect gearIconRect = new Rect(labelRect.xMax, row.y, row.height, row.height);
 
@@ -407,17 +421,10 @@ namespace RPG_Inventory_Remake.Loadout
 
             Rect deleteRect = new Rect(countRect.xMax + GenUI.GapSmall, row.yMin + (row.height - _iconSize) / 2f, _iconSize, _iconSize);
 
-            // interactions (main row rect)
-            if (!Mouse.IsOver(deleteRect))
-            {
-                Widgets.DrawHighlightIfMouseover(row);
-                TooltipHandler.TipRegion(row, string.Concat(thing.GetWeightTip(), '\n', UIText.DragToReorder));
-            }
-
             // label
             Text.Anchor = TextAnchor.MiddleLeft;
             Text.WordWrap = false;
-            Widgets.Label(labelRect, thing.LabelCap);
+            Widgets.Label(labelRect, thing.LabelCapNoCount);
             Text.WordWrap = true;
             Text.Anchor = TextAnchor.UpperLeft;
 
@@ -438,9 +445,22 @@ namespace RPG_Inventory_Remake.Loadout
             if (Widgets.ButtonImage(deleteRect, _iconClear))
             {
                 _currentLoadout.RemoveItem(thing);
-                //_currentLoadout.CachedList = _currentLoadout.ToList();
             }
-            TooltipHandler.TipRegion(deleteRect, "Corgi_DeleteFilter".Translate());
+
+            if (!drawShadow)
+            {
+                // Tooltips && Highlights
+                Widgets.DrawHighlightIfMouseover(row);
+                if (Event.current.type == EventType.MouseDown)
+                {
+                    TooltipHandler.ClearTooltipsFrom(labelRect);
+                }
+                else
+                {
+                    TooltipHandler.TipRegion(labelRect, string.Concat(thing.GetWeightTip(), '\n', UIText.DragToReorder.Translate()));
+                }
+                TooltipHandler.TipRegion(deleteRect, UIText.Delete.Translate());
+            }
         }
 
         private void DrawItemsInLoadout(Rect canvas)
@@ -455,8 +475,24 @@ namespace RPG_Inventory_Remake.Loadout
                 delegate (int from, int to)
                 {
                     ReorderItems(from, to);
+                    UtilityDraw.ResetDrag();
                 }
-                , ReorderableDirection.Vertical);
+                , ReorderableDirection.Vertical
+                , -1
+                , (index, pos) =>
+                {
+                    Vector2 position = UtilityDraw.GetPostionForDrag(windowRect.ContractedBy(Margin), new Vector2(canvas.xMin, canvas.yMin), index, GenUI.ListSpacing);
+                    Rect dragRect = new Rect(position, new Vector2(listRect.width, GenUI.ListSpacing));
+                    Find.WindowStack.ImmediateWindow(Rand.Int, dragRect, WindowLayer.Super,
+                        () =>
+                        {
+                            GUI.DrawTexture(dragRect.AtZero(), SolidColorMaterials.NewSolidColorTexture(Theme.MilkySlicky.BackGround));
+                            GUI.color = Theme.MilkySlicky.ForeGround;
+                            DrawItem(dragRect.AtZero(), _currentLoadout.CachedList[index], 0, true);
+                            GUI.color = Color.white;
+                        }, false);
+                }
+                );
 
             float curY = 0f;
             for (int i = 0; i < _currentLoadout.CachedList.Count; i++)
@@ -469,7 +505,7 @@ namespace RPG_Inventory_Remake.Loadout
                 if (i % 2 == 0)
                     GUI.DrawTexture(row, _darkBackground);
 
-                DrawSlot(row, _currentLoadout.CachedList[i], reorderableGroup);
+                DrawItem(row, _currentLoadout.CachedList[i], reorderableGroup);
                 GUI.color = Color.white;
             }
 
@@ -533,12 +569,6 @@ namespace RPG_Inventory_Remake.Loadout
                 SetSource(sourceSelected);
                 _availableScrollPosition = Vector2.zero;
             }
-        }
-
-        private void ExtraDraggedItemOnGUI(int index, Vector2 startPos)
-        {
-            Color color = GUI.color;
-            GUI.color = new Color(color.r, color.g, color.b, 0.5f);
         }
 
         #endregion Methods

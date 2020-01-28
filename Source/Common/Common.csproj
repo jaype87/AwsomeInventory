@@ -50,6 +50,9 @@
     <Content Include="..\..\Defs\BodyPartGroups.xml">
       <Link>Defs\BodyPartGroups.xml</Link>
     </Content>
+    <Content Include="..\..\Defs\GenericResource.xml">
+      <Link>Defs\GenericResource.xml</Link>
+    </Content>
     <Content Include="..\..\Defs\Jewelry_compat\ApparelLayerDefs.xml">
       <Link>Defs\Jewelry\ApparelLayerDefs.xml</Link>
     </Content>
@@ -74,20 +77,26 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Resources\StringConstant.Designer.cs">
+      <DependentUpon>StringConstant.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\UIText.Designer.cs">
+      <DependentUpon>UIText.resx</DependentUpon>
+      <CustomToolNamespace>RPG_Inventory_Remake_Common</CustomToolNamespace>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="RPG_Pawn.cs" />
     <Compile Include="SmartRect.cs" />
     <Compile Include="TextButton.cs" />
-    <Compile Include="Resources\UIText.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UIText.resx</DependentUpon>
-      <CustomToolNamespace>RPG_Inventory_Remake_Common</CustomToolNamespace>
-    </Compile>
     <Compile Include="UI\Dialog_InstantMessage.cs" />
+    <Compile Include="UI\WindowOnMouseDrag.cs" />
     <Compile Include="Utilities\ThrowHelper.cs" />
     <Compile Include="Utilities\Utility.cs" />
     <Compile Include="Utilities\UtilityConstant.cs" />
-    <Compile Include="Utilities\Utility_Draw.cs" />
+    <Compile Include="Utilities\UtilityDraw.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
@@ -106,12 +115,19 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\ErrorMessage.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ErrorMessage.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>RPGIResource</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\StringConstant.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringConstant.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>RPGIResource</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\UIText.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>UIText.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>RPGIResource</CustomToolNamespace>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

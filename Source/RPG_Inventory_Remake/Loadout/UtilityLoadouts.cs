@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using RPG_Inventory_Remake_Common;
+using RPGIResource;
 using UnityEngine;
 using Verse;
 
@@ -20,6 +21,7 @@ namespace RPG_Inventory_Remake.Loadout
         private static float _labelSize = -1f;
         private static float _margin = 6f;
         private static Texture2D _overburdenedTex;
+        private static ThingDef _genericStuffDef = DefDatabase<ThingDef>.GetNamed(StringConstant.GenericResource);
 
         #endregion Fields
 
@@ -47,6 +49,8 @@ namespace RPG_Inventory_Remake.Loadout
                 return _overburdenedTex;
             }
         }
+
+        public static ThingDef GenericStuff => _genericStuffDef;
 
         #endregion Properties
 
@@ -101,7 +105,7 @@ namespace RPG_Inventory_Remake.Loadout
             GUI.color = Color.white;
         }
 
-        public static RPGILoadout<Thing> GetLoadout(this Pawn pawn)
+        public static RPGILoadout GetLoadout(this Pawn pawn)
         {
             if (pawn == null)
                 throw new ArgumentNullException(nameof(pawn));
@@ -135,7 +139,7 @@ namespace RPG_Inventory_Remake.Loadout
                 "Corgi_Weight".Translate() + ": " + (thing.GetStatValue(StatDefOf.Mass) * thing.stackCount).ToStringMass();
         }
 
-        public static void SetLoadout(this Pawn pawn, RPGILoadout<Thing> loadout)
+        public static void SetLoadout(this Pawn pawn, RPGILoadout loadout)
         {
             if (pawn == null)
             {
@@ -144,16 +148,6 @@ namespace RPG_Inventory_Remake.Loadout
             if (pawn.TryGetComp<compRPGILoudout>() is compRPGILoudout comp)
             {
                 comp.UpdateForNewLoadout(loadout);
-            }
-        }
-
-        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
-        public static void AddItemFromIenumerable(this RPGILoadout<Thing> loadout, IEnumerable<Thing> list)
-        {
-            ThrowHelper.ArgumentNullException(loadout, list);
-            foreach (Thing t in list)
-            {
-                loadout.AddItem(t);
             }
         }
 
@@ -167,13 +161,22 @@ namespace RPG_Inventory_Remake.Loadout
         }
 
         // Note Revisit for generic stuff
-        public static Thing MakeThingSimple(ThingDef def, ThingDef stuff)
+        public static Thing MakeThingSimple(ThingStuffPairWithQuality pair)
         {
-            Thing thing = (Thing)Activator.CreateInstance(def.thingClass);
-            thing.def = def;
-            thing.SetStuffDirect(stuff);
+            if (pair.thing.MadeFromStuff && pair.stuff == null)
+            {
+                if (pair.thing.thingCategories.Count == 1)
+                {
+                    pair.stuff = GenStuff.DefaultStuffFor(pair.thing);
+                }
+                else
+                {
+                    pair.stuff = _genericStuffDef;
+                }
+            }
+            Thing thing = pair.MakeThing();
             (thing as ThingWithComps)?.InitializeComps();
-            if (def.useHitPoints)
+            if (thing.def.useHitPoints)
             {
                 thing.HitPoints = thing.MaxHitPoints;
             }
@@ -182,9 +185,23 @@ namespace RPG_Inventory_Remake.Loadout
 
         public static Thing DeepCopySimple(this Thing thing)
         {
-            Thing copy = MakeThingSimple(thing.def, thing.Stuff);
+            if (thing == null)
+            {
+                throw new ArgumentNullException(nameof(thing));
+            }
+            Thing copy = MakeThingSimple(thing.MakeThingStuffPairWithQuality());
             copy.stackCount = thing.stackCount;
             return copy;
+        }
+
+        public static ThingStuffPairWithQuality MakeThingStuffPairWithQuality(this Thing thing)
+        {
+            if (thing == null)
+            {
+                throw new ArgumentNullException(nameof(thing));
+            }
+            thing.TryGetQuality(out QualityCategory quality);
+            return new ThingStuffPairWithQuality(thing.def, thing.Stuff, quality);
         }
 
         #endregion Methods

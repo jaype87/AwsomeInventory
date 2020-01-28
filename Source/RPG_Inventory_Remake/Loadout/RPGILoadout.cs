@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text;
 using Verse;
 using RimWorld;
-using UnityEngine;
+using RPGIResource;
 using System.Diagnostics.CodeAnalysis;
-using RPG_Inventory_Remake_Common;
 
 namespace RPG_Inventory_Remake.Loadout
 {
@@ -16,7 +15,7 @@ namespace RPG_Inventory_Remake.Loadout
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <remarks>It uses LoadoutCaomparer to generate hash value for keys</remarks>
-    public class RPGILoadout<T> : Outfit, IExposable, ILoadout<T>, IEnumerable<T> where T : Thing, new()
+    public class RPGILoadout : Outfit, IExposable, IEnumerable<Thing>
     {
         [Flags]
         enum DirtyBits
@@ -27,8 +26,8 @@ namespace RPG_Inventory_Remake.Loadout
         }
 
         // Sole purpose of the _cachedList is for reordering in loadout window
-        private List<T> _cachedList = new List<T>();
-        private Dictionary<T, ThingFilterPackage> _loadoutDic = new Dictionary<T, ThingFilterPackage>(new LoadoutComparer<T>());
+        private List<Thing> _cachedList = new List<Thing>();
+        private Dictionary<ThingStuffPairWithQuality, ThingFilterPackage> _loadoutDic = new Dictionary<ThingStuffPairWithQuality, ThingFilterPackage>();
 
         private float _weight = -1;
         private DirtyBits _dirty = DirtyBits.All;
@@ -61,31 +60,36 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 throw new ArgumentNullException(nameof(pawn));
             }
-            AddItemFromIEnumerable(pawn.equipment?.AllEquipmentListForReading as IEnumerable<T>);
-            AddItemFromIEnumerable(pawn.apparel?.WornApparel as IEnumerable<T>);
-            AddItemFromIEnumerable(pawn.inventory?.innerContainer as IEnumerable<T>);
+            AddItemFromIEnumerable(pawn.equipment?.AllEquipmentListForReading as IEnumerable<Thing>);
+            AddItemFromIEnumerable(pawn.apparel?.WornApparel as IEnumerable<Thing>);
+            AddItemFromIEnumerable(pawn.inventory?.innerContainer as IEnumerable<Thing>);
         }
 
         /// <summary>
         /// Copy constructor, except the label is different.
         /// </summary>
         /// <param name="loadout"></param>
-        public RPGILoadout(RPGILoadout<T> loadout) : this(LoadoutManager.GetIncrementalLabel(loadout.Label))
+        public RPGILoadout(RPGILoadout loadout) : this(LoadoutManager.GetIncrementalLabel(loadout.Label))
         {
             if (loadout == null)
             {
                 throw new ArgumentNullException(nameof(loadout));
             }
-            _loadoutDic = new Dictionary<T, ThingFilterPackage>(new LoadoutComparer<T>());
+            _loadoutDic = new Dictionary<ThingStuffPairWithQuality, ThingFilterPackage>();
             foreach (Thing thing in loadout.CachedList)
             {
-                T item = thing.DeepCopySimple() as T;
-                _loadoutDic.Add(item, new ThingFilterPackage(item, new ThingFilter()));
+                Thing item = thing.DeepCopySimple();
+                _loadoutDic.Add(item.MakeThingStuffPairWithQuality(), new ThingFilterPackage(item, new ThingFilter()));
                 _cachedList.Add(item);
             }
         }
 
         #endregion
+
+        public ThingStuffPairWithQuality First()
+        {
+            return _loadoutDic.Keys.First();
+        }
 
         #region Properties
 
@@ -107,16 +111,16 @@ namespace RPG_Inventory_Remake.Loadout
         #endregion
 
         #region Methods
-        public List<T> CachedList => _cachedList;
+        public List<Thing> CachedList => _cachedList;
 
         public void ExposeData()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public IEnumerator<Thing> GetEnumerator()
         {
-            return _loadoutDic.Keys.GetEnumerator();
+            return _loadoutDic.Values.Select(i => i.Thing).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -124,23 +128,42 @@ namespace RPG_Inventory_Remake.Loadout
             return _loadoutDic.Keys.GetEnumerator();
         }
 
-        public bool Contains(T thing)
+        /// <summary>
+        /// Return false if thing is null
+        /// </summary>
+        /// <param name="thing"></param>
+        /// <returns></returns>
+        public bool Contains(Thing thing)
         {
-            return _loadoutDic.ContainsKey(thing);
+            if (thing == null)
+            {
+                return false;
+            }
+            return Contains(thing.MakeThingStuffPairWithQuality());
+        }
+
+        public bool Contains(ThingStuffPairWithQuality pairWithQuality)
+        {
+            return _loadoutDic.ContainsKey(pairWithQuality);
+        }
+
+        public void SetDirtyAll()
+        {
+            _dirty = DirtyBits.All;
         }
 
         #region CRUD operation
 
         [SuppressMessage("Design", "CA1043:Use Integral Or String Argument For Indexers", Justification = "<Pending>")]
-        public ThingFilterPackage this[Thing thing]
+        public ThingFilterPackage this[ThingStuffPairWithQuality thing]
         {
-            get => _loadoutDic[thing as T];
+            get => _loadoutDic[thing];
         }
 
-        public bool TryGetValue(T thing, out T value)
+        public bool TryGetThing(ThingStuffPairWithQuality pair, out Thing value)
         {
-            bool result = _loadoutDic.TryGetValue(thing, out ThingFilterPackage package);
-            value = package.Thing as T;
+            bool result = _loadoutDic.TryGetValue(pair, out ThingFilterPackage package);
+            value = package.Thing;
             return result;
         }
 
@@ -150,56 +173,117 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 throw new ArgumentNullException(nameof(thingDef));
             }
-            T thing = UtilityLoadouts.MakeThingSimple(thingDef, null) as T;
+            Thing thing = UtilityLoadouts.MakeThingSimple(new ThingStuffPairWithQuality(thingDef, null, QualityCategory.Normal));
             AddItem(thing);
         }
 
-        public void AddItem(T thing)
+        public void AddItem(ThingStuffPairWithQuality pair)
         {
-            if (_loadoutDic.ContainsKey(thing))
+            _loadoutDic.Add(pair, new ThingFilterPackage(pair.MakeThing(), new ThingFilter()));
+        }
+
+        public void AddItem(Thing thing)
+        {
+            if (thing == null)
             {
-                _loadoutDic[thing].Thing.stackCount++;
+                throw new ArgumentNullException(nameof(thing));
+            }
+            ThingStuffPairWithQuality pair = thing.MakeThingStuffPairWithQuality();
+            if (_loadoutDic.ContainsKey(pair))
+            {
+                _loadoutDic[pair].Thing.stackCount++;
             }
             else
             {
-                _loadoutDic.Add(thing, new ThingFilterPackage(thing, new ThingFilter()));
+                _loadoutDic.Add(pair, new ThingFilterPackage(thing, new ThingFilter()));
                 _cachedList.Add(thing);
             }
             _dirty = DirtyBits.All;
         }
 
-        public void AddPackage(ThingFilterPackage package)
+        public void AddPackage(ThingFilterPackage package, int index = -1)
         {
             if (package == null)
             {
                 throw new ArgumentNullException(nameof(package));
             }
-            if (_loadoutDic.ContainsKey(package.Thing as T))
+            ThingStuffPairWithQuality pair = package.Thing.MakeThingStuffPairWithQuality();
+            if (_loadoutDic.ContainsKey(pair))
             {
-                AddItem(package.Thing as T);
+                AddItem(package.Thing);
                 return;
             }
-            _loadoutDic.Add(package.Thing as T, package);
-            _cachedList.Add(package.Thing as T);
+            _loadoutDic.Add(pair, package);
+            if (index > -1)
+            {
+                _cachedList.Insert(index, package.Thing);
+                return;
+            }
+            _cachedList.Add(package.Thing);
         }
 
-        public void RemoveItem(T thing)
+        public void RemoveItem(Thing thing)
         {
-            _loadoutDic.Remove(thing);
+            if (thing == null)
+            {
+                return;
+            }
+            RemoveItem(thing.MakeThingStuffPairWithQuality(), thing);
+        }
+
+        public void RemoveItem(ThingStuffPairWithQuality pair)
+        {
+            if (!_loadoutDic.ContainsKey(pair))
+            {
+                return;
+            }
+            RemoveItem(pair, _loadoutDic[pair].Thing);
+        }
+
+        private void RemoveItem(ThingStuffPairWithQuality pair, Thing thing)
+        {
+            _loadoutDic.Remove(pair);
             _cachedList.Remove(thing);
             _dirty = DirtyBits.All;
         }
 
-        private void AddItemFromIEnumerable(IEnumerable<T> list)
+        public void UpdateItem(Thing thing, object target)
+        {
+            if (!Contains(thing))
+            {
+                throw new ArgumentOutOfRangeException(nameof(thing));
+            }
+            int index = _cachedList.IndexOf(thing);
+            ThingFilterPackage package = _loadoutDic[thing.MakeThingStuffPairWithQuality()];
+            if (target is QualityCategory qualityCategory)
+            {
+                RemoveItem(thing);
+                thing.TryGetComp<CompQuality>()?.SetQuality(qualityCategory, default);
+                AddPackage(package, index);
+            }
+            else if (target is ThingDef thingDef && thingDef.IsStuff)
+            {
+                RemoveItem(thing);
+                thing.SetStuffDirect(thingDef);
+                thing.HitPoints = thing.MaxHitPoints;
+                AddPackage(package, index);
+            }
+            else
+            {
+                throw new ArgumentException(ErrorMessage.WrongArgumentType, nameof(target));
+            }
+        }
+
+        private void AddItemFromIEnumerable(IEnumerable<Thing> list)
         {
             if (list == null)
             {
                 return;
             }
 
-            foreach (T t in list)
+            foreach (Thing t in list)
             {
-                AddItem(t);
+                AddItem(UtilityLoadouts.DeepCopySimple(t));
             }
         }
 
@@ -209,10 +293,12 @@ namespace RPG_Inventory_Remake.Loadout
         {
             if ((_dirty & DirtyBits.Read) == DirtyBits.Read)
             {
-                _weight = _loadoutDic.Keys.Sum(i => i.GetStatValue(StatDefOf.Mass) * i.stackCount);
+                _weight = _loadoutDic.Values.Sum(i => i.Thing.GetStatValue(StatDefOf.Mass) * i.Thing.stackCount);
                 _dirty ^= DirtyBits.Read;
             }
         }
+
+
 
         #endregion
     }

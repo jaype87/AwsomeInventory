@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Verse;
@@ -966,18 +967,20 @@ namespace RPG_Inventory_Remake_Common
             TooltipHandler.TipRegion(rect, text);
         }
 
+        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
         public static string Times(this string str, int num)
         {
             if (str.NullOrEmpty())
             {
                 return string.Empty;
             }
-            string result = "";
-            for (int i = 0; i < num; ++i)
+            int length = str.Length * num;
+            char[] array = new char[length];
+            for(int i = 0; i < length; i++)
             {
-                result = string.Concat(result, str);
+                array[i] = 'a';
             }
-            return result;
+            return new string(array);
         }
     }
 }

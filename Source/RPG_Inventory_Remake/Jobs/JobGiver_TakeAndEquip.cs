@@ -38,7 +38,7 @@ namespace RPG_Inventory_Remake
             #region Colonists with primary and a loadout have no work priority
             if (pawn.Faction.IsPlayer)
             {
-                RPGILoadout<Thing> loadout = pawn.GetLoadout();
+                RPGILoadout loadout = pawn.GetLoadout();
                 // if (loadout != null && !loadout.Slots.NullOrEmpty())
                 if (loadout != null && loadout.Any())
                 {

@@ -12,6 +12,10 @@ namespace RPG_Inventory_Remake_Common
 {
     public static class UtilityDraw
     {
+        public static Vector2 MouseDownPos;
+        private static Vector2 _dragStartPos;
+        public static bool isDrag;
+
         public static bool DrawThumbnails(RPG_Pawn pawn, SmartRect smartRect, ThingWithComps thing, List<ThingWithComps> apparelOverflow)
         {
             // find next available rect, if not found in current row, check the row above
@@ -69,16 +73,15 @@ namespace RPG_Inventory_Remake_Common
         /// <param name="position"></param>
         /// <param name="title"></param>
         /// <param name="rollingY"></param>
-        public static void DrawTitle(Vector2 position, string title, ref float rollingY)
+        public static Rect DrawTitle(Vector2 position, string title, ref float rollingY)
         {
             Text.Font = GameFont.Medium;
             Vector2 titleSize = Text.CalcSize(title);
-            //position.x += GenUI.GapSmall;
-            //position.y += GenUI.GapSmall;
             Rect rectToDraw = new Rect(position, titleSize);
             Widgets.Label(rectToDraw, title);
             Text.Font = GameFont.Small;
             rollingY = rectToDraw.yMax;
+            return rectToDraw;
         }
 
         public static void DrawLineButton<Target>(Rect rect, string label, Target target, Action<Target> action)
@@ -124,6 +127,35 @@ namespace RPG_Inventory_Remake_Common
                 return new Vector2(width, length);
             }
             return new Vector2(length, width);
+        }
+
+        public static Vector2 GetStartPositionForDrag(Rect realRect, Vector2 listMin, float index, float rowHeight)
+        {
+            float x = realRect.xMin + listMin.x;
+            float y = realRect.yMin + listMin.y + index * rowHeight;
+            return new Vector2(x, y);
+        }
+
+        public static Vector2 GetPostionForDrag(Rect realRect, Vector2 listMin, float index, float rowHeight)
+        {
+            if (!isDrag)
+            {
+                isDrag = true;
+                MouseDownPos = Event.current.mousePosition;
+                _dragStartPos = GetStartPositionForDrag(realRect, listMin, index, rowHeight);
+                return _dragStartPos;
+            }
+            else
+            {
+                return _dragStartPos + (Event.current.mousePosition - MouseDownPos);
+            }
+        }
+
+        public static void ResetDrag()
+        {
+            isDrag = false;
+            MouseDownPos = Vector2.zero;
+            _dragStartPos = Vector2.zero;
         }
     }
 }

@@ -8,14 +8,14 @@ using System.Text;
 using UnityEngine;
 using Verse;
 using RPG_Inventory_Remake;
-using RPG_Inventory_Remake.Resources;
+using RPGIResource;
 
 namespace RPG_Inventory_Remake.Loadout
 {
     public class LoadoutManager : GameComponent
     {
         #region Fields
-        private static List<RPGILoadout<Thing>> _loadouts = new List<RPGILoadout<Thing>>();
+        private static List<RPGILoadout> _loadouts = new List<RPGILoadout>();
         private static readonly Regex _pattern = new Regex(@"^(.*?)(\d*)$");
         #endregion Fields
 
@@ -35,7 +35,7 @@ namespace RPG_Inventory_Remake.Loadout
 
         #region Properties
 
-        public static List<RPGILoadout<Thing>> Loadouts => _loadouts;
+        public static List<RPGILoadout> Loadouts => _loadouts;
 
         #endregion Properties
 
@@ -59,7 +59,7 @@ namespace RPG_Inventory_Remake.Loadout
 
         #region Methods
 
-        public static void AddLoadout(RPGILoadout<Thing> loadout)
+        public static void AddLoadout(RPGILoadout loadout)
         {
             if (loadout == null)
             {
@@ -68,7 +68,7 @@ namespace RPG_Inventory_Remake.Loadout
             _loadouts.Add(loadout);
         }
 
-        public static void RemoveLoadout(RPGILoadout<Thing> loadout)
+        public static void RemoveLoadout(RPGILoadout loadout)
         {
             if (loadout == null)
             {
@@ -79,7 +79,7 @@ namespace RPG_Inventory_Remake.Loadout
 
         public static string GetIncrementalLabel(object obj)
         {
-            if (obj is RPGILoadout<Thing> loadout)
+            if (obj is RPGILoadout loadout)
             {
                 return GetIncrementalLabel(loadout.Label);
             }
@@ -96,7 +96,7 @@ namespace RPG_Inventory_Remake.Loadout
             Regex namePattern = new Regex(string.Concat("^(", onlyName, @")(\d*)", '$'));
 
             List<int> numsPostfix = new List<int>();
-            foreach (RPGILoadout<Thing> loadout in _loadouts)
+            foreach (RPGILoadout loadout in _loadouts)
             {
                 Match match = namePattern.Match(loadout.Label);
                 if (match.Success)

@@ -483,7 +483,7 @@ namespace RPG_Inventory_Remake
                     // Select loadout button
                     if (Widgets.ButtonText(new Rect(viewRect.width / 2, buttonY, viewRect.width / 4, 26f), Translator.Translate("Corgi_SelectLoadout"), true, false, true))
                     {
-                        List<RPGILoadout<Thing>> loadouts = LoadoutManager.Loadouts;
+                        List<RPGILoadout> loadouts = LoadoutManager.Loadouts;
                         List<FloatMenuOption> list = new List<FloatMenuOption>();
                         if (loadouts.Count == 0)
                         {
@@ -508,7 +508,7 @@ namespace RPG_Inventory_Remake
                     {
                         if (selPawn.Pawn.IsColonist && (selPawn.Pawn.GetLoadout() == null))
                         {
-                            RPGILoadout<Thing> loadout = new RPGILoadout<Thing>(selPawn.Pawn);
+                            RPGILoadout loadout = new RPGILoadout(selPawn.Pawn);
                             LoadoutManager.AddLoadout(loadout);
                             selPawn.Pawn.SetLoadout(loadout);
                         }

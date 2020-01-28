@@ -26,3 +26,21 @@ GenUI.GetWidthCached()
 Text.LineHeight()
 Text.SpaceBetweenLines()
 GenUI.GetMouseAttachedWindowPos
+
+MeleeWeapon_AverageArmorPenetration, a XML stat that is not present in the code
+
+X hotkey exception
+System.NullReferenceException: Object reference not set to an instance of an object
+  at RPG_Inventory_Remake_Common.ToggleGearTab.ToggleTab () [0x00000] in <filename unknown>:0 
+  at Verse.Command_Action.ProcessInput (UnityEngine.Event ev) [0x00000] in <filename unknown>:0 
+  at Verse.GizmoGridDrawer.DrawGizmoGrid (IEnumerable`1 gizmos, Single startX, Verse.Gizmo& mouseoverGizmo) [0x00000] in <filename unknown>:0 
+  at RimWorld.InspectGizmoGrid.DrawInspectGizmoGridFor (IEnumerable`1 selectedObjects, Verse.Gizmo& mouseoverGizmo) [0x00000] in <filename unknown>:0 
+Verse.Log:Error(String, Boolean)
+Verse.Log:ErrorOnce(String, Int32, Boolean)
+RimWorld.InspectGizmoGrid:DrawInspectGizmoGridFor(IEnumerable`1, Gizmo&)
+RimWorld.MainTabWindow_Inspect:DrawInspectGizmos()
+RimWorld.InspectPaneUtility:ExtraOnGUI(IInspectPane)
+RimWorld.MainTabWindow_Inspect:ExtraOnGUI()
+Verse.WindowStack:WindowStackOnGUI()
+RimWorld.UIRoot_Play:UIRootOnGUI()
+Verse.Root:OnGUI()

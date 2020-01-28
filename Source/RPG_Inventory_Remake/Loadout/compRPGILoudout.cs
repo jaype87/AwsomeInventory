@@ -20,12 +20,12 @@ namespace RPG_Inventory_Remake.Loadout
     {
         #region Fields
 
-        public RPGILoadout<Thing> Loadout = null;
+        public RPGILoadout Loadout = null;
         /// <summary>
         /// Value in this dictionary acts as a margin. If the amount set in loadout is met, the margin is 0.
         /// Excessive amount has a positive margin, vice versa.
         /// </summary>
-        public Dictionary<Thing, int> InventoryTracker;
+        public Dictionary<Thing, int> InventoryTracker = new Dictionary<Thing, int>();
 
         #endregion
 
@@ -64,7 +64,7 @@ namespace RPG_Inventory_Remake.Loadout
 
         }
 
-        public compRPGILoudout(RPGILoadout<Thing> loadout)
+        public compRPGILoudout(RPGILoadout loadout)
         {
             Loadout = loadout ?? throw new ArgumentNullException(nameof(loadout));
             InventoryTracker = new Dictionary<Thing, int>(new LoadoutComparer<Thing>());
@@ -105,7 +105,7 @@ namespace RPG_Inventory_Remake.Loadout
             InventoryTracker.Remove(thing);
         }
 
-        public void UpdateForNewLoadout(RPGILoadout<Thing> newLoadout)
+        public void UpdateForNewLoadout(RPGILoadout newLoadout)
         {
             if (newLoadout == null)
             {
@@ -133,7 +133,7 @@ namespace RPG_Inventory_Remake.Loadout
                 // Add new items or updated the old ones
                 foreach (Thing thing in newLoadout)
                 {
-                    if (Loadout.TryGetValue(thing, out Thing oldThing))
+                    if (Loadout.TryGetThing(thing.MakeThingStuffPairWithQuality(), out Thing oldThing))
                     {
                         InventoryTracker[thing] += (oldThing.stackCount - thing.stackCount);
                     }

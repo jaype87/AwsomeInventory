@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RPG_Inventory_Remake.Resources {
+namespace RPGIResource {
     using System;
     
     
@@ -70,11 +70,92 @@ namespace RPG_Inventory_Remake.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Corgi_CopyLoadout.
+        /// </summary>
+        public static string CopyLoadout {
+            get {
+                return ResourceManager.GetString("CopyLoadout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corgi_CountFieldTip.
+        /// </summary>
+        public static string CountFieldTip {
+            get {
+                return ResourceManager.GetString("CountFieldTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corgi_Customize.
+        /// </summary>
+        public static string Customize {
+            get {
+                return ResourceManager.GetString("Customize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corgi_DeleteLoadout.
+        /// </summary>
+        public static string DeleteLoadout {
+            get {
+                return ResourceManager.GetString("DeleteLoadout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Corgi_DragToReorder.
         /// </summary>
         public static string DragToReorder {
             get {
                 return ResourceManager.GetString("DragToReorder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corgi_MouseOverNumbersForDetails.
+        /// </summary>
+        public static string MouseOverNumbersForDetails {
+            get {
+                return ResourceManager.GetString("MouseOverNumbersForDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corgi_NewLoadout.
+        /// </summary>
+        public static string NewLoadout {
+            get {
+                return ResourceManager.GetString("NewLoadout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corgi_NoLoadouts.
+        /// </summary>
+        public static string NoLoadouts {
+            get {
+                return ResourceManager.GetString("NoLoadouts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corgi_NoLoadoutSelected.
+        /// </summary>
+        public static string NoLoadoutSelected {
+            get {
+                return ResourceManager.GetString("NoLoadoutSelected", resourceCulture);
             }
         }
         
@@ -97,11 +178,92 @@ namespace RPG_Inventory_Remake.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Corgi_SelectLoadout.
+        /// </summary>
+        public static string SelectLoadout {
+            get {
+                return ResourceManager.GetString("SelectLoadout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corgi_SourceAllTip.
+        /// </summary>
+        public static string SourceAllTip {
+            get {
+                return ResourceManager.GetString("SourceAllTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apparel.
+        /// </summary>
+        public static string SourceApparelTip {
+            get {
+                return ResourceManager.GetString("SourceApparelTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corgi_SourceFilterTip.
+        /// </summary>
+        public static string SourceFilterTip {
+            get {
+                return ResourceManager.GetString("SourceFilterTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corgi_SourceGenericTip.
+        /// </summary>
+        public static string SourceGenericTip {
+            get {
+                return ResourceManager.GetString("SourceGenericTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corgi_SourceMeleeTip.
+        /// </summary>
+        public static string SourceMeleeTip {
+            get {
+                return ResourceManager.GetString("SourceMeleeTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corgi_SourceMinifiedTip.
+        /// </summary>
+        public static string SourceMinifiedTip {
+            get {
+                return ResourceManager.GetString("SourceMinifiedTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corgi_SourceRangedTip.
+        /// </summary>
+        public static string SourceRangedTip {
+            get {
+                return ResourceManager.GetString("SourceRangedTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AAAAAAAAAA.
         /// </summary>
         public static string TenCharsString {
             get {
                 return ResourceManager.GetString("TenCharsString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corgi_Weight.
+        /// </summary>
+        public static string Weight {
+            get {
+                return ResourceManager.GetString("Weight", resourceCulture);
             }
         }
     }

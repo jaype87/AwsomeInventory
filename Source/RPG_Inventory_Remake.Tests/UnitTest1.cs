@@ -23,7 +23,7 @@ namespace RPG_Inventory_Remake.Tests
             string previousLabel = TestContext.DataRow[TestResource.Var1].ToString();
             string expected = TestContext.DataRow[TestResource.Expected].ToString();
             string result = LoadoutManager.GetIncrementalLabel(previousLabel);
-            LoadoutManager.Loadouts.Add(new RPGILoadout<Thing>() { Label = result });
+            LoadoutManager.Loadouts.Add(new RPGILoadout() { Label = result });
             Assert.AreEqual(expected, result);
         }
 
@@ -32,7 +32,7 @@ namespace RPG_Inventory_Remake.Tests
         public void TestGetIncrementalLabelCleanup()
         {
             string previousLabel = TestContext.DataRow[TestResource.Var1].ToString();
-            LoadoutManager.Loadouts.Add(new RPGILoadout<Thing>() { Label = previousLabel });
+            LoadoutManager.Loadouts.Add(new RPGILoadout() { Label = previousLabel });
         }
     }
 }

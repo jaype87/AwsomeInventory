@@ -75,7 +75,7 @@ namespace RPG_Inventory_Remake
             CompInventory inventory = pawn.TryGetComp<CompInventory>();
             if (inventory?.container != null)
             {
-                //RPGILoadout<Thing> loadout = pawn.GetLoadout();
+                //RPGILoadout loadout = pawn.GetLoadout();
                 //if (loadout != null && !loadout.Any())
                 //{
                 //    // Need to generate a dictionary and nibble like when dropping in order to allow for conflicting loadouts to work properly.
@@ -229,7 +229,7 @@ namespace RPG_Inventory_Remake
             CompInventory inventory = pawn.TryGetComp<CompInventory>();
             if (inventory == null) return null;
 
-            RPGILoadout<Thing> loadout = pawn.GetLoadout();
+            RPGILoadout loadout = pawn.GetLoadout();
             if (loadout != null)
             {
                 ThingWithComps dropEq;
