@@ -37,11 +37,13 @@ namespace RPG_Inventory_Remake.Loadout
 
         public RPGILoadout()
         {
+#if (TEST == false)
             List<Outfit> outfits = Current.Game.outfitDatabase.AllOutfits;
             int id = (!outfits.Any()) ? 1 : (outfits.Max((Outfit o) => o.uniqueId) + 1);
             uniqueId = id;
             filter.SetAllow(ThingCategoryDefOf.Apparel, allow: true);
             outfits.Add(this);
+#endif
         }
 
         public RPGILoadout(string oldLabel) : this()

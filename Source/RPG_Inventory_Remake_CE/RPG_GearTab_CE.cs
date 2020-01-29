@@ -79,16 +79,6 @@ namespace RPG_Inventory_Remake_CE
                 _isAscetic = true;
             }
 
-            //// Starting to draw gear/stats display
-            //Rect position = new Rect(10, 30, this.size.x - 20, this.size.y - 20 - 20);
-            //GUI.BeginGroup(position);
-            //// Redundent: Text.Font = GameFont.Small;
-            //GUI.color = Color.white;
-            //Rect outerRect = new Rect(0f, 0f, position.width, position.height - 60);
-            //Rect viewRect = new Rect(0f, 0f, position.width - 20f, this.scrollViewHeight);
-            //Widgets.BeginScrollView(outerRect, ref this.scrollPosition, viewRect, true);
-
-
             if (_isJealous)
             {
                 FillTabOperationsCE.DrawJealousCE(_selPawn, this.size);

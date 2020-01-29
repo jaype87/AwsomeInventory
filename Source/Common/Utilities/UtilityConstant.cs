@@ -12,8 +12,9 @@ namespace RPG_Inventory_Remake_Common
 {
     public static class UtilityConstant
     {
+        public static readonly Vector2 PaperDollSize = new Vector2(128f, 128f);
         public static Vector2 InstantMessageBox => new Vector2(50, 30);
-        public static StatDef MeleeWeapon_AverageArmorPenetration
+        public static readonly StatDef MeleeWeapon_AverageArmorPenetration
             = DefDatabase<StatDef>.GetNamed(StringConstant.MeleeWeapon_AverageArmorPenetration);
     }
 }

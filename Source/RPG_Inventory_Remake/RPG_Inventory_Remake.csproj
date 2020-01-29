@@ -20,11 +20,11 @@
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\RPG_Style_Inventory\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -44,12 +44,18 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Vanilla Build|AnyCPU'">
     <OutputPath>..\..\..\RPG_Style_Inventory\Assemblies\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
     <OutputPath>bin\Test\</OutputPath>
+    <DefineConstants>TEST</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityTest|AnyCPU'">
+    <OutputPath>bin\UnityTest\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\Common\Components\CompRPGIUnload.cs">
@@ -79,6 +85,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ErrorMessage.resx</DependentUpon>
     </Compile>
+    <Compile Include="..\Common\Resources\RPGIIcons.Designer.cs">
+      <Link>Resources\RPGIIcons.Designer.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RPGIIcons.resx</DependentUpon>
+    </Compile>
     <Compile Include="..\Common\Resources\StringConstant.Designer.cs">
       <Link>Resources\StringConstant.Designer.cs</Link>
       <AutoGen>True</AutoGen>
@@ -90,6 +102,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>UIText.resx</DependentUpon>
+      <CustomToolNamespace>RPGIResource</CustomToolNamespace>
     </Compile>
     <Compile Include="..\Common\RPG_Pawn.cs">
       <Link>RPG_Pawn.cs</Link>
@@ -102,6 +115,9 @@
     </Compile>
     <Compile Include="..\Common\UI\Dialog_InstantMessage.cs">
       <Link>UI\Dialog_InstantMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UI\Theme.cs">
+      <Link>UI\Theme.cs</Link>
     </Compile>
     <Compile Include="..\Common\UI\WindowOnMouseDrag.cs">
       <Link>UI\WindowOnMouseDrag.cs</Link>
@@ -143,6 +159,7 @@
     <Compile Include="Loadout\RPGILoadout.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RPG_GearTab.cs" />
+    <None Include="App.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="HarmonyPatches\Game_FinalizeInit_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\JobDriver_Cleanup_RPGI_Patch.cs" />
@@ -180,6 +197,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\RW-Decompile\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
@@ -202,6 +220,12 @@
       <Link>Resources\ErrorMessage.resx</Link>
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ErrorMessage.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>RPGIResource</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Common\Resources\RPGIIcons.resx">
+      <Link>Resources\RPGIIcons.resx</Link>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>RPGIIcons.Designer.cs</LastGenOutput>
       <CustomToolNamespace>RPGIResource</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="..\Common\Resources\StringConstant.resx">

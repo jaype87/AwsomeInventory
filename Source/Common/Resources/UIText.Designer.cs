@@ -61,11 +61,56 @@ namespace RPGIResource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ArmorBlunt.
+        /// </summary>
+        public static string ArmorBlunt {
+            get {
+                return ResourceManager.GetString("ArmorBlunt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ArmorHeat.
+        /// </summary>
+        public static string ArmorHeat {
+            get {
+                return ResourceManager.GetString("ArmorHeat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ArmorSharp.
+        /// </summary>
+        public static string ArmorSharp {
+            get {
+                return ResourceManager.GetString("ArmorSharp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sandy_Ascetic.
+        /// </summary>
+        public static string AsceticTab {
+            get {
+                return ResourceManager.GetString("AsceticTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Corgi_ChooseMaterialAndQuality.
         /// </summary>
         public static string ChooseMaterialAndQuality {
             get {
                 return ResourceManager.GetString("ChooseMaterialAndQuality", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ComfyTemperatureRange.
+        /// </summary>
+        public static string ComfyTemperatureRange {
+            get {
+                return ResourceManager.GetString("ComfyTemperatureRange", resourceCulture);
             }
         }
         
@@ -124,6 +169,42 @@ namespace RPGIResource {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sandy_Greedy.
+        /// </summary>
+        public static string GreedyTab {
+            get {
+                return ResourceManager.GetString("GreedyTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inventory.
+        /// </summary>
+        public static string Inventory {
+            get {
+                return ResourceManager.GetString("Inventory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sandy_Jealous.
+        /// </summary>
+        public static string JealousTab {
+            get {
+                return ResourceManager.GetString("JealousTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SandyMassCarried.
+        /// </summary>
+        public static string MassCarried {
+            get {
+                return ResourceManager.GetString("MassCarried", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Corgi_MouseOverNumbersForDetails.
         /// </summary>
         public static string MouseOverNumbersForDetails {
@@ -174,6 +255,15 @@ namespace RPGIResource {
         public static string OK {
             get {
                 return ResourceManager.GetString("OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corgi_OpenLoadout.
+        /// </summary>
+        public static string OpenLoadout {
+            get {
+                return ResourceManager.GetString("OpenLoadout", resourceCulture);
             }
         }
         
@@ -255,6 +345,15 @@ namespace RPGIResource {
         public static string TenCharsString {
             get {
                 return ResourceManager.GetString("TenCharsString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Traits.
+        /// </summary>
+        public static string Traits {
+            get {
+                return ResourceManager.GetString("Traits", resourceCulture);
             }
         }
         

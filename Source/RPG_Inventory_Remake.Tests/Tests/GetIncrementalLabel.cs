@@ -7,7 +7,7 @@ using System.Diagnostics;
 namespace RPG_Inventory_Remake.Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class GetIncrementalLabel
     {
         private TestContext testContextInstance;
         public TestContext TestContext
@@ -18,7 +18,7 @@ namespace RPG_Inventory_Remake.Tests
 
         [TestMethod]
         [DataSource(@"System.Data.SqlServerCe.4.0", @"Data Source=D:\Modding\RPG-Style-Inventory-CE-master\Source\RPG_Inventory_Remake.Tests\TestData\TestDB.sdf", "LoadoutManager", DataAccessMethod.Sequential)]
-        public void TestGetIncrementalLabel()
+        public void Test()
         {
             string previousLabel = TestContext.DataRow[TestResource.Var1].ToString();
             string expected = TestContext.DataRow[TestResource.Expected].ToString();
@@ -29,7 +29,7 @@ namespace RPG_Inventory_Remake.Tests
 
         [TestCleanup]
         [DataSource(@"System.Data.SqlServerCe.4.0", @"Data Source=D:\Modding\RPG-Style-Inventory-CE-master\Source\RPG_Inventory_Remake.Tests\TestData\TestDB.sdf", "LoadoutManager", DataAccessMethod.Sequential)]
-        public void TestGetIncrementalLabelCleanup()
+        public void TestCleanup()
         {
             string previousLabel = TestContext.DataRow[TestResource.Var1].ToString();
             LoadoutManager.Loadouts.Add(new RPGILoadout() { Label = previousLabel });

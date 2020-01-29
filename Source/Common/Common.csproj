@@ -13,7 +13,7 @@
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -42,6 +42,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
     <OutputPath>bin\Test\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityTest|AnyCPU'">
+    <OutputPath>bin\UnityTest\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="..\..\Defs\ApparelLayerDefs.xml">
@@ -77,6 +80,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Resources\RPGIIcons.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RPGIIcons.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\StringConstant.Designer.cs">
       <DependentUpon>StringConstant.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -92,6 +100,7 @@
     <Compile Include="SmartRect.cs" />
     <Compile Include="TextButton.cs" />
     <Compile Include="UI\Dialog_InstantMessage.cs" />
+    <Compile Include="UI\Theme.cs" />
     <Compile Include="UI\WindowOnMouseDrag.cs" />
     <Compile Include="Utilities\ThrowHelper.cs" />
     <Compile Include="Utilities\Utility.cs" />
@@ -109,6 +118,7 @@
       <HintPath>..\..\..\CombatExtended\Assemblies\CombatExtended.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\RW-Decompile\Managed\UnityEngine.dll</HintPath>
     </Reference>
@@ -117,6 +127,11 @@
     <EmbeddedResource Include="Resources\ErrorMessage.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ErrorMessage.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>RPGIResource</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\RPGIIcons.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>RPGIIcons.Designer.cs</LastGenOutput>
       <CustomToolNamespace>RPGIResource</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\StringConstant.resx">

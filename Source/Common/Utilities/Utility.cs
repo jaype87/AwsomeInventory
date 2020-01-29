@@ -10,6 +10,7 @@ using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
 using Harmony;
+using RPGIResource;
 
 namespace RPG_Inventory_Remake_Common
 {
@@ -103,7 +104,7 @@ namespace RPG_Inventory_Remake_Common
         {
             Rect rect = new Rect(0f, curY, width, StandardLineHeight);
             string toolTipText = "";
-            float armorRating = CalculateArmorByParts(selPawn, stat, ref toolTipText, unit);
+            float armorRating = CalculateArmorByParts(selPawn, stat, out toolTipText);
             if (!toolTipText.NullOrEmpty())
             {
                 TooltipHandler.TipRegion(rect, toolTipText);
@@ -124,7 +125,7 @@ namespace RPG_Inventory_Remake_Common
         public static void TryDrawOverallArmorCE(Pawn selPawn, Rect rect, StatDef stat, string label, Texture image, string unit)
         {
             string text = "";
-            float armorRating = CalculateArmorByParts(selPawn, stat, ref text, unit);
+            float armorRating = CalculateArmorByParts(selPawn, stat, out text);
             Rect rect1 = new Rect(rect.x, rect.y, 24f, 27f);
             GUI.DrawTexture(rect1, image);
             TooltipHandler.TipRegion(rect1, label);
@@ -509,7 +510,7 @@ namespace RPG_Inventory_Remake_Common
         /// <param name="text">Text for tooltip</param>
         /// <param name="unit">unit type for the corresponding stat</param>
         /// <returns></returns>
-        public static float CalculateArmorByParts(Pawn pawn, StatDef stat, ref string text, string unit)
+        public static float CalculateArmorByParts(Pawn pawn, StatDef stat, out string text)
         {
             text = "";
             float effectiveArmor = 0;
@@ -537,7 +538,7 @@ namespace RPG_Inventory_Remake_Common
                                              allParts[i].def == BodyPartDefOf.Neck))
                     {
                         text += allParts[i].LabelCap + ": ";
-                        text += FormatArmorValue((1 - effectivePen) * 2, unit) + "\n";
+                        text += ((1 - effectivePen) * 2).ToStringPercent() + "\n";
                     }
                     effectiveArmor += eArmorForPart;
                 }
@@ -604,22 +605,23 @@ namespace RPG_Inventory_Remake_Common
             curY += 22f;
         }
 
-        public static void TryDrawMassInfoWithImage(Pawn pawn, Vector2 rect)
+        public static void TryDrawMassInfoWithImage(Pawn pawn, ref Rect rect)
         {
             if (pawn.Dead || !ShouldShowInventory(pawn))
             {
                 return;
             }
             Rect rect1 = new Rect(rect.x, rect.y, 24f, 24f);
-            GUI.DrawTexture(rect1, ContentFinder<Texture2D>.Get("UI/Icons/Sandy_MassCarried_Icon", true));
+            GUI.DrawTexture(rect1, ContentFinder<Texture2D>.Get(RPGIIcons.Mass, true));
             TooltipHandler.TipRegion(rect1, "SandyMassCarried".Translate());
             float num = MassUtility.GearAndInventoryMass(pawn);
             float num2 = MassUtility.Capacity(pawn, null);
             Rect rect2 = new Rect(rect.x + 30f, rect.y + 2f, 104f, 24f);
-            Widgets.Label(rect2, "SandyMassValue".Translate(num.ToString("0.##"), num2.ToString("0.##")));
+            Widgets.Label(rect2, string.Concat(num, num2.ToStringMass()));
+            //Widgets.Label(rect2, "SandyMassValue".Translate(num.ToString("0.##"), num2.ToString("0.##")));
         }
 
-        public static void TryDrawComfyTemperatureRangeWithImage(Pawn pawn, Vector2 rect)
+        public static void TryDrawComfyTemperatureRangeWithImage(Pawn pawn, ref Rect rect)
         {
             if (pawn.Dead)
             {
@@ -652,7 +654,7 @@ namespace RPG_Inventory_Remake_Common
         {
             string text = "";
             float num = CE ? CalculateArmorByPartsCE(pawn, stat, ref text, unit)
-                           : CalculateArmorByParts(pawn, stat, ref text, unit);
+                           : CalculateArmorByParts(pawn, stat, out text);
             // draw thumbmail
             Rect rect1 = new Rect(rect.x, rect.y, 24f, 27f);
             GUI.DrawTexture(rect1, image);
@@ -978,7 +980,7 @@ namespace RPG_Inventory_Remake_Common
             char[] array = new char[length];
             for(int i = 0; i < length; i++)
             {
-                array[i] = 'a';
+                array[i] = 'A';
             }
             return new string(array);
         }

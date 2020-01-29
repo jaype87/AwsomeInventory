@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 using RPG_Inventory_Remake_Common;
+using RPGIResource;
 
 namespace RPG_Inventory_Remake
 {
@@ -58,47 +59,41 @@ namespace RPG_Inventory_Remake
         {
             _selPawn = _selPawn ?? new RPG_Pawn(SelPawn, SelThing);
             Text.Font = GameFont.Small;
+            GUI.color = Color.white;
 
 
             // Draw checkbox option for Jealous
-            Rect rectJealous = new Rect(20f, 0f, 160f, 30f);
-            if (Widgets.RadioButtonLabeled(rectJealous, "Sandy_Jealous".Translate(), _isJealous))
+            string translatedText = UIText.JealousTab.Translate();
+            Rect headerRect = GetHeaderRect(GenUI.Gap, translatedText);
+            if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isJealous))
             {
                 _isGreedy = _isAscetic = false;
                 _isJealous = true;
             }
             // Draw checkbox option for Greedy
-            Rect rectGreedy = new Rect(220f, 0f, 120f, 30f);
-            if (Widgets.RadioButtonLabeled(rectGreedy, "Sandy_Greedy".Translate(), _isGreedy))
+            translatedText = UIText.GreedyTab.Translate();
+            headerRect = GetHeaderRect(headerRect.xMax + GenUI.GapWide, translatedText);
+            if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isGreedy))
             {
                 _isJealous = _isAscetic = false;
                 _isGreedy = true;
             }
             // Draw checkbox option for Ascetic
-            Rect rectAscetic = new Rect(380f, 0f, 80f, 30f);
-            if (Widgets.RadioButtonLabeled(rectAscetic, "Sandy_Ascetic".Translate(), _isAscetic))
+            translatedText = UIText.AsceticTab.Translate();
+            headerRect = GetHeaderRect(headerRect.xMax + GenUI.GapWide, translatedText);
+            if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isAscetic))
             {
                 _isJealous = _isGreedy = false;
                 _isAscetic = true;
             }
 
-            //// Starting to draw gear/stats display
-            //Rect position = new Rect(10, 30, this.size.x - 20, this.size.y - 20 - 20);
-            //GUI.BeginGroup(position);
-            //// Redundent: Text.Font = GameFont.Small;
-            //GUI.color = Color.white;
-            //Rect outerRect = new Rect(0f, 0f, position.width, position.height - 60);
-            //Rect viewRect = new Rect(0f, 0f, position.width - 20f, this.scrollViewHeight);
-            //Widgets.BeginScrollView(outerRect, ref this.scrollPosition, viewRect, true);
-
-
             if (_isJealous)
             {
-                FillTabOperations.DrawJealous(_selPawn, this.size);
+                FillTabOperations.DrawJealous(_selPawn, new Rect(0, headerRect.yMax, size.x, size.y - headerRect.yMax));
             }
             else if (_isGreedy)
             {
-                FillTabOperations.DrawGreedy(_selPawn, this.size);
+                FillTabOperations.DrawGreedy(_selPawn, new Rect(0, headerRect.yMax, size.x, size.y - headerRect.yMax));
             }
             else if (_isAscetic)
             {
@@ -107,6 +102,12 @@ namespace RPG_Inventory_Remake
             {
                 throw new InvalidOperationException("No Display Option is chosen.");
             }
+        }
+
+        private Rect GetHeaderRect(float x, string translatedText)
+        {
+            float width = GenUI.GetWidthCached(translatedText) + Widgets.RadioButtonSize + GenUI.GapSmall;
+            return new Rect(x, GenUI.GapSmall, width, GenUI.ListSpacing);
         }
     }
 }

@@ -9,20 +9,18 @@ using Verse;
 using Harmony;
 using RPG_Inventory_Remake.Loadout;
 using RPG_Inventory_Remake_Common;
+using RPGIResource;
 
 namespace RPG_Inventory_Remake
 {
     public class FillTabOperations
     {
-        private const float _barHeight = 20f;
         private const float _margin = 15f;
         private const float _topPadding = 50f;
         private const float _apparelRectWidth = 56f;
         private const float _apparelRectHeight = 56f;
         private const float _startingXforRect = 150f;
 
-        private static readonly Color _highlightColor = new Color(0.5f, 0.5f, 0.5f, 1f);
-        private static readonly Color _thingLabelColor = new Color(0.9f, 0.9f, 0.9f, 1f);
         public static Vector2 ScrollPosition = Vector2.zero;
 
         private static SmartRect _smartRectHead;
@@ -34,65 +32,57 @@ namespace RPG_Inventory_Remake
 
         private static float _scrollViewHeight;
         public static void DrawAscetic() { }
-        public static void DrawJealous(RPG_Pawn selPawn, Vector2 size)
+        public static void DrawJealous(RPG_Pawn selPawn, Rect canvas)
         {
             // Races that don't have a humanoid body will fall back to Greedy tab
             if (selPawn.Pawn.RaceProps.body != BodyDefOf.Human)
             {
-                DrawGreedy(selPawn, size);
+                DrawGreedy(selPawn, canvas);
                 return;
             }
-            // set up rects
-            Rect listRect = new Rect(
-                _margin,
-                _topPadding,
-                size.x - 2 * _margin,
-                size.y - _topPadding - _margin);
+
+            Rect innerCanvas = canvas.ContractedBy(GenUI.GapSmall);
+            GUI.BeginGroup(innerCanvas);
+            Rect outRect = innerCanvas.AtZero();
+            Rect viewRect = outRect;
+            viewRect.height = _scrollViewHeight;
+            viewRect.width -= GenUI.Gap;
 
             // start drawing the view
-            GUI.BeginGroup(listRect);
             Text.Font = GameFont.Small;
-            GUI.color = Color.white;
-            Rect outRect = new Rect(0f, 0f, listRect.width, listRect.height);
-            Rect viewRect = new Rect(0f, 0f, listRect.width - 16f, _scrollViewHeight);
             Widgets.BeginScrollView(outRect, ref ScrollPosition, viewRect);
 
-            // draw Mass info and Temperature on the side
-            Vector2 rectStat = new Vector2(374, 0);
-            Utility.TryDrawMassInfoWithImage(selPawn.Pawn, rectStat);
-            Utility.TryDrawComfyTemperatureRangeWithImage(selPawn.Pawn, rectStat);
+            // draw all stats on the right
+            Rect rectStat = outRect.RightPart(0.35f);
 
-            // draw armor rating for humanoid on the side
-            Rect rectarmor = new Rect(374f, 84f, 128f, 85f);
-            TooltipHandler.TipRegion(rectarmor, "OverallArmor".Translate());
-            Rect rectsharp = new Rect(rectarmor.x, rectarmor.y, rectarmor.width, 27f);
-            Utility.TryDrawOverallArmorWithImage(selPawn.Pawn, rectsharp, StatDefOf.ArmorRating_Sharp, "ArmorSharp".Translate(),
-                                     ContentFinder<Texture2D>.Get("UI/Icons/Sandy_ArmorSharp_Icon", true));
-            Rect rectblunt = new Rect(rectarmor.x, rectarmor.y + 30f, rectarmor.width, 27f);
-            Utility.TryDrawOverallArmorWithImage(selPawn.Pawn, rectblunt, StatDefOf.ArmorRating_Blunt, "ArmorBlunt".Translate(),
-                                     ContentFinder<Texture2D>.Get("UI/Icons/Sandy_ArmorBlunt_Icon", true));
-            Rect rectheat = new Rect(rectarmor.x, rectarmor.y + 60f, rectarmor.width, 27f);
-            Utility.TryDrawOverallArmorWithImage(selPawn.Pawn, rectheat, StatDefOf.ArmorRating_Heat, "ArmorHeat".Translate(),
-                                     ContentFinder<Texture2D>.Get("UI/Icons/Sandy_ArmorHeat_Icon", true));
+            DrawStatPanel(rectStat, selPawn.Pawn, out float statY);
 
             //Pawn
-            Color color = new Color(1f, 1f, 1f, 1f);
-            GUI.color = color;
-            Rect PawnRect = new Rect(374f, 172f, 128f, 128f);
-            Utility.DrawColonist(PawnRect, selPawn.Pawn);
+            //float statY = 120;
+            statY -= WidgetRow.IconSize;
+            Rect pawnRect = new Rect(new Vector2(rectStat.x + GenUI.GapSmall, statY), UtilityConstant.PaperDollSize);
 
+            Utility.DrawColonist(pawnRect, selPawn.Pawn);
+
+            #region Weapon
             // draw equipment (equipment means barrel that can shoot bullets, plank that can slice flesh in half)
             // It is weapon.
-            SmartRect rectForEquipment = new SmartRect(new Rect(), CorgiBodyPartGroupDefOf.Arse,
-                                                       PawnRect.x, PawnRect.x, null, PawnRect.x, size.x - 20f);
-            rectForEquipment.y = PawnRect.yMax;
-            rectForEquipment.width = _apparelRectWidth;
-            rectForEquipment.height = _apparelRectHeight;
+            SmartRect rectForEquipment =
+                new SmartRect(new Rect(), CorgiBodyPartGroupDefOf.Arse,
+                              pawnRect.x, pawnRect.x, null, pawnRect.x, canvas.x - 20f)
+                {
+                    y = pawnRect.yMax - GenUI.GapSmall,
+                    width = _apparelRectWidth,
+                    height = _apparelRectHeight
+                };
+
             if (Utility.ShouldShowEquipment(selPawn.Pawn) && (selPawn.Pawn.RaceProps.body == BodyDefOf.Human))
             {
                 Rect primaryRect = rectForEquipment.NextAvailableRect();
-                GUI.DrawTexture(primaryRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
+
+                GUI.DrawTexture(primaryRect, Command.BGTex);
                 TooltipHandler.TipRegion(primaryRect, "Corgi_PrimaryWeapon".Translate());
+
                 foreach (ThingWithComps fireShootingBarrel in selPawn.Pawn.equipment.AllEquipmentListForReading)
                 {
                     if (fireShootingBarrel == selPawn.Pawn.equipment.Primary)
@@ -105,23 +95,24 @@ namespace RPG_Inventory_Remake
                     }
                 }
             }
+            #endregion
 
             // List order: Head:200-181, Neck:180-101, Torso:100-51, Waist:50-11, Legs:10-0
             // Check \steamapps\common\RimWorld\Mods\Core\Defs\Bodies\BodyPartGroups.xml
             IEnumerable<Apparel> apparels = from ap in selPawn.Pawn.apparel.WornApparel
                                             orderby ap.def.apparel.bodyPartGroups[0].listOrder descending
                                             select ap;
-
             IEnumerator<Apparel> apparelCounter = apparels.GetEnumerator();
 
+            #region Headwear
             //Hats. BodyGroup: Fullhead; Layer: Overhead
             _smartRectHead = _smartRectCurrent =
-                new SmartRect(new Rect(0, 0, _apparelRectWidth, _apparelRectHeight),
+                new SmartRect(new Rect(outRect.x, outRect.y, _apparelRectWidth, _apparelRectHeight),
                               BodyPartGroupDefOf.UpperHead,
                               _startingXforRect, _startingXforRect,
                               _smartRects, 10, rectStat.x);
             Rect HeadOverRect = _smartRectCurrent.NextAvailableRect();
-            GUI.DrawTexture(HeadOverRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
+            GUI.DrawTexture(HeadOverRect, Command.BGTex);
             Rect tipRect1 = HeadOverRect;
             TooltipHandler.TipRegion(tipRect1, "Sandy_Head".Translate());
 
@@ -157,7 +148,9 @@ namespace RPG_Inventory_Remake
                     break;
                 }
             }
+            #endregion
 
+            #region Neck
             // Draw apparels on the neck
             if (cont)
             {
@@ -180,6 +173,7 @@ namespace RPG_Inventory_Remake
                     }
                 } while (apparelCounter.MoveNext());
             }
+            #endregion
 
             #region Draw Torso
             // Draw apparels on Torso
@@ -189,19 +183,19 @@ namespace RPG_Inventory_Remake
 
             //Shirts. BodyGroup: Torso; Layer: OnSkin
             Rect TorsoSkinRect = _smartRectCurrent.NextAvailableRect();
-            GUI.DrawTexture(TorsoSkinRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
+            GUI.DrawTexture(TorsoSkinRect, Command.BGTex);
             Rect tipRect3 = TorsoSkinRect.ContractedBy(12f);
             TooltipHandler.TipRegion(tipRect3, "Sandy_TorsoOnSkin".Translate());
 
             //Vests. BodyGroup: Torso; Layer: Middle
             Rect TorsoMidRect = _smartRectCurrent.NextAvailableRect();
-            GUI.DrawTexture(TorsoMidRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
+            GUI.DrawTexture(TorsoMidRect, Command.BGTex);
             Rect tipRect2 = TorsoMidRect.ContractedBy(12f);
             TooltipHandler.TipRegion(tipRect2, "Sandy_TorsoMiddle".Translate());
 
             //Dusters. BodyGroup: Torso; Layer: Shell
             Rect TorsoShellRect = _smartRectCurrent.NextAvailableRect();
-            GUI.DrawTexture(TorsoShellRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
+            GUI.DrawTexture(TorsoShellRect, Command.BGTex);
             Rect tipRect4 = TorsoShellRect.ContractedBy(12f);
             TooltipHandler.TipRegion(tipRect4, "Sandy_TorsoShell".Translate());
 
@@ -255,22 +249,25 @@ namespace RPG_Inventory_Remake
                                                     _startingXforRect);
             //Belts. BodyGroup: Waist; Layer: Belt
             Rect WaistBeltRect = _smartRectCurrent.NextAvailableRect();
-            GUI.DrawTexture(WaistBeltRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
+            GUI.DrawTexture(WaistBeltRect, Command.BGTex);
             Rect tipRect5 = WaistBeltRect.ContractedBy(12f);
             TooltipHandler.TipRegion(tipRect5, "Sandy_Belt".Translate());
 
             if (cont)
             {
+                bool waistBeltDrawn = false;
                 cont = false;
+
                 do
                 {
                     Apparel apparel = apparelCounter.Current;
                     if (apparel.def.apparel.bodyPartGroups[0].listOrder <= CorgiBodyPartGroupDefOf.Waist.listOrder &&
                         apparel.def.apparel.bodyPartGroups[0].listOrder > CorgiBodyPartGroupDefOf.Legs.listOrder)
                     {
-                        if (apparel.def.apparel.LastLayer == ApparelLayerDefOf.Belt)
+                        if (apparel.def.apparel.LastLayer == ApparelLayerDefOf.Belt && waistBeltDrawn == false)
                         {
                             Utility.DrawThingRowWithImage(selPawn, WaistBeltRect, apparel);
+                            waistBeltDrawn = true;
                         }
                         else
                         {
@@ -299,7 +296,7 @@ namespace RPG_Inventory_Remake
                                                     _startingXforRect);
             //Pants. BodyGroup: Legs; Layer: OnSkin
             Rect LegSkinRect = _smartRectCurrent.NextAvailableRect();
-            GUI.DrawTexture(LegSkinRect, ContentFinder<Texture2D>.Get("UI/Widgets/DesButBG", true));
+            GUI.DrawTexture(LegSkinRect, Command.BGTex);
             Rect tipRect6 = LegSkinRect.ContractedBy(12f);
             TooltipHandler.TipRegion(tipRect6, "Sandy_Pants".Translate());
             if (cont)
@@ -334,6 +331,16 @@ namespace RPG_Inventory_Remake
                 } while (apparelCounter.MoveNext());
             }
             #endregion Draw Legs
+
+            float traitY = _smartRectCurrent.Rect.yMax + _smartRectCurrent.HeightGap;
+            WidgetRow traitRow = new WidgetRow(viewRect.x, traitY, UIDirection.RightThenDown, viewRect.width);
+            IEnumerator<Trait> traits = selPawn.Pawn.story.traits.allTraits.GetEnumerator();
+
+            traitRow.Label(UIText.Traits.Translate() + ": ");
+            while (traits.MoveNext())
+            {
+                TooltipHandler.TipRegion(traitRow.Label(traits.Current.LabelCap), traits.Current.TipString(selPawn.Pawn));
+            }
 
             #region Extra Apparels
             // Put undrawn into overflow list
@@ -391,7 +398,51 @@ namespace RPG_Inventory_Remake
                 }
                 rollingY += Utility.StandardLineHeight;
 
-                Widgets.ListSeparator(ref rollingY, viewRect.width, "Inventory".Translate());
+                if (ModStarter.Settings.UseLoadout)
+                {
+                    WidgetRow row = new WidgetRow(viewRect.xMax, rollingY, UIDirection.LeftThenDown, viewRect.width);
+                    if (row.ButtonText(UIText.OpenLoadout.Translate()))
+                    {
+                        if (selPawn.Pawn.IsColonist && (selPawn.Pawn.GetLoadout() == null))
+                        {
+                            RPGILoadout loadout = new RPGILoadout(selPawn.Pawn);
+                            LoadoutManager.AddLoadout(loadout);
+                            selPawn.Pawn.SetLoadout(loadout);
+                        }
+                        Find.WindowStack.Add(new Dialog_ManageLoadouts(selPawn.Pawn.GetLoadout(), selPawn.Pawn));
+                    }
+                    if (row.ButtonText(UIText.SelectLoadout.Translate()))
+                    {
+                        List<RPGILoadout> loadouts = LoadoutManager.Loadouts;
+                        List<FloatMenuOption> list = new List<FloatMenuOption>();
+                        if (loadouts.Count == 0)
+                        {
+                            list.Add(new FloatMenuOption(UIText.NoLoadouts.Translate(), null));
+                        }
+                        else
+                        {
+                            for (int i = 0; i < loadouts.Count; i++)
+                            {
+                                int local_i = i;
+                                list.Add(new FloatMenuOption(loadouts[i].Label, delegate
+                                {
+                                    selPawn.Pawn.SetLoadout(loadouts[local_i]);
+                                }));
+                            }
+                        }
+                        Find.WindowStack.Add(new FloatMenu(list));
+                    }
+                    Text.Anchor = TextAnchor.MiddleRight;
+                    Text.WordWrap = false;
+
+                    row.Label(selPawn.Pawn.GetLoadout()?.Label, GenUI.GetWidthCached(UIText.TenCharsString.Times(3)));
+
+                    Text.Anchor = TextAnchor.UpperLeft;
+                    Text.WordWrap = true;
+                    rollingY = row.FinalY + WidgetRow.IconSize - Text.LineHeight;
+                }
+                Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Inventory.Translate());
+
 
 
                 workingInvList.Clear();
@@ -423,14 +474,14 @@ namespace RPG_Inventory_Remake
 
 
         }
-        public static void DrawGreedy(RPG_Pawn selPawn, Vector2 size)
+        public static void DrawGreedy(RPG_Pawn selPawn, Rect canvas)
         {
             // set up rects
             Rect listRect = new Rect(
                 _margin,
                 _topPadding,
-                size.x - 2 * _margin,
-                size.y - _topPadding - _margin);
+                canvas.width - 2 * _margin,
+                canvas.height - _topPadding - _margin);
 
             // start drawing list
             GUI.BeginGroup(listRect);
@@ -543,9 +594,66 @@ namespace RPG_Inventory_Remake
             Text.Anchor = TextAnchor.UpperLeft;
         }
 
+        private static void DrawStatPanel(Rect rect, Pawn pawn, out float rollingY)
+        {
+            if (pawn.Dead)
+            {
+                rollingY = rect.yMax;
+                return;
+            }
 
+            WidgetRow row = new WidgetRow(rect.x, rect.y, UIDirection.RightThenDown, rect.width);
 
+            // Draw Mass
+            if (Utility.ShouldShowInventory(pawn))
+            {
+                float carried = MassUtility.GearAndInventoryMass(pawn);
+                float capacity = MassUtility.Capacity(pawn);
 
+                row.Icon(ContentFinder<Texture2D>.Get(RPGIIcons.Mass, true), UIText.MassCarried.Translate());
+                row.Label(string.Concat(carried, "/", capacity));
+                row.Gap(Int32.MaxValue);
+            }
+
+            // Draw minimum comfy temperature
+            row.Icon(ContentFinder<Texture2D>.Get(RPGIIcons.MinTemperature, true), UIText.ComfyTemperatureRange.Translate());
+            row.Label(pawn.GetStatValue(StatDefOf.ComfyTemperatureMin, true).ToStringTemperature());
+            row.Gap(Int32.MaxValue);
+
+            // Draw maximum comfy temperature
+            row.Icon(ContentFinder<Texture2D>.Get(RPGIIcons.MaxTemperature, true), UIText.ComfyTemperatureRange.Translate());
+            row.Label(pawn.GetStatValue(StatDefOf.ComfyTemperatureMax, true).ToStringTemperature());
+            row.Gap(Int32.MaxValue);
+
+            // Draw armor stats
+            DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Blunt, RPGIIcons.ArmorBlunt);
+
+            DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Sharp, RPGIIcons.ArmorSharp);
+
+            DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Heat, RPGIIcons.ArmorHeat);
+            rollingY = row.FinalY;
+        }
+
+        private static void DrawArmorStats(WidgetRow row, Pawn pawn, StatDef stat, string iconPath)
+        {
+            float value = Utility.CalculateArmorByParts(pawn, stat, out string tip);
+
+            row.Icon(ContentFinder<Texture2D>.Get(iconPath, true), UIText.ArmorBlunt.Translate());
+            Rect tipRect = row.Label(value.ToStringPercent());  
+            row.Gap(Int32.MaxValue);
+
+            TooltipHandler.TipRegion(tipRect, tip);
+        }
+
+        private static void DrawTraits(WidgetRow rowRTL, IEnumerator<Trait> traits, Pawn pawn)
+        {
+            if (traits.MoveNext())
+            {
+                Trait trait = traits.Current;
+                TooltipHandler.TipRegion(rowRTL.Label(trait.LabelCap), trait.TipString(pawn));
+                rowRTL.Gap(Int32.MaxValue);
+            }
+        }
 
         private static void Reset()
         {
