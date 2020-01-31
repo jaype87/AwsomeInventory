@@ -171,8 +171,8 @@
   <data name="NewLoadout" xml:space="preserve">
     <value>Corgi_NewLoadout</value>
   </data>
-  <data name="NoLoadouts" xml:space="preserve">
-    <value>Corgi_NoLoadouts</value>
+  <data name="NoLoadout" xml:space="preserve">
+    <value>Corgi_NoLoadout</value>
   </data>
   <data name="NoLoadoutSelected" xml:space="preserve">
     <value>Corgi_NoLoadoutSelected</value>
@@ -185,6 +185,9 @@
   </data>
   <data name="OpenLoadout" xml:space="preserve">
     <value>Corgi_OpenLoadout</value>
+  </data>
+  <data name="OutfitAnything" xml:space="preserve">
+    <value>OutfitAnything</value>
   </data>
   <data name="SelectLoadout" xml:space="preserve">
     <value>Corgi_SelectLoadout</value>

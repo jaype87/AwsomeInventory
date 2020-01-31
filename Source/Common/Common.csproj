@@ -70,8 +70,10 @@
     <Compile Include="Components\CompRPGIUnload.cs" />
     <Compile Include="DefOfs\CorgiBodyPartGroupsDefOf.cs" />
     <Compile Include="Gizmos\ToggleGearTab.cs" />
+    <Compile Include="HarmonyPatches\OutfitDatabase_TryDelete.cs" />
     <Compile Include="HarmonyPatches\Pawn_GetGizmos.cs" />
     <Compile Include="DefOfs\RPG_JobDefOf.cs" />
+    <Compile Include="HarmonyPatches\Pawn_OutfitTracker_CurrentOutfit.cs" />
     <Compile Include="Interface\ILoadout.cs" />
     <Compile Include="Interface\ILoadoutManager.cs" />
     <Compile Include="Jobs\JobGiver_Unload.cs" />

@@ -20,6 +20,7 @@ namespace RPG_Inventory_Remake.Loadout
 
         private static float _labelSize = -1f;
         private static float _margin = 6f;
+        private static bool _loadoutSet = false;
         private static Texture2D _overburdenedTex;
         private static ThingDef _genericStuffDef = DefDatabase<ThingDef>.GetNamed(StringConstant.GenericResource);
 
@@ -139,16 +140,27 @@ namespace RPG_Inventory_Remake.Loadout
                 "Corgi_Weight".Translate() + ": " + (thing.GetStatValue(StatDefOf.Mass) * thing.stackCount).ToStringMass();
         }
 
+        /// <summary>
+        /// Set Pawn's loadout. Called by a harmony patch
+        /// </summary>
+        /// <param name="pawn"></param>
+        /// <param name="loadout"></param>
         public static void SetLoadout(this Pawn pawn, RPGILoadout loadout)
         {
             if (pawn == null)
             {
                 throw new ArgumentNullException(nameof(pawn));
             }
-            if (pawn.TryGetComp<compRPGILoudout>() is compRPGILoudout comp)
+            Log.Message("start setting loadout: " + _loadoutSet);
+            if (pawn.TryGetComp<compRPGILoudout>() is compRPGILoudout comp
+                && _loadoutSet == false)
             {
+                Log.Message("set loadout");
+                _loadoutSet = true;
                 comp.UpdateForNewLoadout(loadout);
+                pawn.outfits.CurrentOutfit = loadout;
             }
+            _loadoutSet = false;
         }
 
         public static string GetDefaultLoadoutName(this Pawn pawn)
@@ -175,7 +187,6 @@ namespace RPG_Inventory_Remake.Loadout
                 }
             }
             Thing thing = pair.MakeThing();
-            (thing as ThingWithComps)?.InitializeComps();
             if (thing.def.useHitPoints)
             {
                 thing.HitPoints = thing.MaxHitPoints;

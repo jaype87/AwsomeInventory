@@ -22,14 +22,14 @@ namespace RPG_Inventory_Remake.Tests.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ApparelNames {
+    internal class WeaponStrings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ApparelNames() {
+        internal WeaponStrings() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace RPG_Inventory_Remake.Tests.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPG_Inventory_Remake.Tests.Resources.ApparelNames", typeof(ApparelNames).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPG_Inventory_Remake.Tests.Resources.WeaponStrings", typeof(WeaponStrings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,20 +61,29 @@ namespace RPG_Inventory_Remake.Tests.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Apparel_BasicShirt.
+        ///   Looks up a localized string similar to Gun_BoltActionRifle.
         /// </summary>
-        internal static string Apparel_BasicShirt {
+        internal static string Gun_BoltActionRifle {
             get {
-                return ResourceManager.GetString("Apparel_BasicShirt", resourceCulture);
+                return ResourceManager.GetString("Gun_BoltActionRifle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Apparel_CollarShirt.
+        ///   Looks up a localized string similar to Gun_PumpShotgun.
         /// </summary>
-        internal static string Apparel_CollarShirt {
+        internal static string Gun_PumpShotgun {
             get {
-                return ResourceManager.GetString("Apparel_CollarShirt", resourceCulture);
+                return ResourceManager.GetString("Gun_PumpShotgun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MeleeWeapon_Club.
+        /// </summary>
+        internal static string MeleeWeapon_Club {
+            get {
+                return ResourceManager.GetString("MeleeWeapon_Club", resourceCulture);
             }
         }
     }

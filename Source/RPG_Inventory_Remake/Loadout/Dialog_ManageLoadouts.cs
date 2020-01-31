@@ -154,7 +154,7 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
                 if (loadouts.Count == 0)
-                    options.Add(new FloatMenuOption(UIText.NoLoadouts.Translate(), null));
+                    options.Add(new FloatMenuOption(UIText.NoLoadout.Translate(), null));
                 else
                 {
                     for (int j = 0; j < loadouts.Count; j++)
@@ -165,6 +165,7 @@ namespace RPG_Inventory_Remake.Loadout
                                                         {
                                                             _currentLoadout = loadouts[i];
                                                             _slotScrollPosition = Vector2.zero;
+                                                            _pawn.SetLoadout(_currentLoadout);
                                                         }));
                     }
                 }
@@ -180,7 +181,7 @@ namespace RPG_Inventory_Remake.Loadout
                 };
                 LoadoutManager.AddLoadout(loadout);
                 _currentLoadout = loadout;
-                //_currentLoadout.CachedList = _currentLoadout.ToList();
+                _pawn.SetLoadout(loadout);
             }
 
             // copy loadout
@@ -188,7 +189,7 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 _currentLoadout = new RPGILoadout(_currentLoadout);
                 LoadoutManager.AddLoadout(_currentLoadout);
-                //_currentLoadout.CachedList = _currentLoadout.ToList();
+                _pawn.SetLoadout(_currentLoadout);
             }
 
             // delete loadout
@@ -206,12 +207,12 @@ namespace RPG_Inventory_Remake.Loadout
                             {
                                 if (_currentLoadout == loadouts[i])
                                 {
-                                    LoadoutManager.RemoveLoadout(loadouts[i]);
+                                    LoadoutManager.RemoveLoadout(loadouts[i], true);
                                     _currentLoadout = loadouts.First();
-                                    //_currentLoadout.CachedList = _currentLoadout.ToList();
+                                    _pawn.SetLoadout(_currentLoadout);
                                     return;
                                 }
-                                LoadoutManager.RemoveLoadout(loadouts[i]);
+                                LoadoutManager.RemoveLoadout(loadouts[i], true);
                             }
                             else
                             {
@@ -288,12 +289,6 @@ namespace RPG_Inventory_Remake.Loadout
             SetSource(SourceSelection.Ranged);
         }
 
-        public override void PostOpen()
-        {
-            base.PostOpen();
-            windowRect.x += 200;
-        }
-
         public void DrawCategoryIcon(Rect canvas)
         {
             WidgetRow row = new WidgetRow(canvas.x, canvas.y);
@@ -312,9 +307,6 @@ namespace RPG_Inventory_Remake.Loadout
             Rect filterRect = new Rect(row.FinalX, canvas.y, nameFieldLen, canvas.height);
             DrawFilterField(filterRect);
             TooltipHandler.TipRegion(filterRect, UIText.SourceFilterTip.Translate());
-
-            // reset color
-            GUI.color = Color.white;
         }
 
         public void FilterSource(string filter)

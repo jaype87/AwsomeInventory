@@ -71,7 +71,7 @@ namespace RPG_Inventory_Remake
                 new SmartRect(new Rect(), CorgiBodyPartGroupDefOf.Arse,
                               pawnRect.x, pawnRect.x, null, pawnRect.x, canvas.x - 20f)
                 {
-                    y = pawnRect.yMax - GenUI.GapSmall,
+                    y = pawnRect.yMax - GenUI.GapSmall - 3f,
                     width = _apparelRectWidth,
                     height = _apparelRectHeight
                 };
@@ -332,15 +332,20 @@ namespace RPG_Inventory_Remake
             }
             #endregion Draw Legs
 
-            float traitY = _smartRectCurrent.Rect.yMax + _smartRectCurrent.HeightGap;
+            #region Draw Traits
+
+            float traitY = _smartRectCurrent.yMax + _smartRectCurrent.HeightGap;
             WidgetRow traitRow = new WidgetRow(viewRect.x, traitY, UIDirection.RightThenDown, viewRect.width);
             IEnumerator<Trait> traits = selPawn.Pawn.story.traits.allTraits.GetEnumerator();
 
             traitRow.Label(UIText.Traits.Translate() + ": ");
             while (traits.MoveNext())
             {
-                TooltipHandler.TipRegion(traitRow.Label(traits.Current.LabelCap), traits.Current.TipString(selPawn.Pawn));
+                TooltipHandler.TipRegion(traitRow.Label(traits.Current.LabelCap + ", "), traits.Current.TipString(selPawn.Pawn));
             }
+
+            float rollingY = traitRow.FinalY + WidgetRow.IconSize;
+            #endregion
 
             #region Extra Apparels
             // Put undrawn into overflow list
@@ -357,7 +362,7 @@ namespace RPG_Inventory_Remake
             // If there is any more remains, put them into their own category
             if (_apparelOverflow.Count > 0)
             {
-                float rollingY1 = _smartRectCurrent.y + _smartRectCurrent.height + Utility.StandardLineHeight;
+                float rollingY1 = rollingY + Utility.StandardLineHeight;
                 Widgets.ListSeparator(ref rollingY1, viewRect.width, "Corgi_ExtraApparels".Translate());
                 _smartRectCurrent = _smartRectCurrent.GetWorkingRect(CorgiBodyPartGroupDefOf.Arse, _margin, _margin);
                 _smartRectCurrent.y = rollingY1 + Utility.StandardLineHeight;
@@ -379,20 +384,16 @@ namespace RPG_Inventory_Remake
                         continue;
                     }
                 } while (_apparelOverflow.Count > 0);
+                rollingY = rollingY1;
             }
             #endregion Extra Apparels
 
             #region Draw Inventory
             // Draw inventory
-            float rollingY = 0;
             if (Utility.ShouldShowInventory(selPawn.Pawn))
             {
 
-                if (_smartRectCurrent.Rect.yMax > rectForEquipment.Rect.yMax)
-                {
-                    rollingY = _smartRectCurrent.Rect.yMax;
-                }
-                else
+                if (rollingY < rectForEquipment.Rect.yMax)
                 {
                     rollingY = rectForEquipment.Rect.yMax;
                 }
@@ -417,7 +418,7 @@ namespace RPG_Inventory_Remake
                         List<FloatMenuOption> list = new List<FloatMenuOption>();
                         if (loadouts.Count == 0)
                         {
-                            list.Add(new FloatMenuOption(UIText.NoLoadouts.Translate(), null));
+                            list.Add(new FloatMenuOption(UIText.NoLoadout.Translate(), null));
                         }
                         else
                         {
@@ -538,7 +539,7 @@ namespace RPG_Inventory_Remake
                         List<FloatMenuOption> list = new List<FloatMenuOption>();
                         if (loadouts.Count == 0)
                         {
-                            list.Add(new FloatMenuOption(Translator.Translate("Corgi_NoLoadout"), null));
+                            list.Add(new FloatMenuOption(UIText.NoLoadout.Translate(), null));
                         }
                         else
                         {

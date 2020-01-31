@@ -35,7 +35,7 @@ namespace RPG_Inventory_Remake.Loadout
         }
     }
 
-    public class LoadoutComparer : EqualityComparer
+    public static class LoadoutComparer
     {
         [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
         public static bool isEqual(Thing x, Thing y)

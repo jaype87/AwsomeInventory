@@ -48,14 +48,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityTest|AnyCPU'">
     <OutputPath>bin\UnityTest\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\..\Harmony\net35\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\MyRW-Decompile\bin\Debug\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="RPG_Inventory_Remake, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\RPG_Inventory_Remake\bin\Test\RPG_Inventory_Remake.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -79,6 +79,21 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ApparelNames.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\ItemStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ItemStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\StuffNames.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StuffNames.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\WeaponStrings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WeaponStrings.resx</DependentUpon>
+    </Compile>
     <Compile Include="Tests\RPGILoadout.cs" />
     <Compile Include="TestResource.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -96,10 +111,28 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ApparelNames.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\ItemStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ItemStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\StuffNames.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>StuffNames.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\WeaponStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>WeaponStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="TestResource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>TestResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RPG_Inventory_Remake\RPG_Inventory_Remake.csproj">
+      <Project>{9c99ff79-7175-48ec-a407-9d72950f2bc4}</Project>
+      <Name>RPG_Inventory_Remake</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">

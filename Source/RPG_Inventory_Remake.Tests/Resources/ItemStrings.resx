@@ -117,10 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Apparel_BasicShirt" xml:space="preserve">
-    <value>Apparel_BasicShirt</value>
+  <data name="MealSimple" xml:space="preserve">
+    <value>MealSimple</value>
   </data>
-  <data name="Apparel_CollarShirt" xml:space="preserve">
-    <value>Apparel_CollarShirt</value>
+  <data name="MealSurvivalPack" xml:space="preserve">
+    <value>MealSurvivalPack</value>
+  </data>
+  <data name="MedicineHerbal" xml:space="preserve">
+    <value>MedicineHerbal</value>
+  </data>
+  <data name="MedicineIndustrial" xml:space="preserve">
+    <value>MedicineIndustrial</value>
   </data>
 </root>

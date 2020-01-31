@@ -223,11 +223,11 @@ namespace RPGIResource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Corgi_NoLoadouts.
+        ///   Looks up a localized string similar to Corgi_NoLoadout.
         /// </summary>
-        public static string NoLoadouts {
+        public static string NoLoadout {
             get {
-                return ResourceManager.GetString("NoLoadouts", resourceCulture);
+                return ResourceManager.GetString("NoLoadout", resourceCulture);
             }
         }
         
@@ -264,6 +264,15 @@ namespace RPGIResource {
         public static string OpenLoadout {
             get {
                 return ResourceManager.GetString("OpenLoadout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OutfitAnything.
+        /// </summary>
+        public static string OutfitAnything {
+            get {
+                return ResourceManager.GetString("OutfitAnything", resourceCulture);
             }
         }
         

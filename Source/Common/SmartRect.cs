@@ -96,6 +96,14 @@ namespace RPG_Inventory_Remake_Common
                 Rect.height = value;
             }
         }
+
+        public float yMax
+        {
+            get
+            {
+                return Rect.yMax;
+            }
+        }
         #endregion
 
         public Rect NextAvailableRect()

@@ -264,7 +264,7 @@ namespace RPG_Inventory_Remake.Loadout
                 {
                     if (row.ButtonIcon(TexButton.Info))
                     {
-                        Thing temp = UtilityLoadouts.DeepCopySimple(_thing);
+                        Thing temp = _thing.DeepCopySimple();
                         temp.SetStuffDirect(pair.stuff);
                         Find.WindowStack.Add(new Dialog_InfoCard(temp));
                     }

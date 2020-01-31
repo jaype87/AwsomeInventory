@@ -16,6 +16,7 @@ namespace RPG_Inventory_Remake.Loadout
     {
         #region Fields
         private static List<RPGILoadout> _loadouts = new List<RPGILoadout>();
+        private static List<Outfit> _outfits;
         private static readonly Regex _pattern = new Regex(@"^(.*?)(\d*)$");
         #endregion Fields
 
@@ -46,14 +47,22 @@ namespace RPG_Inventory_Remake.Loadout
         public override void FinalizeInit()
         {
             _loadouts.Clear();
+            _outfits = Current.Game.outfitDatabase.AllOutfits;
+            foreach (Outfit outfit in _outfits)
+            {
+                if (outfit is RPGILoadout loadout)
+                {
+                    _loadouts.Add(loadout);
+                }
+            }
         }
 
         /// <summary>
-        /// Load/Save handler.
+        /// Load/Save handler. Loadouts are saved by OutfitDatabase
         /// </summary>
         public override void ExposeData() // - called when saving a game as well as in the construction phase of creating a new instance on game load.
         {
-            Scribe_Collections.Look(ref _loadouts, "loadouts", LookMode.Deep);
+            //Scribe_Collections.Look(ref _loadouts, "loadouts", LookMode.Deep);
         }
         #endregion Override Methods
 
@@ -65,16 +74,25 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 throw new ArgumentNullException(nameof(loadout));
             }
+            _outfits.Add(loadout);
             _loadouts.Add(loadout);
         }
 
-        public static void RemoveLoadout(RPGILoadout loadout)
+        public static void RemoveLoadout(RPGILoadout loadout, bool forcedDelete = false)
         {
-            if (loadout == null)
+            if (!forcedDelete)
             {
-                throw new ArgumentNullException(nameof(loadout));
+                AcceptanceReport report = Current.Game.outfitDatabase.TryDelete(loadout);
+                if (report.Accepted)
+                {
+                    _loadouts.Remove(loadout);
+                }
             }
-            _loadouts.Remove(loadout);
+            else
+            {
+                _outfits.Remove(loadout);
+                _loadouts.Remove(loadout);
+            }
         }
 
         public static string GetIncrementalLabel(object obj)

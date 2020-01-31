@@ -44,3 +44,8 @@ RimWorld.MainTabWindow_Inspect:ExtraOnGUI()
 Verse.WindowStack:WindowStackOnGUI()
 RimWorld.UIRoot_Play:UIRootOnGUI()
 Verse.Root:OnGUI()
+
+
+nextApparelOptimizeTick, used by vanilla JobGiver
+
+Run customtool every time after changing resources

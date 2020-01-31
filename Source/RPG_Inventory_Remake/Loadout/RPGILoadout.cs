@@ -15,7 +15,7 @@ namespace RPG_Inventory_Remake.Loadout
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <remarks>It uses LoadoutCaomparer to generate hash value for keys</remarks>
-    public class RPGILoadout : Outfit, IExposable, IEnumerable<Thing>
+    public class RPGILoadout : Outfit, ILoadReferenceable, IExposable, IEnumerable<Thing>
     {
         [Flags]
         enum DirtyBits
@@ -37,18 +37,12 @@ namespace RPG_Inventory_Remake.Loadout
 
         public RPGILoadout()
         {
-#if (TEST == false)
-            List<Outfit> outfits = Current.Game.outfitDatabase.AllOutfits;
-            int id = (!outfits.Any()) ? 1 : (outfits.Max((Outfit o) => o.uniqueId) + 1);
-            uniqueId = id;
-            filter.SetAllow(ThingCategoryDefOf.Apparel, allow: true);
-            outfits.Add(this);
-#endif
         }
 
-        public RPGILoadout(string oldLabel) : this()
+        public RPGILoadout(string oldLabel)
         {
             Label = LoadoutManager.GetIncrementalLabel(oldLabel);
+            Init();
         }
 
         /// <summary>
@@ -62,9 +56,9 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 throw new ArgumentNullException(nameof(pawn));
             }
-            AddItemFromIEnumerable(pawn.equipment?.AllEquipmentListForReading as IEnumerable<Thing>);
-            AddItemFromIEnumerable(pawn.apparel?.WornApparel as IEnumerable<Thing>);
-            AddItemFromIEnumerable(pawn.inventory?.innerContainer as IEnumerable<Thing>);
+            AddItemFromIEnumerable(pawn.equipment?.AllEquipmentListForReading);
+            AddItemFromIEnumerable(pawn.apparel?.WornApparel);
+            AddItemFromIEnumerable(pawn.inventory?.innerContainer);
         }
 
         /// <summary>
@@ -81,17 +75,18 @@ namespace RPG_Inventory_Remake.Loadout
             foreach (Thing thing in loadout.CachedList)
             {
                 Thing item = thing.DeepCopySimple();
-                _loadoutDic.Add(item.MakeThingStuffPairWithQuality(), new ThingFilterPackage(item, new ThingFilter()));
+                ThingStuffPairWithQuality pair = item.MakeThingStuffPairWithQuality();
+                _loadoutDic.Add(pair, new ThingFilterPackage(item, new ThingFilter()
+                {
+                    AllowedHitPointsPercents = loadout[pair].Filter.AllowedHitPointsPercents,
+                    AllowedQualityLevels = loadout[pair].Filter.AllowedQualityLevels
+                }));
                 _cachedList.Add(item);
             }
+            filter = loadout.filter;
         }
 
         #endregion
-
-        public ThingStuffPairWithQuality First()
-        {
-            return _loadoutDic.Keys.First();
-        }
 
         #region Properties
 
@@ -117,7 +112,47 @@ namespace RPG_Inventory_Remake.Loadout
 
         public void ExposeData()
         {
-            throw new NotImplementedException();
+            base.ExposeData();
+            Dictionary<SavePairFilter, ThingFilterPackage> dicToSave = new Dictionary<SavePairFilter, ThingFilterPackage>();
+            if (Scribe.mode == LoadSaveMode.Saving)
+            {
+                foreach (var pair in _loadoutDic)
+                {
+                    dicToSave.Add(new SavePairFilter(pair.Key), pair.Value);
+                }
+
+            }
+
+            Scribe_Collections.Look(ref dicToSave, nameof(dicToSave), LookMode.Deep, LookMode.Deep);
+            Scribe_Collections.Look(ref _cachedList, nameof(_cachedList), LookMode.Reference);
+
+            if (Scribe.mode == LoadSaveMode.LoadingVars)
+            {
+                foreach (var pair in dicToSave)
+                {
+                    _loadoutDic.Add(pair.Key.Restore(), pair.Value);
+                }
+            }
+            // TEST
+#if TEST
+            if (Scribe.mode == LoadSaveMode.LoadingVars)
+            {
+                foreach (var pair in _loadoutDic.ToList())
+                {
+                    if (pair.Key != pair.Value.Thing.MakeThingStuffPairWithQuality())
+                    {
+                        Log.Message("Mismatch: " + pair.Key.thing + " " + pair.Key.stuff + " " + pair.Key.Quality);
+                    }
+                }
+                foreach (Thing thing in _cachedList)
+                {
+                    if (!_loadoutDic.TryGetValue(thing.MakeThingStuffPairWithQuality(), out _))
+                    {
+                        Log.Message("Can't find thing");
+                    }
+                }
+            }
+#endif
         }
 
         public IEnumerator<Thing> GetEnumerator()
@@ -127,7 +162,7 @@ namespace RPG_Inventory_Remake.Loadout
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _loadoutDic.Keys.GetEnumerator();
+            return _loadoutDic.Values.Select(i => i.Thing).GetEnumerator();
         }
 
         /// <summary>
@@ -149,6 +184,13 @@ namespace RPG_Inventory_Remake.Loadout
             return _loadoutDic.ContainsKey(pairWithQuality);
         }
 
+        public static RPGILoadout New()
+        {
+            RPGILoadout temp = new RPGILoadout();
+            temp.Init();
+            return temp;
+        }
+
         public void SetDirtyAll()
         {
             _dirty = DirtyBits.All;
@@ -165,7 +207,14 @@ namespace RPG_Inventory_Remake.Loadout
         public bool TryGetThing(ThingStuffPairWithQuality pair, out Thing value)
         {
             bool result = _loadoutDic.TryGetValue(pair, out ThingFilterPackage package);
-            value = package.Thing;
+            if (result)
+            {
+                value = package.Thing;
+            }
+            else
+            {
+                value = null;
+            }
             return result;
         }
 
@@ -276,7 +325,7 @@ namespace RPG_Inventory_Remake.Loadout
             }
         }
 
-        private void AddItemFromIEnumerable(IEnumerable<Thing> list)
+        private void AddItemFromIEnumerable<T>(IEnumerable<T> list) where T : Thing
         {
             if (list == null)
             {
@@ -285,8 +334,16 @@ namespace RPG_Inventory_Remake.Loadout
 
             foreach (Thing t in list)
             {
-                AddItem(UtilityLoadouts.DeepCopySimple(t));
+                AddItem(t.DeepCopySimple());
             }
+        }
+
+        private void Init()
+        {
+            List<Outfit> outfits = Current.Game.outfitDatabase.AllOutfits;
+            int id = (!outfits.Any()) ? 1 : (outfits.Max((Outfit o) => o.uniqueId) + 1);
+            uniqueId = id;
+            filter.SetAllow(ThingCategoryDefOf.Apparel, allow: true);
         }
 
         #endregion CRUD operation
@@ -302,17 +359,72 @@ namespace RPG_Inventory_Remake.Loadout
 
 
 
-        #endregion
+        #endregion Method
+
+        /// <summary>
+        /// Used to save information in ThingStuffPairWithQuality
+        /// </summary>
+        private class SavePairFilter : IExposable
+        {
+            private ThingDef _thing;
+            private ThingDef _stuff;
+            private QualityCategory? _qualityCategory;
+
+            public SavePairFilter()
+            {
+
+            }
+
+
+            public void ExposeData()
+            {
+                Scribe_Defs.Look(ref _thing, nameof(_thing));
+                Scribe_Defs.Look(ref _stuff, nameof(_stuff));
+                Scribe_Values.Look(ref _qualityCategory, nameof(_qualityCategory));
+            }
+
+            public SavePairFilter(ThingStuffPairWithQuality pair)
+            {
+                _thing = pair.thing;
+                _stuff = pair.stuff;
+                _qualityCategory = pair.quality;
+            }
+
+            public ThingStuffPairWithQuality Restore()
+            {
+                return new ThingStuffPairWithQuality
+                {
+                    thing = _thing,
+                    stuff = _stuff,
+                    quality = _qualityCategory
+                };
+            }
+        }
+
+
     }
 
-    public class ThingFilterPackage
+    public class ThingFilterPackage : IExposable
     {
         public Thing Thing;
         public ThingFilter Filter;
+
+        public ThingFilterPackage()
+        {
+
+        }
+
+
         public ThingFilterPackage(Thing thing, ThingFilter filter)
         {
-            this.Thing = thing;
-            this.Filter = filter;
+            Thing = thing;
+            Filter = filter;
+        }
+
+        public void ExposeData()
+        {
+            Scribe_Deep.Look(ref Filter, "Filter");
+            Scribe_Deep.Look(ref Thing, "Thing");
         }
     }
 }

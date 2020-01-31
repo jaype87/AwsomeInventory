@@ -78,6 +78,17 @@ namespace RPG_Inventory_Remake.Loadout
 
         #region Methods
 
+        public override void PostSpawnSetup(bool respawningAfterLoad)
+        {
+            if (parent is Pawn pawn)
+            {
+                if (pawn.outfits?.CurrentOutfit is RPGILoadout loadout)
+                {
+                    Loadout = loadout;
+                }
+            }
+        }
+
         public void NotifiedAdded(Thing thing)
         {
             if (thing == null || !InventoryTracker.ContainsKey(thing))
@@ -120,10 +131,14 @@ namespace RPG_Inventory_Remake.Loadout
                     InventoryTracker[thing] = thing.stackCount;
                 }
             }
+            else if (Loadout == newLoadout)
+            {
+                return;
+            }
             else
             {
                 // Remove deleted items
-                foreach (Thing thing in InventoryTracker.Keys)
+                foreach (Thing thing in InventoryTracker.Keys.ToList())
                 {
                     if (!newLoadout.Contains(thing))
                     {
