@@ -9,7 +9,10 @@ using RPG_Inventory_Remake.Loadout;
 
 namespace RPG_Inventory_Remake
 {
-    public class JobGiver_UpdateLoadout : ThinkNode_JobGiver
+    /// <summary>
+    /// Insert into 
+    /// </summary>
+    public class JobGiver_UpdateInventory : ThinkNode_JobGiver
     {
         private enum ItemPriority : byte
         {
@@ -18,6 +21,11 @@ namespace RPG_Inventory_Remake
             LowStock,
             Proximity
         }
+
+        private int _tinyRadius;
+        private int _smallRadius;
+        private int _mediumRadius;
+        private bool Foundthing;
 
         #region Constants  
 
@@ -29,10 +37,10 @@ namespace RPG_Inventory_Remake
 
         #region Methods
         /// <summary>
-        /// Gets a priority value of how important it is for a pawn to do pickup/drop activities.
+        /// Used by thinknodes that use priotiy to pick jobs
         /// </summary>
-        /// <param name="pawn">Pawn to fetch priority for</param>
-        /// <returns>float indicating priority of pickup/drop job</returns>
+        /// <param name="pawn"></param>
+        /// <returns></returns>
         public override float GetPriority(Pawn pawn)
         {
             //if (pawn.HasExcessThing())
@@ -75,68 +83,6 @@ namespace RPG_Inventory_Remake
             CompInventory inventory = pawn.TryGetComp<CompInventory>();
             if (inventory?.container != null)
             {
-                //RPGILoadout loadout = pawn.GetLoadout();
-                //if (loadout != null && !loadout.Any())
-                //{
-                //    // Need to generate a dictionary and nibble like when dropping in order to allow for conflicting loadouts to work properly.
-                //    Dictionary<ThingDef, int> listing = pawn.GetStorageByThingDef();
-
-                //    // process each loadout slot... (While the LoadoutSlot.countType property only really makes sense in the context of genericDef != null, it should be the correct value (pickupDrop) on .thingDef != null.)
-                //    foreach (LoadoutSlot curSlot in loadout)
-                //    {
-                //        Thing curThing = null;
-                //        ItemPriority curPriority = ItemPriority.None;
-                //        Pawn curCarrier = null;
-                //        int wantCount = curSlot.count;
-
-                //        if (curSlot.thingDef != null)
-                //        {
-                //            if (listing.ContainsKey(curSlot.thingDef))
-                //            {
-                //                int amount = listing[curSlot.thingDef] >= wantCount ? wantCount : listing[curSlot.thingDef];
-                //                listing[curSlot.thingDef] -= amount;
-                //                wantCount -= amount;
-                //                if (listing[curSlot.thingDef] <= 0)
-                //                    listing.Remove(curSlot.thingDef);
-                //            }
-                //        }
-                //        if (curSlot.genericDef != null)
-                //        {
-                //            List<ThingDef> killKeys = new List<ThingDef>();
-                //            int amount;
-                //            foreach (ThingDef def in listing.Keys.Where(td => curSlot.genericDef.lambda(td)))
-                //            {
-                //                amount = listing[def] >= wantCount ? wantCount : listing[def];
-                //                listing[def] -= amount;
-                //                wantCount -= amount;
-                //                if (listing[def] <= 0)
-                //                    killKeys.Add(def);
-                //                if (wantCount <= 0)
-                //                    break;
-                //            }
-                //            foreach (ThingDef def in killKeys)
-                //                listing.Remove(def);
-                //        }
-                //        if (wantCount > 0)
-                //        {
-                //            FindPickup(pawn, curSlot, wantCount, out curPriority, out curThing, out curCarrier);
-
-                //            if (curPriority > priority && curThing != null && inventory.CanFitInInventory(curThing, out count))
-                //            {
-                //                priority = curPriority;
-                //                slot = curSlot;
-                //                count = count >= wantCount ? wantCount : count;
-                //                closestThing = curThing;
-                //                if (curCarrier != null)
-                //                    carriedBy = curCarrier;
-                //            }
-                //            if (priority >= ItemPriority.LowStock)
-                //            {
-                //                break;
-                //            }
-                //        }
-                //    //}
-                //}
             }
 
             return slot;
@@ -233,23 +179,23 @@ namespace RPG_Inventory_Remake
             if (loadout != null)
             {
                 ThingWithComps dropEq;
-                    ThingWithComps droppedEq;
-                    if (pawn.equipment.TryDropEquipment(pawn.equipment.Primary, out droppedEq, pawn.Position, false))
-                    {
-                        if (droppedEq != null)
-                            return HaulAIUtility.HaulToStorageJob(pawn, droppedEq);
-                    }
+                ThingWithComps droppedEq;
+                if (pawn.equipment.TryDropEquipment(pawn.equipment.Primary, out droppedEq, pawn.Position, false))
+                {
+                    if (droppedEq != null)
+                        return HaulAIUtility.HaulToStorageJob(pawn, droppedEq);
+                }
                 Thing dropThing = new Thing();
                 int dropCount = 0;
-                    Thing droppedThing;
-                    if (inventory.container.TryDrop(dropThing, pawn.Position, pawn.Map, ThingPlaceMode.Near, dropCount, out droppedThing))
+                Thing droppedThing;
+                if (inventory.container.TryDrop(dropThing, pawn.Position, pawn.Map, ThingPlaceMode.Near, dropCount, out droppedThing))
+                {
+                    if (droppedThing != null)
                     {
-                        if (droppedThing != null)
-                        {
-                            return HaulAIUtility.HaulToStorageJob(pawn, droppedThing);
-                        }
-                        Log.Error(string.Concat(pawn, " tried dropping ", dropThing, " from loadout but resulting thing is null"));
+                        return HaulAIUtility.HaulToStorageJob(pawn, droppedThing);
                     }
+                    Log.Error(string.Concat(pawn, " tried dropping ", dropThing, " from loadout but resulting thing is null"));
+                }
 
                 // Find missing items
                 ItemPriority priority;
@@ -287,6 +233,13 @@ namespace RPG_Inventory_Remake
                 }
             }
             return null;
+        }
+
+        public static void ResetSearchRadius(int mapSize)
+        {
+            _smallRadius = mapSize / 5;
+            _tinyRadius = Mathf.RoundToInt(_smallRadius / 2.5f);
+            _mediumRadius = _smallRadius * 2;
         }
 
         #endregion

@@ -44,7 +44,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Vanilla Build|AnyCPU'">
     <OutputPath>..\..\..\RPG_Style_Inventory\Assemblies\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;TEST RPG_Inventory_Remake</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;RPG_Inventory_Remake</DefineConstants>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
@@ -63,10 +63,13 @@
       <Link>Components\CompRPGIUnload.cs</Link>
     </Compile>
     <Compile Include="..\Common\DefOfs\CorgiBodyPartGroupsDefOf.cs">
-      <Link>Defs\CorgiBodyPartGroupsDefOf.cs</Link>
+      <Link>DefOfs\CorgiBodyPartGroupsDefOf.cs</Link>
     </Compile>
-    <Compile Include="..\Common\DefOfs\RPG_JobDefOf.cs">
-      <Link>DefOfs\RPG_JobDefOf.cs</Link>
+    <Compile Include="..\Common\DefOfs\RPGI_JobDefOf.cs">
+      <Link>DefOfs\RPGI_JobDefOf.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DefOfs\RPGI_StuffDefOf.cs">
+      <Link>DefOfs\RPGI_StuffDefOf.cs</Link>
     </Compile>
     <Compile Include="..\Common\Gizmos\ToggleGearTab.cs">
       <Link>Gizmos\ToggleGearTab.cs</Link>
@@ -83,8 +86,14 @@
     <Compile Include="..\Common\Interface\ILoadoutManager.cs">
       <Link>Interface\ILoadoutManager.cs</Link>
     </Compile>
+    <Compile Include="..\Common\Jobs\JobDriver_Map_Equip.cs">
+      <Link>Jobs\JobDriver_Map_Equip.cs</Link>
+    </Compile>
     <Compile Include="..\Common\Jobs\JobGiver_Unload.cs">
       <Link>Jobs\JobGiver_Unload.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\Jobs\ThinkNode_RPGI_Core.cs">
+      <Link>Jobs\ThinkNode_RPGI_Core.cs</Link>
     </Compile>
     <Compile Include="..\Common\Resources\ErrorMessage.Designer.cs">
       <Link>Resources\ErrorMessage.Designer.cs</Link>
@@ -122,6 +131,9 @@
     <Compile Include="..\Common\UI\Dialog_InstantMessage.cs">
       <Link>UI\Dialog_InstantMessage.cs</Link>
     </Compile>
+    <Compile Include="..\Common\UI\RPGITex.cs">
+      <Link>UI\RPGITex.cs</Link>
+    </Compile>
     <Compile Include="..\Common\UI\Theme.cs">
       <Link>UI\Theme.cs</Link>
     </Compile>
@@ -142,25 +154,23 @@
     </Compile>
     <Compile Include="Bootstrap\ModStarter.cs" />
     <Compile Include="Bootstrap\Setting.cs" />
-    <Compile Include="Components\CompInventory.cs" />
-    <Compile Include="Components\CompProperties_Inventory.cs" />
     <Compile Include="Components\GameComponent_RPGI_Main.cs" />
-    <Compile Include="Enum\LoadoutCountType.cs" />
     <Compile Include="FillTabOperations.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HarmonyPatches\AddHumanlikeOrders_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\Pawn_GetGizmos.cs" />
     <Compile Include="HarmonyPatches\ThingOwner_RPGI_Patch.cs" />
-    <Compile Include="Jobs\JobDriver_Map_Equip.cs" />
     <Compile Include="Jobs\JobDriver_RPGI_ApparelOptions.cs" />
     <Compile Include="Jobs\JobDriver_RPGI_Unload.cs" />
     <Compile Include="Jobs\JobGiver_RPGI_ApparelOptions.cs" />
-    <Compile Include="Jobs\JobGiver_TakeAndEquip.cs" />
-    <Compile Include="Jobs\JobGiver_UpdateLoadout.cs" />
+    <Compile Include="Jobs\JobGiver_RPGI_FindApparels.cs" />
+    <Compile Include="Jobs\JobGiver_RPGI_FindItems.cs" />
+    <Compile Include="Jobs\JobGiver_RPGI_FindWeapon.cs" />
+    <Compile Include="Jobs\JobGiver_FindItemByRadius.cs" />
+    <Compile Include="Jobs\JobGiver_RPGI_OpportunisticHaul.cs" />
     <Compile Include="Loadout\compRPGILoudout.cs" />
     <Compile Include="Loadout\Dialog_StuffAndQuality.cs" />
     <Compile Include="Loadout\GameComponent_DefManager.cs" />
-    <Compile Include="Loadout\LoadoutModExtension.cs" />
     <Compile Include="Loadout\LoadoutComparer.cs" />
     <Compile Include="Loadout\RPGILoadout.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -172,10 +182,7 @@
     <Compile Include="HarmonyPatches\Pawn_CarryTracker_CarriedThing_RPGI_Patch.cs" />
     <Compile Include="Loadout\Dialog_ManageLoadouts.cs" />
     <Compile Include="Loadout\GameComponent_LoadoutManager.cs" />
-    <Compile Include="Loadout\HoldRecord.cs" />
-    <Compile Include="Loadout\Loadout.cs" />
     <Compile Include="Loadout\LoadoutGenericDef.cs" />
-    <Compile Include="Loadout\LoadoutSlot.cs" />
     <Compile Include="Loadout\MassBulkUtility.cs" />
     <Compile Include="Loadout\UtilityLoadouts.cs" />
     <None Include="packages.config" />
@@ -219,7 +226,10 @@
     <Analyzer Include="..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Defs\" />
+    <Folder Include="Enum\" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\Common\Resources\ErrorMessage.resx">
       <Link>Resources\ErrorMessage.resx</Link>
@@ -259,6 +269,10 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>xcopy D:\Modding\RPG-Style-Inventory-CE-master\Textures D:\Modding\RPG_Style_Inventory\Textures /s /i /d /y
-xcopy D:\Modding\RPG-Style-Inventory-CE-master\Languages D:\Modding\RPG_Style_Inventory\Languages /s /i /d /y</PostBuildEvent>
+xcopy D:\Modding\RPG-Style-Inventory-CE-master\Languages D:\Modding\RPG_Style_Inventory\Languages /s /i /d /y
+</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>"C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\ResGen" D:\Modding\RPG-Style-Inventory-CE-master\Source\Common\Resources\ErrorMessage.resx "D:\Modding\RPG-Style-Inventory-CE-master\Source\RPG_Inventory_Remake\obj\Vanilla Build\RPGIResource.ErrorMessage.resources"  /str:cs,RPGIResource,ErrorMessage /publicClass</PreBuildEvent>
   </PropertyGroup>
 </Project>

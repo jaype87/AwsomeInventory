@@ -6,6 +6,7 @@ using System.Text;
 using Verse;
 using RimWorld;
 using RPGIResource;
+using RPG_Inventory_Remake_Common;
 using System.Diagnostics.CodeAnalysis;
 
 namespace RPG_Inventory_Remake.Loadout
@@ -27,7 +28,7 @@ namespace RPG_Inventory_Remake.Loadout
 
         // Sole purpose of the _cachedList is for reordering in loadout window
         private List<Thing> _cachedList = new List<Thing>();
-        private Dictionary<ThingStuffPairWithQuality, ThingFilterPackage> _loadoutDic = new Dictionary<ThingStuffPairWithQuality, ThingFilterPackage>();
+        private Dictionary<ThingStuffPairWithQuality, ThingFilterAll> _loadoutDic = new Dictionary<ThingStuffPairWithQuality, ThingFilterAll>();
 
         private float _weight = -1;
         private DirtyBits _dirty = DirtyBits.All;
@@ -41,7 +42,11 @@ namespace RPG_Inventory_Remake.Loadout
 
         public RPGILoadout(string oldLabel)
         {
-            Label = LoadoutManager.GetIncrementalLabel(oldLabel);
+            if (oldLabel.NullOrEmpty())
+            {
+                throw new ArgumentNullException(nameof(oldLabel));
+            }
+            label = LoadoutManager.GetIncrementalLabel(oldLabel);
             Init();
         }
 
@@ -50,7 +55,7 @@ namespace RPG_Inventory_Remake.Loadout
         /// </summary>
         /// <param name="pawn"></param>
         public RPGILoadout(Pawn pawn)
-            : this(LoadoutManager.GetIncrementalLabel(pawn.GetLoadout() != null ? pawn.GetLoadout().Label : pawn.GetDefaultLoadoutName()))
+            : this(LoadoutManager.GetIncrementalLabel(pawn.GetLoadout() != null ? pawn.GetLoadout().label : pawn.GetDefaultLoadoutName()))
         {
             if (pawn == null)
             {
@@ -65,25 +70,21 @@ namespace RPG_Inventory_Remake.Loadout
         /// Copy constructor, except the label is different.
         /// </summary>
         /// <param name="loadout"></param>
-        public RPGILoadout(RPGILoadout loadout) : this(LoadoutManager.GetIncrementalLabel(loadout.Label))
+        public RPGILoadout(RPGILoadout loadout) : this(loadout?.label)
         {
             if (loadout == null)
             {
                 throw new ArgumentNullException(nameof(loadout));
             }
-            _loadoutDic = new Dictionary<ThingStuffPairWithQuality, ThingFilterPackage>();
+            _loadoutDic = new Dictionary<ThingStuffPairWithQuality, ThingFilterAll>();
             foreach (Thing thing in loadout.CachedList)
             {
                 Thing item = thing.DeepCopySimple();
                 ThingStuffPairWithQuality pair = item.MakeThingStuffPairWithQuality();
-                _loadoutDic.Add(pair, new ThingFilterPackage(item, new ThingFilter()
-                {
-                    AllowedHitPointsPercents = loadout[pair].Filter.AllowedHitPointsPercents,
-                    AllowedQualityLevels = loadout[pair].Filter.AllowedQualityLevels
-                }));
+                _loadoutDic.Add(pair, new ThingFilterAll(item, loadout[pair]));
                 _cachedList.Add(item);
             }
-            filter = loadout.filter;
+            filter.CopyAllowancesFrom(loadout.filter);
         }
 
         #endregion
@@ -99,21 +100,17 @@ namespace RPG_Inventory_Remake.Loadout
             }
         }
 
-        public string Label
-        {
-            get => label;
-            set => label = value;
-        }
+
 
         #endregion
 
         #region Methods
         public List<Thing> CachedList => _cachedList;
 
-        public void ExposeData()
+        public new void ExposeData()
         {
             base.ExposeData();
-            Dictionary<SavePairFilter, ThingFilterPackage> dicToSave = new Dictionary<SavePairFilter, ThingFilterPackage>();
+            Dictionary<SavePairFilter, ThingFilterAll> dicToSave = new Dictionary<SavePairFilter, ThingFilterAll>();
             if (Scribe.mode == LoadSaveMode.Saving)
             {
                 foreach (var pair in _loadoutDic)
@@ -199,14 +196,14 @@ namespace RPG_Inventory_Remake.Loadout
         #region CRUD operation
 
         [SuppressMessage("Design", "CA1043:Use Integral Or String Argument For Indexers", Justification = "<Pending>")]
-        public ThingFilterPackage this[ThingStuffPairWithQuality thing]
+        public ThingFilterAll this[ThingStuffPairWithQuality thing]
         {
             get => _loadoutDic[thing];
         }
 
         public bool TryGetThing(ThingStuffPairWithQuality pair, out Thing value)
         {
-            bool result = _loadoutDic.TryGetValue(pair, out ThingFilterPackage package);
+            bool result = _loadoutDic.TryGetValue(pair, out ThingFilterAll package);
             if (result)
             {
                 value = package.Thing;
@@ -230,7 +227,7 @@ namespace RPG_Inventory_Remake.Loadout
 
         public void AddItem(ThingStuffPairWithQuality pair)
         {
-            _loadoutDic.Add(pair, new ThingFilterPackage(pair.MakeThing(), new ThingFilter()));
+            _loadoutDic.Add(pair, new ThingFilterAll(pair.MakeThing()));
         }
 
         public void AddItem(Thing thing)
@@ -246,13 +243,13 @@ namespace RPG_Inventory_Remake.Loadout
             }
             else
             {
-                _loadoutDic.Add(pair, new ThingFilterPackage(thing, new ThingFilter()));
+                _loadoutDic.Add(pair, new ThingFilterAll(thing));
                 _cachedList.Add(thing);
             }
             _dirty = DirtyBits.All;
         }
 
-        public void AddPackage(ThingFilterPackage package, int index = -1)
+        public void AddPackage(ThingFilterAll package, int index = -1)
         {
             if (package == null)
             {
@@ -305,12 +302,20 @@ namespace RPG_Inventory_Remake.Loadout
                 throw new ArgumentOutOfRangeException(nameof(thing));
             }
             int index = _cachedList.IndexOf(thing);
-            ThingFilterPackage package = _loadoutDic[thing.MakeThingStuffPairWithQuality()];
+            ThingFilterAll package = _loadoutDic[thing.MakeThingStuffPairWithQuality()];
             if (target is QualityCategory qualityCategory)
             {
-                RemoveItem(thing);
-                thing.TryGetComp<CompQuality>()?.SetQuality(qualityCategory, default);
-                AddPackage(package, index);
+                if (thing.TryGetQuality(out QualityCategory qc))
+                {
+                    if (qualityCategory == qc)
+                    {
+                        return;
+                    }
+                    RemoveItem(thing);
+                    package.AllowedQualityLevelsWrapper
+                        = new QualityRange(qualityCategory, package.AllowedQualityLevels.max);
+                    AddPackage(package, index);
+                }
             }
             else if (target is ThingDef thingDef && thingDef.IsStuff)
             {
@@ -357,8 +362,6 @@ namespace RPG_Inventory_Remake.Loadout
             }
         }
 
-
-
         #endregion Method
 
         /// <summary>
@@ -400,30 +403,148 @@ namespace RPG_Inventory_Remake.Loadout
                 };
             }
         }
-
-
     }
 
-    public class ThingFilterPackage : IExposable
+    public class ThingFilterAll : ThingFilter
     {
         public Thing Thing;
-        public ThingFilter Filter;
 
-        public ThingFilterPackage()
+        public ThingDef ThingDef
+        {
+            get => Thing.def;
+            set
+            {
+                Thing.def = value;
+            }
+
+        }
+
+        public ThingDef Stuff
+        {
+            get => Thing.Stuff;
+            set
+            {
+                Thing.SetStuffDirect(value);
+            }
+        }
+
+        public QualityCategory? Quality
+        {
+            get
+            {
+                if (Thing.TryGetQuality(out QualityCategory qc))
+                {
+                    return qc;
+                }
+                return null;
+            }
+            set
+            {
+                if (Thing.TryGetQuality(out QualityCategory _))
+                {
+                    if (value != null)
+                    {
+                        Thing.TryGetComp<CompQuality>().SetQuality((QualityCategory)value, ArtGenerationContext.Outsider);
+                        AllowedQualityLevels = new QualityRange((QualityCategory)value, AllowedQualityLevels.max);
+                    }
+                    else
+                    {
+                        Thing.TryGetComp<CompQuality>().SetQuality(QualityCategory.Awful, ArtGenerationContext.Outsider);
+                        AllowedQualityLevels = QualityRange.All;
+                    }
+                }
+                else
+                {
+                    AllowedQualityLevels = QualityRange.All;
+                }
+            }
+        }
+
+        public QualityRange? AllowedQualityLevelsWrapper
+        {
+            get
+            {
+                if (Thing.def.FollowQualityThingFilter())
+                {
+                    return AllowedQualityLevels;
+                }
+                return null;
+            }
+            set
+            {
+                if (Thing.def.FollowQualityThingFilter())
+                {
+                    if (value != null)
+                    {
+                        QualityRange qualityRange = (QualityRange)value;
+                        AllowedQualityLevels = qualityRange;
+                        Thing.TryGetComp<CompQuality>()?.SetQuality(qualityRange.min, ArtGenerationContext.Outsider);
+                    }
+                }
+                else
+                {
+                    AllowedQualityLevels = QualityRange.All;
+                    Thing.TryGetComp<CompQuality>()?.SetQuality(QualityCategory.Awful, ArtGenerationContext.Outsider);
+                }
+            }
+        }
+
+        public ThingFilterAll()
         {
 
         }
 
 
-        public ThingFilterPackage(Thing thing, ThingFilter filter)
+        /// <summary>
+        /// Initialize ThingDef, Stuff and Quality from values in thing.
+        /// </summary>
+        /// <param name="thing"></param>
+        /// <param name="filterToCopy"></param>
+        /// <param name="pair"></param>
+        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
+        public ThingFilterAll(Thing thing, ThingFilter filterToCopy)
         {
+            ThrowHelper.ArgumentNullException(thing, filterToCopy);
+
             Thing = thing;
-            Filter = filter;
+            CopyAllowancesFrom(filterToCopy);
+            if (thing.TryGetQuality(out QualityCategory qc))
+            {
+                if (qc != filterToCopy.AllowedQualityLevels.min)
+                {
+                    throw new ArgumentException(string.Format(ErrorMessage.ValueNotMatch, qc, filterToCopy.AllowedQualityLevels.min));
+                }
+                AllowedQualityLevels = new QualityRange(qc, filterToCopy.AllowedQualityLevels.max);
+            }
         }
 
-        public void ExposeData()
+        public ThingFilterAll(Thing thing)
         {
-            Scribe_Deep.Look(ref Filter, "Filter");
+            Thing = thing ?? throw new ArgumentNullException(nameof(thing));
+
+            if (thing.TryGetQuality(out QualityCategory qc))
+            {
+                AllowedQualityLevels = new QualityRange(qc, AllowedQualityLevels.max);
+            }
+        }
+
+        public bool Allows(Thing thing, bool filterStuff = true)
+        {
+            if (thing == null)
+            {
+                Log.Error(string.Format(ErrorMessage.ArgumentIsNull, nameof(thing)));
+                return false;
+            }
+            if (filterStuff)
+            {
+                return base.Allows(thing) && Stuff == thing.Stuff;
+            }
+            return base.Allows(thing);
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
             Scribe_Deep.Look(ref Thing, "Thing");
         }
     }

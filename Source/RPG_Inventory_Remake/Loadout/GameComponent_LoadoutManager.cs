@@ -99,7 +99,7 @@ namespace RPG_Inventory_Remake.Loadout
         {
             if (obj is RPGILoadout loadout)
             {
-                return GetIncrementalLabel(loadout.Label);
+                return GetIncrementalLabel(loadout.label);
             }
             else if (obj is string previousLabel)
             {
@@ -110,13 +110,17 @@ namespace RPG_Inventory_Remake.Loadout
 
         public static string GetIncrementalLabel(string previousLabel)
         {
+            if (previousLabel.NullOrEmpty())
+            {
+                throw new ArgumentNullException(nameof(previousLabel));
+            }
             string onlyName = _pattern.Match(previousLabel).Groups[1].Value;
             Regex namePattern = new Regex(string.Concat("^(", onlyName, @")(\d*)", '$'));
 
             List<int> numsPostfix = new List<int>();
             foreach (RPGILoadout loadout in _loadouts)
             {
-                Match match = namePattern.Match(loadout.Label);
+                Match match = namePattern.Match(loadout.label);
                 if (match.Success)
                 {
                     if (Int32.TryParse(match.Groups[2].Value, out int result))

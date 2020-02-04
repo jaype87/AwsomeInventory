@@ -10,15 +10,13 @@ namespace RPG_Inventory_Remake.Loadout
     {
         public override bool Equals(T x, T y)
         {
-            if (x == y)
-            {
-                return true;
-            }
             if (x == null || y == null)
             {
                 return false;
             }
-            return LoadoutComparer.GetHashCodeFromComparer(x) == LoadoutComparer.GetHashCodeFromComparer(y);
+            ThingStuffPairWithQuality pairX = x.MakeThingStuffPairWithQuality();
+            ThingStuffPairWithQuality pairY = y.MakeThingStuffPairWithQuality();
+            return pairX == pairY;
         }
 
         public override int GetHashCode(T obj)
@@ -27,41 +25,7 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 throw new ArgumentNullException(string.Empty);
             }
-            return string.Concat
-                (obj.def.defName
-                , obj.Stuff?.defName ?? string.Empty
-                , obj.TryGetQuality(out QualityCategory qc) ? qc.ToString() : string.Empty
-                ).GetHashCode();
-        }
-    }
-
-    public static class LoadoutComparer
-    {
-        [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-        public static bool isEqual(Thing x, Thing y)
-        {
-            if (x == y)
-            {
-                return true;
-            }
-            if (x == null || y == null)
-            {
-                return false;
-            }
-            return GetHashCodeFromComparer(x) == GetHashCodeFromComparer(y);
-        }
-
-        public static int GetHashCodeFromComparer(Thing obj)
-        {
-            if (obj == null)
-            {
-                throw new ArgumentNullException(string.Empty);
-            }
-            return string.Concat
-                (obj.def.defName
-                , obj.Stuff?.defName ?? string.Empty
-                , obj.TryGetQuality(out QualityCategory qc) ? qc.ToString() : string.Empty
-                ).GetHashCode();
+            return obj.MakeThingStuffPairWithQuality().GetHashCode();
         }
     }
 }

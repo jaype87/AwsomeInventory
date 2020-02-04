@@ -59,6 +59,9 @@
     <Content Include="..\..\Defs\Jewelry_compat\ApparelLayerDefs.xml">
       <Link>Defs\Jewelry\ApparelLayerDefs.xml</Link>
     </Content>
+    <Content Include="..\..\Defs\JobDefs\Jobs_RPGInventory.xml">
+      <Link>Defs\Jobs_RPGInventory.xml</Link>
+    </Content>
     <Content Include="..\..\Languages\English\Keyed\Sandy_Detailed_RPG_Gear.xml">
       <Link>Languages\Sandy_Detailed_RPG_Gear.xml</Link>
     </Content>
@@ -69,14 +72,17 @@
   <ItemGroup>
     <Compile Include="Components\CompRPGIUnload.cs" />
     <Compile Include="DefOfs\CorgiBodyPartGroupsDefOf.cs" />
+    <Compile Include="DefOfs\RPGI_StuffDefOf.cs" />
     <Compile Include="Gizmos\ToggleGearTab.cs" />
     <Compile Include="HarmonyPatches\OutfitDatabase_TryDelete.cs" />
     <Compile Include="HarmonyPatches\Pawn_GetGizmos.cs" />
-    <Compile Include="DefOfs\RPG_JobDefOf.cs" />
+    <Compile Include="DefOfs\RPGI_JobDefOf.cs" />
     <Compile Include="HarmonyPatches\Pawn_OutfitTracker_CurrentOutfit.cs" />
     <Compile Include="Interface\ILoadout.cs" />
     <Compile Include="Interface\ILoadoutManager.cs" />
+    <Compile Include="Jobs\JobDriver_Map_Equip.cs" />
     <Compile Include="Jobs\JobGiver_Unload.cs" />
+    <Compile Include="Jobs\ThinkNode_RPGI_Core.cs" />
     <Compile Include="Resources\ErrorMessage.Designer.cs">
       <DependentUpon>ErrorMessage.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -102,6 +108,7 @@
     <Compile Include="SmartRect.cs" />
     <Compile Include="TextButton.cs" />
     <Compile Include="UI\Dialog_InstantMessage.cs" />
+    <Compile Include="UI\RPGITex.cs" />
     <Compile Include="UI\Theme.cs" />
     <Compile Include="UI\WindowOnMouseDrag.cs" />
     <Compile Include="Utilities\ThrowHelper.cs" />

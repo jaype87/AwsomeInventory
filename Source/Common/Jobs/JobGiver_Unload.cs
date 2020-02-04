@@ -71,6 +71,7 @@ namespace RPG_Inventory_Remake_Common
                 }
                 else
                 {
+                    // TODO check constant thinknode before stop jobs
                     pawn.jobs.StopAll();
                     pawn.jobs.jobQueue.EnqueueFirst(job, JobTag.UnloadingOwnInventory);
                     JobInProgress = true;

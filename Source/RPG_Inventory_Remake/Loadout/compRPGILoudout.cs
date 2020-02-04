@@ -6,6 +6,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 using System.Reflection;
+using UnityEngine;
 
 namespace RPG_Inventory_Remake.Loadout
 {
@@ -13,36 +14,47 @@ namespace RPG_Inventory_Remake.Loadout
     /// Save loudout information and its current state
     /// </summary>
     /// <remarks>
-    /// Another way to monitor things added or removed is to add a thingComp to every qualified thingDef
+    ///     Another way to monitor things added or removed is to add a thingComp to every qualified thingDef
     /// and take advantage of the PreAbsorbStack(), PostSplitoff() function, etc..
+    ///     The correct initiate state for this clas is both Loadout and InventoryTracker are null. After moving
+    /// to other states, none of them can be null.
     /// </remarks>
-    public class compRPGILoudout : ThingComp
+    public class compRPGILoudout : ThingComp, IExposable
     {
         #region Fields
 
         public RPGILoadout Loadout = null;
+
         /// <summary>
         /// Value in this dictionary acts as a margin. If the amount set in loadout is met, the margin is 0.
-        /// Excessive amount has a positive margin, vice versa.
+        /// Excessive amount has a positive margin, and vice versa.
         /// </summary>
-        public Dictionary<Thing, int> InventoryTracker = new Dictionary<Thing, int>();
+        public Dictionary<Thing, int> InventoryTracker = null;
 
         #endregion
 
         #region Properties
 
-        public bool NeedRefill
+        public bool NeedRestock
         {
             get
             {
+                if (InventoryTracker == null)
+                {
+                    return false;
+                }
                 return InventoryTracker.Values.Any(m => m < 0);
             }
         }
 
-        public IEnumerable<Thing> ItemsToRefill
+        public IEnumerable<Thing> ItemsToRestock
         {
             get
             {
+                if (!NeedRestock)
+                {
+                    yield break;
+                }
                 foreach (var item in InventoryTracker)
                 {
                     if (item.Value < 0)
@@ -61,17 +73,6 @@ namespace RPG_Inventory_Remake.Loadout
 
         public compRPGILoudout()
         {
-
-        }
-
-        public compRPGILoudout(RPGILoadout loadout)
-        {
-            Loadout = loadout ?? throw new ArgumentNullException(nameof(loadout));
-            InventoryTracker = new Dictionary<Thing, int>(new LoadoutComparer<Thing>());
-            foreach (Thing thing in loadout)
-            {
-                InventoryTracker.Add(thing, thing.stackCount);
-            }
         }
 
         #endregion
@@ -91,25 +92,32 @@ namespace RPG_Inventory_Remake.Loadout
 
         public void NotifiedAdded(Thing thing)
         {
-            if (thing == null || !InventoryTracker.ContainsKey(thing))
+            if (thing == null || Loadout == null || !InventoryTracker.ContainsKey(thing))
             {
                 return;
             }
-            InventoryTracker[thing] += thing.stackCount;
+
+            if (InventoryTracker.ContainsKey(thing))
+            {
+                InventoryTracker[thing] += thing.stackCount;
+            }
         }
 
         public void NotifiedAddedAndMergedWith(Thing thing, int mergedAmount)
         {
-            if (thing == null || !InventoryTracker.ContainsKey(thing))
+            if (thing == null || Loadout == null || !InventoryTracker.ContainsKey(thing))
             {
                 return;
             }
-            InventoryTracker[thing] += mergedAmount;
+            if (InventoryTracker.ContainsKey(thing))
+            {
+                InventoryTracker[thing] += mergedAmount;
+            }
         }
 
         public void NotifiedRemoved(Thing thing)
         {
-            if (thing == null || !InventoryTracker.ContainsKey(thing))
+            if (thing == null || Loadout == null || !InventoryTracker.ContainsKey(thing))
             {
                 return;
             }
@@ -122,12 +130,18 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 return;
             }
-
+            Log.Message("newLoadout is not null");
             if (Loadout == null)
             {
-                Init();
+                Log.Message("loadout is null");
+                InventoryTracker = new Dictionary<Thing, int>(new LoadoutComparer<Thing>());
+                Log.Message("Before for loop");
                 foreach (Thing thing in newLoadout)
                 {
+                    if (thing is null)
+                    {
+                        Log.Message("thing is null ");
+                    }
                     InventoryTracker[thing] = thing.stackCount;
                 }
             }
@@ -158,14 +172,61 @@ namespace RPG_Inventory_Remake.Loadout
                     }
                 }
             }
+            Log.Message("Reach assignment");
             Loadout = newLoadout;
         }
 
-        public void Init()
+        /// <summary>
+        /// Determines if and how many of an item currently fit into the inventory with regards to weight/bulk constraints.
+        /// </summary>
+        /// <param name="thing">Thing to check</param>
+        /// <param name="count">Maximum amount of the thing, first param, that can fit into the inventory</param>
+        /// <param name="ignoreEquipment">Whether to include currently equipped weapons when calculating current weight/bulk</param>
+        /// <returns>True if one or more items fit into the inventory</returns>
+        public bool CanFitInInventory(Thing thing, out int count, bool ignoreEquipment = false)
         {
-            InventoryTracker = new Dictionary<Thing, int>(new LoadoutComparer<Thing>());
+            if (!(parent is Pawn pawn))
+            {
+                count = 0;
+                return false;
+            }
+            if (thing == null)
+            {
+                throw new ArgumentNullException(nameof(thing));
+            }
+
+            float thingWeight;
+
+            thingWeight = thing.GetStatValue(StatDefOf.Mass);
+
+            // Subtract weight of currently equipped weapon
+            float eqWeight = 0f;
+            if (ignoreEquipment && pawn?.equipment?.Primary != null)
+            {
+                eqWeight = pawn.equipment.Primary.GetStatValue(StatDefOf.Mass);
+            }
+            // Calculate how many items we can fit into our inventory
+            float amountByWeight = thingWeight <= 0 ? thing.stackCount : (MassUtility.FreeSpace(pawn) + eqWeight) / thingWeight;
+            count = Mathf.FloorToInt(Mathf.Min(amountByWeight, thing.stackCount));
+            return count > 0;
+        }
+
+        public void ExposeData()
+        {
+            //List<Thing> things = new List<Thing>();
+            //List<int> margins = new List<int>();
+            //Scribe_References.Look(ref Loadout, nameof(Loadout));
+            //Scribe_Collections.Look(ref InventoryTracker, nameof(InventoryTracker), LookMode.Reference, LookMode.Value, ref things, ref margins);
         }
 
         #endregion Methods
+    }
+
+    public class CompProperties_RPGILoadout : CompProperties
+    {
+        public CompProperties_RPGILoadout()
+        {
+            compClass = typeof(compRPGILoudout);
+        }
     }
 }

@@ -45,11 +45,11 @@ namespace RPG_Inventory_Remake.Loadout
             ArmorStats = new List<StatDef>()
             {
                 DefDatabase<StatDef>.GetNamed(StatDefOf.MaxHitPoints.defName),
-                DefDatabase<StatDef>.GetNamed(StatDefOf.ArmorRating_Blunt.defName),
                 DefDatabase<StatDef>.GetNamed(StatDefOf.ArmorRating_Sharp.defName),
+                DefDatabase<StatDef>.GetNamed(StatDefOf.ArmorRating_Blunt.defName),
                 DefDatabase<StatDef>.GetNamed(StatDefOf.ArmorRating_Heat.defName),
-                DefDatabase<StatDef>.GetNamed(StatDefOf.Insulation_Heat.defName),
                 DefDatabase<StatDef>.GetNamed(StatDefOf.Insulation_Cold.defName),
+                DefDatabase<StatDef>.GetNamed(StatDefOf.Insulation_Heat.defName),
                 DefDatabase<StatDef>.GetNamed(StatDefOf.Mass.defName)
             };
             BaseWeaponStats = new List<StatDef>()
@@ -65,8 +65,8 @@ namespace RPG_Inventory_Remake.Loadout
             };
             RangedWeaponStats = new List<string>()
             {
-                StringConstant.ArmorPenetration.Translate().CapitalizeFirst(),
-                StringConstant.Damage.Translate().CapitalizeFirst()
+                StringConstant.ArmorPenetration.Translate(),
+                StringConstant.Damage.Translate()
             };
         }
 
@@ -79,7 +79,7 @@ namespace RPG_Inventory_Remake.Loadout
             closeOnClickedOutside = true;
             absorbInputAroundWindow = true;
 
-            ThingFilter filter = loadout[_pair].Filter;
+            ThingFilter filter = loadout[_pair];
             QualityRange qualityRange = filter.AllowedQualityLevels;
             _thing.TryGetQuality(out qualityRange.min);
             filter.AllowedQualityLevels = qualityRange;
@@ -142,12 +142,13 @@ namespace RPG_Inventory_Remake.Loadout
             rollingY2 += GenUI.GapWide;
 
             // Draw hitpoint slider
-            ThingFilter filter = _loadout[_pair].Filter;
+            ThingFilter filter = _loadout[_pair];
+            int dragID = Rand.Int;
             Rect hitpointRect = new Rect(0, rollingY2, rect.width * 0.6f, SliderHeight);
             hitpointRect = hitpointRect.CenteredOnXIn(rect);
 
             FloatRange hitpointRange = filter.AllowedHitPointsPercents;
-            Widgets.FloatRange(hitpointRect, Rand.Int, ref hitpointRange, 0f, 1f, "HitPoints", ToStringStyle.PercentZero);
+            Widgets.FloatRange(hitpointRect, dragID, ref hitpointRange, 0f, 1f, "HitPoints", ToStringStyle.PercentZero);
             if (hitpointRange != _hitpointRange)
             {
                 filter.AllowedHitPointsPercents = hitpointRange;
@@ -156,11 +157,13 @@ namespace RPG_Inventory_Remake.Loadout
             }
 
             // Draw quality slider
-            Rect qualityRect = new Rect(hitpointRect);
-            qualityRect.y = hitpointRect.yMax + GenUI.GapSmall;
+            Rect qualityRect = new Rect(hitpointRect)
+            {
+                y = hitpointRect.yMax + GenUI.GapSmall
+            };
 
             QualityRange qualityRange = filter.AllowedQualityLevels;
-            Widgets.QualityRange(qualityRect, Rand.Int, ref qualityRange);
+            Widgets.QualityRange(qualityRect, ++dragID, ref qualityRange);
             if (_qualityRange != qualityRange)
             {
                 filter.AllowedQualityLevels = _qualityRange = qualityRange;
@@ -266,6 +269,7 @@ namespace RPG_Inventory_Remake.Loadout
                     {
                         Thing temp = _thing.DeepCopySimple();
                         temp.SetStuffDirect(pair.stuff);
+                        temp.HitPoints = temp.MaxHitPoints;
                         Find.WindowStack.Add(new Dialog_InfoCard(temp));
                     }
                     row.Label(pair.stuff.LabelAsStuff.CapitalizeFirst(), numColumnWidth - WidgetRow.IconSize - WidgetRow.DefaultGap);
@@ -304,28 +308,38 @@ namespace RPG_Inventory_Remake.Loadout
             List<List<StatDrawInfo>> listHolder = new List<List<StatDrawInfo>>();
             List<List<StatDrawInfo>> transposedLists = new List<List<StatDrawInfo>>();
 
+            // listHolder[0]  listHolder[1]
+            // | stuff1 |     | stuff2 |
+            // | Damage |     | Damage |
+            // | AP     |     | AP     |
+
+            //                       stuff1   stuff2
+            // transposedLists[0]    Damage   Damage
+            // transposedLists[1]    AP       AP
+
+            List<StatDef> rangedStats = RangedWeaponStats.Select(r => ToStatDef(r)).ToList();
+
             foreach (TSPWQuality pair in pairList)
             {
                 List<StatDrawInfo> infoList = new List<StatDrawInfo>();
 
                 _thing.SetStuffDirect(pair.stuff);
                 infoList.AddRange(_thing.def.SpecialDisplayStats(StatRequest.For(_thing))
-                                .Where(r => RangedWeaponStats.Any(s => s == r.LabelCap))
+                                .Where(r => rangedStats.Any(s => s.LabelCap == r.LabelCap))
                                 .Select(r => (StatDrawInfo)r)
                                 .ToList());
                 listHolder.Add(infoList);
             }
             _thing.SetStuffDirect(_pair.stuff);
 
-            List<StatDef> stats = RangedWeaponStats.Select(r => ToStatDef(r)).ToList();
 
             // Transpose lists
-            for (int i = 0; i < stats.Count; i++)
+            for (int i = 0; i < rangedStats.Count; i++)
             {
                 List<StatDrawInfo> newList = new List<StatDrawInfo>();
                 foreach (List<StatDrawInfo> list in listHolder)
                 {
-                    newList.Add(list[i]);
+                    newList.Add(list.Find(s => s.LabelCap == rangedStats[i].LabelCap));
                 }
                 List<StatDrawInfo> orderedList = newList.OrderByDescending(t => t.Value).ToList();
                 if (orderedList.Count > 1 && orderedList[0].Value != orderedList[1].Value)
@@ -334,7 +348,20 @@ namespace RPG_Inventory_Remake.Loadout
                 }
                 transposedLists.Add(newList);
             }
-            DrawStatRows(stats, null, row, lineHeaderWidth, numColumnWidth, transposedLists, true);
+#if DEBUG
+            Log.Message("listHolder count: " + listHolder.Count);
+            foreach (var entry in _thing.def.SpecialDisplayStats(StatRequest.For(_thing)))
+            {
+                Log.Message("Stats: " + entry.LabelCap);
+            }
+            Log.Message("rangedStats Count: " + rangedStats.Count);
+            Log.Message("transposedLists Count: " + transposedLists.Count);
+            if (rangedStats.Count != transposedLists.Count)
+            {
+                return;
+            }
+#endif
+            DrawStatRows(rangedStats, null, row, lineHeaderWidth, numColumnWidth, transposedLists, true);
         }
 
         private void DrawStatRows(List<StatDef> stats, List<TSPWQuality> pairs, WidgetRow row
@@ -352,7 +379,7 @@ namespace RPG_Inventory_Remake.Loadout
                         StatDrawInfo drawInfo = new StatDrawInfo();
                         if (Event.current.type == EventType.Repaint)
                         {
-                            if (pair.stuff != UtilityLoadouts.GenericStuff)
+                            if (pair.stuff != RPGI_StuffDefOf.RPGIGenericResource)
                             {
                                 _thing.SetStuffDirect(pair.stuff);
                                 drawInfo.StatRequest = StatRequest.For(_thing);
@@ -376,9 +403,7 @@ namespace RPG_Inventory_Remake.Loadout
 
                 Text.Anchor = TextAnchor.MiddleCenter;
                 row.Label(stats[i].LabelCap, lineHeaderWidth);
-                Text.Anchor = TextAnchor.MiddleLeft;
 
-                Text.Anchor = TextAnchor.MiddleCenter;
                 foreach (StatDrawInfo info in statInfoList)
                 {
                     GUI.color = info.Color;
@@ -387,7 +412,9 @@ namespace RPG_Inventory_Remake.Loadout
                                         : "-"
                                         , numColumnWidth);
                     Widgets.DrawHighlightIfMouseover(info.DrawRect);
+                    Text.Anchor = TextAnchor.MiddleLeft;
                     TooltipHandler.TipRegion(info.DrawRect, info.Tip);
+                    Text.Anchor = TextAnchor.MiddleCenter;
                 }
                 Text.Anchor = TextAnchor.UpperLeft;
                 GUI.color = Color.white;
@@ -404,6 +431,7 @@ namespace RPG_Inventory_Remake.Loadout
             public StatRequest StatRequest = default;
             public string Tip = string.Empty;
             public Rect DrawRect;
+            public string LabelCap;
 
             /// <summary>
             /// Adapter for transforming type StatDrawEntry to StatDrawInfo
@@ -411,8 +439,11 @@ namespace RPG_Inventory_Remake.Loadout
             /// <param name="entry"></param>
             public static explicit operator StatDrawInfo(StatDrawEntry entry)
             {
-                StatDrawInfo result = new StatDrawInfo();
-                result.ValueString = entry.ValueString;
+                StatDrawInfo result = new StatDrawInfo
+                {
+                    ValueString = entry.ValueString,
+                    LabelCap = entry.LabelCap
+                };
                 _ = float.TryParse(_regex.Match(entry.ValueString).Value, out result.Value);
                 result.Tip = entry.overrideReportText;
                 return result;

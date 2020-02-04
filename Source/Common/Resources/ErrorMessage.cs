@@ -19,7 +19,7 @@ namespace RPGIResource {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class ErrorMessage {
@@ -39,7 +39,7 @@ namespace RPGIResource {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPG_Inventory_Remake_Common.Resources.ErrorMessage", typeof(ErrorMessage).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPGIResource.ErrorMessage", typeof(ErrorMessage).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,16 +61,7 @@ namespace RPGIResource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Argument is null: {0}.
-        /// </summary>
-        public static string ArgumentIsNull {
-            get {
-                return ResourceManager.GetString("ArgumentIsNull", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Both arguments are not null: {0} and {1}.
+        ///   Looks up a localized string similar to BothArgumentsAreNotNull.
         /// </summary>
         public static string BothArgumentsAreNotNull {
             get {
@@ -79,7 +70,7 @@ namespace RPGIResource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Both arguments are null: {0} and {1}.
+        ///   Looks up a localized string similar to BothArgumentsAreNull.
         /// </summary>
         public static string BothArgumentsAreNull {
             get {
@@ -97,16 +88,7 @@ namespace RPGIResource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} does not match {1}.
-        /// </summary>
-        public static string ValueNotMatch {
-            get {
-                return ResourceManager.GetString("ValueNotMatch", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Wrong argument type: .
+        ///   Looks up a localized string similar to Wrong Argument Type.
         /// </summary>
         public static string WrongArgumentType {
             get {

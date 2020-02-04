@@ -86,10 +86,8 @@ namespace RPG_Inventory_Remake.Loadout
         [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
         public Dialog_ManageLoadouts(RPGILoadout loadout, Pawn pawn)
         {
-            ThrowHelper.ArgumentNullException(loadout, pawn);
-
+            _pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
             _currentLoadout = loadout;
-            _pawn = pawn;
 
             doCloseX = true;
             forcePause = true;
@@ -160,7 +158,7 @@ namespace RPG_Inventory_Remake.Loadout
                     for (int j = 0; j < loadouts.Count; j++)
                     {
                         int i = j;
-                        options.Add(new FloatMenuOption(loadouts[i].Label,
+                        options.Add(new FloatMenuOption(loadouts[i].label,
                                                         delegate
                                                         {
                                                             _currentLoadout = loadouts[i];
@@ -177,7 +175,7 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 RPGILoadout loadout = new RPGILoadout()
                 {
-                    Label = LoadoutManager.GetIncrementalLabel(_currentLoadout.Label)
+                    label = LoadoutManager.GetIncrementalLabel(_currentLoadout.label)
                 };
                 LoadoutManager.AddLoadout(loadout);
                 _currentLoadout = loadout;
@@ -200,7 +198,7 @@ namespace RPG_Inventory_Remake.Loadout
                 for (int j = 0; j < loadouts.Count; j++)
                 {
                     int i = j;
-                    options.Add(new FloatMenuOption(loadouts[i].Label,
+                    options.Add(new FloatMenuOption(loadouts[i].label,
                         delegate
                         {
                             if (loadouts.Count > 1)
@@ -277,7 +275,7 @@ namespace RPG_Inventory_Remake.Loadout
                 SelectableItem selectableItem = new SelectableItem() { thingDef = td };
                 if (td is LoadoutGenericDef genericDef)
                 {
-                    selectableItem.isGreyedOut = visibleDefs.Any(def => genericDef.lambda(def));
+                    selectableItem.isGreyedOut = visibleDefs.Any(def => genericDef.Validator(def));
                 }
                 else
                 {
@@ -387,7 +385,8 @@ namespace RPG_Inventory_Remake.Loadout
 
         private void DrawLoadoutTextField(Rect canvas)
         {
-            Widgets.TextField(canvas, _currentLoadout.Label, _loadoutNameMaxLength, Outfit.ValidNameRegex);
+            _currentLoadout.label = Widgets.TextField
+                (canvas, _currentLoadout.label, _loadoutNameMaxLength, Outfit.ValidNameRegex);
         }
 
         private void DrawItem(Rect row, Thing thing, int reorderableGroup, bool drawShadow = false)

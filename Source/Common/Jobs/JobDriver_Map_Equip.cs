@@ -6,21 +6,17 @@ using Verse;
 using Verse.AI;
 using RimWorld;
 
-namespace RPG_Inventory_Remake
+#if RPG_Inventory_Remake
+using RPG_Inventory_Remake;
+#endif
+
+namespace RPG_Inventory_Remake_Common
 {
     public class JobDriver_Map_Equip : JobDriver
     {
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-            // Following code is an excerpt of a common practise in the vanilla code that assigns
-            // variables to local variables. Given my limited knowledge on
-            // Unity engine especially on how data is synchronized, this practise
-            // is followed.
-            Pawn pawn = base.pawn;
-            LocalTargetInfo targetA = base.job.targetA;
-            Job job = base.job;
-            bool errorOnFailed2 = errorOnFailed;
-            return pawn.Reserve(targetA, job, 1, -1, null, errorOnFailed2);
+            return pawn.Reserve(job.targetA, job, 1, -1, null, errorOnFailed);
         }
 
         protected override IEnumerable<Toil> MakeNewToils()
@@ -59,7 +55,7 @@ namespace RPG_Inventory_Remake
                     }
                     else
                     {
-                        Messages.Message("CannotEquip".Translate(thingWithComps2.LabelShort), MessageTypeDefOf.NeutralEvent);
+                        Messages.Message("CannotEquip".Translate(thingWithComps2.LabelShort), MessageTypeDefOf.RejectInput, false);
                     }
                 }
             };

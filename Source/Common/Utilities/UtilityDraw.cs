@@ -157,5 +157,28 @@ namespace RPG_Inventory_Remake_Common
             MouseDownPos = Vector2.zero;
             _dragStartPos = Vector2.zero;
         }
+
+        public static void DrawBoxWithColor(Rect rect, Texture texture, int thickness = 1)
+        {
+            Vector2 b = new Vector2(rect.x, rect.y);
+            Vector2 a = new Vector2(rect.x + rect.width, rect.y + rect.height);
+            if (b.x > a.x)
+            {
+                float x = b.x;
+                b.x = a.x;
+                a.x = x;
+            }
+            if (b.y > a.y)
+            {
+                float y = b.y;
+                b.y = a.y;
+                a.y = y;
+            }
+            Vector3 vector = a - b;
+            GUI.DrawTexture(new Rect(b.x, b.y, thickness, vector.y), texture);
+            GUI.DrawTexture(new Rect(a.x - (float)thickness, b.y, thickness, vector.y), texture);
+            GUI.DrawTexture(new Rect(b.x + (float)thickness, b.y, vector.x - (float)(thickness * 2), thickness), texture);
+            GUI.DrawTexture(new Rect(b.x + (float)thickness, a.y - (float)thickness, vector.x - (float)(thickness * 2), thickness), texture);
+        }
     }
 }

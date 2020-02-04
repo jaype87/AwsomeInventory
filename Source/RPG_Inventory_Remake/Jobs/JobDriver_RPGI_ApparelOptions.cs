@@ -15,6 +15,7 @@ namespace RPG_Inventory_Remake
         private int duration;
         private Apparel apparel;
         // -1 for removing, 0 for equiping from inventory, 1 for forced equip
+        // HACK Use job.count as mode
         private int mode;
 
         public override bool TryMakePreToilReservations(bool errorOnFailed)

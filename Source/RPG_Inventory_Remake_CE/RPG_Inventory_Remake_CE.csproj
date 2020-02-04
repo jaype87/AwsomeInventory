@@ -58,6 +58,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CE Build|AnyCPU'">
     <OutputPath>..\..\Assemblies\</OutputPath>
+    <DefineConstants>RPG_Inventory_Remake_CE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Vanilla Build|AnyCPU'">
     <OutputPath>bin\Vanilla Build\</OutputPath>
@@ -101,8 +102,11 @@
     <Compile Include="..\Common\DefOfs\CorgiBodyPartGroupsDefOf.cs">
       <Link>DefOfs\CorgiBodyPartGroupsDefOf.cs</Link>
     </Compile>
-    <Compile Include="..\Common\DefOfs\RPG_JobDefOf.cs">
-      <Link>DefOfs\RPG_JobDefOf.cs</Link>
+    <Compile Include="..\Common\DefOfs\RPGI_JobDefOf.cs">
+      <Link>DefOfs\RPGI_JobDefOf.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\DefOfs\RPGI_StuffDefOf.cs">
+      <Link>DefOfs\RPGI_StuffDefOf.cs</Link>
     </Compile>
     <Compile Include="..\Common\Gizmos\ToggleGearTab.cs">
       <Link>Gizmos\ToggleGearTab.cs</Link>

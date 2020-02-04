@@ -10,6 +10,8 @@ namespace RPG_Inventory_Remake
 {
     public class GameComponent_RPGI_Main : GameComponent
     {
+        public static bool HasSimpleSidearm = false;
+
         public GameComponent_RPGI_Main(Game game)
         {
 
@@ -17,10 +19,12 @@ namespace RPG_Inventory_Remake
         public override void FinalizeInit()
         {
             JobGiver_RPGIUnload.JobInProgress = false;
-            //if (LoadedModManager.RunningModsListForReading.Any(m => m.Name == "Combat Extended"))
-            //{
-            //    RPG_GearTab_CE.IsCE = true;
-            //}
+            //JobGiver_UpdateInventory.ResetSearchRadius(Current.Game.InitData.mapSize);
+
+            if (LoadedModManager.RunningModsListForReading.Any(m => m.Name == "Simple sidearms"))
+            {
+                HasSimpleSidearm = true;
+            }
         }
     }
 }

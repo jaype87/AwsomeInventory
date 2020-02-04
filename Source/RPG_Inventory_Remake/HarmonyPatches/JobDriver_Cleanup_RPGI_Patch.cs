@@ -35,7 +35,7 @@ namespace RPG_Inventory_Remake
                 Pawn pawn = __instance.pawn;
                 if (condition == JobCondition.Succeeded || condition == JobCondition.Incompletable)
                 {
-                    for (QueuedJob qj = pawn.jobs.jobQueue.FirstOrDefault(j => j.job.def == RPGI_JobDefOf.RPGI_Fake); qj != null;)
+                    foreach (QueuedJob qj in pawn.jobs.jobQueue.Where(j => j.job.def == RPGI_JobDefOf.RPGI_Fake).ToList())
                     {
                         pawn.jobs.jobQueue.Extract(qj.job);
                         if (qj.job.targetA.Thing != null)
@@ -54,20 +54,14 @@ namespace RPG_Inventory_Remake
                 }
                 else
                 {
-                    Log.Message("In Cleanup");
-                    while (pawn.jobs.jobQueue.Any())
+                    foreach (QueuedJob qj in pawn.jobs.jobQueue.Where(j => j.job.def == RPGI_JobDefOf.RPGI_Fake).ToList())
                     {
-                        QueuedJob qj = pawn.jobs.jobQueue.FirstOrDefault(j => j.job.def == RPGI_JobDefOf.RPGI_Fake);
-                        if (qj != null)
+                        CompRPGIUnload comp1 = qj.job.targetA.Thing?.TryGetComp<CompRPGIUnload>();
+                        if (comp1 != null)
                         {
-                            Log.Message("In for loop");
-                            CompRPGIUnload comp1 = qj.job.targetA.Thing?.TryGetComp<CompRPGIUnload>();
-                            if (comp1 != null)
-                            {
-                                comp1.Unload = false;
-                            }
-                            pawn.jobs.jobQueue.Extract(qj.job);
+                            comp1.Unload = false;
                         }
+                        pawn.jobs.jobQueue.Extract(qj.job);
                     }
                 }
             }

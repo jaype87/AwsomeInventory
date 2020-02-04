@@ -42,10 +42,16 @@ RimWorld.MainTabWindow_Inspect:DrawInspectGizmos()
 RimWorld.InspectPaneUtility:ExtraOnGUI(IInspectPane)
 RimWorld.MainTabWindow_Inspect:ExtraOnGUI()
 Verse.WindowStack:WindowStackOnGUI()
-RimWorld.UIRoot_Play:UIRootOnGUI()
+RimWorld.UIRoot_Play:UIRootOnGUI()1
 Verse.Root:OnGUI()
 
 
 nextApparelOptimizeTick, used by vanilla JobGiver
 
 Run customtool every time after changing resources
+
+Add example how how to add compRPGILoadout to pawn race in xml
+
+Add Ignore region constrait to force equip
+
+unload button color is not updated when reload game

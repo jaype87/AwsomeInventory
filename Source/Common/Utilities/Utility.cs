@@ -174,12 +174,14 @@ namespace RPG_Inventory_Remake_Common
             }
         }
 
+        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
         public static void InterfaceUnloadNow(ThingWithComps t, Pawn pawn)
         {
-            Log.Message("In InterfaceUnloadNow");
             // TODO examine HaulToContainer code path
             // If there is no comps in def, AllComps will always return an empty list
             // Can't add new comp if the parent class has no comp to begin with
+            // The .Any() is not a fool proof test if some mods use it as a dirty way to
+            // comps to things that should not have comps
             // Check ThingWithComps for more information
             if (t.AllComps.Any())
             {
@@ -215,51 +217,6 @@ namespace RPG_Inventory_Remake_Common
                 }
             }
         }
-
-        //public static void InterfaceDropCE(Thing t, Pawn selPawn)
-        //{
-        //    if (selPawn.HoldTrackerIsHeld(t))
-        //        selPawn.HoldTrackerForget(t);
-        //    ThingWithComps thingWithComps = t as ThingWithComps;
-        //    Apparel apparel = t as Apparel;
-        //    if (apparel != null && selPawn.apparel != null && selPawn.apparel.WornApparel.Contains(apparel))
-        //    {
-        //        selPawn.jobs.TryTakeOrderedJob(new Job(JobDefOf.RemoveApparel, apparel));
-        //    }
-        //    else if (thingWithComps != null && selPawn.equipment != null && selPawn.equipment.AllEquipmentListForReading.Contains(thingWithComps))
-        //    {
-        //        selPawn.jobs.TryTakeOrderedJob(new Job(JobDefOf.DropEquipment, thingWithComps));
-        //    }
-        //    else if (!t.def.destroyOnDrop)
-        //    {
-        //        Thing thing;
-        //        Thing dropThing = t;
-        //        if (t.def.Minifiable)
-        //            dropThing = selPawn.inventory.innerContainer.FirstOrDefault(x => x.GetInnerIfMinified().ThingID == t.ThingID);
-        //        selPawn.inventory.innerContainer.TryDrop(dropThing, selPawn.Position, selPawn.Map, ThingPlaceMode.Near, out thing, null);
-        //    }
-        //}
-
-        //private static void InterfaceDropHaul(Thing t, Pawn selPawn)
-        //{
-        //    if (selPawn.HoldTrackerIsHeld(t))
-        //        selPawn.HoldTrackerForget(t);
-        //    ThingWithComps thingWithComps = t as ThingWithComps;
-        //    Apparel apparel = t as Apparel;
-        //    if (apparel != null && selPawn.apparel != null && selPawn.apparel.WornApparel.Contains(apparel))
-        //    {
-        //        selPawn.jobs.TryTakeOrderedJob(new Job(JobDefOf.RemoveApparel, apparel) { haulDroppedApparel = true });
-        //    }
-        //    else if (thingWithComps != null && selPawn.equipment != null && selPawn.equipment.AllEquipmentListForReading.Contains(thingWithComps))
-        //    {
-        //        selPawn.jobs.TryTakeOrderedJob(new Job(JobDefOf.DropEquipment, thingWithComps));
-        //    }
-        //    else if (!t.def.destroyOnDrop)
-        //    {
-        //        Thing thing;
-        //        selPawn.inventory.innerContainer.TryDrop(t, selPawn.Position, selPawn.Map, ThingPlaceMode.Near, out thing);
-        //    }
-        //}
 
         // Serve straight up from source, no idea why it is made private
         public static void DrawThingRow(RPG_Pawn selPawn, ref float y, float width, Thing thing, bool inventory = false)
@@ -361,37 +318,41 @@ namespace RPG_Inventory_Remake_Common
                 {
                     case QualityCategory.Legendary:
                         {
-                            GUI.DrawTexture(rect, ContentFinder<Texture2D>.Get("UI/Frames/RPG_Legendary", true));
+                            UtilityDraw.DrawBoxWithColor(rect, RPGITex.Lengendary);
                             break;
                         }
                     case QualityCategory.Masterwork:
                         {
-                            GUI.DrawTexture(rect, ContentFinder<Texture2D>.Get("UI/Frames/RPG_Masterwork", true));
+                            UtilityDraw.DrawBoxWithColor(rect, RPGITex.Masterwork);
                             break;
                         }
                     case QualityCategory.Excellent:
                         {
-                            GUI.DrawTexture(rect, ContentFinder<Texture2D>.Get("UI/Frames/RPG_Excellent", true));
+                            UtilityDraw.DrawBoxWithColor(rect, RPGITex.Excellent);
                             break;
                         }
                     case QualityCategory.Good:
                         {
-                            GUI.DrawTexture(rect, ContentFinder<Texture2D>.Get("UI/Frames/RPG_Good", true));
+                            UtilityDraw.DrawBoxWithColor(rect, RPGITex.Good);
+
                             break;
                         }
                     case QualityCategory.Normal:
                         {
-                            GUI.DrawTexture(rect, ContentFinder<Texture2D>.Get("UI/Frames/RPG_Normal", true));
+                            UtilityDraw.DrawBoxWithColor(rect, RPGITex.Normal);
+
                             break;
                         }
                     case QualityCategory.Poor:
                         {
-                            GUI.DrawTexture(rect, ContentFinder<Texture2D>.Get("UI/Frames/RPG_Poor", true));
+                            UtilityDraw.DrawBoxWithColor(rect, RPGITex.Poor);
+
                             break;
                         }
                     case QualityCategory.Awful:
                         {
-                            GUI.DrawTexture(rect, ContentFinder<Texture2D>.Get("UI/Frames/RPG_Awful", true));
+                            UtilityDraw.DrawBoxWithColor(rect, RPGITex.Awful);
+
                             break;
                         }
                 }

@@ -336,12 +336,13 @@ namespace RPG_Inventory_Remake
 
             float traitY = _smartRectCurrent.yMax + _smartRectCurrent.HeightGap;
             WidgetRow traitRow = new WidgetRow(viewRect.x, traitY, UIDirection.RightThenDown, viewRect.width);
-            IEnumerator<Trait> traits = selPawn.Pawn.story.traits.allTraits.GetEnumerator();
+            List<Trait> traits = selPawn.Pawn.story.traits.allTraits;
 
             traitRow.Label(UIText.Traits.Translate() + ": ");
-            while (traits.MoveNext())
+            for (int i = 0; i < traits.Count; i++)
             {
-                TooltipHandler.TipRegion(traitRow.Label(traits.Current.LabelCap + ", "), traits.Current.TipString(selPawn.Pawn));
+                TooltipHandler.TipRegion(traitRow.Label(traits[i].LabelCap + (i != traits.Count ? ", " : ""))
+                    , traits[i].TipString(selPawn.Pawn));
             }
 
             float rollingY = traitRow.FinalY + WidgetRow.IconSize;
@@ -404,7 +405,7 @@ namespace RPG_Inventory_Remake
                     WidgetRow row = new WidgetRow(viewRect.xMax, rollingY, UIDirection.LeftThenDown, viewRect.width);
                     if (row.ButtonText(UIText.OpenLoadout.Translate()))
                     {
-                        if (selPawn.Pawn.IsColonist && (selPawn.Pawn.GetLoadout() == null))
+                        if (selPawn.Pawn.IsColonist && selPawn.Pawn.GetLoadout() == null)
                         {
                             RPGILoadout loadout = new RPGILoadout(selPawn.Pawn);
                             LoadoutManager.AddLoadout(loadout);
@@ -425,7 +426,7 @@ namespace RPG_Inventory_Remake
                             for (int i = 0; i < loadouts.Count; i++)
                             {
                                 int local_i = i;
-                                list.Add(new FloatMenuOption(loadouts[i].Label, delegate
+                                list.Add(new FloatMenuOption(loadouts[i].label, delegate
                                 {
                                     selPawn.Pawn.SetLoadout(loadouts[local_i]);
                                 }));
@@ -436,7 +437,7 @@ namespace RPG_Inventory_Remake
                     Text.Anchor = TextAnchor.MiddleRight;
                     Text.WordWrap = false;
 
-                    row.Label(selPawn.Pawn.GetLoadout()?.Label, GenUI.GetWidthCached(UIText.TenCharsString.Times(3)));
+                    row.Label(selPawn.Pawn.GetLoadout()?.label, GenUI.GetWidthCached(UIText.TenCharsString.Times(3)));
 
                     Text.Anchor = TextAnchor.UpperLeft;
                     Text.WordWrap = true;
@@ -530,7 +531,7 @@ namespace RPG_Inventory_Remake
                     rollingY += 3;
                     float buttonY = rollingY;
 
-                    Widgets.Label(new Rect(viewRect.width / 4, buttonY, viewRect.width / 4, 26f), selPawn.Pawn.GetLoadout()?.Label ?? "Corgi_NoLoadout".Translate());
+                    Widgets.Label(new Rect(viewRect.width / 4, buttonY, viewRect.width / 4, 26f), selPawn.Pawn.GetLoadout()?.label ?? "Corgi_NoLoadout".Translate());
 
                     // Select loadout button
                     if (Widgets.ButtonText(new Rect(viewRect.width / 2, buttonY, viewRect.width / 4, 26f), Translator.Translate("Corgi_SelectLoadout"), true, false, true))
@@ -546,7 +547,7 @@ namespace RPG_Inventory_Remake
                             for (int i = 0; i < loadouts.Count; i++)
                             {
                                 int local_i = i;
-                                list.Add(new FloatMenuOption(loadouts[i].Label, delegate
+                                list.Add(new FloatMenuOption(loadouts[i].label, delegate
                                 {
                                     selPawn.Pawn.SetLoadout(loadouts[local_i]);
                                 }));
@@ -640,7 +641,7 @@ namespace RPG_Inventory_Remake
             float value = Utility.CalculateArmorByParts(pawn, stat, out string tip);
 
             row.Icon(ContentFinder<Texture2D>.Get(iconPath, true), UIText.ArmorBlunt.Translate());
-            Rect tipRect = row.Label(value.ToStringPercent());  
+            Rect tipRect = row.Label(value.ToStringPercent());
             row.Gap(Int32.MaxValue);
 
             TooltipHandler.TipRegion(tipRect, tip);

@@ -2,7 +2,7 @@
 
 <Defs>
     <ThingDef ParentName="ResourceBase">
-        <defName>GenericResource</defName>
+        <defName>RPGIGenericResource</defName>
         <label>generic</label>
         <description>Panacea, one solution to all problems</description>
         <useHitPoints>false</useHitPoints>

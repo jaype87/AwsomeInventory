@@ -1,0 +1,7 @@
+==== Job ====
+check ThingTreeDefs.Humanlike.xml and Pawn_JobTracker.JobTrackerTick() for AI job assignments
+JobDriver_Equip is only used by JobDefOf.Equip which, in return, is only given out by JobGiver_PickUpOpportunisticWeapon that
+only exists in prisoners' think tree/
+
+==== RNG ====
+Check Verse.Rand.RandTests()

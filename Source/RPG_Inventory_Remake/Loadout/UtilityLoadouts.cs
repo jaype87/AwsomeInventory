@@ -22,7 +22,6 @@ namespace RPG_Inventory_Remake.Loadout
         private static float _margin = 6f;
         private static bool _loadoutSet = false;
         private static Texture2D _overburdenedTex;
-        private static ThingDef _genericStuffDef = DefDatabase<ThingDef>.GetNamed(StringConstant.GenericResource);
 
         #endregion Fields
 
@@ -50,8 +49,6 @@ namespace RPG_Inventory_Remake.Loadout
                 return _overburdenedTex;
             }
         }
-
-        public static ThingDef GenericStuff => _genericStuffDef;
 
         #endregion Properties
 
@@ -109,7 +106,9 @@ namespace RPG_Inventory_Remake.Loadout
         public static RPGILoadout GetLoadout(this Pawn pawn)
         {
             if (pawn == null)
+            {
                 throw new ArgumentNullException(nameof(pawn));
+            }
 
             return pawn.TryGetComp<compRPGILoudout>()?.Loadout;
         }
@@ -141,7 +140,7 @@ namespace RPG_Inventory_Remake.Loadout
         }
 
         /// <summary>
-        /// Set Pawn's loadout. Called by a harmony patch
+        /// Set Pawn's loadout. Called by a harmony patch, Pawn_OutfitTracker_CurrentOutfit.
         /// </summary>
         /// <param name="pawn"></param>
         /// <param name="loadout"></param>
@@ -151,16 +150,19 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 throw new ArgumentNullException(nameof(pawn));
             }
-            Log.Message("start setting loadout: " + _loadoutSet);
-            if (pawn.TryGetComp<compRPGILoudout>() is compRPGILoudout comp
-                && _loadoutSet == false)
+            if (pawn.TryGetComp<compRPGILoudout>() is compRPGILoudout comp)
             {
-                Log.Message("set loadout");
-                _loadoutSet = true;
+                if (comp.Loadout == loadout)
+                {
+                    return;
+                }
                 comp.UpdateForNewLoadout(loadout);
+                if (loadout == pawn.outfits.CurrentOutfit)
+                {
+                    return;
+                }
                 pawn.outfits.CurrentOutfit = loadout;
             }
-            _loadoutSet = false;
         }
 
         public static string GetDefaultLoadoutName(this Pawn pawn)
@@ -177,14 +179,7 @@ namespace RPG_Inventory_Remake.Loadout
         {
             if (pair.thing.MadeFromStuff && pair.stuff == null)
             {
-                if (pair.thing.thingCategories.Count == 1)
-                {
-                    pair.stuff = GenStuff.DefaultStuffFor(pair.thing);
-                }
-                else
-                {
-                    pair.stuff = _genericStuffDef;
-                }
+                pair.stuff = RPGI_StuffDefOf.RPGIGenericResource;
             }
             Thing thing = pair.MakeThing();
             if (thing.def.useHitPoints)
@@ -194,6 +189,11 @@ namespace RPG_Inventory_Remake.Loadout
             return thing;
         }
 
+        /// <summary>
+        /// Copy def, stuff, quality and stackCount
+        /// </summary>
+        /// <param name="thing"></param>
+        /// <returns></returns>
         public static Thing DeepCopySimple(this Thing thing)
         {
             if (thing == null)
@@ -211,8 +211,16 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 throw new ArgumentNullException(nameof(thing));
             }
-            thing.TryGetQuality(out QualityCategory quality);
-            return new ThingStuffPairWithQuality(thing.def, thing.Stuff, quality);
+            if (thing.TryGetQuality(out QualityCategory quality))
+            {
+                return new ThingStuffPairWithQuality(thing.def, thing.Stuff, quality);
+            }
+            return new ThingStuffPairWithQuality
+            {
+                thing = thing.def,
+                stuff = thing.Stuff,
+                quality = null
+            };
         }
 
         #endregion Methods
