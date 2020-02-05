@@ -128,7 +128,7 @@ namespace RPG_Inventory_Remake.Loadout
                 0f,
                 nameRect.yMax + _margin,
                 (canvas.width * 5 / 9 - _margin),
-                canvas.height - _topAreaHeight - nameRect.height - _barHeight * 2 - _margin * 5);
+                canvas.height - _topAreaHeight - nameRect.height - _barHeight - _margin * 5);
 
             Rect weightBarRect = new Rect(slotListRect.xMin, slotListRect.yMax + _margin, slotListRect.width, _barHeight);
 
@@ -465,7 +465,7 @@ namespace RPG_Inventory_Remake.Loadout
                 , -1
                 , (index, pos) =>
                 {
-                    Vector2 position = UtilityDraw.GetPostionForDrag(windowRect.ContractedBy(Margin), new Vector2(canvas.xMin, canvas.yMin), index, GenUI.ListSpacing);
+                    Vector2 position = UtilityDraw.GetPostionForDrag(windowRect.ContractedBy(Margin), new Vector2(canvas.x, canvas.y), index, GenUI.ListSpacing);
                     Rect dragRect = new Rect(position, new Vector2(listRect.width, GenUI.ListSpacing));
                     Find.WindowStack.ImmediateWindow(Rand.Int, dragRect, WindowLayer.Super,
                         () =>
