@@ -76,7 +76,7 @@ namespace RPG_Inventory_Remake.Loadout
                 DrawBarThreshold(barRect, capacity / current, 1f);
             }
             else
-                Widgets.FillableBar(barRect, fillPercentage);
+                Widgets.FillableBar(barRect, fillPercentage, RPGITex.RoyalBlueTex as Texture2D);
 
             // tooltip
             if (!tooltip.NullOrEmpty())

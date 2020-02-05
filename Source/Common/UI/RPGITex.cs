@@ -18,6 +18,8 @@ namespace RPG_Inventory_Remake_Common
         public static readonly Texture SandTex = SolidColorMaterials.NewSolidColorTexture(ColorLibrary.Sand);
         public static readonly Texture SalmonTex = SolidColorMaterials.NewSolidColorTexture(ColorLibrary.Salmon);
         public static readonly Texture BrickRedTex = SolidColorMaterials.NewSolidColorTexture(ColorLibrary.BrickRed);
+        public static readonly Texture LightBlueTex = SolidColorMaterials.NewSolidColorTexture(ColorLibrary.LightBlue);
+        public static readonly Texture RoyalBlueTex = SolidColorMaterials.NewSolidColorTexture(ColorLibrary.RoyalBlue);
 
         public static readonly Texture Lengendary = OrangeTex;
         public static readonly Texture Masterwork = CyanTex;
