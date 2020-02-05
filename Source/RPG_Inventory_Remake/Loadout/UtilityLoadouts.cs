@@ -174,7 +174,6 @@ namespace RPG_Inventory_Remake.Loadout
             return string.Concat(pawn.Name.ToStringFull, " ", "Corgi_DefaultLoadoutName".Translate());
         }
 
-        // Note Revisit for generic stuff
         public static Thing MakeThingSimple(ThingStuffPairWithQuality pair)
         {
             if (pair.thing.MadeFromStuff && pair.stuff == null)
@@ -194,15 +193,50 @@ namespace RPG_Inventory_Remake.Loadout
         /// </summary>
         /// <param name="thing"></param>
         /// <returns></returns>
-        public static Thing DeepCopySimple(this Thing thing)
+        public static Thing DeepCopySimple(this Thing thing, bool withID = true)
         {
             if (thing == null)
             {
                 throw new ArgumentNullException(nameof(thing));
             }
-            Thing copy = MakeThingSimple(thing.MakeThingStuffPairWithQuality());
+            Thing copy;
+            if (withID)
+            {
+                copy = MakeThingSimple(thing.MakeThingStuffPairWithQuality());
+            }
+            else
+            {
+                copy = MakeThingWithoutID(thing.MakeThingStuffPairWithQuality());
+            }
             copy.stackCount = thing.stackCount;
             return copy;
+        }
+
+        private static Thing MakeThingWithoutID(ThingStuffPairWithQuality pair)
+        {
+            if (pair.thing.MadeFromStuff && pair.stuff == null)
+            {
+                pair.stuff = RPGI_StuffDefOf.RPGIGenericResource;
+            }
+            if (pair.stuff != null && !pair.stuff.IsStuff)
+            {
+                Log.Error("MakeThing error: Tried to make " + pair.thing+ " from " + pair.stuff + " which is not a stuff. Assigning default.");
+                pair.stuff = GenStuff.DefaultStuffFor(pair.thing);
+            }
+            if (!pair.thing.MadeFromStuff && pair.stuff != null)
+            {
+                Log.Error("MakeThing error: " + pair.thing + " is not madeFromStuff but stuff=" + pair.stuff + ". Setting to null.");
+                pair.stuff = null;
+            }
+            Thing thing = (Thing)Activator.CreateInstance(pair.thing.thingClass);
+            thing.def = pair.thing;
+            thing.SetStuffDirect(pair.stuff);
+            if (thing.def.useHitPoints)
+            {
+                thing.HitPoints = thing.MaxHitPoints;
+            }
+            thing.TryGetComp<CompQuality>()?.SetQuality(pair.Quality, ArtGenerationContext.Outsider);
+            return thing;
         }
 
         public static ThingStuffPairWithQuality MakeThingStuffPairWithQuality(this Thing thing)

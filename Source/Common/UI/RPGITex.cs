@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace RPG_Inventory_Remake_Common
 {
+    [StaticConstructorOnStartup]
     public static class RPGITex
     {
         public static readonly Texture OrangeTex = SolidColorMaterials.NewSolidColorTexture(ColorLibrary.Orange);

@@ -30,7 +30,7 @@ namespace RPG_Inventory_Remake_Common
             {
                 if (outfit is RPGILoadout loadout)
                 {
-                    LoadoutManager.RemoveLoadout(loadout, true);
+                    LoadoutManager.TryRemoveLoadout(loadout, true);
                 }
             }
         }

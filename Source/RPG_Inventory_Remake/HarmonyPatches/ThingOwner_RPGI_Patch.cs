@@ -8,6 +8,7 @@ using RimWorld;
 using System.Reflection;
 using RPG_Inventory_Remake_Common;
 using RPG_Inventory_Remake.Loadout;
+using System.Diagnostics.CodeAnalysis;
 
 namespace RPG_Inventory_Remake
 {
@@ -33,6 +34,7 @@ namespace RPG_Inventory_Remake
             Utility._harmony.Patch(original3, null, new HarmonyMethod(postfix3));
         }
 
+        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
         public static void NotifyAdded_Postfix(ThingOwner __instance, Thing item)
         {
             (__instance.Owner as Pawn_InventoryTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedAdded(item);
@@ -40,6 +42,7 @@ namespace RPG_Inventory_Remake
             (__instance.Owner as Pawn_EquipmentTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedAdded(item);
         }
 
+        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
         public static void NotifyAddedAndMergedWith_Postfix(ThingOwner __instance, Thing item, int mergedCount)
         {
             (__instance.Owner as Pawn_InventoryTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedAddedAndMergedWith(item, mergedCount);
@@ -47,18 +50,12 @@ namespace RPG_Inventory_Remake
             (__instance.Owner as Pawn_EquipmentTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedAddedAndMergedWith(item, mergedCount);
         }
 
+        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
         public static void NotifyRemoved_Postfix(ThingOwner __instance, Thing item)
         {
             (__instance.Owner as Pawn_InventoryTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedRemoved(item);
             (__instance.Owner as Pawn_ApparelTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedRemoved(item);
             (__instance.Owner as Pawn_EquipmentTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedRemoved(item);
-        }
-
-        public static void Notify_ContainedItemDestroyed_Postfix(ThingOwner __instance, Thing t)
-        {
-            (__instance.Owner as Pawn_InventoryTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedRemoved(t);
-            (__instance.Owner as Pawn_ApparelTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedRemoved(t);
-            (__instance.Owner as Pawn_EquipmentTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedRemoved(t);
         }
     }
 }

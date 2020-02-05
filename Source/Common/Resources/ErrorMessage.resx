@@ -126,6 +126,15 @@
   <data name="BothArgumentsAreNull" xml:space="preserve">
     <value>Both arguments are null: {0} and {1}</value>
   </data>
+  <data name="ExpectedString" xml:space="preserve">
+    <value>{0}, Expected : {1}, Actual: {2}</value>
+  </data>
+  <data name="MarginNotMatchIncompRPGILoadout" xml:space="preserve">
+    <value>Margin is not match in compRPGILoadout</value>
+  </data>
+  <data name="ReportString" xml:space="preserve">
+    <value>At {0}, Variable: {1}, Value: {2}</value>
+  </data>
   <data name="TryToDeleteLastLoadout" xml:space="preserve">
     <value>Corgi_TryToDeleteLastLoadout</value>
   </data>

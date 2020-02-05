@@ -17,11 +17,11 @@ namespace RPG_Inventory_Remake
     {
         protected bool _itemFound = false;
         protected static List<int> _radius = new List<int>();
-        protected float _tinyRadiusFactor = 0.08f;
-        protected float _smallRadiusFactor = 0.2f;
-        protected float _mediumRadiusFactor = 0.4f;
-        protected int _defaultRadiusIndex;
-        protected int _lastRadiusIndex;
+        protected const float _tinyRadiusFactor = 0.08f;
+        protected const float _smallRadiusFactor = 0.2f;
+        protected const float _mediumRadiusFactor = 0.4f;
+        protected static int _defaultRadiusIndex;
+        protected static int _lastRadiusIndex;
 
         public static List<int> Radius
         {
@@ -30,21 +30,7 @@ namespace RPG_Inventory_Remake
 
         protected Func<Pawn, Thing, bool> ValidatorBase = (Pawn p, Thing x) => p.CanReserve(x) && !x.IsBurning();
 
-        public JobGiver_FindItemByRadius()
-        {
-            int? mapSize = Current.Game?.InitData?.mapSize;
-            if (mapSize != null)
-            {
-                _radius.Add(Mathf.FloorToInt(mapSize.Value * _tinyRadiusFactor));
-                _radius.Add(Mathf.FloorToInt(mapSize.Value * _smallRadiusFactor));
-                _radius.Add(Mathf.FloorToInt(mapSize.Value * _mediumRadiusFactor));
-                _defaultRadiusIndex = Mathf.FloorToInt(_radius.Count / 2);
-                _lastRadiusIndex = _defaultRadiusIndex;
-            }
-            
-        }
-
-        protected virtual T FindItem(Pawn pawn, ThingDef thingDef = null, ThingRequestGroup thingRequestGroup = 0, Func<Thing, bool> validator = null, Func<Thing, float> priorityGetter = null, int searchLevel = 1)
+        protected virtual T FindItem(Pawn pawn, ThingDef thingDef = null, ThingRequestGroup thingRequestGroup = 0, Func<Thing, bool> validator = null, Func<Thing, float> priorityGetter = null, int searchLevel = 2)
         {
             if (thingDef == null && thingRequestGroup == ThingRequestGroup.Undefined)
             {
@@ -67,9 +53,18 @@ namespace RPG_Inventory_Remake
                 {
                     ++_lastRadiusIndex;
                 }
+                if (--searchLevel < 1)
+                {
+                    ++searchLevel;
+                }
+#if DEBUG
+                Log.Message(string.Format(ErrorMessage.ExpectedString, nameof(_itemFound), true, _itemFound));
+                Log.Message(string.Format(ErrorMessage.ExpectedString, nameof(_lastRadiusIndex), "-", _lastRadiusIndex));
+                Log.Message(string.Format(ErrorMessage.ExpectedString, nameof(searchLevel), "-", searchLevel));
+#endif
             }
             Thing thing = null;
-            while (thing == null && searchLevel-- >= 0)
+            while (thing == null && searchLevel-- > 0)
             {
                 thing = GenClosest.ClosestThing_Global_Reachable
                     (pawn.Position
@@ -90,8 +85,36 @@ namespace RPG_Inventory_Remake
                         break;
                     }
                 }
+                else
+                {
+#if DEBUG
+                    Log.Message(string.Format(ErrorMessage.ReportString, "Thing Found", thing.LabelCap, "-"));
+#endif
+                    _itemFound = true;
+                    break;
+                }
+#if DEBUG
+                Log.Message(string.Format(ErrorMessage.ReportString, "While loop end", nameof(searchLevel), searchLevel));
+                Log.Message(string.Format(ErrorMessage.ReportString, "While loop end", nameof(_lastRadiusIndex), _lastRadiusIndex));
+#endif
             }
             return thing as T;
+        }
+
+        public static void Reset()
+        {
+            int mapSize = Current.Game.AnyPlayerHomeMap.Size.x;
+            _radius.Add(Mathf.FloorToInt(mapSize * _tinyRadiusFactor));
+            _radius.Add(Mathf.FloorToInt(mapSize * _smallRadiusFactor));
+            _radius.Add(Mathf.FloorToInt(mapSize * _mediumRadiusFactor));
+            _defaultRadiusIndex = Mathf.FloorToInt(_radius.Count / 2);
+            _lastRadiusIndex = _defaultRadiusIndex;
+#if DEBUG
+            foreach (int radius in _radius)
+            {
+                Log.Message(string.Concat(nameof(radius), ": ", radius));
+            }
+#endif
         }
     }
 }

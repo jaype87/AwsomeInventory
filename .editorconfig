@@ -11,3 +11,12 @@ dotnet_diagnostic.CA1305.severity = silent
 
 # CA1707: Identifiers should not contain underscores
 dotnet_diagnostic.CA1707.severity = silent
+
+# CA1052: Static holder types should be Static or NotInheritable
+dotnet_diagnostic.CA1052.severity = silent
+
+# CA2211: Non-constant fields should not be visible
+dotnet_diagnostic.CA2211.severity = silent
+
+# CA1810: Initialize reference type static fields inline
+dotnet_diagnostic.CA1810.severity = silent

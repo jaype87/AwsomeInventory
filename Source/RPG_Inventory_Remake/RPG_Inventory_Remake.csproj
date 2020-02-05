@@ -44,7 +44,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Vanilla Build|AnyCPU'">
     <OutputPath>..\..\..\RPG_Style_Inventory\Assemblies\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;RPG_Inventory_Remake</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;RPG_Inventory_Remake</DefineConstants>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
@@ -79,6 +79,9 @@
     </Compile>
     <Compile Include="..\Common\HarmonyPatches\Pawn_OutfitTracker_CurrentOutfit.cs">
       <Link>HarmonyPatches\Pawn_OutfitTracker_CurrentOutfit.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\HarmonyPatches\Thing_RPGI_Patch.cs">
+      <Link>HarmonyPatches\Thing_RPGI_Patch.cs</Link>
     </Compile>
     <Compile Include="..\Common\Interface\ILoadout.cs">
       <Link>Interface\ILoadout.cs</Link>
@@ -155,6 +158,7 @@
     <Compile Include="Bootstrap\ModStarter.cs" />
     <Compile Include="Bootstrap\Setting.cs" />
     <Compile Include="Components\GameComponent_RPGI_Main.cs" />
+    <Compile Include="Debug\compRPGILoadout.cs" />
     <Compile Include="FillTabOperations.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="HarmonyPatches\AddHumanlikeOrders_RPGI_Patch.cs" />

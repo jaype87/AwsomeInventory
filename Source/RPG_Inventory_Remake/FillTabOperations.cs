@@ -437,7 +437,7 @@ namespace RPG_Inventory_Remake
                     Text.Anchor = TextAnchor.MiddleRight;
                     Text.WordWrap = false;
 
-                    row.Label(selPawn.Pawn.GetLoadout()?.label, GenUI.GetWidthCached(UIText.TenCharsString.Times(3)));
+                    row.Label(selPawn.Pawn.GetLoadout()?.label, GenUI.GetWidthCached(UIText.TenCharsString.Times(2.5f)));
 
                     Text.Anchor = TextAnchor.UpperLeft;
                     Text.WordWrap = true;
@@ -531,7 +531,16 @@ namespace RPG_Inventory_Remake
                     rollingY += 3;
                     float buttonY = rollingY;
 
-                    Widgets.Label(new Rect(viewRect.width / 4, buttonY, viewRect.width / 4, 26f), selPawn.Pawn.GetLoadout()?.label ?? "Corgi_NoLoadout".Translate());
+                    Text.WordWrap = false;
+                    Text.Anchor = TextAnchor.MiddleRight;
+                    Widgets.Label(
+                        new Rect
+                            (GenUI.GetWidthCached(UIText.TenCharsString)
+                            , buttonY
+                            , viewRect.width / 2 - GenUI.GetWidthCached(UIText.TenCharsString)
+                            , 26f), selPawn.Pawn.GetLoadout()?.label ?? "Corgi_NoLoadout".Translate());
+                    Text.WordWrap = true;
+                    Text.Anchor = TextAnchor.UpperLeft;
 
                     // Select loadout button
                     if (Widgets.ButtonText(new Rect(viewRect.width / 2, buttonY, viewRect.width / 4, 26f), Translator.Translate("Corgi_SelectLoadout"), true, false, true))

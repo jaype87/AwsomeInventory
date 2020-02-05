@@ -78,20 +78,22 @@ namespace RPG_Inventory_Remake.Loadout
             _loadouts.Add(loadout);
         }
 
-        public static void RemoveLoadout(RPGILoadout loadout, bool forcedDelete = false)
+        public static bool TryRemoveLoadout(RPGILoadout loadout, bool fromOutfit = false)
         {
-            if (!forcedDelete)
+            if (!fromOutfit)
             {
                 AcceptanceReport report = Current.Game.outfitDatabase.TryDelete(loadout);
                 if (report.Accepted)
                 {
-                    _loadouts.Remove(loadout);
+                    return true;
                 }
+                Messages.Message(report.Reason, MessageTypeDefOf.RejectInput, historical: false);
+                return false;
             }
             else
             {
-                _outfits.Remove(loadout);
                 _loadouts.Remove(loadout);
+                return true;
             }
         }
 

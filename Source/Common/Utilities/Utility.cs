@@ -931,13 +931,13 @@ namespace RPG_Inventory_Remake_Common
         }
 
         [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
-        public static string Times(this string str, int num)
+        public static string Times(this string str, float num)
         {
             if (str.NullOrEmpty())
             {
                 return string.Empty;
             }
-            int length = str.Length * num;
+            int length = Mathf.RoundToInt(str.Length * num);
             char[] array = new char[length];
             for(int i = 0; i < length; i++)
             {

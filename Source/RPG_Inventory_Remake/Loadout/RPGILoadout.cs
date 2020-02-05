@@ -201,6 +201,13 @@ namespace RPG_Inventory_Remake.Loadout
             get => _loadoutDic[thing];
         }
 
+
+        [SuppressMessage("Design", "CA1043:Use Integral Or String Argument For Indexers", Justification = "<Pending>")]
+        public ThingFilterAll this[Thing thing]
+        {
+            get => _loadoutDic[thing.MakeThingStuffPairWithQuality()];
+        }
+
         public bool TryGetThing(ThingStuffPairWithQuality pair, out Thing value)
         {
             bool result = _loadoutDic.TryGetValue(pair, out ThingFilterAll package);

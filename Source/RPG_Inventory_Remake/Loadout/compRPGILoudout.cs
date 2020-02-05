@@ -19,7 +19,7 @@ namespace RPG_Inventory_Remake.Loadout
     ///     The correct initiate state for this clas is both Loadout and InventoryTracker are null. After moving
     /// to other states, none of them can be null.
     /// </remarks>
-    public class compRPGILoudout : ThingComp, IExposable
+    public partial class compRPGILoudout : ThingComp, IExposable
     {
         #region Fields
 
@@ -90,38 +90,49 @@ namespace RPG_Inventory_Remake.Loadout
             }
         }
 
-        public void NotifiedAdded(Thing thing)
+        private void NotifiedThingChanged(Thing thing, int count, bool isAdd)
         {
             if (thing == null || Loadout == null || !InventoryTracker.ContainsKey(thing))
             {
                 return;
             }
-
             if (InventoryTracker.ContainsKey(thing))
             {
-                InventoryTracker[thing] += thing.stackCount;
+                InventoryTracker[thing] = InventoryTracker[thing] + count * (isAdd ? 1 : -1);
             }
+            foreach (var pair in InventoryTracker)
+            {
+                if (pair.Key.def is LoadoutGenericDef genericDef)
+                {
+                    if (genericDef.Includes(thing.def))
+                    {
+                        InventoryTracker[pair.Key] = InventoryTracker[pair.Key] + count * (isAdd ? 1 : -1);
+                    }
+                }
+            }
+#if DEBUG
+            RPGIDebug.DebugNotifiedMethod(parent as Pawn, thing, Loadout, InventoryTracker);
+#endif
+        }
+
+        public void NotifiedAdded(Thing thing)
+        {
+            NotifiedThingChanged(thing, thing.stackCount, true);
         }
 
         public void NotifiedAddedAndMergedWith(Thing thing, int mergedAmount)
         {
-            if (thing == null || Loadout == null || !InventoryTracker.ContainsKey(thing))
-            {
-                return;
-            }
-            if (InventoryTracker.ContainsKey(thing))
-            {
-                InventoryTracker[thing] += mergedAmount;
-            }
+            NotifiedThingChanged(thing, mergedAmount, true);
         }
 
         public void NotifiedRemoved(Thing thing)
         {
-            if (thing == null || Loadout == null || !InventoryTracker.ContainsKey(thing))
-            {
-                return;
-            }
-            InventoryTracker.Remove(thing);
+            NotifiedThingChanged(thing, thing.stackCount, false);
+        }
+        
+        public void NotifiedSplitOff(Thing thing, int count)
+        {
+            NotifiedThingChanged(thing, count, false);
         }
 
         public void UpdateForNewLoadout(RPGILoadout newLoadout)
@@ -130,18 +141,11 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 return;
             }
-            Log.Message("newLoadout is not null");
             if (Loadout == null)
             {
-                Log.Message("loadout is null");
                 InventoryTracker = new Dictionary<Thing, int>(new LoadoutComparer<Thing>());
-                Log.Message("Before for loop");
                 foreach (Thing thing in newLoadout)
                 {
-                    if (thing is null)
-                    {
-                        Log.Message("thing is null ");
-                    }
                     InventoryTracker[thing] = thing.stackCount;
                 }
             }
@@ -172,12 +176,11 @@ namespace RPG_Inventory_Remake.Loadout
                     }
                 }
             }
-            Log.Message("Reach assignment");
             Loadout = newLoadout;
         }
 
         /// <summary>
-        /// Determines if and how many of an item currently fit into the inventory with regards to weight/bulk constraints.
+        /// Determines if and how many of an item currently fit into the inventory with regards to weight constraints.
         /// </summary>
         /// <param name="thing">Thing to check</param>
         /// <param name="count">Maximum amount of the thing, first param, that can fit into the inventory</param>
@@ -213,20 +216,20 @@ namespace RPG_Inventory_Remake.Loadout
 
         public void ExposeData()
         {
-            //List<Thing> things = new List<Thing>();
-            //List<int> margins = new List<int>();
-            //Scribe_References.Look(ref Loadout, nameof(Loadout));
-            //Scribe_Collections.Look(ref InventoryTracker, nameof(InventoryTracker), LookMode.Reference, LookMode.Value, ref things, ref margins);
+            List<Thing> things = new List<Thing>();
+            List<int> margins = new List<int>();
+            Scribe_References.Look(ref Loadout, nameof(Loadout));
+            Scribe_Collections.Look(ref InventoryTracker, nameof(InventoryTracker), LookMode.Reference, LookMode.Value, ref things, ref margins);
         }
 
         #endregion Methods
     }
 
-    public class CompProperties_RPGILoadout : CompProperties
-    {
-        public CompProperties_RPGILoadout()
-        {
-            compClass = typeof(compRPGILoudout);
-        }
-    }
+    //public class CompProperties_RPGILoadout : CompProperties
+    //{
+    //    public CompProperties_RPGILoadout()
+    //    {
+    //        compClass = typeof(compRPGILoudout);
+    //    }
+    //}
 }

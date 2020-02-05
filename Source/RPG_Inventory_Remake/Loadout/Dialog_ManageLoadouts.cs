@@ -203,19 +203,12 @@ namespace RPG_Inventory_Remake.Loadout
                         {
                             if (loadouts.Count > 1)
                             {
-                                if (_currentLoadout == loadouts[i])
-                                {
-                                    LoadoutManager.RemoveLoadout(loadouts[i], true);
-                                    _currentLoadout = loadouts.First();
-                                    _pawn.SetLoadout(_currentLoadout);
-                                    return;
-                                }
-                                LoadoutManager.RemoveLoadout(loadouts[i], true);
+                                LoadoutManager.TryRemoveLoadout(loadouts[i], false);
                             }
                             else
                             {
-                                Rect msgRect = new Rect(Vector2.zero, Text.CalcSize(ErrorMessage.TryToDeleteLastLoadout.Translate()));
-                                msgRect = msgRect.ExpandedBy(50);
+                                Rect msgRect = new Rect(Vector2.zero, Text.CalcSize(ErrorMessage.TryToDeleteLastLoadout.Translate()))
+                                                .ExpandedBy(50);
                                 Find.WindowStack.Add(
                                     new Dialog_InstantMessage
                                         (ErrorMessage.TryToDeleteLastLoadout.Translate(), msgRect.size, UIText.OK.Translate())

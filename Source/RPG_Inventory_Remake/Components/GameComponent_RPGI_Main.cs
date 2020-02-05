@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Verse;
-using RimWorld;
 using RPG_Inventory_Remake_Common;
+using System.Diagnostics.CodeAnalysis;
 
 namespace RPG_Inventory_Remake
 {
@@ -12,6 +12,7 @@ namespace RPG_Inventory_Remake
     {
         public static bool HasSimpleSidearm = false;
 
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
         public GameComponent_RPGI_Main(Game game)
         {
 
@@ -19,7 +20,7 @@ namespace RPG_Inventory_Remake
         public override void FinalizeInit()
         {
             JobGiver_RPGIUnload.JobInProgress = false;
-            //JobGiver_UpdateInventory.ResetSearchRadius(Current.Game.InitData.mapSize);
+            JobGiver_FindItemByRadius<Thing>.Reset();
 
             if (LoadedModManager.RunningModsListForReading.Any(m => m.Name == "Simple sidearms"))
             {

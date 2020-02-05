@@ -78,6 +78,7 @@
     <Compile Include="HarmonyPatches\Pawn_GetGizmos.cs" />
     <Compile Include="DefOfs\RPGI_JobDefOf.cs" />
     <Compile Include="HarmonyPatches\Pawn_OutfitTracker_CurrentOutfit.cs" />
+    <Compile Include="HarmonyPatches\Thing_RPGI_Patch.cs" />
     <Compile Include="Interface\ILoadout.cs" />
     <Compile Include="Interface\ILoadoutManager.cs" />
     <Compile Include="Jobs\JobDriver_Map_Equip.cs" />

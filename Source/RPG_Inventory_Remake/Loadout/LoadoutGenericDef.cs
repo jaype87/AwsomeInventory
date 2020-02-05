@@ -23,6 +23,7 @@ namespace RPG_Inventory_Remake.Loadout
         public int defaultCount = 1;
         public Predicate<ThingDef> Validator = td => true;
         public ThingRequestGroup thingRequestGroup = ThingRequestGroup.HaulableEver;
+        public Predicate<ThingDef> Includes;
         public bool isBasic = false;
 
         // The following group are intentionally left unsaved so that if the game state changes between saves the new value is calculated.
@@ -58,10 +59,11 @@ namespace RPG_Inventory_Remake.Loadout
                 thingClass = typeof(ThingWithComps),
                 description = "Generic Loadout for perishable meals.  Intended for compatibility with pawns automatically picking up a meal for themself.",
                 label = "Corgi_Generic_Meal".Translate(),
-                Validator = td => td.IsNutritionGivingIngestible && td.ingestible.preferability >= FoodPreferability.MealAwful && td.GetCompProperties<CompProperties_Rottable>()?.daysToRotStart <= 5 && !td.IsDrug,
+                Validator = (ThingDef thingDef) => thingDef.IsNutritionGivingIngestible && thingDef.ingestible.preferability >= FoodPreferability.MealAwful && thingDef.GetCompProperties<CompProperties_Rottable>()?.daysToRotStart <= 5 && !thingDef.IsDrug,
                 thingRequestGroup = ThingRequestGroup.FoodSourceNotPlantOrTree,
                 isBasic = true
             };
+            generic.Includes = (ThingDef thingDef) => generic.thingRequestGroup.Includes(thingDef) && generic.Validator(thingDef);
             
             _genericDefs.Add(generic);
             //Log.Message(string.Concat("CombatExtended :: LoadoutGenericDef :: ", generic.LabelCap, " list: ", string.Join(", ", DefDatabase<ThingDef>.AllDefs.Where(t => generic.lambda(t)).Select(t => t.label).ToArray())));
@@ -75,9 +77,10 @@ namespace RPG_Inventory_Remake.Loadout
                 description = "Generic Loadout for Raw Food.  Intended for compatibility with pawns automatically picking up raw food to train animals.",
                 label = "Corgi_Generic_RawFood".Translate(),
                 // Exclude drugs and corpses.  Also exclude any food worse than RawBad as in testing the pawns would not even pick it up for training.
-                Validator = x => x.IsNutritionGivingIngestible && !x.IsCorpse && x.ingestible.HumanEdible && !x.HasComp(typeof(CompHatcher)) && (int)x.ingestible.preferability < 6,
+                Validator = (ThingDef thingDef) => thingDef.IsNutritionGivingIngestible && !thingDef.IsCorpse && thingDef.ingestible.HumanEdible && !thingDef.HasComp(typeof(CompHatcher)) && (int)thingDef.ingestible.preferability < 6,
                 defaultCount = Convert.ToInt32(Math.Floor(targetNutrition / everything.Where(td => generic.Validator(td)).Average(td => td.ingestible.CachedNutrition)))
             };
+            generic.Includes = (ThingDef thingDef) => generic.Validator(thingDef);
             _genericDefs.Add(generic);
             //Log.Message(string.Concat("CombatExtended :: LoadoutGenericDef :: ", generic.LabelCap, " list: ", string.Join(", ", DefDatabase<ThingDef>.AllDefs.Where(t => generic.lambda(t)).Select(t => t.label + " B(" + t.GetStatValueAbstract(CE_StatDefOf.Bulk) + ") M(" + t.GetStatValueAbstract(StatDefOf.Mass) + ")").ToArray())));
 
@@ -92,7 +95,7 @@ namespace RPG_Inventory_Remake.Loadout
                 thingRequestGroup = ThingRequestGroup.Drug,
                 isBasic = true
             };
-
+            generic.Includes = (ThingDef thingDef) => generic.thingRequestGroup.Includes(thingDef);
             _genericDefs.Add(generic);
             //Log.Message(string.Concat("CombatExtended :: LoadoutGenericDef :: ", generic.LabelCap, " list: ", string.Join(", ", DefDatabase<ThingDef>.AllDefs.Where(t => generic.lambda(t)).Select(t => t.label).ToArray())));
 
@@ -106,6 +109,7 @@ namespace RPG_Inventory_Remake.Loadout
                 label = "Corgi_Generic_Medicine".Translate(),
                 thingRequestGroup = ThingRequestGroup.Medicine
             };
+            generic.Includes = (ThingDef thingDef) => generic.thingRequestGroup.Includes(thingDef);
             _genericDefs.Add(generic);
 
             // finally we add all the defs generated to the DefDatabase.

@@ -39,7 +39,7 @@ namespace RPGIResource {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPG_Inventory_Remake_Common.Resources.ErrorMessage", typeof(ErrorMessage).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPG_Inventory_Remake.Resources.ErrorMessage", typeof(ErrorMessage).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -84,6 +84,33 @@ namespace RPGIResource {
         public static string BothArgumentsAreNull {
             get {
                 return ResourceManager.GetString("BothArgumentsAreNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}, Expected : {1}, Actual: {2}.
+        /// </summary>
+        public static string ExpectedString {
+            get {
+                return ResourceManager.GetString("ExpectedString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Margin is not match in compRPGILoadout.
+        /// </summary>
+        public static string MarginNotMatchIncompRPGILoadout {
+            get {
+                return ResourceManager.GetString("MarginNotMatchIncompRPGILoadout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At {0}, Variable: {1}, Value: {2}.
+        /// </summary>
+        public static string ReportString {
+            get {
+                return ResourceManager.GetString("ReportString", resourceCulture);
             }
         }
         
