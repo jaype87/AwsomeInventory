@@ -55,3 +55,7 @@ Add example how how to add compRPGILoadout to pawn race in xml
 Add Ignore region constrait to force equip
 
 unload button color is not updated when reload game
+
+Plan of Attack:
+    1. Items to pick up at tiny/small/medium range
+    2. Consecutive itmes to pick up at progressive ranges

@@ -39,7 +39,7 @@ namespace RPGIResource {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPG_Inventory_Remake.Resources.ErrorMessage", typeof(ErrorMessage).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPG_Inventory_Remake_Common.Resources.ErrorMessage", typeof(ErrorMessage).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -93,6 +93,15 @@ namespace RPGIResource {
         public static string ExpectedString {
             get {
                 return ResourceManager.GetString("ExpectedString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inventory tracker and Loadout is out of sync.
+        /// </summary>
+        public static string InvTrackerAndLoadoutOutOfSync {
+            get {
+                return ResourceManager.GetString("InvTrackerAndLoadoutOutOfSync", resourceCulture);
             }
         }
         

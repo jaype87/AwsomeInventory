@@ -245,7 +245,7 @@ namespace RPG_Inventory_Remake.Loadout
             // bars
             if (_currentLoadout != null)
             {
-                UtilityLoadouts.DrawBar(weightBarRect, _currentLoadout.Weight, MassUtility.Capacity(_pawn), UIText.Weight.Translate(), null);
+                LoadoutUtility.DrawBar(weightBarRect, _currentLoadout.Weight, MassUtility.Capacity(_pawn), UIText.Weight.Translate(), null);
                 // draw text overlays on bars
                 Text.Font = GameFont.Small;
                 Text.Anchor = TextAnchor.MiddleCenter;
@@ -357,10 +357,12 @@ namespace RPG_Inventory_Remake.Loadout
 
             int countInt = thing.stackCount;
             string buffer = countInt.ToString();
-            Widgets.TextFieldNumeric<int>(canvas, ref countInt, ref buffer);
+            Widgets.TextFieldNumeric(canvas, ref countInt, ref buffer);
             TooltipHandler.TipRegion(canvas, UIText.CountFieldTip.Translate(thing.stackCount));
             if (countInt != thing.stackCount)
             {
+                int delta = countInt - thing.stackCount;
+                _pawn.GetComp<compRPGILoudout>().InventoryTracker[thing] -= delta;
                 _currentLoadout.SetDirtyAll();
             }
             thing.stackCount = countInt;
@@ -530,7 +532,10 @@ namespace RPG_Inventory_Remake.Loadout
                     (labelRect
                     , _source[j].thingDef.LabelCap
                     , _source[j].thingDef
-                    , (target) => _currentLoadout.AddItem(target));
+                    , (target) =>
+                    {
+                        _currentLoadout.AddItem(target);
+                    });
 
                 GUI.color = baseColor;
             }

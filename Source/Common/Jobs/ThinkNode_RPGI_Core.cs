@@ -15,6 +15,11 @@ namespace RPG_Inventory_Remake_Common
     {
         protected override bool Satisfied(Pawn pawn)
         {
+            Log.Message("In ThinkNode_RPGI_Core");
+#if DEBUG
+            bool needRestock = base.Satisfied(pawn) && (pawn.TryGetComp<compRPGILoudout>()?.NeedRestock ?? false);
+            Log.Message("Need restock: " + needRestock);
+#endif
             return base.Satisfied(pawn) && (pawn.TryGetComp<compRPGILoudout>()?.NeedRestock ?? false);
         }
     }

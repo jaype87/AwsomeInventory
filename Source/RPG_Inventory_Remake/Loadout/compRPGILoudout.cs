@@ -7,6 +7,7 @@ using Verse;
 using Verse.AI;
 using System.Reflection;
 using UnityEngine;
+using RPGIResource;
 
 namespace RPG_Inventory_Remake.Loadout
 {
@@ -23,13 +24,14 @@ namespace RPG_Inventory_Remake.Loadout
     {
         #region Fields
 
-        public RPGILoadout Loadout = null;
+        private Pawn _pawn;
 
         /// <summary>
         /// Value in this dictionary acts as a margin. If the amount set in loadout is met, the margin is 0.
         /// Excessive amount has a positive margin, and vice versa.
         /// </summary>
         public Dictionary<Thing, int> InventoryTracker = null;
+        public RPGILoadout Loadout = null;
 
         #endregion
 
@@ -39,10 +41,47 @@ namespace RPG_Inventory_Remake.Loadout
         {
             get
             {
+                Log.Message("Check if need resotkc");
                 if (InventoryTracker == null)
                 {
                     return false;
                 }
+#if DEBUG
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.Append(((Pawn)parent).Name + "'s inventory");
+                stringBuilder.AppendLine();
+                foreach (var item in InventoryTracker)
+                {
+                    stringBuilder.AppendFormat(ErrorMessage.ReportString, nameof(NeedRestock), item.Key.LabelCap, item.Value);
+                    stringBuilder.AppendLine();
+                }
+                Log.Warning(stringBuilder.ToString(), true);
+
+                var curInventory = MakeLookupForPawnGearAndInventory(_pawn);
+                foreach (Thing thing in Loadout)
+                {
+                    if (!InventoryTracker.ContainsKey(thing))
+                    {
+                        string message
+                            = string.Concat(ErrorMessage.InvTrackerAndLoadoutOutOfSync
+                                           , "\n"
+                                           , string.Format(ErrorMessage.ExpectedString, thing.LabelCap, thing.stackCount, 0));
+                        Log.ErrorOnce(message, Rand.Int, true);
+                    }
+                    else
+                    {
+                        int expected = (curInventory.TryGetValue(thing, out int count) ? count : 0) - Loadout[thing].Thing.stackCount;
+                        if (InventoryTracker[thing] != expected)
+                        {
+                            string message
+                            = string.Concat(ErrorMessage.InvTrackerAndLoadoutOutOfSync
+                                            , "\n"
+                                            , string.Format(ErrorMessage.ExpectedString, thing.LabelCap, expected, InventoryTracker[thing]));
+                            Log.ErrorOnce(message, Rand.Int, true);
+                        }
+                    }
+                }
+#endif
                 return InventoryTracker.Values.Any(m => m < 0);
             }
         }
@@ -78,6 +117,12 @@ namespace RPG_Inventory_Remake.Loadout
         #endregion
 
         #region Methods
+
+        public override void Initialize(CompProperties props)
+        {
+            base.Initialize(props);
+            _pawn = (Pawn)parent;
+        }
 
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
@@ -129,7 +174,7 @@ namespace RPG_Inventory_Remake.Loadout
         {
             NotifiedThingChanged(thing, thing.stackCount, false);
         }
-        
+
         public void NotifiedSplitOff(Thing thing, int count)
         {
             NotifiedThingChanged(thing, count, false);
@@ -137,24 +182,40 @@ namespace RPG_Inventory_Remake.Loadout
 
         public void UpdateForNewLoadout(RPGILoadout newLoadout)
         {
+            Log.Message("Update for new Loadout");
             if (newLoadout == null)
             {
                 return;
             }
             if (Loadout == null)
             {
+                Log.Message("Loadout is null");
+
                 InventoryTracker = new Dictionary<Thing, int>(new LoadoutComparer<Thing>());
+                Dictionary<Thing, int> curInventory = MakeLookupForPawnGearAndInventory(_pawn);
+
                 foreach (Thing thing in newLoadout)
                 {
-                    InventoryTracker[thing] = thing.stackCount;
+                    if (curInventory.ContainsKey(thing))
+                    {
+                        InventoryTracker[thing] = curInventory[thing] - thing.stackCount;
+                    }
+                    else
+                    {
+                        InventoryTracker.Add(thing, 0 - thing.stackCount);
+                    }
                 }
             }
             else if (Loadout == newLoadout)
             {
+                Log.Message("Loadout is unchanged");
+
                 return;
             }
             else
             {
+                Log.Message("Loadout is not null");
+
                 // Remove deleted items
                 foreach (Thing thing in InventoryTracker.Keys.ToList())
                 {
@@ -172,11 +233,44 @@ namespace RPG_Inventory_Remake.Loadout
                     }
                     else
                     {
-                        InventoryTracker[thing] = thing.stackCount;
+                        InventoryTracker[thing] = 0 - thing.stackCount;
                     }
                 }
+                Loadout.CallbacksOnAddOrRemove.Remove(UpdateInventoryTracker);
             }
+            newLoadout.CallbacksOnAddOrRemove.Add(UpdateInventoryTracker);
             Loadout = newLoadout;
+        }
+
+        private void UpdateInventoryTracker(Thing thing, bool removed)
+        {
+            if (removed)
+            {
+                InventoryTracker.Remove(thing);
+            }
+            else
+            {
+                if (InventoryTracker.ContainsKey(thing))
+                {
+                    InventoryTracker[thing] -= thing.stackCount;
+                }
+                else
+                {
+                    InventoryTracker[thing] = -thing.stackCount;
+                }
+            }
+        }
+
+        private static Dictionary<Thing, int> MakeLookupForPawnGearAndInventory(Pawn pawn)
+        {
+            List<Thing> things = new List<Thing>();
+            things.AddRange(pawn.equipment.AllEquipmentListForReading.Cast<Thing>());
+            things.AddRange(pawn.apparel.WornApparel.Cast<Thing>());
+            things.AddRange(pawn.inventory.innerContainer);
+            return things.ToDictionary(
+                (Thing thing) => thing
+                , (Thing thing) => thing.stackCount
+                , new LoadoutComparer<Thing>());
         }
 
         /// <summary>
@@ -224,12 +318,4 @@ namespace RPG_Inventory_Remake.Loadout
 
         #endregion Methods
     }
-
-    //public class CompProperties_RPGILoadout : CompProperties
-    //{
-    //    public CompProperties_RPGILoadout()
-    //    {
-    //        compClass = typeof(compRPGILoudout);
-    //    }
-    //}
 }

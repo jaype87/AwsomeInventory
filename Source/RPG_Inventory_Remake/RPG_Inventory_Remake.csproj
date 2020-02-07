@@ -44,7 +44,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Vanilla Build|AnyCPU'">
     <OutputPath>..\..\..\RPG_Style_Inventory\Assemblies\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;RPG_Inventory_Remake</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;RPG_Inventory_Remake UnitTest</DefineConstants>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
@@ -143,6 +143,51 @@
     <Compile Include="..\Common\UI\WindowOnMouseDrag.cs">
       <Link>UI\WindowOnMouseDrag.cs</Link>
     </Compile>
+    <Compile Include="..\Common\UnitTest\AssertUtility.cs">
+      <Link>UnitTest\AssertUtility.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\AddItem\AddMergeableItemTwice.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\AddItem\AddMergeableItemTwice.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\AddItem\AddOneItem.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\AddItem\AddOneItem.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\AddItem\AddTwoThingsDifferentInQuality.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\AddItem\AddTwoThingsDifferentInQuality.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\AddItem\AddTwoThingsDifferentInStuff.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\AddItem\AddTwoThingsDifferentInStuff.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\AddItem\AddUnmergeableItemTwice.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\AddItem\AddUnmergeableItemTwice.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\AddItem\Test_AddItem.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\AddItem\Test_AddItem.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\RemoveItem\Test_RemoveItem.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\RemoveItem\Test_RemoveItem.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\TestRPGILoadout.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\TestRPGILoadout.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Resources\StringResource.Designer.cs">
+      <Link>UnitTest\Resources\StringResource.Designer.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StringResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\RPGIUnitTest.cs">
+      <Link>UnitTest\RPGIUnitTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\UI\UnitTestButton.cs">
+      <Link>UnitTest\UI\UnitTestButton.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\UnitTest_Root.cs">
+      <Link>UnitTest\UnitTest_Root.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\UnitTest_Start.cs">
+      <Link>UnitTest\UnitTest_Start.cs</Link>
+    </Compile>
     <Compile Include="..\Common\Utilities\ThrowHelper.cs">
       <Link>Utilities\ThrowHelper.cs</Link>
     </Compile>
@@ -188,10 +233,13 @@
     <Compile Include="Loadout\GameComponent_LoadoutManager.cs" />
     <Compile Include="Loadout\LoadoutGenericDef.cs" />
     <Compile Include="Loadout\MassBulkUtility.cs" />
-    <Compile Include="Loadout\UtilityLoadouts.cs" />
+    <Compile Include="Loadout\LoadoutUtility.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\..\RPG_Style_Inventory\Defs\ThingTreeDefs\SubTrees_Misc.xml">
+      <Link>Defs\SubTrees_Misc.xml</Link>
+    </Content>
     <Content Include="..\..\..\RPG_Style_Inventory\Patches\LoadoutDefModExtention.xml">
       <Link>Patches\LoadoutDefModExtention.xml</Link>
     </Content>
@@ -231,7 +279,6 @@
     <Analyzer Include="..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Defs\" />
     <Folder Include="Enum\" />
   </ItemGroup>
   <ItemGroup>
@@ -259,6 +306,12 @@
       <LastGenOutput>UIText.Designer.cs</LastGenOutput>
       <CustomToolNamespace>RPGIResource</CustomToolNamespace>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\Common\UnitTest\Resources\StringResource.resx">
+      <Link>UnitTest\Resources\StringResource.resx</Link>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringResource.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>RPG_Inventory_Remake_Common.UnitTest</CustomToolNamespace>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -272,11 +325,37 @@
     <Error Condition="!Exists('..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>xcopy D:\Modding\RPG-Style-Inventory-CE-master\Textures D:\Modding\RPG_Style_Inventory\Textures /s /i /d /y
-xcopy D:\Modding\RPG-Style-Inventory-CE-master\Languages D:\Modding\RPG_Style_Inventory\Languages /s /i /d /y
-</PostBuildEvent>
+    <PostBuildEvent>
+            xcopy D:\Modding\RPG-Style-Inventory-CE-master\Textures D:\Modding\RPG_Style_Inventory\Textures /s /i /d /y
+            xcopy D:\Modding\RPG-Style-Inventory-CE-master\Languages D:\Modding\RPG_Style_Inventory\Languages /s /i /d /y
+        </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>"C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\ResGen" D:\Modding\RPG-Style-Inventory-CE-master\Source\Common\Resources\ErrorMessage.resx "D:\Modding\RPG-Style-Inventory-CE-master\Source\RPG_Inventory_Remake\obj\Vanilla Build\RPGIResource.ErrorMessage.resources"  /str:cs,RPGIResource,ErrorMessage /publicClass</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <CreateManifestResourceNamesDependsOn>
+            RunCustomToolOnResources
+            $(CreateManifestResourceNamesDependsOn)
+        </CreateManifestResourceNamesDependsOn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespaceOfRPGICommon>RPG_Inventory_Remake_Common</RootNamespaceOfRPGICommon>
+  </PropertyGroup>
+  <Target Name="RunCustomToolOnResources">
+    <ItemGroup>
+      <_Temporary Remove="@(_Temporary)" />
+    </ItemGroup>
+    <!-- Create custom ManifestResourceName -->
+    <CreateCSharpManifestResourceName ResourceFiles="@(EmbeddedResource)" RootNamespace="$(RootNamespaceOfRPGICommon)" UseDependentUponConvention="$(EmbeddedResourceUseDependentUponConvention)" Condition="'%(EmbeddedResource.ManifestResourceName)' == '' and ('%(EmbeddedResource.WithCulture)' == 'false' or '%(EmbeddedResource.Type)' == 'Resx')">
+      <Output TaskParameter="ResourceFilesWithManifestResourceNames" ItemName="_Temporary" />
+    </CreateCSharpManifestResourceName>
+    <Message Text="Manifest Name:   %(_Temporary.ManifestResourceName)" />
+    <ItemGroup>
+      <EmbeddedResource Remove="@(EmbeddedResource)" Condition="'%(EmbeddedResource.ManifestResourceName)' == ''" />
+      <EmbeddedResource Include="@(_Temporary)" />
+      <_Temporary Remove="@(_Temporary)" />
+    </ItemGroup>
+  </Target>
 </Project>

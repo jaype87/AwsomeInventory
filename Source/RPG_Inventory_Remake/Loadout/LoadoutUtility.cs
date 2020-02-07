@@ -13,7 +13,7 @@ using Verse;
 namespace RPG_Inventory_Remake.Loadout
 {
     [StaticConstructorOnStartup]
-    public static class UtilityLoadouts
+    public static class LoadoutUtility
     {
         #region Fields
 
@@ -212,7 +212,7 @@ namespace RPG_Inventory_Remake.Loadout
             return copy;
         }
 
-        private static Thing MakeThingWithoutID(ThingStuffPairWithQuality pair)
+        private static Thing MakeThingWithoutID(this ThingStuffPairWithQuality pair)
         {
             if (pair.thing.MadeFromStuff && pair.stuff == null)
             {

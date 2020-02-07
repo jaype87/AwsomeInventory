@@ -22,17 +22,18 @@ namespace RPG_Inventory_Remake.Loadout
         enum DirtyBits
         {
             Read = 1,
-            ReStash = 2,
-            All = Read | ReStash
+            ReStock = 2,
+            All = Read | ReStock
         }
 
         // Sole purpose of the _cachedList is for reordering in loadout window
+        private float _weight = -1;
+        private DirtyBits _dirty = DirtyBits.All;
         private List<Thing> _cachedList = new List<Thing>();
         private Dictionary<ThingStuffPairWithQuality, ThingFilterAll> _loadoutDic = new Dictionary<ThingStuffPairWithQuality, ThingFilterAll>();
 
-        private float _weight = -1;
-        private DirtyBits _dirty = DirtyBits.All;
-
+        public delegate void CallBack(Thing thing, bool removed);
+        public List<CallBack> CallbacksOnAddOrRemove = new List<CallBack>();
 
         #region Constructor
 
@@ -99,8 +100,6 @@ namespace RPG_Inventory_Remake.Loadout
                 return _weight;
             }
         }
-
-
 
         #endregion
 
@@ -181,13 +180,6 @@ namespace RPG_Inventory_Remake.Loadout
             return _loadoutDic.ContainsKey(pairWithQuality);
         }
 
-        public static RPGILoadout New()
-        {
-            RPGILoadout temp = new RPGILoadout();
-            temp.Init();
-            return temp;
-        }
-
         public void SetDirtyAll()
         {
             _dirty = DirtyBits.All;
@@ -228,13 +220,8 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 throw new ArgumentNullException(nameof(thingDef));
             }
-            Thing thing = UtilityLoadouts.MakeThingSimple(new ThingStuffPairWithQuality(thingDef, null, QualityCategory.Normal));
+            Thing thing = LoadoutUtility.MakeThingSimple(new ThingStuffPairWithQuality(thingDef, null, QualityCategory.Normal));
             AddItem(thing);
-        }
-
-        public void AddItem(ThingStuffPairWithQuality pair)
-        {
-            _loadoutDic.Add(pair, new ThingFilterAll(pair.MakeThing()));
         }
 
         public void AddItem(Thing thing)
@@ -246,7 +233,7 @@ namespace RPG_Inventory_Remake.Loadout
             ThingStuffPairWithQuality pair = thing.MakeThingStuffPairWithQuality();
             if (_loadoutDic.ContainsKey(pair))
             {
-                _loadoutDic[pair].Thing.stackCount++;
+                _loadoutDic[pair].Thing.stackCount += thing.stackCount;
             }
             else
             {
@@ -254,6 +241,7 @@ namespace RPG_Inventory_Remake.Loadout
                 _cachedList.Add(thing);
             }
             _dirty = DirtyBits.All;
+            InvokeCallbacks(thing, false);
         }
 
         public void AddPackage(ThingFilterAll package, int index = -1)
@@ -275,6 +263,7 @@ namespace RPG_Inventory_Remake.Loadout
                 return;
             }
             _cachedList.Add(package.Thing);
+            InvokeCallbacks(package.Thing, false);
         }
 
         public void RemoveItem(Thing thing)
@@ -300,8 +289,14 @@ namespace RPG_Inventory_Remake.Loadout
             _loadoutDic.Remove(pair);
             _cachedList.Remove(thing);
             _dirty = DirtyBits.All;
+            InvokeCallbacks(thing, true);
         }
 
+        /// <summary>
+        ///     Update quality and stuff. Stackcount is updated in Dialog_ManageLoadouts.cs
+        /// </summary>
+        /// <param name="thing"></param>
+        /// <param name="target"></param>
         public void UpdateItem(Thing thing, object target)
         {
             if (!Contains(thing))
@@ -367,6 +362,24 @@ namespace RPG_Inventory_Remake.Loadout
                 _weight = _loadoutDic.Values.Sum(i => i.Thing.GetStatValue(StatDefOf.Mass) * i.Thing.stackCount);
                 _dirty ^= DirtyBits.Read;
             }
+        }
+
+        private void InvokeCallbacks(Thing thing, bool removed)
+        {
+            if (CallbacksOnAddOrRemove.Any())
+            {
+                foreach(var callback in CallbacksOnAddOrRemove)
+                {
+                    callback(thing, removed);
+                }
+            }
+        }
+
+        public void Clear()
+        {
+            _loadoutDic.Clear();
+            _cachedList.Clear();
+            CallbacksOnAddOrRemove.Clear();
         }
 
         #endregion Method
@@ -467,6 +480,9 @@ namespace RPG_Inventory_Remake.Loadout
             }
         }
 
+        /// <summary>
+        /// Keep AllowedQualityLevles and the quality set on thing in sync
+        /// </summary>
         public QualityRange? AllowedQualityLevelsWrapper
         {
             get

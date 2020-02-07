@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RPGIResource {
+namespace RPG_Inventory_Remake_Common.UnitTest {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace RPGIResource {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class ErrorMessage {
+    public class StringResource {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ErrorMessage() {
+        internal StringResource() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace RPGIResource {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPGIResource.ErrorMessage", typeof(ErrorMessage).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPG_Inventory_Remake_Common.UnitTest.StringResource", typeof(StringResource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,38 +61,74 @@ namespace RPGIResource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BothArgumentsAreNotNull.
+        ///   Looks up a localized string similar to Count.
         /// </summary>
-        public static string BothArgumentsAreNotNull {
+        public static string Count {
             get {
-                return ResourceManager.GetString("BothArgumentsAreNotNull", resourceCulture);
+                return ResourceManager.GetString("Count", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BothArgumentsAreNull.
+        ///   Looks up a localized string similar to {0}, Expected : {1}, Actual: {2}.
         /// </summary>
-        public static string BothArgumentsAreNull {
+        public static string ExpectedString {
             get {
-                return ResourceManager.GetString("BothArgumentsAreNull", resourceCulture);
+                return ResourceManager.GetString("ExpectedString", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Corgi_TryToDeleteLastLoadout.
+        ///   Looks up a localized string similar to     .
         /// </summary>
-        public static string TryToDeleteLastLoadout {
+        public static string Indent {
             get {
-                return ResourceManager.GetString("TryToDeleteLastLoadout", resourceCulture);
+                return ResourceManager.GetString("Indent", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wrong Argument Type.
+        ///   Looks up a localized string similar to {0}: {1}.
         /// </summary>
-        public static string WrongArgumentType {
+        public static string KeyValuePair {
             get {
-                return ResourceManager.GetString("WrongArgumentType", resourceCulture);
+                return ResourceManager.GetString("KeyValuePair", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}.Count.
+        /// </summary>
+        public static string ObjectCount {
+            get {
+                return ResourceManager.GetString("ObjectCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}: {1} and {2}: {3} are not equal.
+        /// </summary>
+        public static string ObjectsAreNotEqual {
+            get {
+                return ResourceManager.GetString("ObjectsAreNotEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test count of {0} is {1}.
+        /// </summary>
+        public static string TestCountSum {
+            get {
+                return ResourceManager.GetString("TestCountSum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test String1.
+        /// </summary>
+        public static string TestString {
+            get {
+                return ResourceManager.GetString("TestString", resourceCulture);
             }
         }
     }

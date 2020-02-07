@@ -112,6 +112,24 @@
     <Compile Include="UI\RPGITex.cs" />
     <Compile Include="UI\Theme.cs" />
     <Compile Include="UI\WindowOnMouseDrag.cs" />
+    <Compile Include="UnitTest\AssertUtility.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddTwoThingsDifferentInQuality.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddTwoThingsDifferentInStuff.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddMergeableItemTwice.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddUnmergeableItemTwice.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddOneItem.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\RemoveItem\Test_RemoveItem.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\TestRPGILoadout.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\Test_AddItem.cs" />
+    <Compile Include="UnitTest\Resources\StringResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StringResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="UnitTest\UI\UnitTestButton.cs" />
+    <Compile Include="UnitTest\UnitTest_Start.cs" />
+    <Compile Include="UnitTest\UnitTest_Root.cs" />
+    <Compile Include="UnitTest\RPGIUnitTest.cs" />
     <Compile Include="Utilities\ThrowHelper.cs" />
     <Compile Include="Utilities\Utility.cs" />
     <Compile Include="Utilities\UtilityConstant.cs" />
@@ -154,7 +172,13 @@
       <LastGenOutput>UIText.Designer.cs</LastGenOutput>
       <CustomToolNamespace>RPGIResource</CustomToolNamespace>
     </EmbeddedResource>
+    <EmbeddedResource Include="UnitTest\Resources\StringResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringResource.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>RPG_Inventory_Remake_Common.UnitTest</CustomToolNamespace>
+    </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy D:\Modding\RPG-Style-Inventory-CE-master\Languages D:\Modding\RPG_Style_Inventory\Languages /d /i /s</PostBuildEvent>

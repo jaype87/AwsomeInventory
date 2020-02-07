@@ -44,12 +44,12 @@ namespace RPG_Inventory_Remake
             {
                 return null;
             }
-            Region region = pawn.GetRegion();
-            if (region == null)
+            if (pawn.Map == null)
             {
                 return null;
             }
 
+            Log.Message("At start of FindWeapon");
             bool IsBrawler = pawn.story?.traits?.HasTrait(TraitDefOf.Brawler) ?? false;
             bool preferRanged = !IsBrawler && (pawn.skills.GetSkill(SkillDefOf.Shooting).Level >= pawn.skills.GetSkill(SkillDefOf.Melee).Level
                                              || pawn.skills.GetSkill(SkillDefOf.Shooting).Level >= 6);
@@ -99,8 +99,11 @@ namespace RPG_Inventory_Remake
 
             // Commnet Group 1
             // Find and equip a suitable weapon
+            Log.Message("Ready to FindWeapon");
             if (!hasPrimary)
             {
+                Log.Message("Starting to FindWeapon");
+
                 Thing closestWeapon = GenClosest.RegionwiseBFSWorker
                 (pawn.Position
                 , pawn.Map
@@ -116,6 +119,7 @@ namespace RPG_Inventory_Remake
                 {
                     return null;
                 }
+                Log.Message("Weapon found");
 
                 return new Job(RPGI_JobDefOf.RPGI_Map_Equip, closestWeapon);
             }

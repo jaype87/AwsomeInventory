@@ -93,7 +93,7 @@ namespace RPG_Inventory_Remake_Common
             Widgets.DrawHighlightIfMouseover(rect);
             if (Widgets.ButtonInvisible(rect))
             {
-                action(target);
+                action?.Invoke(target);
             }
 
             Text.Anchor = TextAnchor.UpperLeft;
