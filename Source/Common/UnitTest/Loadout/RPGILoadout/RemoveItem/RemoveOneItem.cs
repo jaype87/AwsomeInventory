@@ -11,7 +11,7 @@ namespace RPG_Inventory_Remake_Common.UnitTest
 {
     public class RemoveOneItem : Test_RemoveItem
     {
-        private readonly int stackcount = loadoutInstance.Count();
+        private readonly int stackcount = loadoutInstance.Count;
 
         public override void Setup()
         {
@@ -22,12 +22,12 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             result = true;
             for (int i = 0; i < things.Count; i++)
             {
-                Thing removed = loadoutInstance.Remove(things[i]);
+                loadoutInstance.Remove(things[i], out Thing removed);
                 List<Thing> remainings = things.Where(t => t != things[i]).ToList();
 
                 result &=
                         // Check count
-                        AssertUtility.Expect(loadoutInstance.Count(), stackcount - 1, string.Format(StringResource.ObjectCount, nameof(loadoutInstance)))
+                        AssertUtility.Expect(loadoutInstance.Count, stackcount - 1, string.Format(StringResource.ObjectCount, nameof(loadoutInstance)))
                         &&
                         AssertUtility.Expect(loadoutInstance.CachedList.Count, stackcount - 1, string.Format(StringResource.ObjectCount, nameof(loadoutInstance.CachedList)))
                         && // Check integrity
