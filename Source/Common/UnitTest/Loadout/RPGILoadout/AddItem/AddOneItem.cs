@@ -19,7 +19,7 @@ namespace RPG_Inventory_Remake_Common.UnitTest
     {
         public override void Setup()
         {
-            loadoutInstance.AddItem(things[0]);
+            loadoutInstance.AddItem(things[0], false);
         }
 
         public override void Run(out bool result)
@@ -27,7 +27,7 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             if (loadoutInstance.Count() == 1)
             {
                 Thing thing = loadoutInstance.CachedList[0];
-                if (thing == loadoutInstance[thing].Thing)
+                if (thing == loadoutInstance[things[0]].Thing)
                 {
                     result = true;
                     return;

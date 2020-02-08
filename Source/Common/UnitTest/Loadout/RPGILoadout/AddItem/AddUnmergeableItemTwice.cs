@@ -17,30 +17,31 @@ namespace RPG_Inventory_Remake_Common.UnitTest
 {
     public class AddUnmergeableItemTwice : Test_AddItem
     {
+        private Thing _toAdd;
         public override void Setup()
         {
-            loadoutInstance.AddItem(things[0]);
-            loadoutInstance.AddItem(things[0]);
+            _toAdd = things[0].DeepCopySimple();
+            loadoutInstance.AddItem(_toAdd, true);
+            loadoutInstance.AddItem(_toAdd, true);
         }
 
         public override void Run(out bool result)
         {
             result = true;
-            // Test if items are merged. Even it has a stack limit of 1, it doesn't matter in loadout
             result &=
-                AssertUtility.Expect(loadoutInstance.Count(), 1, string.Format(StringResource.ObjectCount, nameof(loadoutInstance)));
-            // Test if CachedList is in sync
-            result &=
-                AssertUtility.Expect(loadoutInstance.CachedList.Count, 1, string.Format(StringResource.ObjectCount, nameof(loadoutInstance.CachedList)));
-            // Test if the instance of the item is shared between source and loadout
-            result &=
-                AssertUtility.AreEqual(things[0], loadoutInstance[things[0]].Thing, nameof(things), nameof(loadoutInstance));
-            // Ditto
-            result &=
-                AssertUtility.AreEqual(things[0], loadoutInstance.CachedList[0], nameof(things), nameof(loadoutInstance.CachedList));
-            // Test whether the stackcount is correct
-            result &=
-                AssertUtility.Expect(loadoutInstance.CachedList[0].stackCount, 2, string.Format(StringResource.ObjectCount, things[0].LabelCapNoCount));
+                // Test if items are merged. Even it has a stack limit of 1, it doesn't matter in loadout
+                AssertUtility.Expect(loadoutInstance.Count(), 1, string.Format(StringResource.ObjectCount, nameof(loadoutInstance)))
+                // Test if CachedList is in sync
+                &&
+                AssertUtility.Expect(loadoutInstance.CachedList.Count, 1, string.Format(StringResource.ObjectCount, nameof(loadoutInstance.CachedList)))
+                // Test if the instance of the item is shared between source and loadout
+                &&
+                AssertUtility.AreEqual(_toAdd, loadoutInstance[things[0]].Thing, nameof(_toAdd), nameof(loadoutInstance))
+                &&
+                AssertUtility.AreEqual(_toAdd, loadoutInstance.CachedList[0], nameof(_toAdd), nameof(loadoutInstance.CachedList))
+                // Test whether the stackcount is correct
+                &&
+                AssertUtility.Expect(loadoutInstance.CachedList[0].stackCount, 2, string.Format(StringResource.ObjectCount, _toAdd.LabelCapNoCount));
         }
 
         public override void Cleanup()

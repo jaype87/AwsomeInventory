@@ -19,8 +19,8 @@ namespace RPG_Inventory_Remake_Common.UnitTest
     {
         public override void Setup()
         {
-            loadoutInstance.AddItem(things[3]);
-            loadoutInstance.AddItem(things[3]);
+            loadoutInstance.AddItem(things[3], false);
+            loadoutInstance.AddItem(things[3], false);
         }
 
         public override void Run(out bool result)
@@ -32,15 +32,15 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             // Test if CachedList is in sync
             result &=
                 AssertUtility.Expect(loadoutInstance.CachedList.Count, 1, string.Format(StringResource.ObjectCount, nameof(loadoutInstance.CachedList)));
-            // Test if the instance of the item is shared between source and loadout
+            // Test if the instance of the item is shared between the dictionary and the cachedList
             result &=
-                AssertUtility.AreEqual(things[3], loadoutInstance[things[3]].Thing, nameof(things), nameof(loadoutInstance));
-            // Ditto
+                AssertUtility.AreEqual(loadoutInstance.CachedList[0], loadoutInstance[loadoutInstance.CachedList[0]].Thing, nameof(loadoutInstance.CachedList), nameof(loadoutInstance));
+            // Test if it stores the correct thing
             result &=
-                AssertUtility.AreEqual(things[3], loadoutInstance.CachedList[0], nameof(things), nameof(loadoutInstance.CachedList));
+                AssertUtility.Expect(loadoutInstance.Contains(things[3]), true, string.Format(StringResource.ThingHas, nameof(loadoutInstance), things[3].LabelNoCount));
             // Test whether the stackcount is correct
             result &=
-                AssertUtility.Expect(loadoutInstance.CachedList[0].stackCount, 22, string.Format(StringResource.ObjectCount, things[3].LabelCapNoCount));
+                AssertUtility.Expect(loadoutInstance.CachedList[0].stackCount, things[3].stackCount * 2, string.Format(StringResource.ObjectCount, things[3].LabelCapNoCount));
         }
 
         public override void Cleanup()

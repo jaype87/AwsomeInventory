@@ -225,10 +225,15 @@ namespace RPG_Inventory_Remake.Loadout
                 throw new ArgumentNullException(nameof(thingDef));
             }
             Thing thing = LoadoutUtility.MakeThingSimple(new ThingStuffPairWithQuality(thingDef, null, QualityCategory.Normal));
-            AddItem(thing);
+            AddItem(thing, true);
         }
 
-        public void AddItem(Thing thing)
+        /// <summary>
+        ///     Implementation of adding item to loadout
+        /// </summary>
+        /// <param name="thing">the thing to add</param>
+        /// <param name="owned">if the thing is owned by this loadout</param>
+        public void AddItem(Thing thing, bool owned)
         {
             if (thing == null)
             {
@@ -241,33 +246,20 @@ namespace RPG_Inventory_Remake.Loadout
             }
             else
             {
-                _loadoutDic.Add(pair, new ThingFilterAll(thing));
-                _cachedList.Add(thing);
+                Thing toAdd = owned ? thing : thing.DeepCopySimple(true);
+
+                _loadoutDic.Add(pair, new ThingFilterAll(toAdd));
+                _cachedList.Add(toAdd);
             }
             _dirty = DirtyBits.All;
             InvokeCallbacks(thing, false);
         }
 
-        public void AddPackage(ThingFilterAll package, int index = -1)
+        private void AddItem(ThingFilterAll thingFilter, int index)
         {
-            if (package == null)
-            {
-                throw new ArgumentNullException(nameof(package));
-            }
-            ThingStuffPairWithQuality pair = package.Thing.MakeThingStuffPairWithQuality();
-            if (_loadoutDic.ContainsKey(pair))
-            {
-                AddItem(package.Thing);
-                return;
-            }
-            _loadoutDic.Add(pair, package);
-            if (index > -1)
-            {
-                _cachedList.Insert(index, package.Thing);
-                return;
-            }
-            _cachedList.Add(package.Thing);
-            InvokeCallbacks(package.Thing, false);
+            _loadoutDic.Add(thingFilter.Thing.MakeThingStuffPairWithQuality(), thingFilter);
+            _cachedList.Insert(index, thingFilter.Thing);
+            InvokeCallbacks(thingFilter.Thing, false);
         }
 
         /// <summary>
@@ -276,7 +268,7 @@ namespace RPG_Inventory_Remake.Loadout
         /// <param name="thing"></param>
         public Thing RemoveItem(Thing thing)
         {
-            if (thing == null)
+            if (thing == null || !Contains(thing))
             {
                 return null;
             }
@@ -299,9 +291,11 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 throw new ArgumentOutOfRangeException(nameof(thing));
             }
+
             ThingFilterAll package = this[thing];
             Thing innerThing = package.Thing;
-            int index = _cachedList.IndexOf(package.Thing);
+            int index = _cachedList.IndexOf(innerThing);
+
             if (target is QualityCategory qualityCategory)
             {
                 if (innerThing.TryGetQuality(out QualityCategory qc))
@@ -313,7 +307,7 @@ namespace RPG_Inventory_Remake.Loadout
                     RemoveItem(innerThing);
                     package.AllowedQualityLevelsWrapper
                         = new QualityRange(qualityCategory, package.AllowedQualityLevels.max);
-                    AddPackage(package, index);
+                    AddItem(package, index);
                 }
             }
             else if (target is ThingDef thingDef && thingDef.IsStuff)
@@ -321,7 +315,7 @@ namespace RPG_Inventory_Remake.Loadout
                 RemoveItem(innerThing);
                 innerThing.SetStuffDirect(thingDef);
                 innerThing.HitPoints = innerThing.MaxHitPoints;
-                AddPackage(package, index);
+                AddItem(package, index);
             }
             else
             {
@@ -338,7 +332,7 @@ namespace RPG_Inventory_Remake.Loadout
 
             foreach (Thing t in list)
             {
-                AddItem(t.DeepCopySimple());
+                AddItem(t, false);
             }
         }
 

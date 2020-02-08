@@ -56,10 +56,10 @@ namespace RPG_Inventory_Remake_Common.UnitTest
         public override void Setup()
         {
             // Add tests
-            // Tests.Add(new AddOneItem());
-            // Tests.Add(new AddUnmergeableItemTwice());
-            // Tests.Add(new AddTwoThingsDifferentInStuff());
-            // Tests.Add(new AddTwoThingsDifferentInQuality());
+            Tests.Add(new AddOneItem());
+            Tests.Add(new AddUnmergeableItemTwice());
+            Tests.Add(new AddTwoThingsDifferentInStuff());
+            Tests.Add(new AddTwoThingsDifferentInQuality());
             Tests.Add(new AddMergeableItemTwice());
         }
     }

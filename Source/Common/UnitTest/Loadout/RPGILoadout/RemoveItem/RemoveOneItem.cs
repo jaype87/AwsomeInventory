@@ -45,12 +45,10 @@ namespace RPG_Inventory_Remake_Common.UnitTest
                         AssertUtility.Expect(loadoutInstance.CachedList.Contains(loadoutInstance[remainings[j]].Thing), true, string.Format(StringResource.ThingHas, nameof(loadoutInstance.CachedList), remainings[j].LabelNoCount))
                         && // Check stackcount
                         AssertUtility.Expect(loadoutInstance[remainings[j]].Thing.stackCount, remainings[j].stackCount * 2, string.Format(StringResource.ExpectedString, remainings[j].LabelNoCount, 2, loadoutInstance[remainings[j]].Thing.stackCount))
-                        &&
-                        AssertUtility.Expect(loadoutInstance.CachedList.Find(t => t == loadoutInstance[remainings[j]].Thing).stackCount, remainings[j].stackCount * 2, string.Format(StringResource.ExpectedString, remainings[j].LabelNoCount, 2, remainings[j].stackCount))
                         ;
                 }
-                loadoutInstance.AddItem(things[i].DeepCopySimple());
-                loadoutInstance.AddItem(things[i].DeepCopySimple());
+                loadoutInstance.AddItem(things[i], false);
+                loadoutInstance.AddItem(things[i], false);
             }
         }
 

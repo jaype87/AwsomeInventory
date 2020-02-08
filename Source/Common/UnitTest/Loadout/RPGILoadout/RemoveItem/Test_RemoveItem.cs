@@ -50,13 +50,11 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             things.Add(pair3.MakeThing());
             things.Add(finemeal);
 
-            List<Thing> deepcopy = things.Select(t => t.DeepCopySimple(true)).ToList();
-
             for (int i = 0; i < 2; i++)
             {
-                foreach (Thing thing in deepcopy)
+                foreach (Thing thing in things)
                 {
-                    loadoutInstance.AddItem(thing);
+                    loadoutInstance.AddItem(thing, false);
                 }
             }
         }
