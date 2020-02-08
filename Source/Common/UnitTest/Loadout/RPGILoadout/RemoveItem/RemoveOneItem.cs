@@ -22,7 +22,7 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             result = true;
             for (int i = 0; i < things.Count; i++)
             {
-                Thing removed = loadoutInstance.RemoveItem(things[i]);
+                Thing removed = loadoutInstance.Remove(things[i]);
                 List<Thing> remainings = things.Where(t => t != things[i]).ToList();
 
                 result &=
@@ -47,8 +47,8 @@ namespace RPG_Inventory_Remake_Common.UnitTest
                         AssertUtility.Expect(loadoutInstance[remainings[j]].Thing.stackCount, remainings[j].stackCount * 2, string.Format(StringResource.ExpectedString, remainings[j].LabelNoCount, 2, loadoutInstance[remainings[j]].Thing.stackCount))
                         ;
                 }
-                loadoutInstance.AddItem(things[i], false);
-                loadoutInstance.AddItem(things[i], false);
+                loadoutInstance.Add(things[i], false);
+                loadoutInstance.Add(things[i], false);
             }
         }
 

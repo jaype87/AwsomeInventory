@@ -16,7 +16,7 @@ namespace RPG_Inventory_Remake.Loadout
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <remarks>It uses LoadoutCaomparer to generate hash value for keys</remarks>
-    public class RPGILoadout : Outfit, ILoadReferenceable, IExposable, IEnumerable<Thing>
+    public class RPGILoadout : Outfit, ILoadReferenceable, IExposable, IEnumerable<Thing>, ICollection<Thing>
     {
         [Flags]
         enum DirtyBits
@@ -105,6 +105,10 @@ namespace RPG_Inventory_Remake.Loadout
 
         #region Methods
         public List<Thing> CachedList => _cachedList;
+
+        public int Count => _cachedList.Count;
+
+        public bool IsReadOnly => false;
 
         public new void ExposeData()
         {
@@ -218,14 +222,14 @@ namespace RPG_Inventory_Remake.Loadout
         ///     Called when user chooses items from loadout window
         /// </summary>
         /// <param name="thingDef"></param>
-        public void AddItem(ThingDef thingDef)
+        public void Add(ThingDef thingDef)
         {
             if (thingDef == null)
             {
                 throw new ArgumentNullException(nameof(thingDef));
             }
             Thing thing = LoadoutUtility.MakeThingSimple(new ThingStuffPairWithQuality(thingDef, null, QualityCategory.Normal));
-            AddItem(thing, true);
+            Add(thing, true);
         }
 
         /// <summary>
@@ -233,7 +237,7 @@ namespace RPG_Inventory_Remake.Loadout
         /// </summary>
         /// <param name="thing">the thing to add</param>
         /// <param name="owned">if the thing is owned by this loadout</param>
-        public void AddItem(Thing thing, bool owned)
+        public void Add(Thing thing, bool owned)
         {
             if (thing == null)
             {
@@ -255,7 +259,12 @@ namespace RPG_Inventory_Remake.Loadout
             InvokeCallbacks(thing, false);
         }
 
-        private void AddItem(ThingFilterAll thingFilter, int index)
+        public void Add(Thing item)
+        {
+            Add(item, false);
+        }
+
+        private void Add(ThingFilterAll thingFilter, int index)
         {
             _loadoutDic.Add(thingFilter.Thing.MakeThingStuffPairWithQuality(), thingFilter);
             _cachedList.Insert(index, thingFilter.Thing);
@@ -266,18 +275,25 @@ namespace RPG_Inventory_Remake.Loadout
         ///     Remove item from loadout regardless of stack count
         /// </summary>
         /// <param name="thing"></param>
-        public Thing RemoveItem(Thing thing)
+        public bool Remove(Thing thing)
+        {
+            return Remove(thing, out Thing _);
+        }
+
+        public bool Remove(Thing thing, out Thing removed)
         {
             if (thing == null || !Contains(thing))
             {
-                return null;
+                removed = null;
+                return false;
             }
-            Thing toRemove = this[thing].Thing;
+            removed = this[thing].Thing;
             _loadoutDic.Remove(thing.MakeThingStuffPairWithQuality());
-            _cachedList.Remove(toRemove);
+            _cachedList.Remove(removed);
             _dirty = DirtyBits.All;
-            InvokeCallbacks(thing, true);
-            return toRemove;
+
+            InvokeCallbacks(removed, true);
+            return true;
         }
 
         /// <summary>
@@ -304,18 +320,18 @@ namespace RPG_Inventory_Remake.Loadout
                     {
                         return;
                     }
-                    RemoveItem(innerThing);
+                    Remove(innerThing);
                     package.AllowedQualityLevelsWrapper
                         = new QualityRange(qualityCategory, package.AllowedQualityLevels.max);
-                    AddItem(package, index);
+                    Add(package, index);
                 }
             }
             else if (target is ThingDef thingDef && thingDef.IsStuff)
             {
-                RemoveItem(innerThing);
+                Remove(innerThing);
                 innerThing.SetStuffDirect(thingDef);
                 innerThing.HitPoints = innerThing.MaxHitPoints;
-                AddItem(package, index);
+                Add(package, index);
             }
             else
             {
@@ -332,7 +348,7 @@ namespace RPG_Inventory_Remake.Loadout
 
             foreach (Thing t in list)
             {
-                AddItem(t, false);
+                Add(t, false);
             }
         }
 
@@ -371,6 +387,21 @@ namespace RPG_Inventory_Remake.Loadout
             _loadoutDic.Clear();
             _cachedList.Clear();
             CallbacksOnAddOrRemove.Clear();
+        }
+
+        public void CopyTo(Thing[] array, int arrayIndex)
+        {
+            if (array == null)
+                throw new ArgumentNullException(nameof(array));
+            if (arrayIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(array));
+            if (Count > array.Length - arrayIndex + 1)
+                throw new ArgumentOutOfRangeException(nameof(array));
+
+            for(int i = 0; i < Count; i++)
+            {
+                array[i + arrayIndex] = _cachedList[i];
+            }
         }
 
         #endregion Method

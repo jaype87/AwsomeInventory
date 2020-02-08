@@ -19,8 +19,8 @@ namespace RPG_Inventory_Remake_Common.UnitTest
     {
         public override void Setup()
         {
-            loadoutInstance.AddItem(things[3], false);
-            loadoutInstance.AddItem(things[3], false);
+            loadoutInstance.Add(things[3], false);
+            loadoutInstance.Add(things[3], false);
         }
 
         public override void Run(out bool result)

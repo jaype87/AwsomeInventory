@@ -21,8 +21,8 @@ namespace RPG_Inventory_Remake_Common.UnitTest
         public override void Setup()
         {
             _toAdd = things[0].DeepCopySimple();
-            loadoutInstance.AddItem(_toAdd, true);
-            loadoutInstance.AddItem(_toAdd, true);
+            loadoutInstance.Add(_toAdd, true);
+            loadoutInstance.Add(_toAdd, true);
         }
 
         public override void Run(out bool result)

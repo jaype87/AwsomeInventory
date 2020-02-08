@@ -24,6 +24,22 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             }
         }
 
+        public static bool Contains<T>(T owner, object thing, string nameofOwner) where T : ICollection<object>
+        {
+            if (owner.Contains(thing))
+            {
+                return true;
+            }
+            else
+            {
+                Log.Error(
+                    string.Format(
+                        StringResource.ThingHas, nameofOwner, thing.GetType())
+                    , true);
+                return false;
+            }
+        }
+
         public static bool AreEqual(object A, object B, string nameA, string nameB)
         {
             if (A == B)

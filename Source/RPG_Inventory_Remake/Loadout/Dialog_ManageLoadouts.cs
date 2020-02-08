@@ -430,7 +430,7 @@ namespace RPG_Inventory_Remake.Loadout
                 GUI.DrawTexture(row, TexUI.HighlightTex);
             if (Widgets.ButtonImage(deleteRect, _iconClear))
             {
-                _currentLoadout.RemoveItem(thing);
+                _currentLoadout.Remove(thing);
             }
 
             if (!drawShadow)
@@ -534,7 +534,7 @@ namespace RPG_Inventory_Remake.Loadout
                     , _source[j].thingDef
                     , (target) =>
                     {
-                        _currentLoadout.AddItem(target);
+                        _currentLoadout.Add(target);
                     });
 
                 GUI.color = baseColor;

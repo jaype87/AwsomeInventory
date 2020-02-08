@@ -54,7 +54,7 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             {
                 foreach (Thing thing in things)
                 {
-                    loadoutInstance.AddItem(thing, false);
+                    loadoutInstance.Add(thing, false);
                 }
             }
         }
