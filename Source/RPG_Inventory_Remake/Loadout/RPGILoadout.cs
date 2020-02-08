@@ -214,6 +214,10 @@ namespace RPG_Inventory_Remake.Loadout
             return result;
         }
 
+        /// <summary>
+        ///     Called when user chooses items from loadout window
+        /// </summary>
+        /// <param name="thingDef"></param>
         public void AddItem(ThingDef thingDef)
         {
             if (thingDef == null)
@@ -266,30 +270,22 @@ namespace RPG_Inventory_Remake.Loadout
             InvokeCallbacks(package.Thing, false);
         }
 
-        public void RemoveItem(Thing thing)
+        /// <summary>
+        ///     Remove item from loadout regardless of stack count
+        /// </summary>
+        /// <param name="thing"></param>
+        public Thing RemoveItem(Thing thing)
         {
             if (thing == null)
             {
-                return;
+                return null;
             }
-            RemoveItem(thing.MakeThingStuffPairWithQuality(), thing);
-        }
-
-        public void RemoveItem(ThingStuffPairWithQuality pair)
-        {
-            if (!_loadoutDic.ContainsKey(pair))
-            {
-                return;
-            }
-            RemoveItem(pair, _loadoutDic[pair].Thing);
-        }
-
-        private void RemoveItem(ThingStuffPairWithQuality pair, Thing thing)
-        {
-            _loadoutDic.Remove(pair);
-            _cachedList.Remove(thing);
+            Thing toRemove = this[thing].Thing;
+            _loadoutDic.Remove(thing.MakeThingStuffPairWithQuality());
+            _cachedList.Remove(toRemove);
             _dirty = DirtyBits.All;
             InvokeCallbacks(thing, true);
+            return toRemove;
         }
 
         /// <summary>
@@ -303,17 +299,18 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 throw new ArgumentOutOfRangeException(nameof(thing));
             }
-            int index = _cachedList.IndexOf(thing);
-            ThingFilterAll package = _loadoutDic[thing.MakeThingStuffPairWithQuality()];
+            ThingFilterAll package = this[thing];
+            Thing innerThing = package.Thing;
+            int index = _cachedList.IndexOf(package.Thing);
             if (target is QualityCategory qualityCategory)
             {
-                if (thing.TryGetQuality(out QualityCategory qc))
+                if (innerThing.TryGetQuality(out QualityCategory qc))
                 {
                     if (qualityCategory == qc)
                     {
                         return;
                     }
-                    RemoveItem(thing);
+                    RemoveItem(innerThing);
                     package.AllowedQualityLevelsWrapper
                         = new QualityRange(qualityCategory, package.AllowedQualityLevels.max);
                     AddPackage(package, index);
@@ -321,9 +318,9 @@ namespace RPG_Inventory_Remake.Loadout
             }
             else if (target is ThingDef thingDef && thingDef.IsStuff)
             {
-                RemoveItem(thing);
-                thing.SetStuffDirect(thingDef);
-                thing.HitPoints = thing.MaxHitPoints;
+                RemoveItem(innerThing);
+                innerThing.SetStuffDirect(thingDef);
+                innerThing.HitPoints = innerThing.MaxHitPoints;
                 AddPackage(package, index);
             }
             else

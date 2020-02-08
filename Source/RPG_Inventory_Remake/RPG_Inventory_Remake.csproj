@@ -164,6 +164,9 @@
     <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\AddItem\Test_AddItem.cs">
       <Link>UnitTest\Loadout\RPGILoadout\AddItem\Test_AddItem.cs</Link>
     </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveOneItem.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveOneItem.cs</Link>
+    </Compile>
     <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\RemoveItem\Test_RemoveItem.cs">
       <Link>UnitTest\Loadout\RPGILoadout\RemoveItem\Test_RemoveItem.cs</Link>
     </Compile>

@@ -5,3 +5,6 @@ only exists in prisoners' think tree/
 
 ==== RNG ====
 Check Verse.Rand.RandTests()
+
+==== MSbuild ====
+New build target added in .csproj for linked .resx files

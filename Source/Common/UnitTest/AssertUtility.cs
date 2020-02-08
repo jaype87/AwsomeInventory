@@ -8,9 +8,9 @@ namespace RPG_Inventory_Remake_Common.UnitTest
 {
     public static class AssertUtility
     {
-        public static bool Expect<T>(T A, T B, string nameA)
+        public static bool Expect<T>(T Actual, T expected, string nameofActual)
         {
-            if (EqualityComparer<T>.Default.Equals(A, B))
+            if (EqualityComparer<T>.Default.Equals(Actual, expected))
             {
                 return true;
             }
@@ -18,7 +18,7 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             {
                 Log.Error(
                     string.Format(
-                        StringResource.ExpectedString, nameA, B, A)
+                        StringResource.ExpectedString, nameofActual, expected, Actual)
                     , true);
                 return false;
             }

@@ -88,7 +88,7 @@ namespace RPG_Inventory_Remake_Common.UnitTest {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to     .
+        ///   Looks up a localized string similar to       .
         /// </summary>
         public static string Indent {
             get {
@@ -129,6 +129,15 @@ namespace RPG_Inventory_Remake_Common.UnitTest {
         public static string TestCountSum {
             get {
                 return ResourceManager.GetString("TestCountSum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has {1}.
+        /// </summary>
+        public static string ThingHas {
+            get {
+                return ResourceManager.GetString("ThingHas", resourceCulture);
             }
         }
     }

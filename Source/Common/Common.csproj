@@ -118,6 +118,7 @@
     <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddMergeableItemTwice.cs" />
     <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddUnmergeableItemTwice.cs" />
     <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddOneItem.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveOneItem.cs" />
     <Compile Include="UnitTest\Loadout\RPGILoadout\RemoveItem\Test_RemoveItem.cs" />
     <Compile Include="UnitTest\Loadout\RPGILoadout\TestRPGILoadout.cs" />
     <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\Test_AddItem.cs" />

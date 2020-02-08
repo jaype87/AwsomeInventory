@@ -127,7 +127,7 @@
     <value>NotooShabby.Rimworld.UnitTest</value>
   </data>
   <data name="Indent" xml:space="preserve">
-    <value>    </value>
+    <value>      </value>
   </data>
   <data name="KeyValuePair" xml:space="preserve">
     <value>{0}: {1}</value>
@@ -140,5 +140,8 @@
   </data>
   <data name="TestCountSum" xml:space="preserve">
     <value>Test count of {0} is {1}</value>
+  </data>
+  <data name="ThingHas" xml:space="preserve">
+    <value>{0} has {1}</value>
   </data>
 </root>
