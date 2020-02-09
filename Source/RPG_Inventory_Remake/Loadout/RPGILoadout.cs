@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Verse;
 using RimWorld;
+using UnityEngine;
 using RPGIResource;
 using RPG_Inventory_Remake_Common;
 using System.Diagnostics.CodeAnalysis;
@@ -266,9 +267,19 @@ namespace RPG_Inventory_Remake.Loadout
 
         private void Add(ThingFilterAll thingFilter, int index)
         {
-            _loadoutDic.Add(thingFilter.Thing.MakeThingStuffPairWithQuality(), thingFilter);
-            _cachedList.Insert(index, thingFilter.Thing);
-            InvokeCallbacks(thingFilter.Thing, false);
+            Thing thing = thingFilter.Thing;
+            ThingStuffPairWithQuality pair = thing.MakeThingStuffPairWithQuality();
+            if (_loadoutDic.ContainsKey(pair))
+            {
+                _loadoutDic[pair].Thing.stackCount += thing.stackCount;
+            }
+            else
+            {
+                _loadoutDic.Add(pair, thingFilter);
+                _cachedList.Insert(index, thing);
+            }
+            _dirty = DirtyBits.All;
+            InvokeCallbacks(thing, false);
         }
 
         /// <summary>
@@ -305,37 +316,43 @@ namespace RPG_Inventory_Remake.Loadout
         {
             if (!Contains(thing))
             {
-                throw new ArgumentOutOfRangeException(nameof(thing));
+                return;
             }
 
             ThingFilterAll package = this[thing];
             Thing innerThing = package.Thing;
             int index = _cachedList.IndexOf(innerThing);
 
-            if (target is QualityCategory qualityCategory)
+            switch (target)
             {
-                if (innerThing.TryGetQuality(out QualityCategory qc))
-                {
-                    if (qualityCategory == qc)
+                case QualityCategory qualityCategory:
+                    if (innerThing.TryGetQuality(out QualityCategory qc))
                     {
-                        return;
+                        if (qualityCategory == qc)
+                        {
+                            return;
+                        }
+                        Remove(innerThing);
+                        package.AllowedQualityLevelsWrapper
+                            = new QualityRange(qualityCategory, package.AllowedQualityLevels.max);
+                        Add(package, index);
                     }
+                    break;
+
+                case ThingDef thingDef when thingDef.IsStuff && innerThing.def.MadeFromStuff:
                     Remove(innerThing);
-                    package.AllowedQualityLevelsWrapper
-                        = new QualityRange(qualityCategory, package.AllowedQualityLevels.max);
+                    innerThing.SetStuffDirect(thingDef);
+                    innerThing.HitPoints = innerThing.MaxHitPoints;
                     Add(package, index);
-                }
-            }
-            else if (target is ThingDef thingDef && thingDef.IsStuff)
-            {
-                Remove(innerThing);
-                innerThing.SetStuffDirect(thingDef);
-                innerThing.HitPoints = innerThing.MaxHitPoints;
-                Add(package, index);
-            }
-            else
-            {
-                throw new ArgumentException(ErrorMessage.WrongArgumentType, nameof(target));
+                    break;
+
+                case FloatRange hitpointRange:
+                    package.AllowedHitPointsPercents = hitpointRange;
+                    thing.HitPoints = Mathf.RoundToInt(hitpointRange.TrueMin * thing.MaxHitPoints);
+                    break;
+
+                default:
+                    throw new ArgumentException(ErrorMessage.WrongArgumentType, nameof(target));
             }
         }
 
@@ -375,7 +392,7 @@ namespace RPG_Inventory_Remake.Loadout
         {
             if (CallbacksOnAddOrRemove.Any())
             {
-                foreach(var callback in CallbacksOnAddOrRemove)
+                foreach (var callback in CallbacksOnAddOrRemove)
                 {
                     callback(thing, removed);
                 }
@@ -393,12 +410,12 @@ namespace RPG_Inventory_Remake.Loadout
         {
             if (array == null)
                 throw new ArgumentNullException(nameof(array));
-            if (arrayIndex < 0)
+            if (arrayIndex < 0 || arrayIndex + 1 > array.Length)
                 throw new ArgumentOutOfRangeException(nameof(array));
-            if (Count > array.Length - arrayIndex + 1)
+            if (Count > array.Length - arrayIndex)
                 throw new ArgumentOutOfRangeException(nameof(array));
 
-            for(int i = 0; i < Count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 array[i + arrayIndex] = _cachedList[i];
             }

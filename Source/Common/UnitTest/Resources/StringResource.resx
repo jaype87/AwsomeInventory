@@ -132,16 +132,25 @@
   <data name="KeyValuePair" xml:space="preserve">
     <value>{0}: {1}</value>
   </data>
+  <data name="MoreThanOneFlag" xml:space="preserve">
+    <value>Argument has more one flag</value>
+  </data>
+  <data name="NumberOfChildrenTests" xml:space="preserve">
+    <value>Number of children tests of {0} is {1}</value>
+  </data>
   <data name="ObjectCount" xml:space="preserve">
     <value>{0}.Count</value>
   </data>
   <data name="ObjectsAreNotEqual" xml:space="preserve">
     <value>{0}: {1} and {2}: {3} are not equal</value>
   </data>
-  <data name="TestCountSum" xml:space="preserve">
-    <value>Test count of {0} is {1}</value>
+  <data name="SettingFlagZero" xml:space="preserve">
+    <value>Setting TestFlag.Zero has no effect</value>
   </data>
   <data name="ThingHas" xml:space="preserve">
     <value>{0} has {1}</value>
+  </data>
+  <data name="TotalTests" xml:space="preserve">
+    <value>Number of total tests is {0}</value>
   </data>
 </root>

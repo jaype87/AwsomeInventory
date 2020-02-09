@@ -13,12 +13,12 @@ using RPG_Inventory_Remake;
 
 namespace RPG_Inventory_Remake_Common.UnitTest
 {
-    public class Test_RemoveItem : RPGIUnitTest
+    public class Test_UpdateItem : RPGIUnitTest
     {
         public static RPGILoadout loadoutInstance = new RPGILoadout();
         public static List<Thing> things = new List<Thing>();
 
-        static Test_RemoveItem()
+        static Test_UpdateItem()
         {
             ThingDef thingDef = ThingDef.Named("MeleeWeapon_Knife");
             ThingStuffPairWithQuality pair1 = new ThingStuffPairWithQuality
@@ -58,11 +58,11 @@ namespace RPG_Inventory_Remake_Common.UnitTest
 
         public override void Setup()
         {
-            // Add tests
-            Tests.Add(new RemoveOneItem());
-            Tests.Add(new RemoveSameItemTwice());
-            Tests.Add(new RemoveAllButOne());
-            Tests.Add(new RemoveAll());
+            Tests.Add(new UpdateQualityNoMerge());
+            Tests.Add(new UpdateStuffNoMerge());
+            Tests.Add(new UpdateQualityAndMerged());
+            Tests.Add(new UpdateStuffAndMerged());
+            Tests.Add(new UpdateHitPoint());
         }
     }
 }

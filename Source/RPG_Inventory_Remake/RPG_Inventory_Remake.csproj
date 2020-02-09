@@ -164,14 +164,41 @@
     <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\AddItem\Test_AddItem.cs">
       <Link>UnitTest\Loadout\RPGILoadout\AddItem\Test_AddItem.cs</Link>
     </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveAll.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveAll.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveAllButOne.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveAllButOne.cs</Link>
+    </Compile>
     <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveOneItem.cs">
       <Link>UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveOneItem.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveSameItemTwice.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveSameItemTwice.cs</Link>
     </Compile>
     <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\RemoveItem\Test_RemoveItem.cs">
       <Link>UnitTest\Loadout\RPGILoadout\RemoveItem\Test_RemoveItem.cs</Link>
     </Compile>
     <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\TestRPGILoadout.cs">
       <Link>UnitTest\Loadout\RPGILoadout\TestRPGILoadout.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\UpdateItem\Test_UpdateItem.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\UpdateItem\Test_UpdateItem.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateHitPoint.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateHitPoint.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateQualityAndMerged.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateQualityAndMerged.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateQualityNoMerge.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateQualityNoMerge.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateStuffAndMerge.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateStuffAndMerge.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateStuffNoMerge.cs">
+      <Link>UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateStuffNoMerge.cs</Link>
     </Compile>
     <Compile Include="..\Common\UnitTest\Resources\StringResource.Designer.cs">
       <Link>UnitTest\Resources\StringResource.Designer.cs</Link>

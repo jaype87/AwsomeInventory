@@ -24,8 +24,13 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             }
         }
 
-        public static bool Contains<T>(T owner, object thing, string nameofOwner) where T : ICollection<object>
+        public static bool Contains<T>(ICollection<T> owner, T thing, string nameofOwner, string nameofThing)
         {
+            IntegrationTestHandler.
+            if (owner == null)
+            {
+                throw new ArgumentNullException(nameof(owner));
+            }
             if (owner.Contains(thing))
             {
                 return true;
@@ -34,15 +39,18 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             {
                 Log.Error(
                     string.Format(
-                        StringResource.ThingHas, nameofOwner, thing.GetType())
+                        StringResource.ExpectedString
+                        , string.Format(StringResource.ThingHas, nameofOwner, nameofThing)
+                        , true
+                        , false)
                     , true);
                 return false;
             }
         }
 
-        public static bool AreEqual(object A, object B, string nameA, string nameB)
+        public static bool AreEqual<T>(T A, T B, string nameA, string nameB)
         {
-            if (A == B)
+            if (EqualityComparer<T>.Default.Equals(A, B))
             {
                 return true;
             }

@@ -101,11 +101,6 @@ namespace RPG_Inventory_Remake.Loadout
             }
         }
 
-        public override void PreOpen()
-        {
-            base.PreOpen();
-        }
-
         public override void DoWindowContents(Rect inRect)
         {
             // <Layout>
@@ -151,8 +146,9 @@ namespace RPG_Inventory_Remake.Loadout
             Widgets.FloatRange(hitpointRect, dragID, ref hitpointRange, 0f, 1f, "HitPoints", ToStringStyle.PercentZero);
             if (hitpointRange != _hitpointRange)
             {
-                filter.AllowedHitPointsPercents = hitpointRange;
-                _thing.HitPoints = Mathf.RoundToInt(hitpointRange.TrueMin * _thing.MaxHitPoints);
+                _loadout.UpdateItem(_thing, hitpointRange);
+                //filter.AllowedHitPointsPercents = hitpointRange;
+                //_thing.HitPoints = Mathf.RoundToInt(hitpointRange.TrueMin * _thing.MaxHitPoints);
                 _hitpointRange = hitpointRange;
             }
 
@@ -169,6 +165,7 @@ namespace RPG_Inventory_Remake.Loadout
                 filter.AllowedQualityLevels = _qualityRange = qualityRange;
                 _loadout.UpdateItem(_thing, qualityRange.min);
                 _pair.quality = qualityRange.min;
+                _thing = _loadout[_pair].Thing;
             }
 
             // Draw Close Button
@@ -221,6 +218,7 @@ namespace RPG_Inventory_Remake.Loadout
                     {
                         _loadout.UpdateItem(thing, stuff);
                         _pair.stuff = stuff;
+                        _thing = _loadout[_pair].Thing;
                     });
 
                 if (stuff == _pair.stuff)

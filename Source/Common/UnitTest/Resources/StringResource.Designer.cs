@@ -106,6 +106,24 @@ namespace RPG_Inventory_Remake_Common.UnitTest {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Argument has more one flag.
+        /// </summary>
+        public static string MoreThanOneFlag {
+            get {
+                return ResourceManager.GetString("MoreThanOneFlag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number of children tests of {0} is {1}.
+        /// </summary>
+        public static string NumberOfChildrenTests {
+            get {
+                return ResourceManager.GetString("NumberOfChildrenTests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}.Count.
         /// </summary>
         public static string ObjectCount {
@@ -124,11 +142,11 @@ namespace RPG_Inventory_Remake_Common.UnitTest {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Test count of {0} is {1}.
+        ///   Looks up a localized string similar to Setting TestFlag.Zero has no effect.
         /// </summary>
-        public static string TestCountSum {
+        public static string SettingFlagZero {
             get {
-                return ResourceManager.GetString("TestCountSum", resourceCulture);
+                return ResourceManager.GetString("SettingFlagZero", resourceCulture);
             }
         }
         
@@ -138,6 +156,15 @@ namespace RPG_Inventory_Remake_Common.UnitTest {
         public static string ThingHas {
             get {
                 return ResourceManager.GetString("ThingHas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number of total tests is {0}.
+        /// </summary>
+        public static string TotalTests {
+            get {
+                return ResourceManager.GetString("TotalTests", resourceCulture);
             }
         }
     }

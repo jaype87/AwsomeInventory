@@ -20,6 +20,7 @@ namespace RPG_Inventory_Remake_Common.UnitTest
         {
             Tests.Add(new Test_AddItem());
             Tests.Add(new Test_RemoveItem());
+            Tests.Add(new Test_UpdateItem());
         }
     }
 }

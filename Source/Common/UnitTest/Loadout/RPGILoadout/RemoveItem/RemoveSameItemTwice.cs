@@ -9,7 +9,7 @@ using RPG_Inventory_Remake.Loadout;
 
 namespace RPG_Inventory_Remake_Common.UnitTest
 {
-    public class RemoveOneItem : Test_RemoveItem
+    public class RemoveSameItemTwice : Test_RemoveItem
     {
         private readonly int itemCount = loadoutInstance.Count;
 
@@ -23,6 +23,7 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             for (int i = 0; i < things.Count; i++)
             {
                 loadoutInstance.Remove(things[i], out Thing removed);
+                loadoutInstance.Remove(things[i]);
                 List<Thing> remainings = things.Where(t => t != things[i]).ToList();
 
                 result &=

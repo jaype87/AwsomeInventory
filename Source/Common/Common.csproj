@@ -118,10 +118,19 @@
     <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddMergeableItemTwice.cs" />
     <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddUnmergeableItemTwice.cs" />
     <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddOneItem.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveAll.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveAllButOne.cs" />
     <Compile Include="UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveOneItem.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveSameItemTwice.cs" />
     <Compile Include="UnitTest\Loadout\RPGILoadout\RemoveItem\Test_RemoveItem.cs" />
     <Compile Include="UnitTest\Loadout\RPGILoadout\TestRPGILoadout.cs" />
     <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\Test_AddItem.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\UpdateItem\Test_UpdateItem.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateHitPoint.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateQualityAndMerged.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateQualityNoMerge.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateStuffAndMerge.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateStuffNoMerge.cs" />
     <Compile Include="UnitTest\Resources\StringResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

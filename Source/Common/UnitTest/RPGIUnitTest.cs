@@ -58,22 +58,33 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             return false;
         }
 
-        public static void Report(RPGIUnitTest tests, ref StringBuilder sb, string indent = "")
+        public static int Report(RPGIUnitTest tests, ref StringBuilder sb, string indent = "")
         {
-            if (tests == null || !tests.Tests.Any())
+            int num = 0;
+            if (tests == null || sb == null)
             {
-                return;
+                return 0;
+            }
+            if (!tests.Tests.Any())
+            {
+                return 1;
             }
 
             sb.Append(indent);
-            sb.AppendLine(string.Format(StringResource.TestCountSum, tests.FullName, tests.Tests.Count));
+            sb.AppendLine(string.Format(StringResource.NumberOfChildrenTests, tests.FullName, tests.Tests.Count));
             foreach (RPGIUnitTest test in tests.Tests)
             {
                 sb.Append(indent);
                 sb.Append(StringResource.Indent);
                 sb.AppendLine(string.Format(StringResource.KeyValuePair, test.FullName, tests.TestResults[test.FullName]));
-                Report(test, ref sb, string.Concat(indent, StringResource.Indent));
+                num += Report(test, ref sb, string.Concat(indent, StringResource.Indent));
             }
+            sb.AppendLine();
+            if (indent.NullOrEmpty())
+            {
+                sb.AppendLine(string.Format(StringResource.TotalTests, num));
+            }
+            return num;
         }
     }
 }
