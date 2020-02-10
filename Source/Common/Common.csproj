@@ -113,6 +113,13 @@
     <Compile Include="UI\Theme.cs" />
     <Compile Include="UI\WindowOnMouseDrag.cs" />
     <Compile Include="UnitTest\AssertUtility.cs" />
+    <Compile Include="UnitTest\Loadout\compRPGILoadout\TestcompRPGILoadout.cs" />
+    <Compile Include="UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\AssignLoadoutToNull.cs" />
+    <Compile Include="UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\DifferentInStackCount.cs" />
+    <Compile Include="UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\NewLoadoutHasOneLessThing.cs" />
+    <Compile Include="UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\NewLoadoutHasOneMoreThing.cs" />
+    <Compile Include="UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\Test_UpdateForNewLoadout.cs" />
+    <Compile Include="UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\UpdateLoadoutWithInventory.cs" />
     <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddTwoThingsDifferentInQuality.cs" />
     <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddTwoThingsDifferentInStuff.cs" />
     <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddMergeableItemTwice.cs" />
@@ -136,6 +143,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StringResource.resx</DependentUpon>
     </Compile>
+    <Compile Include="UnitTest\IntegrationTestHandler.cs" />
+    <Compile Include="UnitTest\RPGIIntegrationTest.cs" />
     <Compile Include="UnitTest\UI\UnitTestButton.cs" />
     <Compile Include="UnitTest\UnitTest_Start.cs" />
     <Compile Include="UnitTest\UnitTest_Root.cs" />

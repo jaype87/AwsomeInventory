@@ -19,7 +19,7 @@ namespace RPG_Inventory_Remake
 
         protected override Job TryGiveJob(Pawn pawn)
         {
-            compRPGILoudout RPGIloadout = ((ThingWithComps)pawn).TryGetComp<compRPGILoudout>();
+            compRPGILoadout RPGIloadout = ((ThingWithComps)pawn).TryGetComp<compRPGILoadout>();
             Apparel targetA = null;
 
             if (RPGIloadout == null || !RPGIloadout.NeedRestock)

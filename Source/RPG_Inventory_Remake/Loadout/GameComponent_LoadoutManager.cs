@@ -15,8 +15,8 @@ namespace RPG_Inventory_Remake.Loadout
     public class LoadoutManager : GameComponent
     {
         #region Fields
-        private static List<RPGILoadout> _loadouts = new List<RPGILoadout>();
         private static List<Outfit> _outfits;
+        private static readonly List<RPGILoadout> _loadouts = new List<RPGILoadout>();
         private static readonly Regex _pattern = new Regex(@"^(.*?)(\d*)$");
         #endregion Fields
 
@@ -27,7 +27,6 @@ namespace RPG_Inventory_Remake.Loadout
         {
         }
 
-        // this constructor is also used by the scribe.
         public LoadoutManager()
         {
 

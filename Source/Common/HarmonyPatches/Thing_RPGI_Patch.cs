@@ -29,7 +29,7 @@ namespace RPG_Inventory_Remake_Common
         {
             if (__instance.ParentHolder is Pawn pawn)
             {
-                if (pawn.TryGetComp<compRPGILoudout>() is compRPGILoudout compRPGI)
+                if (pawn.TryGetComp<compRPGILoadout>() is compRPGILoadout compRPGI)
                 {
                     compRPGI.NotifiedSplitOff(__instance, count);
                 }

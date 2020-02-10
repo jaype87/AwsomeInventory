@@ -146,6 +146,30 @@
     <Compile Include="..\Common\UnitTest\AssertUtility.cs">
       <Link>UnitTest\AssertUtility.cs</Link>
     </Compile>
+    <Compile Include="..\Common\UnitTest\IntegrationTestHandler.cs">
+      <Link>UnitTest\IntegrationTestHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\compRPGILoadout\TestcompRPGILoadout.cs">
+      <Link>UnitTest\Loadout\compRPGILoadout\TestcompRPGILoadout.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\AssignLoadoutToNull.cs">
+      <Link>UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\AssignLoadoutToNull.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\DifferentInStackCount.cs">
+      <Link>UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\DifferentInStackCount.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\NewLoadoutHasOneLessThing.cs">
+      <Link>UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\NewLoadoutHasOneLessThing.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\NewLoadoutHasOneMoreThing.cs">
+      <Link>UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\NewLoadoutHasOneMoreThing.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\Test_UpdateForNewLoadout.cs">
+      <Link>UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\Test_UpdateForNewLoadout.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\UpdateLoadoutWithInventory.cs">
+      <Link>UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\UpdateLoadoutWithInventory.cs</Link>
+    </Compile>
     <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\AddItem\AddMergeableItemTwice.cs">
       <Link>UnitTest\Loadout\RPGILoadout\AddItem\AddMergeableItemTwice.cs</Link>
     </Compile>
@@ -206,6 +230,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>StringResource.resx</DependentUpon>
     </Compile>
+    <Compile Include="..\Common\UnitTest\RPGIIntegrationTest.cs">
+      <Link>UnitTest\RPGIIntegrationTest.cs</Link>
+    </Compile>
     <Compile Include="..\Common\UnitTest\RPGIUnitTest.cs">
       <Link>UnitTest\RPGIUnitTest.cs</Link>
     </Compile>
@@ -247,7 +274,7 @@
     <Compile Include="Jobs\JobGiver_RPGI_FindWeapon.cs" />
     <Compile Include="Jobs\JobGiver_FindItemByRadius.cs" />
     <Compile Include="Jobs\JobGiver_RPGI_OpportunisticHaul.cs" />
-    <Compile Include="Loadout\compRPGILoudout.cs" />
+    <Compile Include="Loadout\compRPGILoadout.cs" />
     <Compile Include="Loadout\Dialog_StuffAndQuality.cs" />
     <Compile Include="Loadout\GameComponent_DefManager.cs" />
     <Compile Include="Loadout\LoadoutComparer.cs" />

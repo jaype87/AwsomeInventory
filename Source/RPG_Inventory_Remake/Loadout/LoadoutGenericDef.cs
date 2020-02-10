@@ -177,9 +177,36 @@ namespace RPG_Inventory_Remake.Loadout
             return defName == other.defName;
         }
 
+        public override bool Equals(object obj)
+        {
+            if (!(obj is LoadoutGenericDef genericDef))
+            {
+                return false;
+            }
+            return Equals(genericDef);
+        }
+
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        public static bool operator ==(LoadoutGenericDef a, LoadoutGenericDef b)
+        {
+            if (ReferenceEquals(a, b))
+            {
+                return true;
+            }
+            if (a == null || b == null)
+            {
+                return false;
+            }
+            return a.defName == b.defName;
+        }
+
+        public static bool operator !=(LoadoutGenericDef a, LoadoutGenericDef b)
+        {
+            return !(a == b);
         }
 
         #endregion Methods

@@ -1,0 +1,56 @@
+﻿#if UnitTest
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Verse;
+using RimWorld;
+
+#if RPG_Inventory_Remake
+using RPG_Inventory_Remake.Loadout;
+using RPG_Inventory_Remake;
+#endif
+
+namespace RPG_Inventory_Remake_Common.UnitTest
+{
+    public class AssignLoadoutToNull : Test_UpdateForNewLoadout
+    {
+        public override void Run(out bool result)
+        {
+            compRPGILoadout compRPGI = _pawn.GetComp<compRPGILoadout>();
+            result = true;
+
+            foreach (RPGILoadout loadout in _loadouts)
+            {
+                _pawn.SetLoadout(loadout);
+                result &= AssertUtility.AreEqual(loadout, compRPGI.Loadout, nameof(loadout), nameof(compRPGI.Loadout));
+                if (loadout != null)
+                {
+                    result &= AssertUtility.AreEqual(
+                        compRPGI.InventoryTracker.Count
+                        , loadout.Count
+                        , string.Format(StringResource.ObjectCount, nameof(compRPGI.InventoryTracker))
+                        , string.Format(StringResource.ObjectCount, nameof(loadout)));
+                    foreach (Thing thing in loadout)
+                    {
+                        result &= AssertUtility.Contains(
+                            compRPGI.InventoryTracker.Keys
+                            , thing
+                            , nameof(compRPGI.InventoryTracker)
+                            , thing.LabelCapNoCount);
+
+                        result &= AssertUtility.Expect(
+                            compRPGI.InventoryTracker[thing]
+                            , thing.stackCount * -1
+                            , string.Format(StringResource.ObjectCount, nameof(compRPGI.InventoryTracker)));
+                    }
+                }
+                _pawn.outfits.CurrentOutfit = null;
+                compRPGI.Loadout = null;
+                compRPGI.InventoryTracker = null;
+            }
+            return;
+        }
+    }
+}
+#endif

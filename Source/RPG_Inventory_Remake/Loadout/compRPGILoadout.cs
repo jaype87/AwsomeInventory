@@ -20,7 +20,7 @@ namespace RPG_Inventory_Remake.Loadout
     ///     The correct initiate state for this clas is both Loadout and InventoryTracker are null. After moving
     /// to other states, none of them can be null.
     /// </remarks>
-    public partial class compRPGILoudout : ThingComp, IExposable
+    public partial class compRPGILoadout : ThingComp, IExposable
     {
         #region Fields
 
@@ -41,7 +41,6 @@ namespace RPG_Inventory_Remake.Loadout
         {
             get
             {
-                Log.Message("Check if need resotkc");
                 if (InventoryTracker == null)
                 {
                     return false;
@@ -110,7 +109,7 @@ namespace RPG_Inventory_Remake.Loadout
 
         #region Constructor
 
-        public compRPGILoudout()
+        public compRPGILoadout()
         {
         }
 
@@ -187,35 +186,30 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 return;
             }
+
             if (Loadout == null)
             {
-                Log.Message("Loadout is null");
-
                 InventoryTracker = new Dictionary<Thing, int>(new LoadoutComparer<Thing>());
                 Dictionary<Thing, int> curInventory = MakeLookupForPawnGearAndInventory(_pawn);
 
                 foreach (Thing thing in newLoadout)
                 {
-                    if (curInventory.ContainsKey(thing))
+                    if (curInventory.TryGetValue(thing, out int curStack))
                     {
-                        InventoryTracker[thing] = curInventory[thing] - thing.stackCount;
+                        InventoryTracker[thing] = curStack - thing.stackCount;
                     }
                     else
                     {
-                        InventoryTracker.Add(thing, 0 - thing.stackCount);
+                        InventoryTracker[thing] = -thing.stackCount;
                     }
                 }
             }
             else if (Loadout == newLoadout)
             {
-                Log.Message("Loadout is unchanged");
-
                 return;
             }
             else
             {
-                Log.Message("Loadout is not null");
-
                 // Remove deleted items
                 foreach (Thing thing in InventoryTracker.Keys.ToList())
                 {
@@ -225,6 +219,7 @@ namespace RPG_Inventory_Remake.Loadout
                     }
                 }
                 // Add new items or updated the old ones
+                Dictionary<Thing, int> curInventory = MakeLookupForPawnGearAndInventory(_pawn);
                 foreach (Thing thing in newLoadout)
                 {
                     if (Loadout.TryGetThing(thing.MakeThingStuffPairWithQuality(), out Thing oldThing))
@@ -233,7 +228,11 @@ namespace RPG_Inventory_Remake.Loadout
                     }
                     else
                     {
-                        InventoryTracker[thing] = 0 - thing.stackCount;
+                        if (curInventory.TryGetValue(thing, out int curStack))
+                        {
+                            InventoryTracker[thing] = curStack - thing.stackCount;
+                        }
+                        InventoryTracker[thing] = -thing.stackCount;
                     }
                 }
                 Loadout.CallbacksOnAddOrRemove.Remove(UpdateInventoryTracker);

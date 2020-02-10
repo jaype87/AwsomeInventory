@@ -37,25 +37,25 @@ namespace RPG_Inventory_Remake
         [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
         public static void NotifyAdded_Postfix(ThingOwner __instance, Thing item)
         {
-            (__instance.Owner as Pawn_InventoryTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedAdded(item);
-            (__instance.Owner as Pawn_ApparelTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedAdded(item);
-            (__instance.Owner as Pawn_EquipmentTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedAdded(item);
+            (__instance.Owner as Pawn_InventoryTracker)?.pawn?.TryGetComp<compRPGILoadout>()?.NotifiedAdded(item);
+            (__instance.Owner as Pawn_ApparelTracker)?.pawn?.TryGetComp<compRPGILoadout>()?.NotifiedAdded(item);
+            (__instance.Owner as Pawn_EquipmentTracker)?.pawn?.TryGetComp<compRPGILoadout>()?.NotifiedAdded(item);
         }
 
         [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
         public static void NotifyAddedAndMergedWith_Postfix(ThingOwner __instance, Thing item, int mergedCount)
         {
-            (__instance.Owner as Pawn_InventoryTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedAddedAndMergedWith(item, mergedCount);
-            (__instance.Owner as Pawn_ApparelTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedAddedAndMergedWith(item, mergedCount);
-            (__instance.Owner as Pawn_EquipmentTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedAddedAndMergedWith(item, mergedCount);
+            (__instance.Owner as Pawn_InventoryTracker)?.pawn?.TryGetComp<compRPGILoadout>()?.NotifiedAddedAndMergedWith(item, mergedCount);
+            (__instance.Owner as Pawn_ApparelTracker)?.pawn?.TryGetComp<compRPGILoadout>()?.NotifiedAddedAndMergedWith(item, mergedCount);
+            (__instance.Owner as Pawn_EquipmentTracker)?.pawn?.TryGetComp<compRPGILoadout>()?.NotifiedAddedAndMergedWith(item, mergedCount);
         }
 
         [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
         public static void NotifyRemoved_Postfix(ThingOwner __instance, Thing item)
         {
-            (__instance.Owner as Pawn_InventoryTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedRemoved(item);
-            (__instance.Owner as Pawn_ApparelTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedRemoved(item);
-            (__instance.Owner as Pawn_EquipmentTracker)?.pawn?.TryGetComp<compRPGILoudout>()?.NotifiedRemoved(item);
+            (__instance.Owner as Pawn_InventoryTracker)?.pawn?.TryGetComp<compRPGILoadout>()?.NotifiedRemoved(item);
+            (__instance.Owner as Pawn_ApparelTracker)?.pawn?.TryGetComp<compRPGILoadout>()?.NotifiedRemoved(item);
+            (__instance.Owner as Pawn_EquipmentTracker)?.pawn?.TryGetComp<compRPGILoadout>()?.NotifiedRemoved(item);
         }
     }
 }

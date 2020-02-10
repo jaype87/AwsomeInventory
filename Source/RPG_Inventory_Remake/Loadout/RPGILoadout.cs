@@ -102,6 +102,10 @@ namespace RPG_Inventory_Remake.Loadout
             }
         }
 
+        public ICollection<ThingFilterAll> Values
+        {
+            get => _loadoutDic.Values;
+        }
         #endregion
 
         #region Methods

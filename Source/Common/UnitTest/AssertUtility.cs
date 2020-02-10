@@ -26,7 +26,6 @@ namespace RPG_Inventory_Remake_Common.UnitTest
 
         public static bool Contains<T>(ICollection<T> owner, T thing, string nameofOwner, string nameofThing)
         {
-            IntegrationTestHandler.
             if (owner == null)
             {
                 throw new ArgumentNullException(nameof(owner));

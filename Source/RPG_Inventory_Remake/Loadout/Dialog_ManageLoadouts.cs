@@ -362,7 +362,7 @@ namespace RPG_Inventory_Remake.Loadout
             if (countInt != thing.stackCount)
             {
                 int delta = countInt - thing.stackCount;
-                _pawn.GetComp<compRPGILoudout>().InventoryTracker[thing] -= delta;
+                _pawn.GetComp<compRPGILoadout>().InventoryTracker[thing] -= delta;
                 _currentLoadout.SetDirtyAll();
             }
             thing.stackCount = countInt;

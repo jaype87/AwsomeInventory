@@ -14,35 +14,36 @@ namespace RPG_Inventory_Remake_Common.UnitTest
 {
     public class UnitTest_Start : GameComponent
     {
+        public static RPGIUnitTest Root = new UnitTest_Root();
+
         public UnitTest_Start(Game game)
         {
-
         }
 
-        public static RPGIUnitTest Root = new UnitTest_Root();
-        static UnitTest_Start()
+        public override void LoadedGame()
         {
-            Thread thread = new Thread((ThreadStart)
-                delegate
-                {
-                    while (LongEventHandler.AnyEventNowOrWaiting)
-                    {
-                        Thread.Sleep(1000);
-                    }
-                    try
-                    {
-                        Root.Start();
-                    }
-                    catch(Exception e)
-                    {
-                        Log.Error(e.Message + e.StackTrace);
-                    }
+            Start();
+        }
 
-                    StringBuilder sb = new StringBuilder();
-                    RPGIUnitTest.Report(Root, ref sb);
-                    Log.Warning(sb.ToString());
-                });
-            thread.Start();
+        public override void StartedNewGame()
+        {
+            Start();
+        }
+
+        private void Start()
+        {
+            try
+            {
+                Root.Start();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message + e.StackTrace);
+            }
+
+            StringBuilder sb = new StringBuilder();
+            RPGIUnitTest.Report(Root, ref sb);
+            Log.Warning(sb.ToString());
         }
     }
 }

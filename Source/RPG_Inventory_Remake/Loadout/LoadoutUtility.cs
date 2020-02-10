@@ -110,7 +110,7 @@ namespace RPG_Inventory_Remake.Loadout
                 throw new ArgumentNullException(nameof(pawn));
             }
 
-            return pawn.TryGetComp<compRPGILoudout>()?.Loadout;
+            return pawn.TryGetComp<compRPGILoadout>()?.Loadout;
         }
 
         public static int GetLoadoutId(this Pawn pawn)
@@ -150,7 +150,7 @@ namespace RPG_Inventory_Remake.Loadout
             {
                 throw new ArgumentNullException(nameof(pawn));
             }
-            if (pawn.TryGetComp<compRPGILoudout>() is compRPGILoudout comp)
+            if (pawn.TryGetComp<compRPGILoadout>() is compRPGILoadout comp)
             {
                 if (comp.Loadout == loadout)
                 {
@@ -220,7 +220,7 @@ namespace RPG_Inventory_Remake.Loadout
             }
             if (pair.stuff != null && !pair.stuff.IsStuff)
             {
-                Log.Error("MakeThing error: Tried to make " + pair.thing+ " from " + pair.stuff + " which is not a stuff. Assigning default.");
+                Log.Error("MakeThing error: Tried to make " + pair.thing + " from " + pair.stuff + " which is not a stuff. Assigning default.");
                 pair.stuff = GenStuff.DefaultStuffFor(pair.thing);
             }
             if (!pair.thing.MadeFromStuff && pair.stuff != null)
@@ -255,6 +255,21 @@ namespace RPG_Inventory_Remake.Loadout
                 stuff = thing.Stuff,
                 quality = null
             };
+        }
+
+        public static bool CompareThing(Thing x, Thing y)
+        {
+            if (ReferenceEquals(x, y))
+            {
+                return true;
+            }
+            if (x == null || y == null)
+            {
+                return false;
+            }
+            ThingStuffPairWithQuality pairX = x.MakeThingStuffPairWithQuality();
+            ThingStuffPairWithQuality pairY = y.MakeThingStuffPairWithQuality();
+            return pairX == pairY;
         }
 
         #endregion Methods
