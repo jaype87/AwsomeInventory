@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<loadFolders>
+    <default>
+        <li>Common</li>
+    </default>
+    <v1.1>
+        <li>Common</li>
+        <li IfModActive="Combat Extended">CombatExtended</li>
+        <li IfModNotActive="Combat Extended">Vanilla</li>
+    </v1.1>
+</loadFolders>
