@@ -1,55 +1,56 @@
-﻿using System;
+﻿// <copyright file="Utility.cs" company="Zizhen Li">
+// Copyright (c) Zizhen Li. All rights reserved.
+// Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
-using Verse;
-using Verse.Sound;
-using Verse.AI;
+using AwesomeInventory.Common;
+using AwesomeInventory.Common.Loadout;
+using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
-using UnityEngine;
-using Harmony;
+using RPG_Inventory_Remake_Common;
 using RPGIResource;
+using UnityEngine;
+using Verse;
+using Verse.AI;
+using Verse.Sound;
 
-namespace RPG_Inventory_Remake_Common
+namespace AwesomeInventory.Common
 {
     public static class Utility
     {
-        #region Fields  
-
-        private const float _barHeight = 20f;
-        private const float _margin = 15f;
         private const float _smallIconSize = 20f;
-        private const float _thingLeftX = 36f;
-        private const float _thingRowHeight = 28f;
-        private const float _topPadding = 20f;
-        public const float StandardLineHeight = 22f;
         private static readonly Color _highlightColor = new Color(0.5f, 0.5f, 0.5f, 1f);
         private static readonly Color _highlightGreen = new Color(134 / 255f, 206 / 255f, 0, 1);
         private static readonly Color _highlightBrown = new Color(212 / 255f, 141 / 255f, 0, 1);
         private static readonly Color _thingLabelColor = new Color(0.9f, 0.9f, 0.9f, 1f);
         private static Vector2 _scrollPosition = Vector2.zero;
+
+        public const float StandardLineHeight = 22f;
         public static readonly Vector3 PawnTextureCameraOffset = new Vector3(0f, 0f, 0f);
 
-        public static HarmonyInstance _harmony =
-            HarmonyInstance.Create("NotoShabby.rimworld.mod.RPGInventoryRemake");
+        /// <summary>
+        /// Gets a harmony instance.
+        /// </summary>
+        public static Harmony Harmony { get; } = new Harmony("NotoShabby.rimworld.mod.RPGInventoryRemake");
 
-
-        #endregion Fields
-
-        //public enum ListOrders
-        //{
-        //    UpperHead = 200, FullHead = 199, Eyes = 198, Teeth = 197, Mouth = 196,
-        //    Neck = 180,
-        //    Torso = 100, Arms = 90, LeftArm = 89, RightArm = 88,
-        //    Shoulders = 85, LeftShoulder = 84, RightShoulder = 83,
-        //    Hands = 80, LeftHand = 79, RightHand = 78,
-        //    Waist = 50,
-        //    Legs = 10,
-        //    Feet = 9
-        //}
-
+        /****************************************************************************
+         *  List order used by AwesomeInventory to display items.
+         *
+         *  UpperHead = 200, FullHead = 199, Eyes = 198, Teeth = 197, Mouth = 196,
+         *  Neck = 180,
+         *  Torso = 100, Arms = 90, LeftArm = 89, RightArm = 88,
+         *  Shoulders = 85, LeftShoulder = 84, RightShoulder = 83,
+         *  Hands = 80, LeftHand = 79, RightHand = 78,
+         *  Waist = 50,
+         *  Legs = 10,
+         *  Feet = 9
+         *
+        *****************************************************************************/
 
         public static bool ShouldShowOverallArmor(Pawn p)
         {
@@ -195,14 +196,14 @@ namespace RPG_Inventory_Remake_Common
                 {
                     // Check JobGiver_RPGIUnload for more information
                     comp.Unload = false;
-                    if (pawn.CurJob?.targetA.Thing == t && pawn.CurJobDef == RPGI_JobDefOf.RPGI_Unload)
+                    if (pawn.CurJob?.targetA.Thing == t && pawn.CurJobDef == AwesomeInventory_JobDefOf.RPGI_Unload)
                     {
                         pawn.jobs.EndCurrentJob(JobCondition.Incompletable);
                         return;
                     }
                     QueuedJob queuedJob = pawn.jobs.jobQueue.FirstOrDefault
                         (
-                            j => j.job.def == RPGI_JobDefOf.RPGI_Fake &&
+                            j => j.job.def == AwesomeInventory_JobDefOf.RPGI_Fake &&
                             j.job.targetA.Thing == t
                         );
                     if (queuedJob != null)
@@ -219,7 +220,7 @@ namespace RPG_Inventory_Remake_Common
         }
 
         // Serve straight up from source, no idea why it is made private
-        public static void DrawThingRow(RPG_Pawn selPawn, ref float y, float width, Thing thing, bool inventory = false)
+        public static void DrawThingRow(PawnModal selPawn, ref float y, float width, Thing thing, bool inventory = false)
         {
             Rect rect = new Rect(0f, y, width, 28f);
 
@@ -284,10 +285,12 @@ namespace RPG_Inventory_Remake_Common
                 GUI.color = ITab_Pawn_Gear.HighlightColor;
                 GUI.DrawTexture(rect, TexUI.HighlightTex);
             }
+
             if (thing.def.DrawMatSingle != null && thing.def.DrawMatSingle.mainTexture != null)
             {
                 Widgets.ThingIcon(new Rect(4f, y, 28f, 28f), thing);
             }
+
             Text.Anchor = TextAnchor.MiddleLeft;
             GUI.color = ITab_Pawn_Gear.ThingLabelColor;
             Rect rect5 = new Rect(36f, y, rect.width - 36f, rect.height);
@@ -309,7 +312,7 @@ namespace RPG_Inventory_Remake_Common
             y += 28f;
         }
 
-        public static void DrawThingRowWithImage(RPG_Pawn selPawn, Rect rect, ThingWithComps thing, bool inventory = false)
+        public static void DrawThingRowWithImage(PawnModal selPawn, Rect rect, ThingWithComps thing, bool inventory = false)
         {
             QualityCategory c;
             if (thing.TryGetQuality(out c))
@@ -707,7 +710,7 @@ namespace RPG_Inventory_Remake_Common
         }
 
         // Mouse right click contextual menu when click on item
-        public static bool MRC_ContextualMenu(RPG_Pawn selPawn, Thing thing, Rect rect)
+        public static bool MRC_ContextualMenu(PawnModal selPawn, Thing thing, Rect rect)
         {
             if (Widgets.ButtonInvisible(rect) && Event.current.button == 1)
             {
@@ -735,7 +738,7 @@ namespace RPG_Inventory_Remake_Common
                                         }));
                                 }
 
-                                else if (equipment.def.IsWeapon && selPawn.Pawn.story.WorkTagIsDisabled(WorkTags.Violent))
+                                else if (equipment.def.IsWeapon && selPawn.Pawn.story.DisabledWorkTagsBackstoryAndTraits.HasFlag(WorkTags.Violent))
                                 {
                                     equipOption = new FloatMenuOption("CannotEquip".Translate(labelShort) + " (" + "IsIncapableOfViolenceLower".Translate(selPawn.Pawn.LabelShort, selPawn.Pawn) + ")", null);
                                 }
@@ -795,7 +798,7 @@ namespace RPG_Inventory_Remake_Common
                                     pawn.jobs.TryTakeOrderedJob
                                         (
                                             // Check JobDriver_RPGI_ApparelOptions for more information
-                                            new Job(RPGI_JobDefOf.RPGI_ApparelOptions, thing)
+                                            new Job(AwesomeInventory_JobDefOf.RPGI_ApparelOptions, thing)
                                             { playerForced = true, count = 0 }
                                         );
                                 }));
@@ -806,7 +809,7 @@ namespace RPG_Inventory_Remake_Common
                                 {
                                     pawn.jobs.TryTakeOrderedJob
                                         (
-                                            new Job(RPGI_JobDefOf.RPGI_ApparelOptions, thing)
+                                            new Job(AwesomeInventory_JobDefOf.RPGI_ApparelOptions, thing)
                                             { playerForced = true, count = 1 }
                                         );
                                 }));
@@ -823,7 +826,7 @@ namespace RPG_Inventory_Remake_Common
                                 {
                                     pawn.jobs.TryTakeOrderedJob
                                         (
-                                            new Job(RPGI_JobDefOf.RPGI_ApparelOptions, thing)
+                                            new Job(AwesomeInventory_JobDefOf.RPGI_ApparelOptions, thing)
                                             { playerForced = true, count = -1 },
                                             JobTag.ChangingApparel
                                         );

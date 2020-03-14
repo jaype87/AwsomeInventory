@@ -2,7 +2,7 @@
 <Defs>
     <JobDef>
         <defName>RPGI_Unload</defName>
-        <driverClass>RPG_Inventory_Remake_CE.JobDriver_RPGI_Unload</driverClass>
+        <driverClass>RPG_Inventory_Remake.JobDriver_RPGI_Unload</driverClass>
         <reportString>Unloading TargetA.</reportString>
         <suspendable>false</suspendable>
         <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
@@ -10,7 +10,7 @@
 
     <JobDef>
         <defName>RPGI_Fake</defName>
-        <driverClass>RPG_Inventory_Remake_CE.JobDriver_RPGI_Unload</driverClass>
+        <driverClass>RPG_Inventory_Remake.JobDriver_RPGI_Unload</driverClass>
         <reportString>Unloading TargetA.</reportString>
         <suspendable>false</suspendable>
         <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
@@ -18,7 +18,7 @@
 
     <JobDef>
         <defName>RPGI_ApparelOptions</defName>
-        <driverClass>RPG_Inventory_Remake_CE.JobDriver_RPGI_ApparelOptions</driverClass>
+        <driverClass>RPG_Inventory_Remake.JobDriver_RPGI_ApparelOptions</driverClass>
         <reportString>TargetA.</reportString>
         <suspendable>false</suspendable>
         <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
@@ -26,7 +26,7 @@
 
     <JobDef>
         <defName>RPGI_Map_Equip</defName>
-        <driverClass>RPG_Inventory_Remake_CE.JobDriver_Map_Equip</driverClass>
+        <driverClass>RPG_Inventory_Remake_Common.JobDriver_Map_Equip</driverClass>
         <reportString>Equip TargetA.</reportString>
         <suspendable>false</suspendable>
         <allowOpportunisticPrefix>false</allowOpportunisticPrefix>

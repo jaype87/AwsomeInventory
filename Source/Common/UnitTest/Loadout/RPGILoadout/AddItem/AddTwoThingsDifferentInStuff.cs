@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UnitTest
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -52,3 +53,4 @@ namespace RPG_Inventory_Remake_Common.UnitTest
         }
     }
 }
+#endif

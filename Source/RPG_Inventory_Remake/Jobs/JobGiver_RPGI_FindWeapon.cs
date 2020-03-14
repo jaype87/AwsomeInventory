@@ -28,7 +28,7 @@ namespace RPG_Inventory_Remake
             {
                 return null;
             }
-            if (!pawn.RaceProps.Humanlike || (pawn.story != null && pawn.story.WorkTagIsDisabled(WorkTags.Violent)))
+            if (!pawn.RaceProps.Humanlike || (pawn.story != null && pawn.story.DisabledWorkTagsBackstoryAndTraits.HasFlag(WorkTags.Violent)))
             {
                 return null;
             }

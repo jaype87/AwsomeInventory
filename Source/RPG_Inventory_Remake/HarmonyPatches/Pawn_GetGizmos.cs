@@ -1,9 +1,14 @@
-﻿using Harmony;
+﻿// <copyright file="Pawn_GetGizmos.cs" company="Zizhen Li">
+// Copyright (c) Zizhen Li. All rights reserved.
+// Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
 using System.Collections.Generic;
 using System.Reflection;
-using UnityEngine;
-using Verse;
+using AwesomeInventory.Common;
+using HarmonyLib;
 using RPG_Inventory_Remake_Common;
+using Verse;
 
 namespace RPG_Inventory_Remake
 {
@@ -15,7 +20,7 @@ namespace RPG_Inventory_Remake
         {
             MethodInfo original = AccessTools.Method(typeof(Pawn), "GetGizmos");
             MethodInfo postfix = AccessTools.Method(typeof(Pawn_GetGizmos_RPGI_Patch), "Postfix");
-            Utility._harmony.Patch(original, null, new HarmonyMethod(postfix));
+            Utility.Harmony.Patch(original, null, new HarmonyMethod(postfix));
         }
 
         public static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> gizmos, Pawn __instance)

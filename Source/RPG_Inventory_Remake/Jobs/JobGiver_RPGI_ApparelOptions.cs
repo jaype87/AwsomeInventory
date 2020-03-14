@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 using Verse;
 using Verse.AI;
 using RimWorld;
-using RPG_Inventory_Remake_Common;
 
-namespace RPG_Inventory_Remake
+namespace AwesomeInventory.Common
 {
-    public class JobGiver_RPGI_ApparelOptions : ThinkNode_JobGiver
+    [SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Follow naming convention.")]
+    public class JobGiver_AwsInv_DressAndUndress : ThinkNode_JobGiver
     {
         protected override Job TryGiveJob(Pawn pawn)
         {
@@ -18,9 +16,11 @@ namespace RPG_Inventory_Remake
 
         public static Job TryGiveJob(Pawn pawn, Apparel apparel)
         {
+            ValidateArg.NotNull(pawn, nameof(pawn));
+
             if (pawn.inventory != null && apparel != null)
             {
-                Job job = new Job(RPGI_JobDefOf.RPGI_ApparelOptions)
+                Job job = new Job(AwesomeInventory_JobDefOf.RPGI_ApparelOptions)
                 {
                     playerForced = true
                 };

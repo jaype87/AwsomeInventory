@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RPGIResource {
+namespace AwesomeInventory.Resources {
     using System;
     
     
@@ -111,6 +111,15 @@ namespace RPGIResource {
         public static string MarginNotMatchIncompRPGILoadout {
             get {
                 return ResourceManager.GetString("MarginNotMatchIncompRPGILoadout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Display Option is chosen..
+        /// </summary>
+        public static string NoDisplayOptionChosen {
+            get {
+                return ResourceManager.GetString("NoDisplayOptionChosen", resourceCulture);
             }
         }
         

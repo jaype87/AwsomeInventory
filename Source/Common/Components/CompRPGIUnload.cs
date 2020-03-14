@@ -1,19 +1,20 @@
-﻿using System;
+﻿// <copyright file="CompRPGIUnload.cs" company="Zizhen Li">
+// Copyright (c) Zizhen Li. All rights reserved.
+// Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Verse;
 using RimWorld;
+using Verse;
 
-namespace RPG_Inventory_Remake_Common
+namespace AwesomeInventory.Common.Loadout
 {
-    // It is one weird way to instantiate ThingComp.
-    // Rimworld uses ComProerties to instantiate ThingComp
-    // then attach ComProperties to ThingComp and further
-    // add ThingComp to ThingWithComps. In xml, ThingComp does
-    // not exist, but presents with only a name as an element
-    // inside the CompProperties tag. In return, ComProperties
-    // with the name can instantiate a ThingComp class.
+    /// <summary>
+    /// Component attached to thing that is marked to unload.
+    /// </summary>
     public class CompRPGIUnload : ThingComp
     {
         public CompProperties_RPGUnload Props
@@ -30,6 +31,7 @@ namespace RPG_Inventory_Remake_Common
             {
                 return Props.Unload;
             }
+
             set
             {
                 Props.Unload = value;

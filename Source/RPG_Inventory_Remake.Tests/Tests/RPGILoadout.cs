@@ -24,7 +24,7 @@ namespace RPG_Inventory_Remake.Tests
             RPGILoadout loadout = new RPGILoadout();
             foreach (Apparel apparel in Maker<Apparel>.Make())
             {
-                loadout.AddItem(apparel);
+                //loadout.AddItem(apparel);
                 Thing temp = loadout[apparel.MakeThingStuffPairWithQuality()].Thing;
                 Assert.IsNotNull(temp);
                 Assert.IsTrue(apparel.def.defName == temp.def.defName);

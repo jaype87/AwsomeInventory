@@ -1,16 +1,29 @@
-﻿using RimWorld;
+﻿// <copyright file="ToggleGearTab.cs" company="Zizhen Li">
+// Copyright (c) Zizhen Li. All rights reserved.
+// Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
 using System;
 using System.Linq;
-using UnityEngine;
+using AwesomeInventory.Common;
+using RimWorld;
 using Verse;
 using Verse.Sound;
 
 namespace RPG_Inventory_Remake_Common
 {
+    /// <summary>
+    /// Toggle Gear Tab.
+    /// </summary>
+    /// <remarks> Gear_Helmet.png Designed By nickfz from https://pngtree.com/Pngtree.com .</remarks>
     public class ToggleGearTab : Command_Action
     {
         private Type _tabType;
-        // Gear_Helmet.png Designed By nickfz from <a href="https://pngtree.com/">Pngtree.com</a>
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ToggleGearTab"/> class.
+        /// </summary>
+        /// <param name="tabType"> Tab to open when toggle. </param>
         public ToggleGearTab(Type tabType)
         {
             hotKey = KeyBindingDefOf.Misc12;
@@ -19,6 +32,9 @@ namespace RPG_Inventory_Remake_Common
             _tabType = tabType;
         }
 
+        /// <summary>
+        /// Gets tooltip when hover on the Gizmo.
+        /// </summary>
         public override string Desc => string.Concat("Corgi_ToggleGearTab".Translate()
                                                     + "\n"
                                                     + "Hotkey binded to Misc 12");

@@ -17,7 +17,7 @@ namespace RPG_Inventory_Remake_CE
         private static bool _isGreedy = false;
         private static bool _isAscetic = false;
 
-        private RPG_Pawn _selPawn;
+        private PawnModal _selPawn;
 
         private static List<Thing> workingInvList = new List<Thing>();
         public static readonly Vector3 PawnTextureCameraOffset = new Vector3(0f, 0f, 0f);
@@ -44,7 +44,7 @@ namespace RPG_Inventory_Remake_CE
         {
             get
             {
-                _selPawn = new RPG_Pawn(SelPawn, SelThing);
+                _selPawn = new PawnModal(SelPawn, SelThing);
                 return Utility.ShouldShowInventory(_selPawn.Pawn) ||
                        Utility.ShouldShowApparel(_selPawn.Pawn) ||
                        Utility.ShouldShowEquipment(_selPawn.Pawn);
@@ -53,7 +53,7 @@ namespace RPG_Inventory_Remake_CE
 
         protected override void FillTab()
         {
-            _selPawn = _selPawn ?? new RPG_Pawn(SelPawn, SelThing);
+            _selPawn = _selPawn ?? new PawnModal(SelPawn, SelThing);
             Text.Font = GameFont.Small;
 
 

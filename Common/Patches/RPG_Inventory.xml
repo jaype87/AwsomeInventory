@@ -18,10 +18,12 @@
             </value>
         </nomatch>
     </Operation>
-	<!--<Operation Class="PatchOperationReplace">
-		<xpath>Defs/ThingDef[@Name="BasePawn"]/inspectorTabs/li[text()="CombatExtended.ITab_Inventory"]</xpath>
+	<Operation Class="PatchOperationAdd">
+		<xpath>Defs/ThingDef[@Name="BasePawn"]/comps</xpath>
 		<value>
-			<li>RPG_Inventory_Corgi.RPG_GearTab</li>
+			<li>
+                <compClass>RPG_Inventory_Remake.Loadout.CompRPGILoadout</compClass>
+            </li>
 		</value>
-	</Operation>-->
+	</Operation>
 </Patch>

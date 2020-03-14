@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -15,7 +15,7 @@ namespace RPG_Inventory_Remake_CE
         {
             MethodInfo original = AccessTools.Method(typeof(Pawn), "GetGizmos");
             MethodInfo postfix = AccessTools.Method(typeof(Pawn_GetGizmos_RPGI_Patch), "Postfix");
-            Utility._harmony.Patch(original, null, new HarmonyMethod(postfix));
+            Utility.Harmony.Patch(original, null, new HarmonyMethod(postfix));
         }
 
         public static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> gizmos, Pawn __instance)

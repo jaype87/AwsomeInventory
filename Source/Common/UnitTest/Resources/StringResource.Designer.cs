@@ -39,7 +39,7 @@ namespace RPG_Inventory_Remake_Common.UnitTest {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPG_Inventory_Remake_Common.UnitTest.Resources.StringResource", typeof(StringResource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPG_Inventory_Remake.UnitTest.Resources.StringResource", typeof(StringResource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

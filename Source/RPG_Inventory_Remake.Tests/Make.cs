@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Resources;
 using Verse;
 using RimWorld;
-using Harmony;
+using HarmonyLib;
 using RPGIResource;
 using RPG_Inventory_Remake.Loadout;
 using RPG_Inventory_Remake.Tests.Resources;

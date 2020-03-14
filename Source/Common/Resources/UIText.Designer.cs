@@ -39,7 +39,7 @@ namespace RPGIResource {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPG_Inventory_Remake_Common.Resources.UIText", typeof(UIText).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RPG_Inventory_Remake.Resources.UIText", typeof(UIText).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

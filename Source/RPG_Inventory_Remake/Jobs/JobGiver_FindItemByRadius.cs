@@ -1,15 +1,18 @@
-﻿using System;
+﻿// <copyright file="JobGiver_FindItemByRadius.cs" company="Zizhen Li">
+// Copyright (c) Zizhen Li. All rights reserved.
+// Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
-using UnityEngine;
-using Verse.AI;
-using Verse;
 using RimWorld;
 using RPGIResource;
-using RPG_Inventory_Remake.Loadout;
-using RPG_Inventory_Remake_Common;
+using UnityEngine;
+using Verse;
+using Verse.AI;
 
 namespace RPG_Inventory_Remake
 {

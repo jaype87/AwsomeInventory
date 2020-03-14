@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Verse;
@@ -26,6 +27,8 @@ namespace RPG_Inventory_Remake
             {
                 HasSimpleSidearm = true;
             }
+
+            Log.Warning("Process Id: " + Process.GetCurrentProcess().Id);
         }
     }
 }

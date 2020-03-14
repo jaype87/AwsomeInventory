@@ -12,14 +12,9 @@ namespace RPG_Inventory_Remake
 {
     public class JobGiver_RPGI_FindItems : JobGiver_FindItemByRadius<Thing>
     {
-        public JobGiver_RPGI_FindItems() : base()
-        {
-
-        }
-
         protected override Job TryGiveJob(Pawn pawn)
         {
-            compRPGILoadout RPGIloadout = ((ThingWithComps)pawn).TryGetComp<compRPGILoadout>();
+            CompRPGILoadout RPGIloadout = ((ThingWithComps)pawn).TryGetComp<CompRPGILoadout>();
             Thing targetA = null;
 
             if (RPGIloadout == null || !RPGIloadout.NeedRestock)

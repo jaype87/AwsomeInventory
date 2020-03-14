@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+    <SandyMassCarried>Mass carried</SandyMassCarried>
+    <SandyMassValue> {0} / {1} kg</SandyMassValue>
+    <Sandy_ViewList>Show list</Sandy_ViewList>
+    <Sandy_Head>Head Overhead</Sandy_Head>
+    <Sandy_TorsoMiddle>Torso Middle</Sandy_TorsoMiddle>
+    <Sandy_TorsoOnSkin>Torso OnSkin</Sandy_TorsoOnSkin>
+    <Sandy_TorsoShell>Torso Shell</Sandy_TorsoShell>
+    <Sandy_Belt>Belt</Sandy_Belt>
+    <Sandy_Pants>Legs OnSkin</Sandy_Pants>
+    <Sandy_Greedy>Greedy (List)</Sandy_Greedy>
+    <Sandy_Jealous>Jealous (RPG Style)</Sandy_Jealous>
+    <Sandy_Ascetic>Ascetic</Sandy_Ascetic>
+
+    <Corgi_PrimaryWeapon>Primary Weapon</Corgi_PrimaryWeapon>
+    <Corgi_ExtraApparels>Extra Apparels</Corgi_ExtraApparels>
+    <Corgi_PutAway>Put Away</Corgi_PutAway>
+    <Corgi_UnloadNow>Unload Now</Corgi_UnloadNow>
+    <Corgi_RPGI>RPGI</Corgi_RPGI>
+    <Corgi_Wear>Wear {1_labelShort}</Corgi_Wear>
+    <Corgi_KeepOldApparel>and keep old apparel</Corgi_KeepOldApparel>
+    <Corgi_OpenLoadout>Open Loadout</Corgi_OpenLoadout>
+    <Corgi_UseLoadout>Use Loadout</Corgi_UseLoadout>
+    <Corgi_RPGStyleInventoryRemake>RPG Style Inventory Remake</Corgi_RPGStyleInventoryRemake>
+    <Corgi_ToggleGearTab>Toggle Gear Tab</Corgi_ToggleGearTab>
+    
+    <!-- Loadout Window -->
+    <Corgi_CopyLoadout>Copy Loadout</Corgi_CopyLoadout>
+    <Corgi_CountFieldTip>Number of items</Corgi_CountFieldTip>
+    <Corgi_Customize>Customize</Corgi_Customize>
+    <Corgi_DeleteLoadout>Delete Loadout</Corgi_DeleteLoadout>
+    <Corgi_DragToReorder>Drag to reorder</Corgi_DragToReorder>
+    <Corgi_MouseOverNumbersForDetails>Mouse over number for details</Corgi_MouseOverNumbersForDetails>
+    <Corgi_NewLoadout>New Loadout</Corgi_NewLoadout>
+    <Corgi_NoLoadout>No Loadout</Corgi_NoLoadout>
+    <Corgi_NoLoadoutSelected>No loadout selected</Corgi_NoLoadoutSelected>
+    <Corgi_NoMaterial>No Material</Corgi_NoMaterial>
+    <Corgi_SelectLoadout>Select Loadout</Corgi_SelectLoadout>
+    <Corgi_SourceAllTip>All items</Corgi_SourceAllTip>
+    <Corgi_SourceFilterTip>Filter</Corgi_SourceFilterTip>
+    <Corgi_SourceGenericTip>Generic items</Corgi_SourceGenericTip>
+    <Corgi_SourceMeleeTip>Melee weapons</Corgi_SourceMeleeTip>
+    <Corgi_SourceMinifiedTip>Minified items</Corgi_SourceMinifiedTip>
+    <Corgi_SourceRangedTip>Ranged weapons</Corgi_SourceRangedTip>
+    <Corgi_Weight>Weight</Corgi_Weight>
+    
+    <Corgi_OpenLoadout>Open Loadout</Corgi_OpenLoadout>
+    <AwesomeInventory_Generic_Meal>Generic Meal</AwesomeInventory_Generic_Meal>
+    <Corgi_Generic_RawFood>Generic RawFood</Corgi_Generic_RawFood>
+    <Corgi_Generic_Drugs>Generic Drugs</Corgi_Generic_Drugs>
+    <Corgi_Generic_Medicine>Generic Medicine</Corgi_Generic_Medicine>
+    <Corgi_DefaultLoadoutName>Loadout</Corgi_DefaultLoadoutName>
+    <Corgi_EmptyLoadoutName>Nothing</Corgi_EmptyLoadoutName>
+    <Corgi_ManageLoadouts>Manage Loadouts</Corgi_ManageLoadouts>
+    <Corgi_ForcedHold>Forced holding</Corgi_ForcedHold>
+    <Corgi_TryToDeleteLastLoadout>Cannot delete the last loadout</Corgi_TryToDeleteLastLoadout>
+    <Corgi_ChooseMaterialAndQuality>Choose Material and Quality</Corgi_ChooseMaterialAndQuality>
+    <Corgi_NoMaterial>No material</Corgi_NoMaterial>
+  
+    <!-- Labels -->
+    <AwesomeInventory_GenericMeal_Label>Generic Meals</AwesomeInventory_GenericMeal_Label>
+    <AwesomeInventory_AIGenericRawFood_Label>Generic RawFood</AwesomeInventory_AIGenericRawFood_Label>
+    <AwesomeInventory_AIGenericDrugs_Label>Generic Drugs</AwesomeInventory_AIGenericDrugs_Label>
+    <AwesomeInventory_AIGenericMedicine_Label>Generic Medicine</AwesomeInventory_AIGenericMedicine_Label>
+
+    <!-- Descriptions -->
+    <AwesomeInventory_AIGenericMeal_Description>
+        Placeholder for any perishable meals. Intended for compatibility with pawns automatically picking up a meal for themself. It has the same mass as a fine meal.
+    </AwesomeInventory_AIGenericMeal_Description>
+    <AwesomeInventory_AIGenericRawFood_Description>
+        Placeholder for any raw food.  Intended for compatibility with pawns automatically picking up raw food to train animals.
+    </AwesomeInventory_AIGenericRawFood_Description>
+    <AwesomeInventory_AIGenericDrugs_Description>
+        Placeholder for any drugs. It includes medical drugs and has the same mass as Flake.
+    </AwesomeInventory_AIGenericDrugs_Description>
+    <AwesomeInventory_AIGenericMedicine_Description>
+        Placeholder for any medicine. Most commonly used by doctors.
+    </AwesomeInventory_AIGenericMedicine_Description>
+    
+
+
+</LanguageData>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Harmony;
+using HarmonyLib;
 using System.Reflection;
 using Verse;
 using Verse.AI;
@@ -20,7 +20,7 @@ namespace RPG_Inventory_Remake_CE
         {
             MethodInfo original = AccessTools.Method(typeof(FloatMenuMakerMap), "AddHumanlikeOrders");
             MethodInfo postfix = AccessTools.Method(typeof(AddHumanlikeOrders_RPGI_Patch), "Postfix");
-            Utility._harmony.Patch(original, null, new HarmonyMethod(postfix));
+            Utility.Harmony.Patch(original, null, new HarmonyMethod(postfix));
         }
 
         public static void Postfix(Vector3 clickPos, Pawn pawn, List<FloatMenuOption> opts)

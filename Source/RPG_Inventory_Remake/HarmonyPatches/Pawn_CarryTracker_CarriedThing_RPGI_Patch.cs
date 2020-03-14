@@ -1,6 +1,6 @@
 ﻿using Verse;
 using Verse.AI;
-using Harmony;
+using HarmonyLib;
 using System.Reflection;
 using RPG_Inventory_Remake_Common;
 
@@ -13,7 +13,7 @@ namespace RPG_Inventory_Remake
         {
             MethodInfo original = AccessTools.Method(typeof(Pawn_CarryTracker), "get_CarriedThing");
             MethodInfo postfix = AccessTools.Method(typeof(Pawn_CarryTracker_CarriedThing_RPGI_Patch), "Postfix");
-            Utility._harmony.Patch(original, null, new HarmonyMethod(postfix));
+            Utility.Harmony.Patch(original, null, new HarmonyMethod(postfix));
         }
 
         public static void Postfix(Pawn_CarryTracker __instance, ref Thing __result)

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <ThinkTreeDef>
+        <defName>RPGILoadoutCore</defName>
+        <insertTag>Humanlike_PostDuty</insertTag>
+        <insertPriority>100</insertPriority>
+        <thinkRoot Class="RPG_Inventory_Remake_Common.ThinkNode_RPGI_Core">
+            <subNodes>
+                <!--<li class="RPG_Inventory_Remake.JobGiver_RPGI_FindApparels"></li>-->
+                <!--<li class="RPG_Inventory_Remake.JobGiver_RPGI_FindItems"></li>-->
+                <!--<li class="RPG_Inventory_Remake.JobGiver_RPGI_FindWeapon"></li>-->
+                <!--<li class="RPG_Inventory_Remake.JobGiver_RPGI_OpportunisticHaul"></li>-->
+            </subNodes>
+        </thinkRoot>
+    </ThinkTreeDef>
+</Defs>

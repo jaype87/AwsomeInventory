@@ -1,9 +1,14 @@
-﻿using System.Linq;
+﻿// <copyright file="JobGiver_Unload.cs" company="Zizhen Li">
+// Copyright (c) Zizhen Li. All rights reserved.
+// Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
+using System.Linq;
+using RimWorld;
 using Verse;
 using Verse.AI;
-using RimWorld;
 
-namespace RPG_Inventory_Remake_Common
+namespace AwesomeInventory.Common
 {
     public class JobGiver_RPGIUnload : ThinkNode_JobGiver
     {
@@ -20,7 +25,7 @@ namespace RPG_Inventory_Remake_Common
         {
             if (JobInProgress)
             {
-                Job fakeJob = new Job(RPGI_JobDefOf.RPGI_Fake)
+                Job fakeJob = new Job(AwesomeInventory_JobDefOf.RPGI_Fake)
                 {
                     playerForced = true
                 };
@@ -33,7 +38,7 @@ namespace RPG_Inventory_Remake_Common
                     new TargetInfo(pawn.PositionHeld, pawn.MapHeld), MessageTypeDefOf.NeutralEvent);
                 return null;
             }
-            job.def = RPGI_JobDefOf.RPGI_Unload;
+            job.def = AwesomeInventory_JobDefOf.RPGI_Unload;
 
             return job;
         }
@@ -42,7 +47,7 @@ namespace RPG_Inventory_Remake_Common
         {
             if (JobInProgress)
             {
-                Job fakeJob = new Job(RPGI_JobDefOf.RPGI_Fake, thing)
+                Job fakeJob = new Job(AwesomeInventory_JobDefOf.RPGI_Fake, thing)
                 {
                     playerForced = true
                 };
@@ -55,7 +60,7 @@ namespace RPG_Inventory_Remake_Common
                     new TargetInfo(pawn.PositionHeld, pawn.MapHeld), MessageTypeDefOf.NeutralEvent);
                 return null;
             }
-            job.def = RPGI_JobDefOf.RPGI_Unload;
+            job.def = AwesomeInventory_JobDefOf.RPGI_Unload;
             job.playerForced = true;
 
             return job;

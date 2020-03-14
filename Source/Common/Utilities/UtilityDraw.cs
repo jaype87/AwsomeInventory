@@ -1,14 +1,18 @@
-﻿using System;
+﻿// <copyright file="UtilityDraw.cs" company="Zizhen Li">
+// Copyright (c) Zizhen Li. All rights reserved.
+// Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using UnityEngine;
+using HarmonyLib;
 using RimWorld;
+using UnityEngine;
 using Verse;
-using Harmony;
 
-
-namespace RPG_Inventory_Remake_Common
+namespace AwesomeInventory.Common
 {
     public static class UtilityDraw
     {
@@ -16,7 +20,7 @@ namespace RPG_Inventory_Remake_Common
         private static Vector2 _dragStartPos;
         public static bool isDrag;
 
-        public static bool DrawThumbnails(RPG_Pawn pawn, SmartRect smartRect, ThingWithComps thing, List<ThingWithComps> apparelOverflow)
+        public static bool DrawThumbnails(PawnModal pawn, SmartRect smartRect, ThingWithComps thing, List<ThingWithComps> apparelOverflow)
         {
             // find next available rect, if not found in current row, check the row above
             Rect newRect = smartRect.NextAvailableRect();
@@ -41,7 +45,7 @@ namespace RPG_Inventory_Remake_Common
             return true;
         }
 
-        public static void DrawApparelToNextRow(RPG_Pawn pawn, SmartRect smartRectHead, List<ThingWithComps> apparelOverflow)
+        public static void DrawApparelToNextRow(PawnModal pawn, SmartRect smartRectHead, List<ThingWithComps> apparelOverflow)
         {
             if (apparelOverflow.Count > 0)
             {

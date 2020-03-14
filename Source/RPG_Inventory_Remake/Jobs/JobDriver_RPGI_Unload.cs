@@ -1,12 +1,16 @@
-﻿using System;
+﻿// <copyright file="JobDriver_RPGI_Unload.cs" company="Zizhen Li">
+// Copyright (c) Zizhen Li. All rights reserved.
+// Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AwesomeInventory.Common;
+using RimWorld;
 using Verse;
 using Verse.AI;
-using RimWorld;
-using Harmony;
-using RPG_Inventory_Remake_Common;
 
 namespace RPG_Inventory_Remake
 {
@@ -18,7 +22,7 @@ namespace RPG_Inventory_Remake
         public override string GetReport()
         {
             Thing thing = null;
-            if (job.def == RPGI_JobDefOf.RPGI_Fake)
+            if (job.def == AwesomeInventory_JobDefOf.RPGI_Fake)
             {
                 return "ReportHauling".Translate(TargetThingA.Label, TargetThingA);
             }
@@ -62,7 +66,6 @@ namespace RPG_Inventory_Remake
                 }
 
             }
-
 
             if (pawn.Reserve(target, job, 1, -1, null, errorOnFailed2))
             {

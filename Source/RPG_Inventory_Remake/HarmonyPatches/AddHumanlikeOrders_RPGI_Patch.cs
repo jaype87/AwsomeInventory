@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using Harmony;
+using System.IO;
+using HarmonyLib;
 using System.Reflection;
 using Verse;
 using Verse.AI;
@@ -19,7 +21,23 @@ namespace RPG_Inventory_Remake
         {
             MethodInfo original = AccessTools.Method(typeof(FloatMenuMakerMap), "AddHumanlikeOrders");
             MethodInfo postfix = AccessTools.Method(typeof(AddHumanlikeOrders_RPGI_Patch), "Postfix");
-            Utility._harmony.Patch(original, null, new HarmonyMethod(postfix));
+            Utility.Harmony.Patch(original, null, new HarmonyMethod(postfix));
+
+            // TODO Remove following code
+            MethodInfo original1 = AccessTools.Method(typeof(GenCommandLine), "Restart");
+            MethodInfo prefix = AccessTools.Method(typeof(AddHumanlikeOrders_RPGI_Patch), "Prefix");
+            Utility.Harmony.Patch(original1, new HarmonyMethod(prefix));
+        }
+
+        public static void Prefix()
+        {
+            string path = @"D:\Modding\MSTestExtentinoForRimWorld\ProcessID.txt";
+            // Create a file to write to.
+            StreamWriter sw = File.CreateText(path);
+            sw.WriteLine("Process ID: " + Process.GetCurrentProcess().Id);
+            sw.WriteLine("Process Name: " + Process.GetCurrentProcess().ProcessName);
+            sw.Flush();
+            sw.Dispose();
         }
 
         public static void Postfix(Vector3 clickPos, Pawn pawn, List<FloatMenuOption> opts)
@@ -41,10 +59,11 @@ namespace RPG_Inventory_Remake
                 {
                     string labelShort = equipment.LabelShort;
                     FloatMenuOption menuOption;
-                    if (!(equipment.def.IsWeapon && pawn.story.WorkTagIsDisabled(WorkTags.Violent)
-                        && !pawn.CanReach(equipment, PathEndMode.ClosestTouch, Danger.Deadly)
-                        && !pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation)
-                        && equipment.IsBurning()))
+                    if ((equipment.def.IsWeapon
+                        && !pawn.story.DisabledWorkTagsBackstoryAndTraits.HasFlag(WorkTags.Violent)
+                        && pawn.CanReach(equipment, PathEndMode.ClosestTouch, Danger.Deadly)
+                        && pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation)
+                        && !equipment.IsBurning()))
                     {
                         string text5 = "Corgi_RPGI".Translate() + " " + "Equip".Translate(labelShort);
                         if (equipment.def.IsRangedWeapon && pawn.story != null && pawn.story.traits.HasTrait(TraitDefOf.Brawler))

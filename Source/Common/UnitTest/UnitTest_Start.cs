@@ -7,7 +7,7 @@ using System.Reflection;
 using Verse;
 using System.Threading;
 using RimWorld;
-using Harmony;
+using HarmonyLib;
 using UnityEngine;
 
 namespace RPG_Inventory_Remake_Common.UnitTest

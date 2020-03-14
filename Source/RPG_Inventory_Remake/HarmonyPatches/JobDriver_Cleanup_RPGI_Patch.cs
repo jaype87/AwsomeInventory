@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RimWorld;
-using Harmony;
+using HarmonyLib;
 using Verse;
 using Verse.AI;
 using System.Reflection;
@@ -18,7 +18,7 @@ namespace RPG_Inventory_Remake
         {
             MethodInfo original = AccessTools.Method(typeof(JobDriver), "Cleanup");
             MethodInfo postfix = AccessTools.Method(typeof(JobDriver_Cleanup_RPGI_Patch), "Postfix");
-            Utility._harmony.Patch(original, null, new HarmonyMethod(postfix));
+            Utility.Harmony.Patch(original, null, new HarmonyMethod(postfix));
         }
 
         public static void Postfix(JobCondition condition, JobDriver __instance)

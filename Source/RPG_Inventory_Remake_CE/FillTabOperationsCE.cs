@@ -33,7 +33,7 @@ namespace RPG_Inventory_Remake_CE
 
         private static float _scrollViewHeight;
 
-        public static void DrawGreedyCE(RPG_Pawn selPawn, Vector2 size)
+        public static void DrawGreedyCE(PawnModal selPawn, Vector2 size)
         {
             // get the inventory comp
             CompInventory comp = selPawn.Pawn.TryGetComp<CompInventory>();
@@ -193,7 +193,7 @@ namespace RPG_Inventory_Remake_CE
 
         }
 
-        public static void DrawJealousCE(RPG_Pawn selPawn, Vector2 size)
+        public static void DrawJealousCE(PawnModal selPawn, Vector2 size)
         {
             // Races that don't have a humanoid body will fall back to Greedy tab
             if (selPawn.Pawn.RaceProps.body != BodyDefOf.Human)

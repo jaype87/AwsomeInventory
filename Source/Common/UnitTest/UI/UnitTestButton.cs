@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using System.Reflection;
-using Harmony;
+using HarmonyLib;
 using RimWorld;
 using Verse;
 
@@ -17,7 +17,7 @@ namespace RPG_Inventory_Remake_Common.UnitTest
 
         static UnitTestButton()
         {
-            var harmony = HarmonyInstance.Create(StringResource.HarmonyInstance);
+            Harmony harmony = new Harmony(StringResource.HarmonyInstance);
             MethodInfo original = AccessTools.Method(typeof(DebugWindowsOpener), "DevToolStarterOnGUI");
             MethodInfo postfix = AccessTools.Method(typeof(UnitTestButton), "Draw");
             harmony.Patch(original, null, new HarmonyMethod(postfix));

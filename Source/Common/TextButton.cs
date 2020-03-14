@@ -2,11 +2,13 @@
 using UnityEngine;
 using Verse;
 
-namespace RPG_Inventory_Remake_Common
+namespace AwesomeInventory.Common
 {
-    // Exact copy of the TexButton which is internal for no reason
+    /// <summary>
+    /// Texture resources.
+    /// </summary>
     [StaticConstructorOnStartup]
-    public class TexButton
+    public static class TexButton
     {
         public static readonly Texture2D CloseXBig = ContentFinder<Texture2D>.Get("UI/Widgets/CloseX", true);
 
@@ -53,8 +55,6 @@ namespace RPG_Inventory_Remake_Common
         public static readonly Texture2D OpenInspectSettings = ContentFinder<Texture2D>.Get("UI/Buttons/DevRoot/OpenInspectSettings", true);
 
         public static readonly Texture2D ToggleGodMode = ContentFinder<Texture2D>.Get("UI/Buttons/DevRoot/ToggleGodMode", true);
-
-        public static readonly Texture2D OpenPackageEditor = ContentFinder<Texture2D>.Get("UI/Buttons/DevRoot/OpenPackageEditor", true);
 
         public static readonly Texture2D TogglePauseOnError = ContentFinder<Texture2D>.Get("UI/Buttons/DevRoot/TogglePauseOnError", true);
 

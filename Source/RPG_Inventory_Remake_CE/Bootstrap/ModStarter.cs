@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using Verse;
 using UnityEngine;
-using Harmony;
+using HarmonyLib;
 using RimWorld;
 
 namespace RPG_Inventory_Remake_CE

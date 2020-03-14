@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// <copyright file="Pawn_OutfitTracker_CurrentOutfit.cs" company="Zizhen Li">
+// Copyright (c) Zizhen Li. All rights reserved.
+// Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using Verse;
-using Harmony;
+using AwesomeInventory.Common.Loadout;
+using HarmonyLib;
 using RimWorld;
+using Verse;
 
-#if RPG_Inventory_Remake
-using RPG_Inventory_Remake.Loadout;
-#endif
-
-namespace RPG_Inventory_Remake_Common
+namespace AwesomeInventory.Common.HarmonyPatches
 {
+    /// <summary>
+    /// Patch into the setter of <see cref="Pawn_OutfitTracker.CurrentOutfit"/>, so to synchronize with AILoadout.
+    /// </summary>
     [StaticConstructorOnStartup]
     public static class Pawn_OutfitTracker_CurrentOutfit
     {
@@ -21,13 +22,18 @@ namespace RPG_Inventory_Remake_Common
         {
             MethodInfo original = AccessTools.Property(typeof(Pawn_OutfitTracker), "CurrentOutfit").GetSetMethod();
             MethodInfo postfix = AccessTools.Method(typeof(Pawn_OutfitTracker_CurrentOutfit), "Postfix");
-            Utility._harmony.Patch(original, null, new HarmonyMethod(postfix));
+            Utility.Harmony.Patch(original, null, new HarmonyMethod(postfix));
         }
 
-        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
+        /// <summary>
+        /// Patch into the setter of <see cref="Pawn_OutfitTracker.CurrentOutfit"/>, so to synchronize with AILoadout.
+        /// </summary>
+        /// <param name="value"> New loadout. </param>
+        /// <param name="__instance"> Instance of <see cref="Pawn_OutfitTracker"/>. </param>
+        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Postfix patch")]
         public static void Postfix(Outfit value, Pawn_OutfitTracker __instance)
         {
-            if (value is RPGILoadout loadout)
+            if (value is AILoadout loadout)
             {
                 __instance.pawn.SetLoadout(loadout);
             }

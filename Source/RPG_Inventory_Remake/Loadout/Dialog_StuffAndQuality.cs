@@ -15,7 +15,7 @@ namespace RPG_Inventory_Remake.Loadout
     public class Dialog_StuffAndQuality : Window
     {
         private Thing _thing;
-        private RPGILoadout _loadout;
+        private AILoadout _loadout;
         private TSPWQuality _pair;
         private static ThingDef _stuffPreview;
         private static QualityRange _qualityRange;
@@ -70,7 +70,7 @@ namespace RPG_Inventory_Remake.Loadout
             };
         }
 
-        public Dialog_StuffAndQuality(Thing thing, RPGILoadout loadout)
+        public Dialog_StuffAndQuality(Thing thing, AILoadout loadout)
         {
             _loadout = loadout ?? throw new ArgumentNullException(nameof(loadout));
             _thing = thing;
@@ -233,7 +233,7 @@ namespace RPG_Inventory_Remake.Loadout
                 row.y = row.yMax;
             }
 
-            if (Event.current.type == EventType.layout)
+            if (Event.current.type == EventType.Layout)
             {
                 _scrollViewHeight = row.yMax;
                 rollingY = row.yMax;
@@ -443,7 +443,7 @@ namespace RPG_Inventory_Remake.Loadout
                     LabelCap = entry.LabelCap
                 };
                 _ = float.TryParse(_regex.Match(entry.ValueString).Value, out result.Value);
-                result.Tip = entry.overrideReportText;
+                result.Tip = entry.GetExplanationText(StatRequest.ForEmpty());
                 return result;
             }
         }

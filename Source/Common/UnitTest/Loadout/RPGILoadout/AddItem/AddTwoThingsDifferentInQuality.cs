@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UnitTest
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,6 @@ using RimWorld;
 #if RPG_Inventory_Remake
 using RPG_Inventory_Remake.Loadout;
 using RPG_Inventory_Remake;
-#endif
 
 namespace RPG_Inventory_Remake_Common.UnitTest
 {
@@ -52,3 +52,5 @@ namespace RPG_Inventory_Remake_Common.UnitTest
         }
     }
 }
+#endif
+#endif
