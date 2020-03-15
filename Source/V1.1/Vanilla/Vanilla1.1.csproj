@@ -345,9 +345,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
+    <ProjectReference Include="..\Common\Common1.1.csproj">
       <Project>{6629105c-6bed-491b-a49a-eb12b0710cf3}</Project>
-      <Name>Common</Name>
+      <Name>Common1.1</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
