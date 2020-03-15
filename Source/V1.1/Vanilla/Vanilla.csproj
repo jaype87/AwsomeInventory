@@ -26,12 +26,12 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\v1.1\Vanilla\Assemblies\</OutputPath>
+    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.1\Vanilla\Assemblies\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>..\..\..\v1.1\Vanilla\Assemblies\AwesomeInventoryV1.1.xml</DocumentationFile>
+    <DocumentationFile>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.1\Vanilla\Assemblies\AwesomeInventoryV1.1.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -363,9 +363,8 @@
     <Error Condition="!Exists('..\..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>
-            xcopy /i /e /d /y D:\Modding\AwesomeInventory\v1.1\Vanilla G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\Vanilla
-            xcopy /i /e /d /y D:\Modding\AwesomeInventory\v1.1\Common G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\Common
+    <PostBuildEvent>call $(SolutionDir)SolutionItems\Deploy.bat $(ProjectDir) $(OutDir)
+            
             
 </PostBuildEvent>
   </PropertyGroup>

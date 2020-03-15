@@ -128,12 +128,6 @@
       <LastGenOutput>TestResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RPG_Inventory_Remake\Vanilla.csproj">
-      <Project>{9c99ff79-7175-48ec-a407-9d72950f2bc4}</Project>
-      <Name>Vanilla</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
       <ItemGroup>
