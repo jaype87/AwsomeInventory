@@ -1,0 +1,321 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
+  <Import Project="..\..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props')" />
+  <Import Project="..\..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props')" />
+  <Import Project="..\..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('..\..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props')" />
+  <Import Project="..\..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('..\..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6629105C-6BED-491B-A49A-EB12B0710CF3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>AwesomeInventory.Common</RootNamespace>
+    <AssemblyName>Common</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\v1.1\Common\Assemblies\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>..\..\..\v1.1\Common\Assemblies\Common.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CE Build|AnyCPU'">
+    <OutputPath>bin\CE Build\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Vanilla Build|AnyCPU'">
+    <OutputPath>bin\Vanilla Build\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <OutputPath>bin\Test\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityTest|AnyCPU'">
+    <OutputPath>bin\UnityTest\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="..\..\..\Common\Defs\ApparelLayerDefs.xml">
+      <Link>Defs\ApparelLayerDefs.xml</Link>
+    </Content>
+    <Content Include="..\..\..\Common\Defs\BodyPartGroups.xml">
+      <Link>Defs\BodyPartGroups.xml</Link>
+    </Content>
+    <Content Include="..\..\..\Common\Defs\Jewelry_compat\ApparelLayerDefs.xml">
+      <Link>Defs\Jewelry_compat\ApparelLayerDefs.xml</Link>
+    </Content>
+    <Content Include="..\..\..\Common\Defs\JobDefs\Jobs_RPGInventory.xml">
+      <Link>Defs\JobDefs\Jobs_RPGInventory.xml</Link>
+    </Content>
+    <Content Include="..\..\..\Common\Defs\RPGIGenericResource.xml">
+      <Link>Defs\RPGIGenericResource.xml</Link>
+    </Content>
+    <Content Include="..\..\..\Common\Defs\ThinkTreeDefs\SubTrees_Misc.xml">
+      <Link>Defs\ThinkTreeDefs\SubTrees_Misc.xml</Link>
+    </Content>
+    <Content Include="..\..\..\Common\Languages\English\Keyed\AwesomeInventory.xml">
+      <Link>Languages\AwesomeInventory.xml</Link>
+    </Content>
+    <Content Include="..\..\..\Common\Patches\RPG_Inventory.xml">
+      <Link>Patches\RPG_Inventory.xml</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ModSettings\RegisterServices.cs" />
+    <Compile Include="UI\Dialog_Mod.cs" />
+    <Compile Include="ModSettings\Setting.cs" />
+    <Compile Include="Components\CompRPGILoadout.cs" />
+    <Compile Include="Components\CompRPGIUnload.cs" />
+    <Compile Include="Components\GameComponents\GameComponent_DefManager.cs" />
+    <Compile Include="Components\GameComponents\LoadoutManager.cs" />
+    <Compile Include="DefOfs\CorgiBodyPartGroupsDefOf.cs" />
+    <Compile Include="DefOfs\RPGI_StuffDefOf.cs" />
+    <Compile Include="DynamicDefs\AIGenericDef.cs" />
+    <Compile Include="DynamicDefs\AIGenericDrugs.cs" />
+    <Compile Include="DynamicDefs\AIGenericMeal.cs" />
+    <Compile Include="DynamicDefs\AIGenericMedicine.cs" />
+    <Compile Include="DynamicDefs\AIGenericRawFood.cs" />
+    <Compile Include="Exceptions\ArgumentEmtpyException.cs" />
+    <Compile Include="GearTab\DrawGearTab.cs" />
+    <Compile Include="GearTab\RPG_GearTab.cs" />
+    <Compile Include="Gizmos\ToggleGearTab.cs" />
+    <Compile Include="HarmonyPatches\OutfitDatabase_TryDelete.cs" />
+    <Compile Include="DefOfs\AwesomeInventory_JobDefOf.cs" />
+    <Compile Include="HarmonyPatches\Pawn_GetGizmos_RPGI_Patch.cs" />
+    <Compile Include="HarmonyPatches\Pawn_OutfitTracker_CurrentOutfit.cs" />
+    <Compile Include="HarmonyPatches\Thing_RPGI_Patch.cs" />
+    <Compile Include="Interfaces\IDrawGearTab.cs" />
+    <Compile Include="Interfaces\ILoadout.cs" />
+    <Compile Include="Interfaces\ILoadoutManager.cs" />
+    <Compile Include="Jobs\JobDriver_Map_Equip.cs" />
+    <Compile Include="Jobs\JobGiver_Unload.cs" />
+    <Compile Include="Jobs\ThinkNode_RPGI_Core.cs" />
+    <Compile Include="Loadout\AILoadout.cs" />
+    <Compile Include="Loadout\LoadoutComparer.cs" />
+    <Compile Include="Loadout\LoadoutGenericDef.cs" />
+    <Compile Include="Loadout\LoadoutUtilities.cs" />
+    <Compile Include="PawnModal.cs" />
+    <Compile Include="Resources\DefNames.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DefNames.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Descriptions.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Descriptions.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\ErrorMessage.Designer.cs">
+      <DependentUpon>ErrorMessage.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\Labels.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Labels.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\RPGIIcons.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RPGIIcons.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\StringConstant.Designer.cs">
+      <DependentUpon>StringConstant.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\UIText.Designer.cs">
+      <DependentUpon>UIText.resx</DependentUpon>
+      <CustomToolNamespace>RPG_Inventory_Remake_Common</CustomToolNamespace>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Services\ServiceResolver.cs" />
+    <Compile Include="SmartRect.cs" />
+    <Compile Include="TextButton.cs" />
+    <Compile Include="UI\Dialog_InstantMessage.cs" />
+    <Compile Include="UI\Dialog_ManageLoadouts.cs" />
+    <Compile Include="UI\Dialog_StuffAndQuality.cs" />
+    <Compile Include="UI\RPGITex.cs" />
+    <Compile Include="UI\Theme.cs" />
+    <Compile Include="UI\WindowOnMouseDrag.cs" />
+    <Compile Include="UnitTest\AssertUtility.cs" />
+    <Compile Include="UnitTest\Loadout\compRPGILoadout\TestcompRPGILoadout.cs" />
+    <Compile Include="UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\AssignLoadoutToNull.cs" />
+    <Compile Include="UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\DifferentInStackCount.cs" />
+    <Compile Include="UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\NewLoadoutHasOneLessThing.cs" />
+    <Compile Include="UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\NewLoadoutHasOneMoreThing.cs" />
+    <Compile Include="UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\Test_UpdateForNewLoadout.cs" />
+    <Compile Include="UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\UpdateLoadoutWithInventory.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddTwoThingsDifferentInQuality.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddTwoThingsDifferentInStuff.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddMergeableItemTwice.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddUnmergeableItemTwice.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\AddOneItem.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveAll.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveAllButOne.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveOneItem.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveSameItemTwice.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\RemoveItem\Test_RemoveItem.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\TestRPGILoadout.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\AddItem\Test_AddItem.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\UpdateItem\Test_UpdateItem.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateHitPoint.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateQualityAndMerged.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateQualityNoMerge.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateStuffAndMerge.cs" />
+    <Compile Include="UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateStuffNoMerge.cs" />
+    <Compile Include="UnitTest\Resources\StringResource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StringResource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="UnitTest\IntegrationTestHandler.cs" />
+    <Compile Include="UnitTest\RPGIIntegrationTest.cs" />
+    <Compile Include="UnitTest\UI\UnitTestButton.cs" />
+    <Compile Include="UnitTest\UnitTest_Start.cs" />
+    <Compile Include="UnitTest\UnitTest_Root.cs" />
+    <Compile Include="UnitTest\RPGIUnitTest.cs" />
+    <Compile Include="Utilities\ValidateArg.cs" />
+    <Compile Include="Utilities\Utility.cs" />
+    <Compile Include="Utilities\UtilityConstant.cs" />
+    <Compile Include="Utilities\UtilityDraw.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony, Version=2.0.0.8, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Lib.Harmony.2.0.0.8\lib\net35\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\References\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="UnityEngine">
+      <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\DefNames.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DefNames.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>AwesomeInventory.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Descriptions.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Descriptions.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>AwesomeInventory.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\ErrorMessage.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ErrorMessage.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>AwesomeInventory.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Labels.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Labels.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>AwesomeInventory.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\RPGIIcons.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>RPGIIcons.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>RPGIResource</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\StringConstant.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringConstant.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>RPGIResource</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\UIText.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UIText.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>AwesomeInventory.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UnitTest\Resources\StringResource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringResource.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>RPG_Inventory_Remake_Common.UnitTest</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />
+    <Analyzer Include="..\..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />
+    <Analyzer Include="..\..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\analyzers\dotnet\cs\Humanizer.dll" />
+    <Analyzer Include="..\..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeQuality.Analyzers.dll" />
+    <Analyzer Include="..\..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.CodeQuality.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetCore.Analyzers.dll" />
+    <Analyzer Include="..\..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
+    <Analyzer Include="..\..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\AwesomeInventoryBase\AwesomeInventoryBase\AwesomeInventory.Base.csproj">
+      <Project>{b08984e0-c241-4fee-b9a1-fff9adef5bb2}</Project>
+      <Name>AwesomeInventory.Base</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /i /e /d /y D:\Modding\AwesomeInventory\About G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\About</PostBuildEvent>
+  </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props'))" />
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props'))" />
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props'))" />
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
+  </Target>
+  <Import Project="$(SolutionDir)SolutionItems\GlobalEditorFiles.props" Condition="Exists('$(SolutionDir)SolutionItems\GlobalEditorFiles.props')" />
+</Project>

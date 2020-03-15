@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+    <name>Awesome Inventory</name>
+    <author>NotooShabby</author>
+    <packageId>NotooShabby.AwesomeInventory</packageId>
+    <description>
+        A spiritual successor of RPG Inventory.
+        It offers a fine grain control on your inventory and a RPG style interface.
+    </description>
+    <url>https://github.com/Mhburg/AwsomeInventory</url>
+    <supportedVersions>
+        <li>1.1</li>
+    </supportedVersions>
+</ModMetaData>
