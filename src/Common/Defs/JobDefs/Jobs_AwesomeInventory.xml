@@ -31,4 +31,20 @@
         <suspendable>false</suspendable>
         <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
     </JobDef>
+
+    <JobDef>
+        <defName>AwesomeInventory_Dress</defName>
+        <driverClass>AwesomeInventory.Common.Jobs.JobDriver_AwesomeInventory_Dress</driverClass>
+        <reportString></reportString>
+        <suspendable>false</suspendable>
+        <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
+    </JobDef>
+
+    <JobDef>
+        <defName>AwesomeInventory_Undress</defName>
+        <driverClass>AwesomeInventory.Common.Jobs.JobDriver_AwesomeInventory_Undress</driverClass>
+        <reportString>removing TargetA.</reportString>
+        <suspendable>false</suspendable>
+        <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
+    </JobDef>
 </Defs>
