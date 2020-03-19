@@ -3,12 +3,9 @@
 // Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using AwesomeInventory.Common.Loadout;
+using AwesomeInventory.Loadout;
+using AwesomeInventory.Utilities;
 using HarmonyLib;
 using RimWorld;
 using Verse;

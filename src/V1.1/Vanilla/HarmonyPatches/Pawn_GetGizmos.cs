@@ -5,9 +5,9 @@
 
 using System.Collections.Generic;
 using System.Reflection;
-using AwesomeInventory.Common;
+using AwesomeInventory.UI;
+using AwesomeInventory.Utilities;
 using HarmonyLib;
-using RPG_Inventory_Remake_Common;
 using Verse;
 
 namespace RPG_Inventory_Remake
@@ -26,7 +26,7 @@ namespace RPG_Inventory_Remake
         public static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> gizmos, Pawn __instance)
         {
 
-            ToggleGearTab toggleGearTab = new ToggleGearTab(typeof(RPG_GearTab));
+            ToggleGearTab toggleGearTab = new ToggleGearTab(typeof(AwesomeInventoryTabBase));
             foreach (Gizmo gizmo in gizmos)
             {
                 yield return gizmo;

@@ -7,7 +7,7 @@ using System;
 using System.Collections;
 using Verse;
 
-namespace AwesomeInventory.Common
+namespace AwesomeInventory
 {
     /// <summary>
     /// A helper for validating arguments.

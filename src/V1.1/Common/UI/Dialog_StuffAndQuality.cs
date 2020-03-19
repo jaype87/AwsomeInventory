@@ -8,14 +8,15 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
-using AwesomeInventory.Resources;
+using AwesomeInventory.Loadout;
+using AwesomeInventory.Utilities;
 using RimWorld;
 using RPG_Inventory_Remake_Common;
 using RPGIResource;
 using UnityEngine;
 using Verse;
 
-namespace AwesomeInventory.Common.Loadout
+namespace AwesomeInventory.UI
 {
     using TSPWQuality = ThingStuffPairWithQuality;
     public class Dialog_StuffAndQuality : Window
@@ -46,7 +47,7 @@ namespace AwesomeInventory.Common.Loadout
         static Dialog_StuffAndQuality()
         {
             float width = GenUI.GetWidthCached(UIText.TenCharsString.Times(9));
-            _initialSize = new Vector2(width, UI.screenHeight / 3f + GenUI.ListSpacing);
+            _initialSize = new Vector2(width, Verse.UI.screenHeight / 3f + GenUI.ListSpacing);
             _initialSizeForWeapon = new Vector2(_initialSize.x * 1.1f, _initialSize.y);
             ArmorStats = new List<StatDef>()
             {
@@ -121,7 +122,7 @@ namespace AwesomeInventory.Common.Loadout
 
             //Draw Header
             //Rect titleRec = UtilityDraw.DrawTitle(canvas.position, UIText.ChooseMaterialAndQuality.Translate(), ref rollingY);
-            Rect titleRec = UtilityDraw.DrawTitle(
+            Rect titleRec = DrawUtility.DrawTitle(
                 canvas.position, string.Concat(UIText.Customize.Translate(), " ", _thing.def.LabelCap)
                 , ref rollingY);
             GUI.color = Color.grey;
@@ -216,7 +217,7 @@ namespace AwesomeInventory.Common.Loadout
                 GUI.DrawTexture(row, texture2D);
 
                 ThingDef stuff = stuffs[i];
-                UtilityDraw.DrawLineButton
+                DrawUtility.DrawLineButton
                     (row
                     , stuff.LabelAsStuff.CapitalizeFirst()
                     , _thing
@@ -269,7 +270,7 @@ namespace AwesomeInventory.Common.Loadout
                 Text.WordWrap = false;
                 foreach (TSPWQuality pair in pairList)
                 {
-                    if (row.ButtonIcon(TexButton.Info))
+                    if (row.ButtonIcon(TexResource.Info))
                     {
                         Thing temp = _thing.DeepCopySimple(false);
                         temp.SetStuffDirect(pair.stuff);

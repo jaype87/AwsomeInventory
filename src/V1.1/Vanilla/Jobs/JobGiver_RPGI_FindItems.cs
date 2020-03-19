@@ -1,20 +1,24 @@
-﻿using System;
+﻿// <copyright file="JobGiver_RPGI_FindItems.cs" company="Zizhen Li">
+// Copyright (c) Zizhen Li. All rights reserved.
+// Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AwesomeInventory.Loadout;
+using RimWorld;
 using Verse;
 using Verse.AI;
-using RimWorld;
-using RPG_Inventory_Remake.Loadout;
-using RPG_Inventory_Remake_Common;
 
-namespace AwesomeInventory.Common.Loadout
+namespace AwesomeInventory.Jobs
 {
     public class JobGiver_RPGI_FindItems : JobGiver_FindItemByRadius<Thing>
     {
         protected override Job TryGiveJob(Pawn pawn)
         {
-            CompRPGILoadout RPGIloadout = ((ThingWithComps)pawn).TryGetComp<CompRPGILoadout>();
+            CompAwesomeInventoryLoadout RPGIloadout = ((ThingWithComps)pawn).TryGetComp<CompAwesomeInventoryLoadout>();
             Thing targetA = null;
 
             if (RPGIloadout == null || !RPGIloadout.NeedRestock)

@@ -7,14 +7,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using AwesomeInventory.Loadout;
 using AwesomeInventory.Resources;
+using AwesomeInventory.Utilities;
 using RimWorld;
 using RPG_Inventory_Remake_Common;
-using RPGIResource;
 using UnityEngine;
 using Verse;
 
-namespace AwesomeInventory.Common.Loadout
+namespace AwesomeInventory.UI
 {
     public enum SourceSelection
     {
@@ -31,28 +32,8 @@ namespace AwesomeInventory.Common.Loadout
         #region Fields
         #region Static Fields
 
-        private static Texture2D
-            _arrowBottom = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/arrowBottom"),
-            _arrowDown = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/arrowDown"),
-            _arrowTop = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/arrowTop"),
-            _arrowUp = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/arrowUp"),
-            _darkBackground = SolidColorMaterials.NewSolidColorTexture(0f, 0f, 0f, .2f),
-            _iconEdit = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/edit"),
-            _iconClear = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/clear"),
-            _iconAmmo = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/ammo"),
-            _iconRanged = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/ranged"),
-            _iconMelee = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/melee"),
-            _iconMinified = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/minified"),
-            _iconGeneric = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/generic"),
-            _iconAll = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/all"),
-            _iconAmmoAdd = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/ammoAdd"),
-            _iconSearch = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/search"),
-            _iconMove = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/move"),
-            _iconPickupDrop = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/loadoutPickupDrop"),
-            _iconDropExcess = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/loadoutDropExcess");
-
-        //private static List<Thing> _currentLoadout.CachedList;
         private static Pawn _pawn;
+
         /// <summary>
         /// Controls the window size and position
         /// </summary>
@@ -85,7 +66,7 @@ namespace AwesomeInventory.Common.Loadout
         {
             float width = GenUI.GetWidthCached(UIText.TenCharsString.Times(10));
 
-            _initialSize = new Vector2(width, UI.screenHeight / 2f);
+            _initialSize = new Vector2(width, Verse.UI.screenHeight / 2f);
             _allSuitableDefs = GameComponent_DefManager.GetSuitableDefs();
         }
 
@@ -289,17 +270,17 @@ namespace AwesomeInventory.Common.Loadout
         public void DrawCategoryIcon(Rect canvas)
         {
             WidgetRow row = new WidgetRow(canvas.x, canvas.y);
-            DrawSourceIcon(SourceSelection.Ranged, _iconRanged, ref row, UIText.SourceRangedTip.Translate());
-            DrawSourceIcon(SourceSelection.Melee, _iconMelee, ref row, UIText.SourceMeleeTip.Translate());
-            DrawSourceIcon(SourceSelection.Apparel, TexButton.Apparel, ref row, UIText.SourceApparelTip.Translate());
-            DrawSourceIcon(SourceSelection.Minified, _iconMinified, ref row, UIText.SourceMinifiedTip.Translate());
-            DrawSourceIcon(SourceSelection.Generic, _iconGeneric, ref row, UIText.SourceGenericTip.Translate());
-            DrawSourceIcon(SourceSelection.All, _iconAll, ref row, UIText.SourceAllTip.Translate());
+            DrawSourceIcon(SourceSelection.Ranged, TexResource.IconRanged, ref row, UIText.SourceRangedTip.Translate());
+            DrawSourceIcon(SourceSelection.Melee, TexResource.IconMelee, ref row, UIText.SourceMeleeTip.Translate());
+            DrawSourceIcon(SourceSelection.Apparel, TexResource.Apparel, ref row, UIText.SourceApparelTip.Translate());
+            DrawSourceIcon(SourceSelection.Minified, TexResource.IconMinified, ref row, UIText.SourceMinifiedTip.Translate());
+            DrawSourceIcon(SourceSelection.Generic, TexResource.IconGeneric, ref row, UIText.SourceGenericTip.Translate());
+            DrawSourceIcon(SourceSelection.All, TexResource.IconAll, ref row, UIText.SourceAllTip.Translate());
 
             float nameFieldLen = GenUI.GetWidthCached(UIText.TenCharsString);
             float incrementX = canvas.xMax - row.FinalX - nameFieldLen - WidgetRow.IconSize - WidgetRow.ButtonExtraSpace;
             row.Gap(incrementX);
-            row.Icon(_iconSearch, UIText.SourceFilterTip.Translate());
+            row.Icon(TexResource.IconSearch, UIText.SourceFilterTip.Translate());
 
             Rect filterRect = new Rect(row.FinalX, canvas.y, nameFieldLen, canvas.height);
             DrawFilterField(filterRect);
@@ -368,7 +349,7 @@ namespace AwesomeInventory.Common.Loadout
             if (countInt != thing.stackCount)
             {
                 int delta = countInt - thing.stackCount;
-                _pawn.GetComp<CompRPGILoadout>().InventoryTracker[thing] -= delta;
+                _pawn.GetComp<CompAwesomeInventoryLoadout>().InventoryTracker[thing] -= delta;
                 _currentLoadout.SetDirtyAll();
             }
             thing.stackCount = countInt;
@@ -423,7 +404,7 @@ namespace AwesomeInventory.Common.Loadout
             // gear icon
             if ((thing.def.MadeFromStuff || thing.TryGetQuality(out _))
                 && !thing.def.IsArt
-                && Widgets.ButtonImage(gearIconRect, TexButton.Gear))
+                && Widgets.ButtonImage(gearIconRect, TexResource.Gear))
             {
                 Find.WindowStack.Add(new Dialog_StuffAndQuality(thing, _currentLoadout));
             }
@@ -434,7 +415,7 @@ namespace AwesomeInventory.Common.Loadout
             // delete
             if (Mouse.IsOver(deleteRect))
                 GUI.DrawTexture(row, TexUI.HighlightTex);
-            if (Widgets.ButtonImage(deleteRect, _iconClear))
+            if (Widgets.ButtonImage(deleteRect, TexResource.IconClear))
             {
                 _currentLoadout.Remove(thing);
             }
@@ -460,20 +441,20 @@ namespace AwesomeInventory.Common.Loadout
             // set up content canvas
             Rect listRect = new Rect(0, 0, canvas.width - GenUI.ScrollBarWidth, _scrollViewHeight);
             // darken whole area
-            GUI.DrawTexture(canvas, _darkBackground);
+            GUI.DrawTexture(canvas, TexResource.DarkBackground);
             Widgets.BeginScrollView(canvas, ref _slotScrollPosition, listRect);
             // Set up reorder functionality
             int reorderableGroup = ReorderableWidget.NewGroup(
                 delegate (int from, int to)
                 {
                     ReorderItems(from, to);
-                    UtilityDraw.ResetDrag();
+                    DrawUtility.ResetDrag();
                 }
                 , ReorderableDirection.Vertical
                 , -1
                 , (index, pos) =>
                 {
-                    Vector2 position = UtilityDraw.GetPostionForDrag(windowRect.ContractedBy(Margin), new Vector2(canvas.x, canvas.y), index, GenUI.ListSpacing);
+                    Vector2 position = DrawUtility.GetPostionForDrag(windowRect.ContractedBy(Margin), new Vector2(canvas.x, canvas.y), index, GenUI.ListSpacing);
                     Rect dragRect = new Rect(position, new Vector2(listRect.width, GenUI.ListSpacing));
                     Find.WindowStack.ImmediateWindow(Rand.Int, dragRect, WindowLayer.Super,
                         () =>
@@ -495,7 +476,7 @@ namespace AwesomeInventory.Common.Loadout
 
                 // alternate row background
                 if (i % 2 == 0)
-                    GUI.DrawTexture(row, _darkBackground);
+                    GUI.DrawTexture(row, TexResource.DarkBackground);
 
                 DrawItem(row, _currentLoadout.CachedList[i], reorderableGroup);
                 GUI.color = Color.white;
@@ -510,7 +491,7 @@ namespace AwesomeInventory.Common.Loadout
 
         private void DrawItemsInCategory(Rect canvas)
         {
-            GUI.DrawTexture(canvas, _darkBackground);
+            GUI.DrawTexture(canvas, TexResource.DarkBackground);
 
             Rect viewRect = new Rect(canvas);
             viewRect.height = _source.Count * GenUI.ListSpacing;
@@ -531,10 +512,10 @@ namespace AwesomeInventory.Common.Loadout
 
                 labelRect.xMin += GenUI.GapTiny;
                 if (i % 2 == 0)
-                    GUI.DrawTexture(row, _darkBackground);
+                    GUI.DrawTexture(row, TexResource.DarkBackground);
 
                 int j = i;
-                UtilityDraw.DrawLineButton
+                DrawUtility.DrawLineButton
                     (labelRect
                     , _source[j].thingDef.LabelCap
                     , _source[j].thingDef

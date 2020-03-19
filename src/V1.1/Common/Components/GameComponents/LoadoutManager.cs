@@ -13,7 +13,7 @@ using RimWorld;
 using RPGIResource;
 using Verse;
 
-namespace AwesomeInventory.Common.Loadout
+namespace AwesomeInventory.Loadout
 {
     /// <summary>
     /// It handles loadouts CRUD operations in the game.

@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)SolutionItems\CustomStyleCopRules.props" Condition="Exists('$(SolutionDir)SolutionItems\CustomStyleCopRules.props')" />
   <Import Project="..\..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
   <Import Project="..\..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('..\..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props')" />
   <Import Project="..\..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props')" />
@@ -12,7 +13,7 @@
     <ProjectGuid>{9C99FF79-7175-48EC-A407-9D72950F2BC4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>AwesomeInventory</RootNamespace>
-    <AssemblyName>AwesomeInventoryV1.1</AssemblyName>
+    <AssemblyName>Vanilla1.1</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -31,7 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.1\Vanilla\Assemblies\AwesomeInventoryV1.1.xml</DocumentationFile>
+    <DocumentationFile>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.1\Vanilla\Assemblies\Vanilla1.1.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -70,12 +71,6 @@
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Common\DefOfs\CorgiBodyPartGroupsDefOf.cs">
-      <Link>DefOfs\CorgiBodyPartGroupsDefOf.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\DefOfs\RPGI_StuffDefOf.cs">
-      <Link>DefOfs\RPGI_StuffDefOf.cs</Link>
-    </Compile>
     <Compile Include="..\Common\Gizmos\ToggleGearTab.cs">
       <Link>Gizmos\ToggleGearTab.cs</Link>
     </Compile>
@@ -102,15 +97,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StringConstant.resx</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Resources\UIText.Designer.cs">
-      <Link>Resources\UIText.Designer.cs</Link>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UIText.resx</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\TextButton.cs">
-      <Link>TextButton.cs</Link>
     </Compile>
     <Compile Include="..\Common\UI\Dialog_InstantMessage.cs">
       <Link>UI\Dialog_InstantMessage.cs</Link>
@@ -202,20 +188,11 @@
     <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateStuffNoMerge.cs">
       <Link>UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateStuffNoMerge.cs</Link>
     </Compile>
-    <Compile Include="..\Common\UnitTest\Resources\StringResource.Designer.cs">
-      <Link>UnitTest\Resources\StringResource.Designer.cs</Link>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>StringResource.resx</DependentUpon>
-    </Compile>
     <Compile Include="..\Common\UnitTest\RPGIIntegrationTest.cs">
       <Link>UnitTest\RPGIIntegrationTest.cs</Link>
     </Compile>
     <Compile Include="..\Common\UnitTest\RPGIUnitTest.cs">
       <Link>UnitTest\RPGIUnitTest.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\UI\UnitTestButton.cs">
-      <Link>UnitTest\UI\UnitTestButton.cs</Link>
     </Compile>
     <Compile Include="..\Common\UnitTest\UnitTest_Root.cs">
       <Link>UnitTest\UnitTest_Root.cs</Link>
@@ -223,21 +200,22 @@
     <Compile Include="..\Common\UnitTest\UnitTest_Start.cs">
       <Link>UnitTest\UnitTest_Start.cs</Link>
     </Compile>
-    <Compile Include="Components\GameComponent_RPGI_Main.cs" />
+    <Compile Include="Components\GameComponent_AwesomeInventory_Entry.cs" />
+    <Compile Include="GearTab\AwesomeInventoryTab.cs" />
+    <Compile Include="GearTab\VanillaGearTabWorker.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="HarmonyPatches\AddHumanlikeOrders_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\Pawn_GetGizmos.cs" />
     <Compile Include="HarmonyPatches\ThingOwner_RPGI_Patch.cs" />
+    <Compile Include="Helpers\DrawHelper.cs" />
+    <Compile Include="Helpers\InventoryHelper.cs" />
     <Compile Include="Jobs\JobDriver_RPGI_DressAndUndress.cs" />
-    <Compile Include="Jobs\JobDriver_RPGI_Unload.cs" />
-    <Compile Include="Jobs\JobGiver_RPGI_ApparelOptions.cs" />
-    <Compile Include="Jobs\JobGiver_RPGI_FindApparels.cs" />
+    <Compile Include="Jobs\JobGiver_AwesomeInventory_FindApparels.cs" />
     <Compile Include="Jobs\JobGiver_RPGI_FindItems.cs" />
     <Compile Include="Jobs\JobGiver_RPGI_FindWeapon.cs" />
     <Compile Include="Jobs\JobGiver_FindItemByRadius.cs" />
     <Compile Include="Jobs\JobGiver_RPGI_OpportunisticHaul.cs" />
-    <Compile Include="PawnModal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\RegisterVanillaServices.cs" />
     <None Include="App.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="HarmonyPatches\Game_FinalizeInit_RPGI_Patch.cs" />
@@ -247,19 +225,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\..\RPG_Style_Inventory\Defs\ThingTreeDefs\SubTrees_Misc.xml">
-      <Link>Defs\SubTrees_Misc.xml</Link>
-    </Content>
     <Content Include="..\..\..\Common\Patches\RPG_Inventory.xml">
       <Link>Patches\RPG_Inventory.xml</Link>
     </Content>
     <Content Include="..\..\..\Languages\English\Keyed\Sandy_Detailed_RPG_Gear.xml">
       <Link>Languages\Sandy_Detailed_RPG_Gear.xml</Link>
     </Content>
-    <Content Include="..\..\..\LoadFolders.xml">
-      <Link>LoadFolders.xml</Link>
-    </Content>
-    <Content Include="About\About.xml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.0.0.8, Culture=neutral, processorArchitecture=MSIL">
@@ -267,7 +238,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\References\Assembly-CSharp.dll</HintPath>
+      <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -307,9 +278,8 @@
     <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Debug\" />
-    <Folder Include="Enum\" />
     <Folder Include="Interface\" />
+    <Folder Include="UnitTest\Resources\" />
     <Folder Include="Utilities\" />
   </ItemGroup>
   <ItemGroup>
@@ -331,20 +301,13 @@
       <LastGenOutput>StringConstant.Designer.cs</LastGenOutput>
       <CustomToolNamespace>RPGIResource</CustomToolNamespace>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\Common\Resources\UIText.resx">
-      <Link>Resources\UIText.resx</Link>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>UIText.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>RPGIResource</CustomToolNamespace>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\Common\UnitTest\Resources\StringResource.resx">
-      <Link>UnitTest\Resources\StringResource.resx</Link>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>StringResource.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>RPG_Inventory_Remake_Common.UnitTest</CustomToolNamespace>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\AwesomeInventory.Base.csproj">
+      <Project>{b08984e0-c241-4fee-b9a1-fff9adef5bb2}</Project>
+      <Name>AwesomeInventory.Base</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common1.1.csproj">
       <Project>{6629105c-6bed-491b-a49a-eb12b0710cf3}</Project>
       <Name>Common1.1</Name>

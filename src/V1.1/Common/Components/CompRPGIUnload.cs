@@ -10,7 +10,7 @@ using System.Text;
 using RimWorld;
 using Verse;
 
-namespace AwesomeInventory.Common.Loadout
+namespace AwesomeInventory.Loadout
 {
     /// <summary>
     /// Component attached to thing that is marked to unload.

@@ -5,16 +5,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using AwesomeInventory.Common.Loadout;
+using AwesomeInventory.Loadout;
+using AwesomeInventory.Utilities;
 using HarmonyLib;
 using RimWorld;
-using RPG_Inventory_Remake.Loadout;
-using RPG_Inventory_Remake_Common;
 using Verse;
 
 namespace AwesomeInventory.Common.HarmonyPatches
@@ -40,25 +37,25 @@ namespace AwesomeInventory.Common.HarmonyPatches
         [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
         public static void NotifyAdded_Postfix(ThingOwner __instance, Thing item)
         {
-            (__instance.Owner as Pawn_InventoryTracker)?.pawn?.TryGetComp<CompRPGILoadout>()?.NotifiedAdded(item);
-            (__instance.Owner as Pawn_ApparelTracker)?.pawn?.TryGetComp<CompRPGILoadout>()?.NotifiedAdded(item);
-            (__instance.Owner as Pawn_EquipmentTracker)?.pawn?.TryGetComp<CompRPGILoadout>()?.NotifiedAdded(item);
+            (__instance.Owner as Pawn_InventoryTracker)?.pawn?.TryGetComp<CompAwesomeInventoryLoadout>()?.NotifiedAdded(item);
+            (__instance.Owner as Pawn_ApparelTracker)?.pawn?.TryGetComp<CompAwesomeInventoryLoadout>()?.NotifiedAdded(item);
+            (__instance.Owner as Pawn_EquipmentTracker)?.pawn?.TryGetComp<CompAwesomeInventoryLoadout>()?.NotifiedAdded(item);
         }
 
         [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
         public static void NotifyAddedAndMergedWith_Postfix(ThingOwner __instance, Thing item, int mergedCount)
         {
-            (__instance.Owner as Pawn_InventoryTracker)?.pawn?.TryGetComp<CompRPGILoadout>()?.NotifiedAddedAndMergedWith(item, mergedCount);
-            (__instance.Owner as Pawn_ApparelTracker)?.pawn?.TryGetComp<CompRPGILoadout>()?.NotifiedAddedAndMergedWith(item, mergedCount);
-            (__instance.Owner as Pawn_EquipmentTracker)?.pawn?.TryGetComp<CompRPGILoadout>()?.NotifiedAddedAndMergedWith(item, mergedCount);
+            (__instance.Owner as Pawn_InventoryTracker)?.pawn?.TryGetComp<CompAwesomeInventoryLoadout>()?.NotifiedAddedAndMergedWith(item, mergedCount);
+            (__instance.Owner as Pawn_ApparelTracker)?.pawn?.TryGetComp<CompAwesomeInventoryLoadout>()?.NotifiedAddedAndMergedWith(item, mergedCount);
+            (__instance.Owner as Pawn_EquipmentTracker)?.pawn?.TryGetComp<CompAwesomeInventoryLoadout>()?.NotifiedAddedAndMergedWith(item, mergedCount);
         }
 
         [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
         public static void NotifyRemoved_Postfix(ThingOwner __instance, Thing item)
         {
-            (__instance.Owner as Pawn_InventoryTracker)?.pawn?.TryGetComp<CompRPGILoadout>()?.NotifiedRemoved(item);
-            (__instance.Owner as Pawn_ApparelTracker)?.pawn?.TryGetComp<CompRPGILoadout>()?.NotifiedRemoved(item);
-            (__instance.Owner as Pawn_EquipmentTracker)?.pawn?.TryGetComp<CompRPGILoadout>()?.NotifiedRemoved(item);
+            (__instance.Owner as Pawn_InventoryTracker)?.pawn?.TryGetComp<CompAwesomeInventoryLoadout>()?.NotifiedRemoved(item);
+            (__instance.Owner as Pawn_ApparelTracker)?.pawn?.TryGetComp<CompAwesomeInventoryLoadout>()?.NotifiedRemoved(item);
+            (__instance.Owner as Pawn_EquipmentTracker)?.pawn?.TryGetComp<CompAwesomeInventoryLoadout>()?.NotifiedRemoved(item);
         }
     }
 }

@@ -4,21 +4,17 @@
 // </copyright>
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AwesomeInventory.Common
+namespace AwesomeInventory
 {
     /// <summary>
     /// Exception to be thrown if an argument has no item/element in it.
     /// </summary>
     [Serializable]
-    [SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "<Pending>")]
+    [SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "Not required.")]
     public sealed class ArgumentEmtpyException : Exception
     {
         private const string _message = "Argument {0} is empty.";

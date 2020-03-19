@@ -5,12 +5,11 @@
 
 using System;
 using System.Linq;
-using AwesomeInventory.Common;
 using RimWorld;
 using Verse;
 using Verse.Sound;
 
-namespace RPG_Inventory_Remake_Common
+namespace AwesomeInventory.UI
 {
     /// <summary>
     /// Toggle Gear Tab.
@@ -28,7 +27,7 @@ namespace RPG_Inventory_Remake_Common
         {
             hotKey = KeyBindingDefOf.Misc12;
             action = ToggleTab;
-            icon = TexButton.GearHelmet;
+            icon = TexResource.GearHelmet;
             _tabType = tabType;
         }
 

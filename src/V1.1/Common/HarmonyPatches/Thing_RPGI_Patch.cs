@@ -5,7 +5,8 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using AwesomeInventory.Common.Loadout;
+using AwesomeInventory.Loadout;
+using AwesomeInventory.Utilities;
 using HarmonyLib;
 using Verse;
 
@@ -34,7 +35,7 @@ namespace AwesomeInventory.Common.HarmonyPatches
         {
             if (__instance.ParentHolder is Pawn pawn)
             {
-                if (pawn.TryGetComp<CompRPGILoadout>() is CompRPGILoadout compRPGI)
+                if (pawn.TryGetComp<CompAwesomeInventoryLoadout>() is CompAwesomeInventoryLoadout compRPGI)
                 {
                     compRPGI.NotifiedSplitOff(__instance, count);
                 }

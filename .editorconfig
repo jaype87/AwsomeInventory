@@ -27,3 +27,24 @@ dotnet_diagnostic.SA1200.severity = none
 
 # SA1313: Parameter names should begin with lower-case letter
 dotnet_diagnostic.SA1313.severity = none
+
+# CA1305: Specify IFormatProvider
+dotnet_diagnostic.CA1305.severity = none
+
+# SA1401: Fields should be private
+dotnet_diagnostic.SA1401.severity = none
+
+# CA1051: Do not declare visible instance fields
+dotnet_diagnostic.CA1051.severity = none
+
+# SA1636: File header copyright text should match
+dotnet_diagnostic.SA1636.severity = silent
+
+# SA1113: Comma should be on the same line as previous parameter
+dotnet_diagnostic.SA1113.severity = none
+
+# SA1001: Commas should be spaced correctly
+dotnet_diagnostic.SA1001.severity = none
+
+# SA1123: Do not place regions within elements
+dotnet_diagnostic.SA1123.severity = none

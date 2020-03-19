@@ -4,8 +4,9 @@
 // </copyright>
 
 using System.Reflection;
+using AwesomeInventory.Jobs;
+using AwesomeInventory.Utilities;
 using HarmonyLib;
-using RPG_Inventory_Remake_Common;
 using Verse;
 using Verse.AI;
 
@@ -27,7 +28,7 @@ namespace AwesomeInventory.Common.HarmonyPatches
             Job job = __instance.pawn.CurJob;
             if (job != null)
             {
-                if (job.def == AwesomeInventory_JobDefOf.RPGI_Unload)
+                if (job.def == AwesomeInventory_JobDefOf.AwesomeInventory_Unload)
                 {
                     if (job.targetA.HasThing)
                     {

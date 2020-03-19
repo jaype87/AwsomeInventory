@@ -1,32 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Defs>
     <JobDef>
-        <defName>RPGI_Unload</defName>
-        <driverClass>RPG_Inventory_Remake.JobDriver_RPGI_Unload</driverClass>
+        <defName>AwesomeInventory_Unload</defName>
+        <driverClass>AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Unload</driverClass>
         <reportString>Unloading TargetA.</reportString>
         <suspendable>false</suspendable>
         <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
     </JobDef>
 
     <JobDef>
-        <defName>RPGI_Fake</defName>
-        <driverClass>RPG_Inventory_Remake.JobDriver_RPGI_Unload</driverClass>
+        <defName>AwesomeInventory_Fake</defName>
+        <driverClass>AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Unload</driverClass>
         <reportString>Unloading TargetA.</reportString>
         <suspendable>false</suspendable>
         <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
     </JobDef>
 
     <JobDef>
-        <defName>RPGI_ApparelOptions</defName>
-        <driverClass>RPG_Inventory_Remake.JobDriver_RPGI_ApparelOptions</driverClass>
-        <reportString>TargetA.</reportString>
-        <suspendable>false</suspendable>
-        <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
-    </JobDef>
-
-    <JobDef>
-        <defName>RPGI_Map_Equip</defName>
-        <driverClass>RPG_Inventory_Remake_Common.JobDriver_Map_Equip</driverClass>
+        <defName>AwesomeInventory_MapEquip</defName>
+        <driverClass>AwesomeInventory.Jobs.JobDriver_AwesomeInventory_MapEquip</driverClass>
         <reportString>Equip TargetA.</reportString>
         <suspendable>false</suspendable>
         <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
@@ -34,7 +26,7 @@
 
     <JobDef>
         <defName>AwesomeInventory_Dress</defName>
-        <driverClass>AwesomeInventory.Common.Jobs.JobDriver_AwesomeInventory_Dress</driverClass>
+        <driverClass>AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Dress</driverClass>
         <reportString></reportString>
         <suspendable>false</suspendable>
         <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
@@ -42,7 +34,7 @@
 
     <JobDef>
         <defName>AwesomeInventory_Undress</defName>
-        <driverClass>AwesomeInventory.Common.Jobs.JobDriver_AwesomeInventory_Undress</driverClass>
+        <driverClass>AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Undress</driverClass>
         <reportString>removing TargetA.</reportString>
         <suspendable>false</suspendable>
         <allowOpportunisticPrefix>false</allowOpportunisticPrefix>

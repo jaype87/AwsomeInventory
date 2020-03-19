@@ -1,4 +1,9 @@
-﻿using System;
+﻿// <copyright file="LoadoutUtilities.cs" company="Zizhen Li">
+// Copyright (c) Zizhen Li. All rights reserved.
+// Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -10,7 +15,7 @@ using RPGIResource;
 using UnityEngine;
 using Verse;
 
-namespace AwesomeInventory.Common.Loadout
+namespace AwesomeInventory.Loadout
 {
     [StaticConstructorOnStartup]
     public static class LoadoutUtilities
@@ -109,7 +114,7 @@ namespace AwesomeInventory.Common.Loadout
                 throw new ArgumentNullException(nameof(pawn));
             }
 
-            return pawn.TryGetComp<CompRPGILoadout>()?.Loadout;
+            return pawn.TryGetComp<CompAwesomeInventoryLoadout>()?.Loadout;
         }
 
         public static int GetLoadoutId(this Pawn pawn)
@@ -145,7 +150,7 @@ namespace AwesomeInventory.Common.Loadout
         /// <param name="loadout"></param>
         public static void SetLoadout(this Pawn pawn, AILoadout loadout)
         {
-            if (pawn.TryGetComp<CompRPGILoadout>() is CompRPGILoadout comp)
+            if (pawn.TryGetComp<CompAwesomeInventoryLoadout>() is CompAwesomeInventoryLoadout comp)
             {
                 if (comp.Loadout == loadout)
                 {

@@ -3,17 +3,11 @@
 
     <SandyMassValue> {0} / {1} kg</SandyMassValue>
     <Sandy_ViewList>Show list</Sandy_ViewList>
-    <Sandy_Head>Head Overhead</Sandy_Head>
-    <Sandy_TorsoMiddle>Torso Middle</Sandy_TorsoMiddle>
-    <Sandy_TorsoOnSkin>Torso OnSkin</Sandy_TorsoOnSkin>
-    <Sandy_TorsoShell>Torso Shell</Sandy_TorsoShell>
-    <Sandy_Belt>Belt</Sandy_Belt>
-    <Sandy_Pants>Legs OnSkin</Sandy_Pants>
+    
+    
 
-    <Corgi_PrimaryWeapon>Primary Weapon</Corgi_PrimaryWeapon>
     <Corgi_ExtraApparels>Extra Apparels</Corgi_ExtraApparels>
     <Corgi_UnloadNow>Unload Now</Corgi_UnloadNow>
-    <Corgi_Wear>Wear {1_labelShort}</Corgi_Wear>
     <Corgi_KeepOldApparel>and keep old apparel</Corgi_KeepOldApparel>
     <Corgi_OpenLoadout>Open Loadout</Corgi_OpenLoadout>
     <Corgi_UseLoadout>Use Loadout</Corgi_UseLoadout>
@@ -21,9 +15,16 @@
     <Corgi_ToggleGearTab>Toggle Gear Tab</Corgi_ToggleGearTab>
 
     <!-- Inventory Window -->
+    <AwesomeInventory_Belt>Belt</AwesomeInventory_Belt>
     <AwesomeInventory_GreedyTab>Greedy (List)</AwesomeInventory_GreedyTab>
+    <AwesomeInventory_Head>Head Overhead</AwesomeInventory_Head>
     <AwesomeInventory_JealousTab>Jealous (RPG Style)</AwesomeInventory_JealousTab>
     <AwesomeInventory_MassCarried>Mass carried</AwesomeInventory_MassCarried>
+    <AwesomeInventory_Pants>Legs OnSkin Layer</AwesomeInventory_Pants>
+    <AwesomeInventory_PrimaryWeapon>Primary Weapon</AwesomeInventory_PrimaryWeapon>
+    <AwesomeInventory_TorsoMiddle>Torso Middle Layer</AwesomeInventory_TorsoMiddle>
+    <AwesomeInventory_TorsoOnSkin>Torso OnSkin Layer</AwesomeInventory_TorsoOnSkin>
+    <AwesomeInventory_TorsoShell>Torso Shell Layer</AwesomeInventory_TorsoShell>
 
     <!-- Loadout Window -->
     <AwesomeInventory_ChooseMaterialAndQuality>Choose Material and Quality</AwesomeInventory_ChooseMaterialAndQuality>
@@ -75,14 +76,16 @@
     
     <!-- Option texts on context menu -->
     <AwesomeInventory_Equip>Equip {0} and keep the retired</AwesomeInventory_Equip>
-    <AwesomeInventory_ForceWear>Force wear {0} and keep the retired</AwesomeInventory_ForceWear>
+    <AwesomeInventory_ForceWear>Force wear {0} and keep the repleced</AwesomeInventory_ForceWear>
     <AwesomeInventory_PutAway>Put Away {0}</AwesomeInventory_PutAway>
-    <AwesomeInventory_Wear>Wear {0} and keep the retired</AwesomeInventory_Wear>
+    <AwesomeInventory_Wear>Wear {0} and keep the replaced</AwesomeInventory_Wear>
+    <AwesomeInventory_VanillaWear>Wear {0}</AwesomeInventory_VanillaWear>
 
     <!-- Tooltips -->
     <AwesomeInventory_Ascetic>Ascetic</AwesomeInventory_Ascetic>
 
-
+    <!-- Messages -->
+    <AwesomeInventory_FailToDrop>{0} failed to drop {1}</AwesomeInventory_FailToDrop>
 
 
 </LanguageData>

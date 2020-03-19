@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)SolutionItems\CustomStyleCopRules.props" Condition="Exists('$(SolutionDir)SolutionItems\CustomStyleCopRules.props')" />
   <Import Project="..\..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
   <Import Project="..\..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props')" />
   <Import Project="..\..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props')" />
@@ -12,7 +13,7 @@
     <ProjectGuid>{6629105C-6BED-491B-A49A-EB12B0710CF3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>AwesomeInventory.Common</RootNamespace>
-    <AssemblyName>Common</AssemblyName>
+    <AssemblyName>Common1.1</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -30,7 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.1\Common\Assemblies\Common.xml</DocumentationFile>
+    <DocumentationFile>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.1\Common\Assemblies\Common1.1.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -65,40 +66,23 @@
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="..\..\..\Common\Defs\ApparelLayerDefs.xml">
-      <Link>Defs\ApparelLayerDefs.xml</Link>
-    </Content>
-    <Content Include="..\..\..\Common\Defs\BodyPartGroups.xml">
-      <Link>Defs\BodyPartGroups.xml</Link>
-    </Content>
-    <Content Include="..\..\..\Common\Defs\Jewelry_compat\ApparelLayerDefs.xml">
-      <Link>Defs\Jewelry_compat\ApparelLayerDefs.xml</Link>
-    </Content>
-    <Content Include="..\..\..\Common\Defs\JobDefs\Jobs_RPGInventory.xml">
-      <Link>Defs\JobDefs\Jobs_RPGInventory.xml</Link>
-    </Content>
-    <Content Include="..\..\..\Common\Defs\RPGIGenericResource.xml">
-      <Link>Defs\RPGIGenericResource.xml</Link>
-    </Content>
-    <Content Include="..\..\..\Common\Defs\ThinkTreeDefs\SubTrees_Misc.xml">
-      <Link>Defs\ThinkTreeDefs\SubTrees_Misc.xml</Link>
-    </Content>
-    <Content Include="..\..\..\Common\Languages\English\Keyed\AwesomeInventory.xml">
-      <Link>Languages\AwesomeInventory.xml</Link>
-    </Content>
-    <Content Include="..\..\..\Common\Patches\RPG_Inventory.xml">
-      <Link>Patches\RPG_Inventory.xml</Link>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="ModSettings\RegisterServices.cs" />
+    <Compile Include="GearTab\IconRect.cs" />
+    <Compile Include="GearTab\SmartRectList.cs" />
+    <Compile Include="HarmonyPatches\AddHumanlikeOrders_RPGI_Patch.cs" />
+    <Compile Include="Helpers\IDrawHelper.cs" />
+    <Compile Include="Interfaces\IInventoryHelper.cs" />
+    <Compile Include="Jobs\DressJob.cs" />
+    <Compile Include="Jobs\JobDriver_AwesomeInventory_Dress.cs" />
+    <Compile Include="Jobs\JobDriver_AwesomeInventory_Undress.cs" />
+    <Compile Include="Jobs\JobDriver_AwesomeInventory_Unload.cs" />
+    <Compile Include="Services\RegisterServices.cs" />
     <Compile Include="UI\Dialog_Mod.cs" />
-    <Compile Include="ModSettings\Setting.cs" />
-    <Compile Include="Components\CompRPGILoadout.cs" />
+    <Compile Include="ModSettings\AwesomeInventorySetting.cs" />
+    <Compile Include="Components\CompAwesomeInventoryLoadout.cs" />
     <Compile Include="Components\CompRPGIUnload.cs" />
     <Compile Include="Components\GameComponents\GameComponent_DefManager.cs" />
     <Compile Include="Components\GameComponents\LoadoutManager.cs" />
-    <Compile Include="DefOfs\CorgiBodyPartGroupsDefOf.cs" />
+    <Compile Include="DefOfs\AwesomeInventoryBodyPartGroupDefOf.cs" />
     <Compile Include="DefOfs\RPGI_StuffDefOf.cs" />
     <Compile Include="DynamicDefs\AIGenericDef.cs" />
     <Compile Include="DynamicDefs\AIGenericDrugs.cs" />
@@ -106,8 +90,8 @@
     <Compile Include="DynamicDefs\AIGenericMedicine.cs" />
     <Compile Include="DynamicDefs\AIGenericRawFood.cs" />
     <Compile Include="Exceptions\ArgumentEmtpyException.cs" />
-    <Compile Include="GearTab\DrawGearTab.cs" />
-    <Compile Include="GearTab\RPG_GearTab.cs" />
+    <Compile Include="GearTab\DrawGearTabWorker.cs" />
+    <Compile Include="GearTab\AwesomeInventoryTabBase.cs" />
     <Compile Include="Gizmos\ToggleGearTab.cs" />
     <Compile Include="HarmonyPatches\OutfitDatabase_TryDelete.cs" />
     <Compile Include="DefOfs\AwesomeInventory_JobDefOf.cs" />
@@ -117,9 +101,9 @@
     <Compile Include="Interfaces\IDrawGearTab.cs" />
     <Compile Include="Interfaces\ILoadout.cs" />
     <Compile Include="Interfaces\ILoadoutManager.cs" />
-    <Compile Include="Jobs\JobDriver_Map_Equip.cs" />
-    <Compile Include="Jobs\JobGiver_Unload.cs" />
-    <Compile Include="Jobs\ThinkNode_RPGI_Core.cs" />
+    <Compile Include="Jobs\JobDriver_AwesomeInventory_MapEquip.cs" />
+    <Compile Include="Jobs\JobGiver_AwesomeInventory_Unload.cs" />
+    <Compile Include="Jobs\ThinkNode_AwesomeInventory_Core.cs" />
     <Compile Include="Loadout\AILoadout.cs" />
     <Compile Include="Loadout\LoadoutComparer.cs" />
     <Compile Include="Loadout\LoadoutGenericDef.cs" />
@@ -155,15 +139,8 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Resources\UIText.Designer.cs">
-      <DependentUpon>UIText.resx</DependentUpon>
-      <CustomToolNamespace>RPG_Inventory_Remake_Common</CustomToolNamespace>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Services\ServiceResolver.cs" />
-    <Compile Include="SmartRect.cs" />
-    <Compile Include="TextButton.cs" />
+    <Compile Include="GearTab\SmartRect.cs" />
+    <Compile Include="TexResource.cs" />
     <Compile Include="UI\Dialog_InstantMessage.cs" />
     <Compile Include="UI\Dialog_ManageLoadouts.cs" />
     <Compile Include="UI\Dialog_StuffAndQuality.cs" />
@@ -210,14 +187,16 @@
     <Compile Include="Utilities\ValidateArg.cs" />
     <Compile Include="Utilities\Utility.cs" />
     <Compile Include="Utilities\UtilityConstant.cs" />
-    <Compile Include="Utilities\UtilityDraw.cs" />
+    <Compile Include="Utilities\DrawUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.0.0.8, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Lib.Harmony.2.0.0.8\lib\net35\0Harmony.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\References\Assembly-CSharp.dll</HintPath>
+      <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -269,11 +248,6 @@
       <LastGenOutput>StringConstant.Designer.cs</LastGenOutput>
       <CustomToolNamespace>RPGIResource</CustomToolNamespace>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\UIText.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>UIText.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>AwesomeInventory.Resources</CustomToolNamespace>
-    </EmbeddedResource>
     <EmbeddedResource Include="UnitTest\Resources\StringResource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>StringResource.Designer.cs</LastGenOutput>
@@ -297,9 +271,14 @@
     <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\AwesomeInventoryBase\AwesomeInventory.Base.csproj">
+    <Folder Include="Languages\" />
+    <Folder Include="Patches\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\AwesomeInventory.Base.csproj">
       <Project>{b08984e0-c241-4fee-b9a1-fff9adef5bb2}</Project>
       <Name>AwesomeInventory.Base</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

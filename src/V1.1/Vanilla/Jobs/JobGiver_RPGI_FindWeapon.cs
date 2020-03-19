@@ -1,17 +1,21 @@
-using RimWorld;
-using RPG_Inventory_Remake.Loadout;
+// <copyright file="JobGiver_RPGI_FindWeapon.cs" company="Zizhen Li">
+// Copyright (c) Zizhen Li. All rights reserved.
+// Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AwesomeInventory.Jobs;
+using RimWorld;
 using Verse;
 using Verse.AI;
 using Verse.Sound;
-using UnityEngine;
-using RPG_Inventory_Remake_Common;
 
-namespace AwesomeInventory.Common.Loadout
+namespace AwesomeInventory.Jobs
 {
     // TODO test if non-hostile NPC, caravan and wild man, will take weapons
+
     /// <summary>
     ///     Find pawn a suitable weapon. This JobGiver is ignored for colonists when Simple Sidearm is present.
     /// It is inserted to ThinkNode_SubtreesByTag with tag, Humanlike_PostMentalState. Check Humanlike.xml for more info
@@ -20,7 +24,7 @@ namespace AwesomeInventory.Common.Loadout
     {
         protected override Job TryGiveJob(Pawn pawn)
         {
-            if (GameComponent_RPGI_Main.HasSimpleSidearm && pawn.Faction.IsPlayer)
+            if (GameComponent_AwesomeInventory_Entry.HasSimpleSidearm && pawn.Faction.IsPlayer)
             {
                 return null;
             }
@@ -121,7 +125,7 @@ namespace AwesomeInventory.Common.Loadout
                 }
                 Log.Message("Weapon found");
 
-                return new Job(AwesomeInventory_JobDefOf.RPGI_Map_Equip, closestWeapon);
+                return new Job(AwesomeInventory_JobDefOf.AwesomeInventory_MapEquip, closestWeapon);
             }
             return null;
         }

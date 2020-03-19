@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SkipDefaultEditorConfigAsAdditionalFile>true</SkipDefaultEditorConfigAsAdditionalFile>
+  </PropertyGroup>
+  <ItemGroup>
+      <AdditionalFiles Condition="Exists('$(SolutionDir).editorconfig')" Include="$(SolutionDir).editorconfig" />
+  </ItemGroup>
+</Project>

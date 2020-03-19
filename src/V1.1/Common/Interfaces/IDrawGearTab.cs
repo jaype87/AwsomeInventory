@@ -12,7 +12,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace AwesomeInventory.Common
+namespace AwesomeInventory.UI
 {
     /// <summary>
     /// Draw contents for <see cref="ITab_Pawn_Gear"/>.
@@ -24,14 +24,19 @@ namespace AwesomeInventory.Common
         /// </summary>
         /// <param name="pawn"> Pawn that owns the tab. </param>
         /// <param name="canvas"> Position on screen to draw on. </param>
-        void DrawJealous(PawnModal pawn, Rect canvas);
+        void DrawJealous(Pawn pawn, Rect canvas);
 
         /// <summary>
         /// Draw greedy tab.
         /// </summary>
         /// <param name="pawn"> Pawn that owns the tab. </param>
         /// <param name="canvas"> Position on screen to draw on. </param>
-        void DrawGreedy(PawnModal pawn, Rect canvas);
+        void DrawGreedy(Pawn pawn, Rect canvas);
+
+        /// <summary>
+        /// Draw ascetic tab.
+        /// </summary>
+        void DrawAscetic();
 
         /// <summary>
         /// Reset the scroll position of gear tab.

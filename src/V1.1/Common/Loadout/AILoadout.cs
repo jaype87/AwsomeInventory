@@ -15,7 +15,7 @@ using RPGIResource;
 using UnityEngine;
 using Verse;
 
-namespace AwesomeInventory.Common.Loadout
+namespace AwesomeInventory.Loadout
 {
     /// <summary>
     /// It inherits from the "Outfit" class, is added to outfitDatabase and holds information about loadout

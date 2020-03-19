@@ -7,8 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using AwesomeInventory.Common;
-using AwesomeInventory.Common.Loadout;
+using AwesomeInventory.Jobs;
+using AwesomeInventory.Loadout;
+using AwesomeInventory.UI;
 using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
@@ -19,17 +20,10 @@ using Verse;
 using Verse.AI;
 using Verse.Sound;
 
-namespace AwesomeInventory.Common
+namespace AwesomeInventory.Utilities
 {
     public static class Utility
     {
-        private const float _smallIconSize = 20f;
-        private static readonly Color _highlightColor = new Color(0.5f, 0.5f, 0.5f, 1f);
-        private static readonly Color _highlightGreen = new Color(134 / 255f, 206 / 255f, 0, 1);
-        private static readonly Color _highlightBrown = new Color(212 / 255f, 141 / 255f, 0, 1);
-        private static readonly Color _thingLabelColor = new Color(0.9f, 0.9f, 0.9f, 1f);
-        private static Vector2 _scrollPosition = Vector2.zero;
-
         public const float StandardLineHeight = 22f;
         public static readonly Vector3 PawnTextureCameraOffset = new Vector3(0f, 0f, 0f);
 
@@ -148,293 +142,6 @@ namespace AwesomeInventory.Common
             return value.ToStringByStyle(asPercent ? ToStringStyle.FloatMaxOne : ToStringStyle.FloatMaxTwo) + unit;
         }
 
-        // RimWorld.ITab_Pawn_Gear
-        private static void InterfaceIngest(Thing t, Pawn selPawn)
-        {
-            Job job = new Job(JobDefOf.Ingest, t);
-            job.count = Mathf.Min(t.stackCount, t.def.ingestible.maxNumToIngestAtOnce);
-            job.count = Mathf.Min(job.count, FoodUtility.WillIngestStackCountOf(selPawn, t.def, t.GetStatValue(StatDefOf.Nutrition, true)));
-            selPawn.jobs.TryTakeOrderedJob(job, JobTag.Misc);
-        }
-
-        public static void InterfaceDrop(Thing t, Pawn pawn)
-        {
-            ThingWithComps thingWithComps = t as ThingWithComps;
-            Apparel apparel = t as Apparel;
-            if (apparel != null && pawn.apparel != null && pawn.apparel.WornApparel.Contains(apparel))
-            {
-                pawn.jobs.TryTakeOrderedJob(new Job(JobDefOf.RemoveApparel, apparel));
-            }
-            else if (thingWithComps != null && pawn.equipment != null && pawn.equipment.AllEquipmentListForReading.Contains(thingWithComps))
-            {
-                pawn.jobs.TryTakeOrderedJob(new Job(JobDefOf.DropEquipment, thingWithComps));
-            }
-            else if (!t.def.destroyOnDrop)
-            {
-                pawn.inventory.innerContainer.TryDrop(t, pawn.Position, pawn.Map, ThingPlaceMode.Near, out Thing _);
-            }
-        }
-
-        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
-        public static void InterfaceUnloadNow(ThingWithComps t, Pawn pawn)
-        {
-            // TODO examine HaulToContainer code path
-            // If there is no comps in def, AllComps will always return an empty list
-            // Can't add new comp if the parent class has no comp to begin with
-            // The .Any() is not a fool proof test if some mods use it as a dirty way to
-            // comps to things that should not have comps
-            // Check ThingWithComps for more information
-            if (t.AllComps.Any())
-            {
-                CompRPGIUnload comp = t.GetComp<CompRPGIUnload>();
-                if (comp == null)
-                {
-                    t.AllComps.Add(new CompRPGIUnload(true));
-                    JobGiver_RPGIUnload.QueueJob(pawn, JobGiver_RPGIUnload.TryGiveJobStatic(pawn, t));
-                }
-                else if (comp.Unload == true)
-                {
-                    // Check JobGiver_RPGIUnload for more information
-                    comp.Unload = false;
-                    if (pawn.CurJob?.targetA.Thing == t && pawn.CurJobDef == AwesomeInventory_JobDefOf.RPGI_Unload)
-                    {
-                        pawn.jobs.EndCurrentJob(JobCondition.Incompletable);
-                        return;
-                    }
-                    QueuedJob queuedJob = pawn.jobs.jobQueue.FirstOrDefault
-                        (
-                            j => j.job.def == AwesomeInventory_JobDefOf.RPGI_Fake &&
-                            j.job.targetA.Thing == t
-                        );
-                    if (queuedJob != null)
-                    {
-                        pawn.jobs.jobQueue.Extract(queuedJob.job);
-                    }
-                }
-                else if (comp.Unload == false)
-                {
-                    comp.Unload = true;
-                    JobGiver_RPGIUnload.QueueJob(pawn, JobGiver_RPGIUnload.TryGiveJobStatic(pawn, t));
-                }
-            }
-        }
-
-        // Serve straight up from source, no idea why it is made private
-        public static void DrawThingRow(PawnModal selPawn, ref float y, float width, Thing thing, bool inventory = false)
-        {
-            Rect rect = new Rect(0f, y, width, 28f);
-
-            Widgets.InfoCardButton(rect.width - 24f, y, thing);
-            rect.width -= 24f;
-            if (selPawn.CanControl && (inventory || selPawn.CanControlColonist || (selPawn.Pawn.Spawned && !selPawn.Pawn.Map.IsPlayerHome)))
-            {
-                rect.width -= 24f;
-                Rect rect2 = new Rect(rect.width, y, 24f, 24f);
-                TooltipHandler.TipRegion(rect2, "DropThing".Translate());
-                if (Widgets.ButtonImage(rect2, TexButton.Drop))
-                {
-                    SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                    InterfaceDrop(thing, selPawn.Pawn);
-                }
-                if (thing is ThingWithComps thingWithComps)
-                {
-                    // Draw unload now button
-                    rect.width -= 24f;
-                    Rect rect3 = new Rect(rect.width, y, 24f, 24f);
-                    TooltipHandler.TipRegion(rect3, "Corgi_UnloadNow".Translate());
-                    Texture2D image = ContentFinder<Texture2D>.Get("UI/Icons/DoubleDownArrow", true);
-                    if (thingWithComps.GetComp<CompRPGIUnload>()?.Unload ?? false)
-                    {
-                        if (Widgets.ButtonImage(rect3, image, _highlightBrown, _highlightGreen))
-                        {
-                            SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                            InterfaceUnloadNow(thingWithComps, selPawn.Pawn);
-                        }
-                    }
-                    else
-                    {
-                        if (Widgets.ButtonImage(rect3, image, Color.white, _highlightGreen))
-                        {
-                            SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                            InterfaceUnloadNow(thingWithComps, selPawn.Pawn);
-                        }
-                    }
-
-                }
-            }
-            if (selPawn.CanControlColonist)
-            {
-                if ((thing.def.IsNutritionGivingIngestible || thing.def.IsNonMedicalDrug) && thing.IngestibleNow && selPawn.Pawn.WillEat(thing))
-                {
-                    Rect rect3 = new Rect(rect.width - 24f, y, 24f, 24f);
-                    TooltipHandler.TipRegion(rect3, "ConsumeThing".Translate(thing.LabelNoCount, thing));
-                    if (Widgets.ButtonImage(rect3, TexButton.Ingest))
-                    {
-                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                        InterfaceIngest(thing, selPawn.Pawn);
-                    }
-                }
-                rect.width -= 24f;
-            }
-            Rect rect4 = rect;
-            rect4.xMin = rect4.xMax - 60f;
-            CaravanThingsTabUtility.DrawMass(thing, rect4);
-            rect.width -= 60f;
-            if (Mouse.IsOver(rect))
-            {
-                GUI.color = ITab_Pawn_Gear.HighlightColor;
-                GUI.DrawTexture(rect, TexUI.HighlightTex);
-            }
-
-            if (thing.def.DrawMatSingle != null && thing.def.DrawMatSingle.mainTexture != null)
-            {
-                Widgets.ThingIcon(new Rect(4f, y, 28f, 28f), thing);
-            }
-
-            Text.Anchor = TextAnchor.MiddleLeft;
-            GUI.color = ITab_Pawn_Gear.ThingLabelColor;
-            Rect rect5 = new Rect(36f, y, rect.width - 36f, rect.height);
-
-            // Draw label for thing in a row
-            string text = thing.LabelCap;
-            Apparel apparel = thing as Apparel;
-            bool isForced = apparel != null && selPawn.Pawn.outfits != null &&
-                                       selPawn.Pawn.outfits.forcedHandler.IsForced(apparel);
-            Text.WordWrap = false;
-            Widgets.Label(rect5, text.Truncate(rect5.width));
-            Text.WordWrap = true;
-
-            string tooltipText = TooltipTextForThing(thing, false, isForced);
-
-            MRC_ContextualMenu(selPawn, thing, rect);
-            TooltipHandler.TipRegion(rect, tooltipText);
-
-            y += 28f;
-        }
-
-        public static void DrawThingRowWithImage(PawnModal selPawn, Rect rect, ThingWithComps thing, bool inventory = false)
-        {
-            QualityCategory c;
-            if (thing.TryGetQuality(out c))
-            {
-                switch (c)
-                {
-                    case QualityCategory.Legendary:
-                        {
-                            UtilityDraw.DrawBoxWithColor(rect, RPGITex.Lengendary);
-                            break;
-                        }
-                    case QualityCategory.Masterwork:
-                        {
-                            UtilityDraw.DrawBoxWithColor(rect, RPGITex.Masterwork);
-                            break;
-                        }
-                    case QualityCategory.Excellent:
-                        {
-                            UtilityDraw.DrawBoxWithColor(rect, RPGITex.Excellent);
-                            break;
-                        }
-                    case QualityCategory.Good:
-                        {
-                            UtilityDraw.DrawBoxWithColor(rect, RPGITex.Good);
-
-                            break;
-                        }
-                    case QualityCategory.Normal:
-                        {
-                            UtilityDraw.DrawBoxWithColor(rect, RPGITex.Normal);
-
-                            break;
-                        }
-                    case QualityCategory.Poor:
-                        {
-                            UtilityDraw.DrawBoxWithColor(rect, RPGITex.Poor);
-
-                            break;
-                        }
-                    case QualityCategory.Awful:
-                        {
-                            UtilityDraw.DrawBoxWithColor(rect, RPGITex.Awful);
-
-                            break;
-                        }
-                }
-            }
-
-
-            Rect rect5 = rect.ContractedBy(2f);
-            float num2 = rect5.height * ((float)thing.HitPoints / (float)thing.MaxHitPoints);
-            rect5.yMin = rect5.yMax - num2;
-            rect5.height = num2;
-            // draw background indicator for hitpoints
-            GUI.DrawTexture(rect5, SolidColorMaterials.NewSolidColorTexture(new Color(0.4f, 0.47f, 0.53f, 0.44f)));
-            if ((float)thing.HitPoints <= ((float)thing.MaxHitPoints / 2))
-            {
-                GUI.DrawTexture(rect5, SolidColorMaterials.NewSolidColorTexture(new Color(1f, 0.5f, 0.31f, 0.44f)));
-            }
-            if (thing.def.DrawMatSingle != null && thing.def.DrawMatSingle.mainTexture != null)
-            {
-                Rect rect1 = new Rect(rect.x + 4f, rect.y + 4f, rect.width - 8f, rect.height - 8f);
-                Widgets.ThingIcon(rect1, thing, 1f);
-            }
-            if (Mouse.IsOver(rect))
-            {
-                GUI.color = _highlightColor;
-                GUI.DrawTexture(rect, TexUI.HighlightTex);
-                Widgets.InfoCardButton(rect.x, rect.y, thing);
-                if (selPawn.CanControl && (inventory || selPawn.CanControlColonist || (selPawn.Pawn.Spawned && !selPawn.Pawn.Map.IsPlayerHome)))
-                {
-                    // Draw drop button
-                    Rect rect2 = new Rect(rect.xMax - 24f, rect.y, 24f, 24f);
-                    TooltipHandler.TipRegion(rect2, "DropThing".Translate());
-                    if (Widgets.ButtonImage(rect2, ContentFinder<Texture2D>.Get("UI/Buttons/Drop", true)))
-                    {
-                        SoundDefOf.Tick_High.PlayOneShotOnCamera(null);
-                        InterfaceDrop(thing, selPawn.Pawn);
-                    }
-                    // Draw Unload Now button
-                    rect2 = new Rect(rect.xMax - _smallIconSize, rect.yMax - _smallIconSize, _smallIconSize, _smallIconSize);
-                    TooltipHandler.TipRegion(rect2, "Corgi_UnloadNow".Translate());
-                    Texture2D image = ContentFinder<Texture2D>.Get("UI/Icons/DoubleDownArrow", true);
-                    if (thing.GetComp<CompRPGIUnload>()?.Unload ?? false)
-                    {
-                        if (Widgets.ButtonImage(rect2, image, _highlightBrown, _highlightGreen))
-                        {
-                            SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                            InterfaceUnloadNow(thing, selPawn.Pawn);
-                        }
-                    }
-                    else
-                    {
-                        if (Widgets.ButtonImage(rect2, image, Color.white, _highlightGreen))
-                        {
-                            SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                            InterfaceUnloadNow(thing, selPawn.Pawn);
-                        }
-                    }
-                    GUI.color = Color.white;
-                }
-            }
-            Apparel apparel = thing as Apparel;
-            if (apparel != null && selPawn.Pawn.outfits != null && apparel.WornByCorpse)
-            {
-                Rect rect3 = new Rect(rect.xMax - 20f, rect.yMax - 20f, 20f, 20f);
-                GUI.DrawTexture(rect3, ContentFinder<Texture2D>.Get("UI/Icons/Sandy_Tainted_Icon", true));
-                TooltipHandler.TipRegion(rect3, "WasWornByCorpse".Translate());
-            }
-            bool isForced = apparel != null && selPawn.Pawn.outfits != null && selPawn.Pawn.outfits.forcedHandler.IsForced(apparel);
-            if (isForced)
-            {
-                Rect rect4 = new Rect(rect.x, rect.yMax - 20f, 20f, 20f);
-                GUI.DrawTexture(rect4, ContentFinder<Texture2D>.Get("UI/Icons/Sandy_Forced_Icon", true));
-                TooltipHandler.TipRegion(rect4, "ForcedApparel".Translate());
-            }
-            Text.WordWrap = true;
-            TooltipHandler.TipRegion(rect, TooltipTextForThing(thing, true, isForced));
-
-            MRC_ContextualMenu(selPawn, thing, rect);
-        }
-
         public static void TryDrawComfyTemperatureRange(Pawn pawn, Rect rect)
         {
             if (pawn.Dead)
@@ -546,7 +253,6 @@ namespace AwesomeInventory.Common
             return num;
         }
 
-
         public static void DrawArmorRatingWithText(Rect pos, string label, float armorRating, string unit)
         {
             // Draw Label
@@ -643,23 +349,6 @@ namespace AwesomeInventory.Common
             GUI.DrawTexture(rect, PortraitsCache.Get(pawn, pos, PawnTextureCameraOffset, 1.18f));
         }
 
-        public static SmartRect GetWorkingRect(this SmartRect curr, BodyPartGroupDef bodyPartGroupDef,
-                                               float x_leftCurPosition, float x_rightCurPosition)
-        {
-            if (curr.BodyPartGroup != bodyPartGroupDef)
-            {
-                var temp = curr.List.Find(s => s.BodyPartGroup == bodyPartGroupDef);
-                if (temp == default)
-                {
-                    temp = curr.CreateSibling(bodyPartGroupDef, x_leftCurPosition, x_rightCurPosition);
-                    curr.NextSibling = temp;
-                    temp.PreviousSibling = curr;
-                }
-                return temp;
-            }
-            return curr;
-        }
-
         // TODO Add brawler have ranged weapon text
         public static string TooltipTextForThing(Thing thing, bool labelCap, bool isForced)
         {
@@ -672,6 +361,7 @@ namespace AwesomeInventory.Common
                     text += ", " + "ApparelForcedLower".Translate();
                 }
             }
+
             text += thing.DescriptionDetailed;
 
             // hit points
@@ -679,6 +369,7 @@ namespace AwesomeInventory.Common
             {
                 text += "\n" + thing.HitPoints + " / " + thing.MaxHitPoints;
             }
+
             // mass
             string mass = (thing.GetStatValue(StatDefOf.Mass, true) * (float)thing.stackCount)
                             .ToString("G") + " kg";
@@ -706,144 +397,8 @@ namespace AwesomeInventory.Common
                 }
 
             }
+
             return text;
-        }
-
-        // Mouse right click contextual menu when click on item
-        public static bool MRC_ContextualMenu(PawnModal selPawn, Thing thing, Rect rect)
-        {
-            if (Widgets.ButtonInvisible(rect) && Event.current.button == 1)
-            {
-                // Check if pawn is under control
-                if (selPawn.CanControlColonist)
-                {
-                    List<FloatMenuOption> floatOptionList = new List<FloatMenuOption>();
-
-                    // Equipment option
-                    if (thing.TryGetComp<CompEquippable>() != null)
-                    {
-                        if (thing is ThingWithComps equipment)
-                        {
-                            if (equipment != null)
-                            {
-                                string labelShort = equipment.LabelShort;
-                                FloatMenuOption equipOption;
-                                // Add put away option
-                                if (selPawn.Pawn.equipment.AllEquipmentListForReading.Contains(equipment) && selPawn.Pawn.inventory != null)
-                                {
-                                    equipOption = new FloatMenuOption("Corgi_PutAway".Translate(labelShort),
-                                        new Action(delegate
-                                        {
-                                            selPawn.Pawn.equipment.TryTransferEquipmentToContainer(selPawn.Pawn.equipment.Primary, selPawn.Pawn.inventory.innerContainer);
-                                        }));
-                                }
-
-                                else if (equipment.def.IsWeapon && selPawn.Pawn.story.DisabledWorkTagsBackstoryAndTraits.HasFlag(WorkTags.Violent))
-                                {
-                                    equipOption = new FloatMenuOption("CannotEquip".Translate(labelShort) + " (" + "IsIncapableOfViolenceLower".Translate(selPawn.Pawn.LabelShort, selPawn.Pawn) + ")", null);
-                                }
-                                else if (!selPawn.Pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
-                                {
-                                    equipOption = new FloatMenuOption("CannotEquip".Translate(labelShort) + " (" + "Incapable".Translate() + ")", null);
-                                }
-                                // Add equip option
-                                else
-                                {
-                                    string text5 = "Equip".Translate(labelShort);
-                                    if (equipment.def.IsRangedWeapon && selPawn.Pawn.story != null && selPawn.Pawn.story.traits.HasTrait(TraitDefOf.Brawler))
-                                    {
-                                        text5 = text5 + " " + "EquipWarningBrawler".Translate();
-                                    }
-                                    equipOption = new FloatMenuOption(text5, delegate
-                                    {
-                                        if (selPawn.Pawn.CurJob != null) { selPawn.Pawn.jobs.StopAll(); }
-                                        // put away equiped weapon first
-                                        if (selPawn.Pawn.equipment.Primary != null)
-                                        {
-                                            if (!selPawn.Pawn.equipment.TryTransferEquipmentToContainer(selPawn.Pawn.equipment.Primary, selPawn.Pawn.inventory.innerContainer))
-                                            {
-                                                // if failed, drop the weapon
-                                                selPawn.Pawn.equipment.MakeRoomFor(equipment);
-                                            }
-                                        }
-                                        if (selPawn.Pawn.equipment.Primary == null)
-                                        {
-                                            // unregister new weapon in the inventory list and register it in equipment list 
-                                            selPawn.Pawn.equipment.GetDirectlyHeldThings().TryAddOrTransfer(equipment);
-                                        }
-                                        else
-                                        {
-                                            Messages.Message("CannotEquip".Translate(labelShort), MessageTypeDefOf.NeutralEvent);
-                                        }
-
-                                    });
-                                }
-                                floatOptionList.Add(equipOption);
-                            }
-                        }
-                    }
-                    // Apparel option
-                    if (thing is Apparel apparel)
-                    {
-                        Pawn pawn = selPawn.Pawn;
-                        string labelShort = apparel.LabelShort;
-                        FloatMenuOption equipOption = null;
-
-                        // Equip option
-                        if (pawn.inventory.Contains(thing))
-                        {
-                            equipOption = new FloatMenuOption("Equip".Translate(labelShort),
-                                new Action(delegate
-                                {
-                                    pawn.jobs.TryTakeOrderedJob
-                                        (
-                                            // Check JobDriver_RPGI_ApparelOptions for more information
-                                            new Job(AwesomeInventory_JobDefOf.RPGI_ApparelOptions, thing)
-                                            { playerForced = true, count = 0 }
-                                        );
-                                }));
-                            floatOptionList.Add(equipOption);
-                            // Forced equip option
-                            equipOption = new FloatMenuOption("ApparelForcedLower".Translate() + " " + "Equip".Translate(labelShort),
-                                new Action(delegate
-                                {
-                                    pawn.jobs.TryTakeOrderedJob
-                                        (
-                                            new Job(AwesomeInventory_JobDefOf.RPGI_ApparelOptions, thing)
-                                            { playerForced = true, count = 1 }
-                                        );
-                                }));
-                            floatOptionList.Add(equipOption);
-                        }
-
-
-
-                        // Put away option
-                        if (pawn.apparel.Contains(thing) && pawn.inventory != null)
-                        {
-                            equipOption = new FloatMenuOption("Corgi_PutAway".Translate(labelShort),
-                                new Action(delegate
-                                {
-                                    pawn.jobs.TryTakeOrderedJob
-                                        (
-                                            new Job(AwesomeInventory_JobDefOf.RPGI_ApparelOptions, thing)
-                                            { playerForced = true, count = -1 },
-                                            JobTag.ChangingApparel
-                                        );
-                                }));
-                            floatOptionList.Add(equipOption);
-                        }
-                    }
-
-                    if (floatOptionList.Count > 0)
-                    {
-                        FloatMenu window = new FloatMenu(floatOptionList, "", false);
-                        Find.WindowStack.Add(window);
-                    }
-                    return true;
-                }
-            }
-            return false;
         }
 
         // Most part is from the source code
@@ -853,41 +408,52 @@ namespace AwesomeInventory.Common
             {
                 newApparel.DeSpawn();
             }
+
             if (!ApparelUtility.HasPartsToWear(pawn, newApparel.def))
             {
                 Log.Warning(pawn + " tried to wear " + newApparel + " but he has no body parts required to wear it.");
                 return;
             }
+
+            List<Apparel> apparelsToReplace = new List<Apparel>();
             for (int num = pawn.apparel.WornApparelCount - 1; num >= 0; num--)
             {
-                Apparel apparel = pawn.apparel.WornApparel[num];
-                if (!ApparelUtility.CanWearTogether(newApparel.def, apparel.def, pawn.RaceProps.body))
+                Apparel oldApparel = pawn.apparel.WornApparel[num];
+                if (!ApparelUtility.CanWearTogether(newApparel.def, oldApparel.def, pawn.RaceProps.body))
                 {
-                    if (dropReplacedApparel)
-                    {
-                        bool forbid = pawn.Faction != null && pawn.Faction.HostileTo(Faction.OfPlayer);
-                        if (!pawn.apparel.TryDrop(apparel, out Apparel _, pawn.PositionHeld, forbid))
-                        {
-                            Log.Error(pawn + " could not drop " + apparel);
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        pawn.apparel.Remove(apparel);
-                        // New code
-                        pawn.inventory.innerContainer.TryAdd(apparel);
-                    }
+                    apparelsToReplace.Add(oldApparel);
                 }
             }
+
+            foreach (Apparel apparel in apparelsToReplace)
+            {
+                if (dropReplacedApparel)
+                {
+                    bool forbid = pawn.Faction != null && pawn.Faction.HostileTo(Faction.OfPlayer);
+                    if (!pawn.apparel.TryDrop(apparel, out Apparel _, pawn.PositionHeld, forbid))
+                    {
+                        Messages.Message(UIText.FailToDrop.Translate(pawn, apparel), MessageTypeDefOf.NeutralEvent);
+                        return;
+                    }
+                }
+                else
+                {
+                    pawn.apparel.Remove(apparel);
+                    pawn.inventory.innerContainer.TryAdd(apparel);
+                }
+            }
+
             if (newApparel.Wearer != null)
             {
                 Log.Warning(pawn + " is trying to wear " + newApparel + " but this apparel already has a wearer (" + newApparel.Wearer + "). This may or may not cause bugs.");
             }
-            // Extra spice
-            Traverse.Create(pawn).Field("apparel").Field("wornApparel")
-                .Method("TryAdd", new Type[] { typeof(Thing), typeof(bool) }, null)
-                .GetValue(newApparel, false);
+
+            // Circumvene accessibility restriction and add apparel directly to inner list.
+            object wornApparel = pawn.apparel
+                                     .GetType()
+                                     .GetField("wornApparel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                                     .GetValue(pawn.apparel);
+            wornApparel.GetType().GetMethod("TryAdd", new Type[] { typeof(Thing), typeof(bool) }).Invoke(wornApparel, new object[] { newApparel, false });
         }
 
         private static string formatArmorValue(float value, string unit)
@@ -899,8 +465,6 @@ namespace AwesomeInventory.Common
             }
             return value.ToStringByStyle(asPercent ? ToStringStyle.FloatMaxOne : ToStringStyle.FloatMaxTwo) + unit;
         }
-
-
 
         public static void DrawMassBreakdown(Pawn pawn, Rect rect)
         {
@@ -942,7 +506,7 @@ namespace AwesomeInventory.Common
             }
             int length = Mathf.RoundToInt(str.Length * num);
             char[] array = new char[length];
-            for(int i = 0; i < length; i++)
+            for (int i = 0; i < length; i++)
             {
                 array[i] = 'A';
             }

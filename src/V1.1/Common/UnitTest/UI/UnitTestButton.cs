@@ -1,11 +1,16 @@
-﻿using System;
+﻿// <copyright file="UnitTestButton.cs" company="Zizhen Li">
+// Copyright (c) Zizhen Li. All rights reserved.
+// Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using UnityEngine;
 using System.Reflection;
+using System.Text;
 using HarmonyLib;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace RPG_Inventory_Remake_Common.UnitTest
@@ -22,7 +27,6 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             MethodInfo postfix = AccessTools.Method(typeof(UnitTestButton), "Draw");
             harmony.Patch(original, null, new HarmonyMethod(postfix));
         }
-
 
         public static void Draw()
         {

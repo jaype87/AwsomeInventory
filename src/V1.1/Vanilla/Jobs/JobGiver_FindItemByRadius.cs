@@ -10,14 +10,14 @@ using System.Linq;
 using System.Text;
 using AwesomeInventory.Resources;
 using RimWorld;
-using RPGIResource;
 using UnityEngine;
 using Verse;
 using Verse.AI;
 
-namespace AwesomeInventory.Common
+namespace AwesomeInventory.Jobs
 {
-    public abstract class JobGiver_FindItemByRadius<T> : ThinkNode_JobGiver where T : Thing
+    public abstract class JobGiver_FindItemByRadius<T> : ThinkNode_JobGiver
+        where T : Thing
     {
         protected bool _itemFound = false;
         protected static List<int> _radius = new List<int>();

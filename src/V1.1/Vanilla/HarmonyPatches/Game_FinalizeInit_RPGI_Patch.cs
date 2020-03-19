@@ -20,7 +20,7 @@ namespace RPG_Inventory_Remake
 
         public static void Postfix()
         {
-            JobGiver_RPGIUnload.JobInProgress = false;
+            JobGiver_AwesomeInventory_Unload.JobInProgress = false;
             if (AccessTools.TypeByName("CombatExtended.ITab_Inventory") != null)
             {
                 RPG_GearTab_CE.IsCE = true;

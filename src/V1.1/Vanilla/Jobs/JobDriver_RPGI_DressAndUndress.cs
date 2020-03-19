@@ -7,17 +7,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AwesomeInventory.Utilities;
 using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace AwesomeInventory.Common.Loadout
+namespace AwesomeInventory.Loadout
 {
     public class JobDriver_RPGI_DressAndUndress : JobDriver
     {
-
         private int duration;
         private Apparel apparel;
+
         // -1 for removing, 0 for equiping from inventory, 1 for forced equip
         // HACK Use job.count as mode
         private int mode;
@@ -28,6 +29,7 @@ namespace AwesomeInventory.Common.Loadout
             {
                 return pawn.Reserve(TargetThingA, job, 1, -1, null, errorOnFailed);
             }
+
             return true;
         }
 

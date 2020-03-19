@@ -5,7 +5,8 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using AwesomeInventory.Common.Loadout;
+using AwesomeInventory.Loadout;
+using AwesomeInventory.Utilities;
 using HarmonyLib;
 using RimWorld;
 using Verse;

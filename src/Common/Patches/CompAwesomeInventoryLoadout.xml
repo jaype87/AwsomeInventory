@@ -5,7 +5,7 @@
 		<xpath>Defs/ThingDef[@Name="BasePawn"]/comps</xpath>
 		<value>
 			<li>
-                <compClass>AwesomeInventory.Common.Loadout.CompAwesomeInventoryLoadout</compClass>
+                <compClass>AwesomeInventory.Loadout.CompAwesomeInventoryLoadout</compClass>
             </li>
 		</value>
 	</Operation>

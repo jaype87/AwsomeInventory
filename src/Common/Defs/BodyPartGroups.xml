@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- Check CorgiBodyPartGroupDefOf.cs for a complete list of list order-->
-<!-- TODO Add to PR for CE-->
+<!-- TODO Create PR to CE-->
 <Defs>
     <BodyPartGroupDef>
         <defName>Ears</defName>
@@ -33,7 +33,7 @@
     </BodyPartGroupDef>
 
     <BodyPartGroupDef>
-        <defName>Arse</defName>
+        <defName>None</defName>
         <label>arse</label>
         <listOrder>-1</listOrder>
     </BodyPartGroupDef>

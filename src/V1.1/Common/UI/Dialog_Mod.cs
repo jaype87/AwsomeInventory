@@ -13,14 +13,14 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace AwesomeInventory.Common
+namespace AwesomeInventory.UI
 {
     public class Dialog_Mod : Mod
     {
         // TODO add a getter method to update realtime value
-        private static Setting settings;
+        private static AwesomeInventorySetting settings;
 
-        public static Setting Settings
+        public static AwesomeInventorySetting Settings
         {
             get => settings;
         }
@@ -28,7 +28,7 @@ namespace AwesomeInventory.Common
         // TODO Revisit ModStarter
         public Dialog_Mod(ModContentPack content) : base(content)
         {
-            settings = GetSettings<Setting>();
+            settings = GetSettings<AwesomeInventorySetting>();
         }
 
         public override void DoSettingsWindowContents(Rect inRect)

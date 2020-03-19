@@ -4,12 +4,12 @@
         <defName>RPGILoadoutCore</defName>
         <insertTag>Humanlike_PostDuty</insertTag>
         <insertPriority>100</insertPriority>
-        <thinkRoot Class="AwesomeInventory.Common.Loadout.ThinkNode_RPGI_Core">
+        <thinkRoot Class="AwesomeInventory.Loadout.ThinkNode_AwesomeInventory_Core">
             <subNodes>
-                <li class="AwesomeInventory.Common.Loadout.JobGiver_AwesomeInventory_FindApparels"></li>
-                <!--<li class="RPG_Inventory_Remake.JobGiver_RPGI_FindItems"></li>-->
-                <!--<li class="RPG_Inventory_Remake.JobGiver_RPGI_FindWeapon"></li>-->
-                <!--<li class="RPG_Inventory_Remake.JobGiver_RPGI_OpportunisticHaul"></li>-->
+                <li Class="AwesomeInventory.Loadout.JobGiver_AwesomeInventory_FindApparels"></li>
+                <li Class="AwesomeInventory.Jobs.JobGiver_RPGI_FindItems"></li>
+                <li Class="AwesomeInventory.Jobs.JobGiver_RPGI_FindWeapon"></li>
+                <li Class="AwesomeInventory.Jobs.JobGiver_RPGI_OpportunisticHaul"></li>
             </subNodes>
         </thinkRoot>
     </ThinkTreeDef>

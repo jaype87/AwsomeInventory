@@ -7,10 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AwesomeInventory.Common.Loadout;
+using AwesomeInventory.Loadout;
 using Verse;
 
-namespace AwesomeInventory.Common
+namespace AwesomeInventory
 {
     public class GameComponent_DefManager : GameComponent
     {

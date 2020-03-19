@@ -7,10 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AwesomeInventory.Utilities;
 using RimWorld;
 using Verse;
 
-namespace AwesomeInventory.Common
+namespace AwesomeInventory.UI
 {
     /// <summary>
     /// A pawn modal used for drawing gear tab.
@@ -48,7 +49,7 @@ namespace AwesomeInventory.Common
         /// <summary>
         /// Gets the pawn used in this modal.
         /// </summary>
-        public Pawn Pawn { get; }
+        public Pawn Pawn { get; set; }
 
         /// <summary>
         /// Gets a collection of <see cref="BodyPartGroupDef"/>.

@@ -5,11 +5,12 @@
 
 using System.Collections.Generic;
 using System.Reflection;
-using AwesomeInventory.Common;
+using AwesomeInventory.UI;
+using AwesomeInventory.Utilities;
 using HarmonyLib;
 using Verse;
 
-namespace RPG_Inventory_Remake_Common
+namespace AwesomeInventory.HarmonyPatches
 {
     /// <summary>
     /// Patch into pawn's gizmos, so to provide a Gear gizmo to open gear tab.
@@ -35,7 +36,7 @@ namespace RPG_Inventory_Remake_Common
             if (gizmos == null)
                 gizmos = new List<Gizmo>();
 
-            ToggleGearTab toggleGearTab = new ToggleGearTab(typeof(RPG_GearTab));
+            ToggleGearTab toggleGearTab = new ToggleGearTab(typeof(AwesomeInventoryTabBase));
             foreach (Gizmo gizmo in gizmos)
             {
                 yield return gizmo;

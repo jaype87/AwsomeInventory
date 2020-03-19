@@ -7,11 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using AwesomeInventory.Common.Loadout;
+using AwesomeInventory.Jobs;
+using AwesomeInventory.Loadout;
+using AwesomeInventory.Utilities;
 using HarmonyLib;
-using RimWorld;
-using RPG_Inventory_Remake_Common;
 using Verse;
 using Verse.AI;
 
@@ -35,18 +34,18 @@ namespace AwesomeInventory.Common.HarmonyPatches
             {
                 comp.Unload = false;
             }
-            if (__instance.job.def == AwesomeInventory_JobDefOf.RPGI_Unload)
+            if (__instance.job.def == AwesomeInventory_JobDefOf.AwesomeInventory_Unload)
             {
-                JobGiver_RPGIUnload.JobInProgress = false;
+                JobGiver_AwesomeInventory_Unload.JobInProgress = false;
                 Pawn pawn = __instance.pawn;
                 if (condition == JobCondition.Succeeded || condition == JobCondition.Incompletable)
                 {
-                    foreach (QueuedJob qj in pawn.jobs.jobQueue.Where(j => j.job.def == AwesomeInventory_JobDefOf.RPGI_Fake).ToList())
+                    foreach (QueuedJob qj in pawn.jobs.jobQueue.Where(j => j.job.def == AwesomeInventory_JobDefOf.AwesomeInventory_Fake).ToList())
                     {
                         pawn.jobs.jobQueue.Extract(qj.job);
                         if (qj.job.targetA.Thing != null)
                         {
-                            Job newJob = JobGiver_RPGIUnload.TryGiveJobStatic(pawn, qj.job.targetA.Thing);
+                            Job newJob = JobGiver_AwesomeInventory_Unload.TryGiveJobStatic(pawn, qj.job.targetA.Thing);
                             if (newJob == null)
                             {
                                 qj.job.targetA.Thing.TryGetComp<CompRPGIUnload>().Unload = false;
@@ -60,7 +59,7 @@ namespace AwesomeInventory.Common.HarmonyPatches
                 }
                 else
                 {
-                    foreach (QueuedJob qj in pawn.jobs.jobQueue.Where(j => j.job.def == AwesomeInventory_JobDefOf.RPGI_Fake).ToList())
+                    foreach (QueuedJob qj in pawn.jobs.jobQueue.Where(j => j.job.def == AwesomeInventory_JobDefOf.AwesomeInventory_Fake).ToList())
                     {
                         CompRPGIUnload comp1 = qj.job.targetA.Thing?.TryGetComp<CompRPGIUnload>();
                         if (comp1 != null)

@@ -12,7 +12,7 @@ using AwesomeInventory.Resources;
 using RimWorld;
 using Verse;
 
-namespace AwesomeInventory.Common.Loadout
+namespace AwesomeInventory.Loadout
 {
     /// <summary>
     /// Generic raw food def for loadout purpose.

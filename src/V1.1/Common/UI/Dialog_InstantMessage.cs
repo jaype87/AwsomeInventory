@@ -10,7 +10,7 @@ using System.Text;
 using UnityEngine;
 using Verse;
 
-namespace RPG_Inventory_Remake_Common
+namespace AwesomeInventory.UI
 {
     public class Dialog_InstantMessage : Dialog_MessageBox
     {

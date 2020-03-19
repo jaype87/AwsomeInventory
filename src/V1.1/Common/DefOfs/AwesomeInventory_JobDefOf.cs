@@ -11,7 +11,7 @@ using System.Text;
 using RimWorld;
 using Verse;
 
-namespace AwesomeInventory.Common
+namespace AwesomeInventory.Jobs
 {
     /// <summary>
     /// Job def provided by AwesomeInventory.
@@ -27,22 +27,27 @@ namespace AwesomeInventory.Common
         /// <summary>
         /// Unload inventory.
         /// </summary>
-        public static JobDef RPGI_Unload;
+        public static JobDef AwesomeInventory_Unload;
 
         /// <summary>
-        /// Placeholder in job queue for <see cref="RPGI_Unload"/>.
+        /// Placeholder in job queue for <see cref="AwesomeInventory_Unload"/>.
         /// </summary>
-        public static JobDef RPGI_Fake;
+        public static JobDef AwesomeInventory_Fake;
 
         /// <summary>
-        /// 
+        /// Wear apparel and put the previously equipped into inventory.
         /// </summary>
-        public static JobDef RPGI_ApparelOptions;
+        public static JobDef AwesomeInventory_Dress;
+
+        /// <summary>
+        /// Put worn apparel to inventory.
+        /// </summary>
+        public static JobDef AwesomeInventory_Undress;
 
         /// <summary>
         /// Equip items from map.
         /// </summary>
-        public static JobDef RPGI_Map_Equip;
+        public static JobDef AwesomeInventory_MapEquip;
 
 #pragma warning restore CA2211 // Non-constant fields should not be visible
 #pragma warning restore SA1310 // Field names should not contain underscore

@@ -11,7 +11,7 @@ using Verse;
  * -for Drugs - Pawns can auto fetch drugs to fit a schedule.
  */
 // TODO Map generic type to ThingRequestGroup so to get rid of querying ListerThing.AllThings
-namespace AwesomeInventory.Common.Loadout
+namespace AwesomeInventory.Loadout
 {
     /// <summary>
     /// LoadoutGenericDef handles Generic LoadoutSlots.
