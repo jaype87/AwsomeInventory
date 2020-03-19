@@ -4,6 +4,7 @@
 // </copyright>
 
 using System.Linq;
+using AwesomeInventory.Loadout;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -31,6 +32,7 @@ namespace AwesomeInventory.Jobs
                 };
                 return fakeJob;
             }
+
             Job job = HaulAIUtility.HaulToStorageJob(pawn, _thing);
             if (job == null)
             {
@@ -38,6 +40,7 @@ namespace AwesomeInventory.Jobs
                     new TargetInfo(pawn.PositionHeld, pawn.MapHeld), MessageTypeDefOf.NeutralEvent);
                 return null;
             }
+
             job.def = AwesomeInventory_JobDefOf.AwesomeInventory_Unload;
 
             return job;
@@ -49,17 +52,20 @@ namespace AwesomeInventory.Jobs
             {
                 Job fakeJob = new Job(AwesomeInventory_JobDefOf.AwesomeInventory_Fake, thing)
                 {
-                    playerForced = true
+                    playerForced = true,
                 };
                 return fakeJob;
             }
+
             Job job = HaulAIUtility.HaulToStorageJob(pawn, thing);
             if (job == null)
             {
                 Messages.Message("NoEmptyPlaceLower".Translate(),
                     new TargetInfo(pawn.PositionHeld, pawn.MapHeld), MessageTypeDefOf.NeutralEvent);
+                thing.TryGetComp<CompRPGIUnload>().Unload = false;
                 return null;
             }
+
             job.def = AwesomeInventory_JobDefOf.AwesomeInventory_Unload;
             job.playerForced = true;
 

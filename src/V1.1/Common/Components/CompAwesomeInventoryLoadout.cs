@@ -38,6 +38,17 @@ namespace AwesomeInventory.Loadout
 
         #endregion
 
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CompAwesomeInventoryLoadout"/> class.
+        /// </summary>
+        public CompAwesomeInventoryLoadout()
+        {
+        }
+
+        #endregion
+
         #region Properties
 
         public bool NeedRestock
@@ -110,14 +121,6 @@ namespace AwesomeInventory.Loadout
 
         #endregion
 
-        #region Constructor
-
-        public CompAwesomeInventoryLoadout()
-        {
-        }
-
-        #endregion
-
         #region Methods
 
         public override void Initialize(CompProperties props)
@@ -143,10 +146,12 @@ namespace AwesomeInventory.Loadout
             {
                 return;
             }
+
             if (InventoryTracker.ContainsKey(thing))
             {
                 InventoryTracker[thing] = InventoryTracker[thing] + count * (isAdd ? 1 : -1);
             }
+
             foreach (var pair in InventoryTracker)
             {
                 if (pair.Key.def is LoadoutGenericDef genericDef)
@@ -161,27 +166,26 @@ namespace AwesomeInventory.Loadout
 
         public void NotifiedAdded(Thing thing)
         {
-            NotifiedThingChanged(thing, thing.stackCount, true);
+            this.NotifiedThingChanged(thing, thing.stackCount, true);
         }
 
         public void NotifiedAddedAndMergedWith(Thing thing, int mergedAmount)
         {
-            NotifiedThingChanged(thing, mergedAmount, true);
+            this.NotifiedThingChanged(thing, mergedAmount, true);
         }
 
         public void NotifiedRemoved(Thing thing)
         {
-            NotifiedThingChanged(thing, thing.stackCount, false);
+            this.NotifiedThingChanged(thing, thing.stackCount, false);
         }
 
         public void NotifiedSplitOff(Thing thing, int count)
         {
-            NotifiedThingChanged(thing, count, false);
+            this.NotifiedThingChanged(thing, count, false);
         }
 
         public void UpdateForNewLoadout(AILoadout newLoadout)
         {
-            Log.Message("Update for new Loadout");
             if (newLoadout == null)
             {
                 return;
@@ -218,6 +222,7 @@ namespace AwesomeInventory.Loadout
                         InventoryTracker.Remove(thing);
                     }
                 }
+
                 // Add new items or updated the old ones
                 Dictionary<Thing, int> curInventory = MakeLookupForPawnGearAndInventory(_pawn);
                 foreach (Thing thing in newLoadout)
@@ -232,11 +237,14 @@ namespace AwesomeInventory.Loadout
                         {
                             InventoryTracker[thing] = curStack - thing.stackCount;
                         }
+
                         InventoryTracker[thing] = -thing.stackCount;
                     }
                 }
+
                 Loadout.CallbacksOnAddOrRemove.Remove(UpdateInventoryTracker);
             }
+
             newLoadout.CallbacksOnAddOrRemove.Add(UpdateInventoryTracker);
             Loadout = newLoadout;
         }
