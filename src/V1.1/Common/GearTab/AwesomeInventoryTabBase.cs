@@ -28,7 +28,7 @@ namespace AwesomeInventory.UI
             typeof(ITab_Pawn_Gear).GetMethod("InterfaceIngest", _nonPublicInstance);
 
         public static PropertyInfo CanControlColonist { get; } =
-            typeof(ITab_Pawn_Gear).GetProperty("CanControlColonist", _nonPublicStatic);
+            typeof(ITab_Pawn_Gear).GetProperty("CanControlColonist", _nonPublicInstance);
 
         /// <summary>
         /// Retrieve private property SelPawnForGear from <see cref="ITab_Pawn_Gear"/>.
@@ -42,7 +42,6 @@ namespace AwesomeInventory.UI
         protected IDrawGearTab _drawGearTab;
 
         private const BindingFlags _nonPublicInstance = BindingFlags.NonPublic | BindingFlags.Instance;
-        private const BindingFlags _nonPublicStatic = BindingFlags.NonPublic | BindingFlags.Static;
 
         // TODO set a static constructor to queue up unload jobs after game restarts
         private static bool _isJealous = true;

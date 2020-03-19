@@ -31,6 +31,8 @@ namespace AwesomeInventory.UI
 
         public const string Delete = "Delete";
 
+        public const string DropThing = "DropThing";
+
         public const string Equip = "Equip";
 
         public const string EquipWarningBrawler = "EquipWarningBrawler";

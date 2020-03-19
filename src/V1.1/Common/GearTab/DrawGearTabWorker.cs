@@ -146,7 +146,6 @@ namespace AwesomeInventory.UI
             // List order: Head:200-181, Neck:180-101, Torso:100-51, Waist:50-11, Legs:10-0
             // Check \steamapps\common\RimWorld\Mods\Core\Defs\Bodies\BodyPartGroups.xml
 
-
             // Hats. BodyGroup: Fullhead; Layer: Overhead
             _smartRectHead =
                 new SmartRect<Apparel>(
@@ -495,27 +494,37 @@ namespace AwesomeInventory.UI
             }
         }
 
+        /// <summary>
+        /// Draw thing icon, description and function buttons in a row.
+        /// </summary>
+        /// <param name="selPawn"> Selected Pawn.</param>
+        /// <param name="y"> The yMax coordinate after the row is drawn. </param>
+        /// <param name="width"> Width of this row. </param>
+        /// <param name="thing"> Thing to draw. </param>
         protected virtual void DrawThingRow(Pawn selPawn, ref float y, float width, Thing thing)
         {
+            ValidateArg.NotNull(selPawn, nameof(selPawn));
+            ValidateArg.NotNull(thing, nameof(thing));
+
             Rect rect = new Rect(0f, y, width, 28f);
             rect.width -= GenUI.SmallIconSize;
             Widgets.InfoCardButton(rect.width, y, thing);
             rect.width -= GenUI.SmallIconSize;
-            Rect rect2 = new Rect(rect.width, y, 24f, 24f);
+            Rect rect2 = new Rect(rect.width, y, DrawUtility.IconSize, DrawUtility.IconSize);
 
             // Draw drop button.
-            TooltipHandler.TipRegion(rect2, "DropThing".Translate());
+            TooltipHandler.TipRegion(rect2, UIText.DropThing.Translate());
             if (Widgets.ButtonImage(rect2, TexResource.Drop))
             {
                 SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                InterfaceDrop(thing, selPawn);
+                AwesomeInventoryTabBase.InterfaceDrop.Invoke(_gearTab, new object[] { thing });
             }
 
             if (thing is ThingWithComps thingWithComps)
             {
                 // Draw unload now button
                 rect.width -= 24f;
-                Rect rect3 = new Rect(rect.width, y, 24f, 24f);
+                Rect rect3 = new Rect(rect.width, y, DrawUtility.IconSize, DrawUtility.IconSize);
                 TooltipHandler.TipRegion(rect3, "Corgi_UnloadNow".Translate());
                 Texture2D image = ContentFinder<Texture2D>.Get("UI/Icons/DoubleDownArrow", true);
                 if (thingWithComps.GetComp<CompRPGIUnload>()?.Unload ?? false)
@@ -544,7 +553,7 @@ namespace AwesomeInventory.UI
                 if (Widgets.ButtonImage(rect3, TexResource.Ingest))
                 {
                     SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                    InterfaceIngest(thing, selPawn);
+                    AwesomeInventoryTabBase.InterfaceIngest.Invoke(_gearTab, new object[] { thing });
                 }
             }
 
@@ -570,9 +579,9 @@ namespace AwesomeInventory.UI
 
             // Draw label for thing in a row
             string text = thing.LabelCap;
-            Apparel apparel = thing as Apparel;
-            bool isForced = apparel != null && selPawn.outfits != null &&
-                                       selPawn.outfits.forcedHandler.IsForced(apparel);
+            bool isForced = thing is Apparel apparel
+                         && selPawn.outfits != null
+                         && selPawn.outfits.forcedHandler.IsForced(apparel);
             Text.WordWrap = false;
             Widgets.Label(rect5, text.Truncate(rect5.width));
             Text.WordWrap = true;
@@ -697,50 +706,49 @@ namespace AwesomeInventory.UI
                 GUI.DrawTexture(rect, TexUI.HighlightTex);
                 Widgets.InfoCardButton(rect.x, rect.y, thing);
 
-                if (selPawn.Spawned && !selPawn.Map.IsPlayerHome)
+                // Draw drop button
+                //Rect buttonRect = new Rect(rect.xMax - DrawUtility.IconSize, rect.y, DrawUtility.IconSize, DrawUtility.IconSize);
+                //TooltipHandler.TipRegion(buttonRect, UIText.DropThing.Translate());
+                //if (Widgets.ButtonImage(buttonRect, ContentFinder<Texture2D>.Get("UI/Buttons/Drop", true)))
+                //{
+                //    SoundDefOf.Tick_High.PlayOneShotOnCamera(null);
+                //    AwesomeInventoryTabBase.InterfaceDrop.Invoke((ITab_Pawn_Gear)_gearTab, new object[] { thing });
+                //}
+
+                Rect buttonRect;
+
+                // Draw Unload Now button
+                buttonRect = new Rect(rect.xMax - DrawUtility.SmallIconSize, rect.yMax - DrawUtility.SmallIconSize, DrawUtility.SmallIconSize, DrawUtility.SmallIconSize);
+                TooltipHandler.TipRegion(buttonRect, "Corgi_UnloadNow".Translate());
+                Texture2D image = ContentFinder<Texture2D>.Get("UI/Icons/DoubleDownArrow", true);
+                if (thing.GetComp<CompRPGIUnload>()?.Unload ?? false)
                 {
-                    // Draw drop button
-                    Rect buttonRect = new Rect(rect.xMax - DrawUtility.IconSize, rect.y, DrawUtility.IconSize, DrawUtility.IconSize);
-                    TooltipHandler.TipRegion(buttonRect, "DropThing".Translate());
-                    if (Widgets.ButtonImage(buttonRect, ContentFinder<Texture2D>.Get("UI/Buttons/Drop", true)))
+                    if (Widgets.ButtonImage(buttonRect, image, DrawUtility.HighlightBrown, DrawUtility.HighlightGreen))
                     {
-                        SoundDefOf.Tick_High.PlayOneShotOnCamera(null);
-                        AwesomeInventoryTabBase.InterfaceDrop.Invoke((ITab_Pawn_Gear)_gearTab, new object[] { thing });
+                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                        AwesomeInventoryTabBase.InterfaceUnloadNow(thing, selPawn);
                     }
-
-                    // Draw Unload Now button
-                    buttonRect = new Rect(rect.xMax - DrawUtility.SmallIconSize, rect.yMax - DrawUtility.SmallIconSize, DrawUtility.SmallIconSize, DrawUtility.SmallIconSize);
-                    TooltipHandler.TipRegion(buttonRect, "Corgi_UnloadNow".Translate());
-                    Texture2D image = ContentFinder<Texture2D>.Get("UI/Icons/DoubleDownArrow", true);
-                    if (thing.GetComp<CompRPGIUnload>()?.Unload ?? false)
-                    {
-                        if (Widgets.ButtonImage(buttonRect, image, DrawUtility.HighlightBrown, DrawUtility.HighlightGreen))
-                        {
-                            SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                            AwesomeInventoryTabBase.InterfaceUnloadNow(thing, selPawn);
-                        }
-                    }
-                    else
-                    {
-                        if (Widgets.ButtonImage(buttonRect, image, Color.white, DrawUtility.HighlightGreen))
-                        {
-                            SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                            AwesomeInventoryTabBase.InterfaceUnloadNow(thing, selPawn);
-                        }
-                    }
-
-                    GUI.color = Color.white;
                 }
+                else
+                {
+                    if (Widgets.ButtonImage(buttonRect, image, Color.white, DrawUtility.HighlightGreen))
+                    {
+                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                        AwesomeInventoryTabBase.InterfaceUnloadNow(thing, selPawn);
+                    }
+                }
+
+                GUI.color = Color.white;
             }
 
             // Draw tainted and forced icon.
             bool isForced = false;
-            if (thing is Apparel apparel && selPawn.outfits != null)
+            if (thing is Apparel apparel)
             {
                 isForced = selPawn.outfits.forcedHandler.IsForced(apparel);
                 if (apparel.WornByCorpse)
                 {
-                    Rect rect3 = new Rect(rect.xMax - 20f, rect.yMax - 20f, 20f, 20f);
+                    Rect rect3 = new Rect(rect.xMax - DrawUtility.IconSize, rect.y, DrawUtility.SmallIconSize, DrawUtility.SmallIconSize);
                     GUI.DrawTexture(rect3, ContentFinder<Texture2D>.Get("UI/Icons/Sandy_Tainted_Icon", true));
                     TooltipHandler.TipRegion(rect3, "WasWornByCorpse".Translate());
                 }
@@ -855,12 +863,12 @@ namespace AwesomeInventory.UI
 
             Pawn pawn = selPawn;
             string labelShort = apparel.LabelShort;
-            FloatMenuOption equipOption = null;
+            FloatMenuOption option = null;
 
             // Equip option
             if (pawn.inventory.Contains(apparel))
             {
-                equipOption = new FloatMenuOption(
+                option = new FloatMenuOption(
                     UIText.VanillaWear.Translate(labelShort),
                     () =>
                     {
@@ -870,9 +878,9 @@ namespace AwesomeInventory.UI
                         dressJob.ForceWear = false;
                         pawn.jobs.TryTakeOrderedJob(dressJob, JobTag.ChangingApparel);
                     });
-                floatOptionList.Add(equipOption);
+                floatOptionList.Add(option);
 
-                equipOption = new FloatMenuOption(
+                option = new FloatMenuOption(
                     UIText.AIForceWear.Translate(labelShort),
                     () =>
                     {
@@ -882,13 +890,13 @@ namespace AwesomeInventory.UI
                         dressJob.ForceWear = true;
                         pawn.jobs.TryTakeOrderedJob(dressJob, JobTag.ChangingApparel);
                     });
-                floatOptionList.Add(equipOption);
+                floatOptionList.Add(option);
             }
 
             // Put away option
             if (pawn.apparel.Contains(apparel) && pawn.inventory != null)
             {
-                equipOption = new FloatMenuOption(
+                option = new FloatMenuOption(
                     UIText.PutAway.Translate(labelShort),
                     () =>
                     {
@@ -896,7 +904,19 @@ namespace AwesomeInventory.UI
                             JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_Undress, apparel),
                             JobTag.ChangingApparel);
                     });
-                floatOptionList.Add(equipOption);
+                floatOptionList.Add(option);
+            }
+
+            // Drop option
+            if (pawn.apparel.Contains(apparel) || pawn.inventory.Contains(apparel))
+            {
+                option = new FloatMenuOption(
+                    UIText.DropThing.Translate(),
+                    () =>
+                    {
+                        AwesomeInventoryTabBase.InterfaceDrop.Invoke(_gearTab, new object[] { apparel });
+                    });
+                floatOptionList.Add(option);
             }
         }
 
@@ -1105,35 +1125,16 @@ namespace AwesomeInventory.UI
             return backupQueue.AsEnumerable();
         }
 
-        private static void InterfaceIngest(Thing t, Pawn selPawn)
-        {
-            Job job = new Job(JobDefOf.Ingest, t);
-            job.count = Mathf.Min(t.stackCount, t.def.ingestible.maxNumToIngestAtOnce);
-            job.count = Mathf.Min(job.count, FoodUtility.WillIngestStackCountOf(selPawn, t.def, t.GetStatValue(StatDefOf.Nutrition, true)));
-            selPawn.jobs.TryTakeOrderedJob(job, JobTag.Misc);
-        }
-
-        public static void InterfaceDrop(Thing t, Pawn pawn)
+        /// <summary>
+        /// Unload items on pawn.
+        /// </summary>
+        /// <param name="t"> Thing to unload. </param>
+        /// <param name="pawn"> Selected pawn. </param>
+        protected virtual void InterfaceUnloadNow(ThingWithComps t, Pawn pawn)
         {
             ValidateArg.NotNull(t, nameof(t));
             ValidateArg.NotNull(pawn, nameof(pawn));
 
-            if (t is Apparel apparel && pawn.apparel != null && pawn.apparel.WornApparel.Contains(apparel))
-            {
-                pawn.jobs.TryTakeOrderedJob(new Job(JobDefOf.RemoveApparel, apparel));
-            }
-            else if (t is ThingWithComps thingWithComps && pawn.equipment != null && pawn.equipment.AllEquipmentListForReading.Contains(thingWithComps))
-            {
-                pawn.jobs.TryTakeOrderedJob(new Job(JobDefOf.DropEquipment, thingWithComps));
-            }
-            else if (!t.def.destroyOnDrop)
-            {
-                pawn.inventory.innerContainer.TryDrop(t, pawn.Position, pawn.Map, ThingPlaceMode.Near, out Thing _);
-            }
-        }
-
-        public static void InterfaceUnloadNow(ThingWithComps t, Pawn pawn)
-        {
             // TODO examine HaulToContainer code path
             // If there is no comps in def, AllComps will always return an empty list
             // Can't add new comp if the parent class has no comp to begin with
@@ -1157,11 +1158,10 @@ namespace AwesomeInventory.UI
                         pawn.jobs.EndCurrentJob(JobCondition.Incompletable);
                         return;
                     }
-                    QueuedJob queuedJob = pawn.jobs.jobQueue.FirstOrDefault
-                        (
+
+                    QueuedJob queuedJob = pawn.jobs.jobQueue.FirstOrDefault(
                             j => j.job.def == AwesomeInventory_JobDefOf.AwesomeInventory_Fake &&
-                            j.job.targetA.Thing == t
-                        );
+                            j.job.targetA.Thing == t);
                     if (queuedJob != null)
                     {
                         pawn.jobs.jobQueue.Extract(queuedJob.job);
