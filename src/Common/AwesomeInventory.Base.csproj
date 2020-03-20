@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Resources\ErrorText.cs" />
     <Compile Include="Services\AIDebug.cs" />
     <Compile Include="Services\AwesomeInventoryServiceProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

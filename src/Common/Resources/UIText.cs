@@ -19,6 +19,8 @@ namespace AwesomeInventory.UI
 #pragma warning disable SA1600 // Elements should be documented
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
+        public const string Apparel = "Apparel";
+
         public const string ApparelForcedLower = "ApparelForcedLower";
 
         public const string ArmorBlunt = "ArmorBlunt";
@@ -35,15 +37,23 @@ namespace AwesomeInventory.UI
 
         public const string Equip = "Equip";
 
+        public const string Equipment = "Equipment";
+
         public const string EquipWarningBrawler = "EquipWarningBrawler";
 
         public const string ForcedApparel = "ForcedApparel";
+
+        public const string HitPointsBasic = "HitPointsBasic";
 
         public const string Incapable = "Incapable";
 
         public const string Inventory = "Inventory";
 
         public const string IsIncapableOfViolenceLower = "IsIncapableOfViolenceLower";
+
+        public const string Mass = "Mass";
+
+        public const string MassCarried = "MassCarried";
 
         public const string NoEmptyPlaceLower = "NoEmptyPlaceLower";
 
@@ -81,7 +91,7 @@ namespace AwesomeInventory.UI
 
         public const string JealousTab = "AwesomeInventory_JealousTab";
 
-        public const string MassCarried = "AwesomeInventory_MassCarried";
+        public const string AIMassCarried = "AwesomeInventory_MassCarried";
 
         public const string MouseOverNumbersForDetails = "AwesomeInventory_MouseOverNumbersForDetails";
 

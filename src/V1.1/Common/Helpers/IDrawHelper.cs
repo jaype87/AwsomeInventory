@@ -22,9 +22,8 @@ namespace AwesomeInventory.UI
         /// Compile a tooltip string for <paramref name="thing"/>.
         /// </summary>
         /// <param name="thing"> <paramref name="thing"/> that needs a tooltip text. </param>
-        /// <param name="labelcap"> If true, capitalize the first letter of label. </param>
         /// <param name="isForced"> Indicates if <paramref name="thing"/> is forced on pawn. </param>
         /// <returns> A tooltip string. </returns>
-        string TooltipTextFor(Thing thing, bool labelcap, bool isForced);
+        string TooltipTextFor(Thing thing, bool isForced);
     }
 }

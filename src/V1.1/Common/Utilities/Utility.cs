@@ -132,7 +132,7 @@ namespace AwesomeInventory.Utilities
             Widgets.Label(rect2, armorRating.ToStringPercent());
         }
 
-        private static string FormatArmorValue(float value, string unit)
+        public static string FormatArmorValue(float value, string unit)
         {
             var asPercent = unit.Equals("%", StringComparison.InvariantCulture);
             if (asPercent)
@@ -278,74 +278,6 @@ namespace AwesomeInventory.Utilities
             curY += 22f;
         }
 
-        public static void TryDrawMassInfoWithImage(Pawn pawn, ref Rect rect)
-        {
-            if (pawn.Dead || !ShouldShowInventory(pawn))
-            {
-                return;
-            }
-            Rect rect1 = new Rect(rect.x, rect.y, 24f, 24f);
-            GUI.DrawTexture(rect1, ContentFinder<Texture2D>.Get(RPGIIcons.Mass, true));
-            TooltipHandler.TipRegion(rect1, "SandyMassCarried".Translate());
-            float num = MassUtility.GearAndInventoryMass(pawn);
-            float num2 = MassUtility.Capacity(pawn, null);
-            Rect rect2 = new Rect(rect.x + 30f, rect.y + 2f, 104f, 24f);
-            Widgets.Label(rect2, string.Concat(num, num2.ToStringMass()));
-            //Widgets.Label(rect2, "SandyMassValue".Translate(num.ToString("0.##"), num2.ToString("0.##")));
-        }
-
-        public static void TryDrawComfyTemperatureRangeWithImage(Pawn pawn, ref Rect rect)
-        {
-            if (pawn.Dead)
-            {
-                return;
-            }
-            Rect rect1 = new Rect(rect.x, rect.y + 26f, 24f, 24f);
-            GUI.DrawTexture(rect1, ContentFinder<Texture2D>.Get("UI/Icons/min_temperature", true));
-            TooltipHandler.TipRegion(rect1, "ComfyTemperatureRange".Translate());
-            float statValue = pawn.GetStatValue(StatDefOf.ComfyTemperatureMin, true);
-            Rect rect2 = new Rect(rect.x + 30f, rect.y + 28f, 104f, 24f);
-            Widgets.Label(rect2, string.Concat(new string[]
-            {
-                " ",
-                statValue.ToStringTemperature("F0")
-            }));
-
-            rect1 = new Rect(rect.x, rect.y + 52f, 24f, 24f);
-            GUI.DrawTexture(rect1, ContentFinder<Texture2D>.Get("UI/Icons/max_temperature", true));
-            TooltipHandler.TipRegion(rect1, "ComfyTemperatureRange".Translate());
-            float statValue2 = pawn.GetStatValue(StatDefOf.ComfyTemperatureMax, true);
-            rect2 = new Rect(rect.x + 30f, rect.y + 56f, 104f, 24f);
-            Widgets.Label(rect2, string.Concat(new string[]
-            {
-                " ",
-                statValue2.ToStringTemperature("F0")
-            }));
-        }
-
-        public static void TryDrawOverallArmorWithImage(Pawn pawn, Rect rect, StatDef stat, string label, Texture image, bool CE = false, string unit = "%")
-        {
-            string text = "";
-            float num = CE ? CalculateArmorByPartsCE(pawn, stat, ref text, unit)
-                           : CalculateArmorByParts(pawn, stat, out text);
-            // draw thumbmail
-            Rect rect1 = new Rect(rect.x, rect.y, 24f, 27f);
-            GUI.DrawTexture(rect1, image);
-            TooltipHandler.TipRegion(rect1, label);
-            // draw values
-            Rect rect2 = new Rect(rect.x + 34f, rect.y + 3f, 104f, 24f);
-            num = (float)Math.Round(num, 1, MidpointRounding.AwayFromZero);
-            if (CE)
-            {
-                Widgets.Label(rect2, string.Concat(num, unit));
-            }
-            else
-            {
-                Widgets.Label(rect2, num.ToStringPercent());
-            }
-            TooltipHandler.TipRegion(rect2, text);
-        }
-
         public static void DrawColonist(Rect rect, Pawn pawn)
         {
             Vector2 pos = new Vector2(rect.width, rect.height);
@@ -355,7 +287,7 @@ namespace AwesomeInventory.Utilities
         // TODO Add brawler have ranged weapon text
         public static string TooltipTextForThing(Thing thing, bool labelCap, bool isForced)
         {
-            string text = "";
+            string text = string.Empty;
             if (labelCap)
             {
                 text = thing.LabelCap;
@@ -370,13 +302,13 @@ namespace AwesomeInventory.Utilities
             // hit points
             if (thing.def.useHitPoints)
             {
-                text += "\n" + thing.HitPoints + " / " + thing.MaxHitPoints;
+                text += "\n" + UIText.HitPointsBasic.Translate().CapitalizeFirst() + ": " + thing.HitPoints + " / " + thing.MaxHitPoints;
             }
 
             // mass
             string mass = (thing.GetStatValue(StatDefOf.Mass, true) * (float)thing.stackCount)
                             .ToString("G") + " kg";
-            text += "\n" + mass;
+            text += "\n" + UIText.Mass.Translate() + ": " + mass;
 
             if (thing is Apparel app)
             {

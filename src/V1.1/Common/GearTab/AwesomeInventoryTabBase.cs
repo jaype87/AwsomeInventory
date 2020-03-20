@@ -30,6 +30,15 @@ namespace AwesomeInventory.UI
         public static MethodInfo InterfaceIngest { get; } =
             typeof(ITab_Pawn_Gear).GetMethod("InterfaceIngest", _nonPublicInstance);
 
+        public static MethodInfo ShouldShowInventory { get; } =
+            typeof(ITab_Pawn_Gear).GetMethod("ShouldShowInventory", _nonPublicInstance);
+
+        public static MethodInfo ShouldShowApparel { get; } =
+            typeof(ITab_Pawn_Gear).GetMethod("ShouldShowApparel", _nonPublicInstance);
+
+        public static MethodInfo ShouldShowEquipment { get; } =
+            typeof(ITab_Pawn_Gear).GetMethod("ShouldShowEquipment", _nonPublicInstance);
+
         public static PropertyInfo CanControlColonist { get; } =
             typeof(ITab_Pawn_Gear).GetProperty("CanControlColonist", _nonPublicInstance);
 
@@ -138,7 +147,7 @@ namespace AwesomeInventory.UI
         public override void OnOpen()
         {
             base.OnOpen();
-            _drawGearTab.RestScrollPosition();
+            _drawGearTab.Reset();
         }
 
         /// <summary>
@@ -159,7 +168,7 @@ namespace AwesomeInventory.UI
             if (_selPawn != selPawn)
             {
                 _selPawn = selPawn;
-                _drawGearTab.RestScrollPosition();
+                _drawGearTab.Reset();
                 lock (_apparelChangedLock)
                 {
                     _apparelChanged = true;
@@ -196,9 +205,9 @@ namespace AwesomeInventory.UI
                 _isAscetic = true;
             }
 
-            lock (_apparelChangedLock)
+            if (Event.current.type != EventType.Layout)
             {
-                if (Event.current.type != EventType.Layout)
+                lock (_apparelChangedLock)
                 {
                     if (_isJealous)
                     {
@@ -208,7 +217,9 @@ namespace AwesomeInventory.UI
                     }
                     else if (_isGreedy)
                     {
+                        AIDebug.Timer.Start();
                         _drawGearTab.DrawGreedy(_selPawn, new Rect(0, headerRect.yMax, size.x, size.y - headerRect.yMax), _apparelChanged);
+                        AIDebug.Timer.Stop(AIDebug.Header + Event.current.type.ToString());
                     }
                     else if (_isAscetic)
                     {

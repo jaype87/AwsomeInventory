@@ -47,8 +47,11 @@ namespace AwesomeInventory.UI
         private static float _scrollViewHeight;
         private SmartRectList<Apparel> _smartRectList;
 
-        private Dictionary<StatDef, Tuple<float, string>> _armorStatCache = new Dictionary<StatDef, Tuple<float, string>>();
+        private Dictionary<StatDef, Tuple<float, string>> _statCache = new Dictionary<StatDef, Tuple<float, string>>();
+        private Dictionary<Thing, Tuple<string, string>> _thingTooltipCache = new Dictionary<Thing, Tuple<string, string>>();
+        private Dictionary<Pawn, List<Tuple<Trait, string>>> _traitCache = new Dictionary<Pawn, List<Tuple<Trait, string>>>();
         private AwesomeInventoryTabBase _gearTab;
+        private IDrawHelper _drawHelper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DrawGearTabWorker"/> class.
@@ -57,13 +60,32 @@ namespace AwesomeInventory.UI
         public DrawGearTabWorker(AwesomeInventoryTabBase gearTab)
         {
             _gearTab = gearTab;
+        }
 
+        /// <summary>
+        /// Gets draw helper provided either by vanilla or CE implementation of this mod.
+        /// </summary>
+        protected IDrawHelper DrawHelper
+        {
+            get
+            {
+                if (_drawHelper == null)
+                {
+                    if (AwesomeInventoryServiceProvider.TryGetImplementation(out IDrawHelper drawHelper))
+                        _drawHelper = drawHelper;
+                    else
+                        Log.Error(ErrorText.DrawHelperIsMissing);
+                }
+
+                return _drawHelper;
+            }
         }
 
         /// <inheritdoc/>
-        public virtual void RestScrollPosition()
+        public virtual void Reset()
         {
             _scrollPosition = Vector2.zero;
+            _thingTooltipCache.Clear();
         }
 
         /// <inheritdoc/>
@@ -140,6 +162,7 @@ namespace AwesomeInventory.UI
                     }
                 }
             }
+
             #endregion
 
             #region Apparels
@@ -158,12 +181,26 @@ namespace AwesomeInventory.UI
             WidgetRow traitRow = new WidgetRow(viewRect.x, traitY, UIDirection.RightThenDown, statRect.x - viewRect.x);
             List<Trait> traits = selPawn.story.traits.allTraits;
 
+            if (!_traitCache.TryGetValue(selPawn, out List<Tuple<Trait, string>> cache))
+            {
+                List<Tuple<Trait, string>> tuples = new List<Tuple<Trait, string>>();
+                foreach (Trait trait in traits)
+                {
+                    tuples.Add(Tuple.Create(trait, trait.TipString(selPawn)));
+                }
+
+                _traitCache.Add(selPawn, tuples);
+            }
+
             traitRow.Label(UIText.Traits.Translate() + ": ");
             for (int i = 0; i < traits.Count; i++)
             {
+                Rect tipRegion = traitRow.Label(traits[i].LabelCap + (i != traits.Count ? ", " : string.Empty));
+
                 TooltipHandler.TipRegion(
-                    traitRow.Label(traits[i].LabelCap + (i != traits.Count ? ", " : string.Empty)),
-                    traits[i].TipString(selPawn));
+                    tipRegion,
+                    _traitCache[selPawn].Find(t => t.Item1 == traits[i]).Item2);
+                Widgets.DrawHighlightIfMouseover(tipRegion);
             }
 
             float rollingY = traitRow.FinalY + WidgetRow.IconSize;
@@ -208,56 +245,7 @@ namespace AwesomeInventory.UI
 
                 rollingY += Utility.StandardLineHeight;
 
-                if (Dialog_Mod.Settings.UseLoadout)
-                {
-                    WidgetRow row = new WidgetRow(viewRect.xMax, rollingY, UIDirection.LeftThenDown, viewRect.width);
-                    if (row.ButtonText(UIText.OpenLoadout.Translate()))
-                    {
-                        if (selPawn.IsColonist && selPawn.GetLoadout() == null)
-                        {
-                            AILoadout loadout = new AILoadout(selPawn);
-                            LoadoutManager.AddLoadout(loadout);
-                            selPawn.SetLoadout(loadout);
-                        }
-
-                        Find.WindowStack.Add(new Dialog_ManageLoadouts(selPawn.GetLoadout(), selPawn));
-                    }
-
-                    if (row.ButtonText(UIText.SelectLoadout.Translate()))
-                    {
-                        List<AILoadout> loadouts = LoadoutManager.Loadouts;
-                        List<FloatMenuOption> list = new List<FloatMenuOption>();
-                        if (loadouts.Count == 0)
-                        {
-                            list.Add(new FloatMenuOption(UIText.NoLoadout.Translate(), null));
-                        }
-                        else
-                        {
-                            for (int i = 0; i < loadouts.Count; i++)
-                            {
-                                int local_i = i;
-                                list.Add(new FloatMenuOption(
-                                    loadouts[i].label,
-                                    () =>
-                                    {
-                                        selPawn.SetLoadout(loadouts[local_i]);
-                                    }));
-                            }
-                        }
-
-                        Find.WindowStack.Add(new FloatMenu(list));
-                    }
-
-                    Text.Anchor = TextAnchor.MiddleRight;
-                    Text.WordWrap = false;
-
-                    row.Label(selPawn.GetLoadout()?.label, GenUI.GetWidthCached(UIText.TenCharsString.Times(2.5f)));
-
-                    Text.Anchor = TextAnchor.UpperLeft;
-                    Text.WordWrap = true;
-                    rollingY = row.FinalY + WidgetRow.IconSize - Text.LineHeight;
-                }
-
+                this.DrawLoadoutButtons(selPawn, viewRect.xMax, ref rollingY, viewRect.width);
                 Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Inventory.Translate());
 
                 ThingOwner<Thing> things = selPawn.inventory.innerContainer;
@@ -277,10 +265,7 @@ namespace AwesomeInventory.UI
             //}
             */
 
-            if (Event.current.type == EventType.Layout)
-            {
-                _scrollViewHeight = rollingY + 30f;
-            }
+            _scrollViewHeight = rollingY + InspectPaneUtility.TabHeight;
 
             Widgets.EndScrollView();
             GUI.EndGroup();
@@ -291,11 +276,14 @@ namespace AwesomeInventory.UI
         /// <inheritdoc/>
         public virtual void DrawGreedy(Pawn selPawn, Rect canvas, bool apparelChanged)
         {
+            ValidateArg.NotNull(selPawn, nameof(selPawn));
+            ValidateArg.NotNull(canvas, nameof(canvas));
+
             // set up rects
             Rect listRect = new Rect(
-                _margin,
+                GenUI.Gap,
                 _topPadding,
-                canvas.width - 2 * _margin,
+                canvas.width - InspectPaneUtility.TabHeight,
                 canvas.height - _topPadding - _margin);
 
             // start drawing list
@@ -303,33 +291,38 @@ namespace AwesomeInventory.UI
             Text.Font = GameFont.Small;
             GUI.color = Color.white;
             Rect outRect = new Rect(0f, 0f, listRect.width, listRect.height);
-            Rect viewRect = new Rect(0f, 0f, listRect.width - 16f, _scrollViewHeight);
+            Rect viewRect = new Rect(0f, 0f, listRect.width - GenUI.Gap, _scrollViewHeight);
             Widgets.BeginScrollView(outRect, ref _scrollPosition, viewRect);
 
-            float rollingY = 0f;
+            float rollingY;
+            WidgetRow row = new WidgetRow(viewRect.x, viewRect.y, UIDirection.RightThenDown, viewRect.width);
+
             // draw mass info and temperature
-            Utility.TryDrawMassInfo(selPawn, ref rollingY, viewRect.width);
-            Utility.TryDrawComfyTemperatureRange(selPawn, ref rollingY, viewRect.width);
+            this.DrawMassInfoRow(row, selPawn, apparelChanged);
+            this.DrawComfyTemperatureRow(row, selPawn, apparelChanged);
+            rollingY = row.FinalY;
 
             // draw overall armor
-            if (Utility.ShouldShowOverallArmor(selPawn))
+            Widgets.ListSeparator(ref rollingY, viewRect.width, "OverallArmor".Translate());
+            row.Init(viewRect.x, rollingY, UIDirection.RightThenDown, viewRect.width);
+
+            this.DrawArmorStatsRow(row, selPawn, StatDefOf.ArmorRating_Sharp, UIText.ArmorSharp.Translate(), apparelChanged);
+            this.DrawArmorStatsRow(row, selPawn, StatDefOf.ArmorRating_Blunt, UIText.ArmorBlunt.Translate(), apparelChanged);
+            this.DrawArmorStatsRow(row, selPawn, StatDefOf.ArmorRating_Heat, UIText.ArmorHeat.Translate(), apparelChanged);
+            rollingY = row.FinalY;
+
+            if ((bool)AwesomeInventoryTabBase.ShouldShowEquipment.Invoke(_gearTab, new object[] { selPawn }))
             {
-                Widgets.ListSeparator(ref rollingY, viewRect.width, "OverallArmor".Translate());
-                Utility.TryDrawOverallArmor(selPawn, ref rollingY, viewRect.width, StatDefOf.ArmorRating_Sharp, "ArmorSharp".Translate(), "%");
-                Utility.TryDrawOverallArmor(selPawn, ref rollingY, viewRect.width, StatDefOf.ArmorRating_Blunt, "ArmorBlunt".Translate(), "%");
-                Utility.TryDrawOverallArmor(selPawn, ref rollingY, viewRect.width, StatDefOf.ArmorRating_Heat, "ArmorHeat".Translate(), "%");
-            }
-            if (Utility.ShouldShowEquipment(selPawn))
-            {
-                Widgets.ListSeparator(ref rollingY, viewRect.width, "Equipment".Translate());
+                Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Equipment.Translate());
                 foreach (ThingWithComps current in selPawn.equipment.AllEquipmentListForReading)
                 {
                     this.DrawThingRow(selPawn, ref rollingY, viewRect.width, current);
                 }
             }
-            if (Utility.ShouldShowApparel(selPawn))
+
+            if ((bool)AwesomeInventoryTabBase.ShouldShowApparel.Invoke(_gearTab, new object[] { selPawn }))
             {
-                Widgets.ListSeparator(ref rollingY, viewRect.width, "Apparel".Translate());
+                Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Apparel.Translate());
                 foreach (Apparel current2 in from ap in selPawn.apparel.WornApparel
                                              orderby ap.def.apparel.bodyPartGroups[0].listOrder descending
                                              select ap)
@@ -337,61 +330,11 @@ namespace AwesomeInventory.UI
                     this.DrawThingRow(selPawn, ref rollingY, viewRect.width, current2);
                 }
             }
-            if (Utility.ShouldShowInventory(selPawn))
+
+            if ((bool)AwesomeInventoryTabBase.ShouldShowInventory.Invoke(_gearTab, new object[] { selPawn }))
             {
-                if (Dialog_Mod.Settings.UseLoadout)
-                {
-                    rollingY += 3;
-                    float buttonY = rollingY;
-
-                    Text.WordWrap = false;
-                    Text.Anchor = TextAnchor.MiddleRight;
-                    Widgets.Label(
-                        new Rect
-                            (GenUI.GetWidthCached(UIText.TenCharsString)
-                            , buttonY
-                            , viewRect.width / 2 - GenUI.GetWidthCached(UIText.TenCharsString)
-                            , 26f), selPawn.GetLoadout()?.label ?? "Corgi_NoLoadout".Translate());
-                    Text.WordWrap = true;
-                    Text.Anchor = TextAnchor.UpperLeft;
-
-                    // Select loadout button
-                    if (Widgets.ButtonText(new Rect(viewRect.width / 2, buttonY, viewRect.width / 4, 26f), Translator.Translate("Corgi_SelectLoadout"), true, false, true))
-                    {
-                        List<AILoadout> loadouts = LoadoutManager.Loadouts;
-                        List<FloatMenuOption> list = new List<FloatMenuOption>();
-                        if (loadouts.Count == 0)
-                        {
-                            list.Add(new FloatMenuOption(UIText.NoLoadout.Translate(), null));
-                        }
-                        else
-                        {
-                            for (int i = 0; i < loadouts.Count; i++)
-                            {
-                                int local_i = i;
-                                list.Add(new FloatMenuOption(loadouts[i].label, delegate
-                                {
-                                    selPawn.SetLoadout(loadouts[local_i]);
-                                }));
-                            }
-                        }
-                        Find.WindowStack.Add(new FloatMenu(list));
-                    }
-
-                    Rect loadoutButtonRect = new Rect(viewRect.width / 4 * 3, buttonY, viewRect.width / 4, 26f); // button is half the available width...
-                    if (Widgets.ButtonText(loadoutButtonRect, "Corgi_OpenLoadout".Translate()))
-                    {
-                        if (selPawn.IsColonist && (selPawn.GetLoadout() == null))
-                        {
-                            AILoadout loadout = new AILoadout(selPawn);
-                            LoadoutManager.AddLoadout(loadout);
-                            selPawn.SetLoadout(loadout);
-                        }
-
-                        Find.WindowStack.Add(new Dialog_ManageLoadouts(selPawn.GetLoadout(), selPawn));
-                    }
-                }
-                Widgets.ListSeparator(ref rollingY, viewRect.width, "Inventory".Translate());
+                this.DrawLoadoutButtons(selPawn, viewRect.xMax, ref rollingY, viewRect.width);
+                Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Inventory.Translate());
 
                 ThingOwner<Thing> things = selPawn.inventory.innerContainer;
                 for (int i = 0; i < things.Count; i++)
@@ -407,14 +350,152 @@ namespace AwesomeInventory.UI
             //    .Invoke(null, new object[] { selPawn, rollingY, viewRect.width });
             //}
 
-            if (Event.current.type == EventType.Layout)
-            {
-                _scrollViewHeight = rollingY + 30f;
-            }
+            _scrollViewHeight = rollingY + 30f;
+
             Widgets.EndScrollView();
             GUI.EndGroup();
             GUI.color = Color.white;
             Text.Anchor = TextAnchor.UpperLeft;
+        }
+
+        protected virtual void DrawLoadoutButtons(Pawn selPawn, float x, ref float rollingY, float width)
+        {
+            ValidateArg.NotNull(selPawn, nameof(selPawn));
+
+            if (Dialog_Mod.Settings.UseLoadout)
+            {
+                WidgetRow row = new WidgetRow(x, rollingY, UIDirection.LeftThenDown, width);
+                if (row.ButtonText(UIText.OpenLoadout.Translate()))
+                {
+                    if (selPawn.IsColonist && selPawn.GetLoadout() == null)
+                    {
+                        AILoadout loadout = new AILoadout(selPawn);
+                        LoadoutManager.AddLoadout(loadout);
+                        selPawn.SetLoadout(loadout);
+                    }
+
+                    Find.WindowStack.Add(new Dialog_ManageLoadouts(selPawn.GetLoadout(), selPawn));
+                }
+
+                if (row.ButtonText(UIText.SelectLoadout.Translate()))
+                {
+                    List<AILoadout> loadouts = LoadoutManager.Loadouts;
+                    List<FloatMenuOption> list = new List<FloatMenuOption>();
+                    if (loadouts.Count == 0)
+                    {
+                        list.Add(new FloatMenuOption(UIText.NoLoadout.Translate(), null));
+                    }
+                    else
+                    {
+                        for (int i = 0; i < loadouts.Count; i++)
+                        {
+                            int local_i = i;
+                            list.Add(new FloatMenuOption(
+                                loadouts[i].label,
+                                () =>
+                                {
+                                    selPawn.SetLoadout(loadouts[local_i]);
+                                }));
+                        }
+                    }
+
+                    Find.WindowStack.Add(new FloatMenu(list));
+                }
+
+                Text.Anchor = TextAnchor.MiddleRight;
+                Text.WordWrap = false;
+
+                row.Label(selPawn.GetLoadout()?.label, GenUI.GetWidthCached(UIText.TenCharsString.Times(2.5f)));
+
+                Text.Anchor = TextAnchor.UpperLeft;
+                Text.WordWrap = true;
+                rollingY = row.FinalY + WidgetRow.IconSize - Text.LineHeight;
+            }
+        }
+
+        protected virtual Tuple<float, string> GetArmorStat(Pawn pawn, StatDef stat, bool apparelChanged)
+        {
+            Tuple<float, string> tuple;
+            if (apparelChanged)
+            {
+                float value = Utility.CalculateArmorByParts(pawn, stat, out string tip);
+                _statCache[stat] = tuple = Tuple.Create(value, tip);
+            }
+            else
+            {
+                if (!_statCache.TryGetValue(stat, out tuple))
+                {
+                    Log.Error("Armor stat is not initiated.");
+                }
+            }
+
+            return tuple;
+        }
+
+        /// <summary>
+        /// Draw armor stats row for greedy tab.
+        /// </summary>
+        /// <param name="row"> A <see cref="WidgetRow"/> initialized to a certain size of canvas. </param>
+        /// <param name="pawn"> Selected pawn. </param>
+        /// <param name="stat"> Stat to draw. </param>
+        /// <param name="label"> Label for <paramref name="stat"/>. </param>
+        /// <param name="apparelChanged"> Indicates if apparels have changed since last call. </param>
+        protected virtual void DrawArmorStatsRow(WidgetRow row, Pawn pawn, StatDef stat, string label, bool apparelChanged)
+        {
+            ValidateArg.NotNull(row, nameof(row));
+
+            Tuple<float, string> tuple = this.GetArmorStat(pawn, stat, apparelChanged);
+            row.Label(label);
+            row.Gap((WidgetRow.LabelGap * 120) - row.FinalX);
+            row.Label(Utility.FormatArmorValue(tuple.Item1, "%"));
+            Rect tipRegion = new Rect(0, row.FinalY, row.FinalX, WidgetRow.IconSize);
+            row.Gap(int.MaxValue);
+
+            TooltipHandler.TipRegion(tipRegion, tuple.Item2);
+            Widgets.DrawHighlightIfMouseover(tipRegion);
+        }
+
+        /// <summary>
+        /// Draw mass info row for greedy tab.
+        /// </summary>
+        /// <param name="row"> A <see cref="WidgetRow"/> initialized to a certain size of canvas. </param>
+        /// <param name="pawn"> Selected pawn. </param>
+        /// <param name="apparelChanged"> Indicates if apparels have changed since last call. </param>
+        protected virtual void DrawMassInfoRow(WidgetRow row, Pawn pawn, bool apparelChanged)
+        {
+            ValidateArg.NotNull(row, nameof(row));
+
+            float carriedMass = MassUtility.GearAndInventoryMass(pawn);
+            float capacity = MassUtility.Capacity(pawn);
+            row.Label(UIText.MassCarried.Translate(carriedMass.ToString("0.##"), capacity.ToString("0.##")));
+            row.Gap(int.MaxValue);
+        }
+
+        /// <summary>
+        /// Draw comfy temperature for greedy tab.
+        /// </summary>
+        /// <param name="row"> A <see cref="WidgetRow"/> initialized to a certain size of canvas. </param>
+        /// <param name="pawn"> Selected pawn. </param>
+        /// <param name="apparelChanged"> Indicates if apparels have changed since last call. </param>
+        protected virtual void DrawComfyTemperatureRow(WidgetRow row, Pawn pawn, bool apparelChanged)
+        {
+            ValidateArg.NotNull(row, nameof(row));
+            ValidateArg.NotNull(pawn, nameof(pawn));
+
+            if (pawn.Dead)
+                return;
+
+            row.Label(
+                string.Concat(
+                    new string[]
+                    {
+                        UIText.ComfyTemperatureRange.Translate(),
+                        ": ",
+                        this.GetTemperatureStats(pawn, StatDefOf.ComfyTemperatureMin, apparelChanged).ToStringTemperature("F0"),
+                        "~",
+                        this.GetTemperatureStats(pawn, StatDefOf.ComfyTemperatureMax, apparelChanged).ToStringTemperature("F0"),
+                    }));
+            row.Gap(int.MaxValue);
         }
 
         /// <summary>
@@ -571,10 +652,14 @@ namespace AwesomeInventory.UI
             Widgets.Label(rect5, text.Truncate(rect5.width));
             Text.WordWrap = true;
 
-            string tooltipText = Utility.TooltipTextForThing(thing, false, isForced);
+            if (!_thingTooltipCache.TryGetValue(thing, out Tuple<string, string> tuple))
+            {
+                _thingTooltipCache[thing] = Tuple.Create(this.DrawHelper.TooltipTextFor(thing, true), this.DrawHelper.TooltipTextFor(thing, false));
+                tuple = _thingTooltipCache[thing];
+            }
 
             this.MouseContextMenu(selPawn, thing, rect);
-            TooltipHandler.TipRegion(rect, tooltipText);
+            TooltipHandler.TipRegion(rect, tuple.Item2);
 
             y += 28f;
         }
@@ -604,63 +689,73 @@ namespace AwesomeInventory.UI
                 float carried = MassUtility.GearAndInventoryMass(pawn);
                 float capacity = MassUtility.Capacity(pawn);
 
-                row.Icon(ContentFinder<Texture2D>.Get(RPGIIcons.Mass, true), UIText.MassCarried.Translate());
+                row.Icon(TexResource.Mass, UIText.AIMassCarried.Translate());
                 row.Label(string.Concat(carried, "/", capacity));
                 row.Gap(int.MaxValue);
             }
 
             // Draw minimum comfy temperature
-            row.Icon(ContentFinder<Texture2D>.Get(RPGIIcons.MinTemperature, true), UIText.ComfyTemperatureRange.Translate());
-            row.Label(pawn.GetStatValue(StatDefOf.ComfyTemperatureMin, true).ToStringTemperature());
+            row.Icon(TexResource.MinTemperature, UIText.ComfyTemperatureRange.Translate());
+            row.Label(this.GetTemperatureStats(pawn, StatDefOf.ComfyTemperatureMin, apparelChanged).ToStringTemperature());
             row.Gap(GenUI.Gap);
 
             // Draw maximum comfy temperature
-            row.Icon(TexResource.IconFlame, UIText.ComfyTemperatureRange.Translate());
-            row.Label(pawn.GetStatValue(StatDefOf.ComfyTemperatureMax, true).ToStringTemperature());
+            row.Icon(TexResource.MaxTemperature, UIText.ComfyTemperatureRange.Translate());
+            row.Label(this.GetTemperatureStats(pawn, StatDefOf.ComfyTemperatureMax, apparelChanged).ToStringTemperature());
             row.Gap(int.MaxValue);
 
             // Draw armor stats
-            DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Blunt, TexResource.ArmorBlunt, apparelChanged);
-            DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Sharp, TexResource.ArmorSharp, apparelChanged);
-            DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Heat, TexResource.ArmorHeat, apparelChanged);
+            this.DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Blunt, TexResource.ArmorBlunt, UIText.ArmorBlunt.TranslateSimple(), apparelChanged);
+            this.DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Sharp, TexResource.ArmorSharp, UIText.ArmorSharp.TranslateSimple(), apparelChanged);
+            this.DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Heat, TexResource.ArmorHeat, UIText.ArmorHeat.TranslateSimple(), apparelChanged);
 
             rollingY = row.FinalY;
         }
 
+        protected virtual float GetTemperatureStats(Pawn pawn, StatDef stat, bool apparelChanged)
+        {
+            float value;
+            if (apparelChanged)
+            {
+                value = pawn.GetStatValue(stat);
+                _statCache[stat] = Tuple.Create(value, string.Empty);
+            }
+            else
+            {
+                value = _statCache[stat].Item1;
+            }
+
+            return value;
+        }
+
         /// <summary>
-        /// Draw sharp, blunt, heat stats for armor.
+        /// Draw sharp, blunt, heat stats for armor in jealous tab.
         /// </summary>
         /// <param name="row"> A drawing helper for drawing in a row. </param>
         /// <param name="pawn"> Selected pawn. </param>
         /// <param name="stat"> Stat to draw. </param>
         /// <param name="icon"> Icon for <paramref name="stat"/>. </param>
+        /// <param name="altIconText"> Description for <paramref name="icon"/>. </param>
         /// <param name="apparelChanged"> Indicates whether apparels on pawn have changed. </param>
         /// <remarks> It costs 1ms to calculate one stat for a pawn with 16 apparels, therefore the cache. </remarks>
-        protected virtual void DrawArmorStats(WidgetRow row, Pawn pawn, StatDef stat, Texture2D icon, bool apparelChanged)
+        protected virtual void DrawArmorStats(WidgetRow row, Pawn pawn, StatDef stat, Texture2D icon, string altIconText, bool apparelChanged)
         {
             ValidateArg.NotNull(row, nameof(row));
 
-            Tuple<float, string> tuple;
-            if (apparelChanged)
-            {
-                float value = Utility.CalculateArmorByParts(pawn, stat, out string tip);
-                _armorStatCache[stat] = tuple = Tuple.Create(value, tip);
-            }
-            else
-            {
-                if (!_armorStatCache.TryGetValue(stat, out tuple))
-                {
-                    Log.Error("Armor stat is not initiated.");
-                }
-            }
+            Tuple<float, string> tuple = this.GetArmorStat(pawn, stat, apparelChanged);
 
-            row.Icon(icon, UIText.ArmorBlunt.Translate());
-            Rect tipRect = row.Label(tuple.Item1.ToStringPercent());
+            Rect iconRect = row.Icon(icon, string.Empty);
+            Rect numberRect = row.Label(tuple.Item1.ToStringPercent());
+            Rect tipRect = new Rect(iconRect) { xMax = numberRect.xMax };
 
             // Move row to next level.
             row.Gap(int.MaxValue);
 
-            TooltipHandler.TipRegion(tipRect, tuple.Item2);
+            if (Mouse.IsOver(tipRect))
+            {
+                TooltipHandler.TipRegion(tipRect, string.Concat(altIconText, Environment.NewLine, tuple.Item2));
+                Widgets.DrawHighlightIfMouseover(tipRect);
+            }
         }
 
         /// <summary>
@@ -743,6 +838,7 @@ namespace AwesomeInventory.UI
                     TooltipHandler.TipRegion(rect3, "WasWornByCorpse".Translate());
                 }
 
+                // NOTE Can weapon be forced?
                 if (isForced)
                 {
                     Rect rect4 = new Rect(rect.x, rect.yMax - 20f, 20f, 20f);
@@ -752,10 +848,15 @@ namespace AwesomeInventory.UI
             }
 
             Text.WordWrap = true;
-            if (AwesomeInventoryServiceProvider.TryGetImplementation(out IDrawHelper drawHelper))
+            string tooltip;
+            if (!_thingTooltipCache.TryGetValue(thing, out Tuple<string, string> tuple))
             {
-                TooltipHandler.TipRegion(rect, drawHelper.TooltipTextFor(thing, true, isForced));
+                _thingTooltipCache[thing] = Tuple.Create(this.DrawHelper.TooltipTextFor(thing, true), this.DrawHelper.TooltipTextFor(thing, false));
+                tuple = _thingTooltipCache[thing];
             }
+
+            tooltip = isForced ? tuple.Item1 : tuple.Item2;
+            TooltipHandler.TipRegion(rect, tooltip);
 
             MouseContextMenu(selPawn, thing, rect);
         }

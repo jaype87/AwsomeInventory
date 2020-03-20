@@ -16,32 +16,34 @@ namespace AwesomeInventory.UI
     public class DrawHelper : IDrawHelper
     {
         /// <inheritdoc/>
-        public string TooltipTextFor(Thing thing, bool labelCap, bool isForced)
+        public string TooltipTextFor(Thing thing, bool isForced)
         {
             ValidateArg.NotNull(thing, nameof(thing));
 
             StringBuilder text = new StringBuilder();
-            if (labelCap)
+            text.Append(thing.LabelCap);
+            if (isForced)
             {
-                text.Append(thing.LabelCap);
-                if (isForced)
-                {
-                    text.Append(", " + UIText.ApparelForcedLower.Translate());
-                }
+                text.Append(", " + UIText.ApparelForcedLower.Translate());
             }
 
-            text.Append(thing.DescriptionDetailed);
             text.AppendLine();
 
-            // hit points
+            if (thing.def.IsRangedWeapon && thing.holdingOwner?.Owner.ParentHolder is Pawn selPawn && selPawn.story != null && selPawn.story.traits.HasTrait(TraitDefOf.Brawler))
+            {
+                text.AppendLine(UIText.EquipWarningBrawler.Translate());
+                text.AppendLine();
+            }
+
+            text.AppendLine(thing.DescriptionDetailed);
             if (thing.def.useHitPoints)
             {
-                text.AppendLine(thing.HitPoints + " / " + thing.MaxHitPoints);
+                text.AppendLine(UIText.HitPointsBasic.Translate().CapitalizeFirst() + ": " + thing.HitPoints + " / " + thing.MaxHitPoints);
             }
 
             // mass
             string mass = (thing.GetStatValue(StatDefOf.Mass, true) * (float)thing.stackCount).ToString("G") + " kg";
-            text.AppendLine(mass);
+            text.AppendLine(UIText.Mass.Translate() + ": " + mass);
 
             if (thing is Apparel app)
             {

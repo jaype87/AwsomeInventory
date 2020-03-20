@@ -41,8 +41,8 @@ namespace AwesomeInventory.UI
         void DrawAscetic();
 
         /// <summary>
-        /// Reset the scroll position of gear tab.
+        /// Reset the scroll position of gear tab and clear cache.
         /// </summary>
-        void RestScrollPosition();
+        void Reset();
     }
 }
