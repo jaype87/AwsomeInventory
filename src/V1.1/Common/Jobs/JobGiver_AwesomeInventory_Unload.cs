@@ -5,6 +5,7 @@
 
 using System.Linq;
 using AwesomeInventory.Loadout;
+using AwesomeInventory.UI;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -36,8 +37,7 @@ namespace AwesomeInventory.Jobs
             Job job = HaulAIUtility.HaulToStorageJob(pawn, _thing);
             if (job == null)
             {
-                Messages.Message("NoEmptyPlaceLower".Translate(),
-                    new TargetInfo(pawn.PositionHeld, pawn.MapHeld), MessageTypeDefOf.NeutralEvent);
+                Messages.Message("NoEmptyPlaceLower".Translate(), new TargetInfo(pawn.PositionHeld, pawn.MapHeld), MessageTypeDefOf.NeutralEvent);
                 return null;
             }
 
@@ -48,6 +48,9 @@ namespace AwesomeInventory.Jobs
 
         public static Job TryGiveJobStatic(Pawn pawn, Thing thing)
         {
+            ValidateArg.NotNull(pawn, nameof(pawn));
+            ValidateArg.NotNull(thing, nameof(thing));
+
             if (JobInProgress)
             {
                 Job fakeJob = new Job(AwesomeInventory_JobDefOf.AwesomeInventory_Fake, thing)
@@ -60,8 +63,7 @@ namespace AwesomeInventory.Jobs
             Job job = HaulAIUtility.HaulToStorageJob(pawn, thing);
             if (job == null)
             {
-                Messages.Message("NoEmptyPlaceLower".Translate(),
-                    new TargetInfo(pawn.PositionHeld, pawn.MapHeld), MessageTypeDefOf.NeutralEvent);
+                Messages.Message(UIText.NoEmptyPlaceLower.Translate(), new TargetInfo(pawn.PositionHeld, pawn.MapHeld), MessageTypeDefOf.NeutralEvent);
                 thing.TryGetComp<CompRPGIUnload>().Unload = false;
                 return null;
             }

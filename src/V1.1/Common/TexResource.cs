@@ -136,6 +136,8 @@ namespace AwesomeInventory.UI
 
         public static readonly Texture2D Gear = ContentFinder<Texture2D>.Get("UI/Icons/Gear", true);
 
+        public static readonly Texture2D RWButtonBG = ContentFinder<Texture2D>.Get("UI/Widgets/ButtonBG");
+
         // Custom icons
         public static readonly Texture2D Apparel = ContentFinder<Texture2D>.Get("UI/Icons/Apparel", true);
 
@@ -148,6 +150,8 @@ namespace AwesomeInventory.UI
         public static readonly Texture2D ArrowUp = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/arrowUp");
 
         public static readonly Texture2D DarkBackground = SolidColorMaterials.NewSolidColorTexture(0f, 0f, 0f, .2f);
+
+        public static readonly Texture2D DoubleDownArrow = ContentFinder<Texture2D>.Get("UI/Icons/DoubleDownArrow", true);
 
         public static readonly Texture2D GearHelmet = ContentFinder<Texture2D>.Get("UI/Icons/Gear_Helmet_Colored", true);
 
@@ -176,6 +180,18 @@ namespace AwesomeInventory.UI
         public static readonly Texture2D IconPickupDrop = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/loadoutPickupDrop");
 
         public static readonly Texture2D IconDropExcess = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/loadoutDropExcess");
+
+        public static readonly Texture2D IconTainted = ContentFinder<Texture2D>.Get("UI/Icons/Sandy_Tainted_Icon");
+
+        public static readonly Texture2D IconForced = ContentFinder<Texture2D>.Get("UI/Icons/Sandy_Forced_Icon");
+
+        public static readonly Texture2D IconFlame = ContentFinder<Texture2D>.Get("UI/Icons/Fire_Mini");
+
+        public static readonly Texture2D ArmorBlunt = ContentFinder<Texture2D>.Get("UI/Icons/Sandy_ArmorBlunt_Icon");
+
+        public static readonly Texture2D ArmorSharp = ContentFinder<Texture2D>.Get("UI/Icons/Sandy_ArmorSharp_Icon");
+
+        public static readonly Texture2D ArmorHeat = ContentFinder<Texture2D>.Get("UI/Icons/Sandy_ArmorHeat_Icon");
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning restore SA1600 // Elements should be documented

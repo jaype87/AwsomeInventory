@@ -50,15 +50,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AwesomeInventoryServiceProvider.cs" />
+    <Compile Include="Services\AIDebug.cs" />
+    <Compile Include="Services\AwesomeInventoryServiceProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\UIText.cs" />
+    <Compile Include="Interfaces\ILogger.cs" />
+    <Compile Include="Services\Timer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup Condition="Exists('$(SolutionDir)stylecop.json')" />
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

@@ -69,12 +69,14 @@
     <Compile Include="GearTab\IconRect.cs" />
     <Compile Include="GearTab\SmartRectList.cs" />
     <Compile Include="HarmonyPatches\AddHumanlikeOrders_RPGI_Patch.cs" />
+    <Compile Include="HarmonyPatches\Pawn_ApparelTracker_ApparelChanged_Patch.cs" />
     <Compile Include="Helpers\IDrawHelper.cs" />
     <Compile Include="Interfaces\IInventoryHelper.cs" />
     <Compile Include="Jobs\DressJob.cs" />
     <Compile Include="Jobs\JobDriver_AwesomeInventory_Dress.cs" />
     <Compile Include="Jobs\JobDriver_AwesomeInventory_Undress.cs" />
     <Compile Include="Jobs\JobDriver_AwesomeInventory_Unload.cs" />
+    <Compile Include="Services\Logger.cs" />
     <Compile Include="Services\RegisterServices.cs" />
     <Compile Include="UI\Dialog_Mod.cs" />
     <Compile Include="ModSettings\AwesomeInventorySetting.cs" />

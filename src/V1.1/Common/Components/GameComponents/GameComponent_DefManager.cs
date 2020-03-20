@@ -18,7 +18,7 @@ namespace AwesomeInventory
 
         public GameComponent_DefManager(Game game)
         {
-
+            AIDebug.Init(new Logger());
         }
 
         public override void FinalizeInit()

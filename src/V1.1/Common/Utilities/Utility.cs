@@ -177,14 +177,14 @@ namespace AwesomeInventory.Utilities
         /// the "ListOrder" tag and correct value to their new "BodyPartGroup" element in xml.
         /// </summary>
         /// <param name="pawn"></param>
-        /// <param name="stat">Sharp, blunt or heat, maybe electrical?</param>
-        /// <param name="text">Text for tooltip</param>
-        /// <param name="unit">unit type for the corresponding stat</param>
+        /// <param name="stat">Sharp, blunt or heat, maybe electrical?. </param>
+        /// <param name="text">Text for tooltip. </param>
         /// <returns></returns>
         public static float CalculateArmorByParts(Pawn pawn, StatDef stat, out string text)
         {
-            text = "";
+            text = string.Empty;
             float effectiveArmor = 0;
+
             // Max amor rating is at 200% in vanilla, divide it by 2 is for scaling manipulation purpose
             // the final value will be multiplied by 2 to restore the original scaling.
             float natureArmor = Mathf.Clamp01(pawn.GetStatValue(stat, true) / 2f);
@@ -202,6 +202,7 @@ namespace AwesomeInventory.Utilities
                             effectivePen *= 1 - Mathf.Clamp01(apparelList[j].GetStatValue(stat, true) / 2f);
                         }
                     }
+
                     float eArmorForPart = allParts[i].coverageAbs * (1 - effectivePen);
                     if (allParts[i].depth == BodyPartDepth.Outside &&
                                             (allParts[i].coverage >= 0.1 ||
@@ -211,9 +212,11 @@ namespace AwesomeInventory.Utilities
                         text += allParts[i].LabelCap + ": ";
                         text += ((1 - effectivePen) * 2).ToStringPercent() + "\n";
                     }
+
                     effectiveArmor += eArmorForPart;
                 }
             }
+
             effectiveArmor = Mathf.Clamp(effectiveArmor * 2, 0, 2);
 
             return effectiveArmor;

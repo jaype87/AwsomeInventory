@@ -7,7 +7,6 @@
     
 
     <Corgi_ExtraApparels>Extra Apparels</Corgi_ExtraApparels>
-    <Corgi_UnloadNow>Unload Now</Corgi_UnloadNow>
     <Corgi_KeepOldApparel>and keep old apparel</Corgi_KeepOldApparel>
     <Corgi_OpenLoadout>Open Loadout</Corgi_OpenLoadout>
     <Corgi_UseLoadout>Use Loadout</Corgi_UseLoadout>
@@ -25,6 +24,7 @@
     <AwesomeInventory_TorsoMiddle>Torso Middle Layer</AwesomeInventory_TorsoMiddle>
     <AwesomeInventory_TorsoOnSkin>Torso OnSkin Layer</AwesomeInventory_TorsoOnSkin>
     <AwesomeInventory_TorsoShell>Torso Shell Layer</AwesomeInventory_TorsoShell>
+    <AwesomeInventory_UnloadNow>Unload Now</AwesomeInventory_UnloadNow>
 
     <!-- Loadout Window -->
     <AwesomeInventory_ChooseMaterialAndQuality>Choose Material and Quality</AwesomeInventory_ChooseMaterialAndQuality>

@@ -37,11 +37,15 @@ namespace AwesomeInventory.UI
 
         public const string EquipWarningBrawler = "EquipWarningBrawler";
 
+        public const string ForcedApparel = "ForcedApparel";
+
         public const string Incapable = "Incapable";
 
         public const string Inventory = "Inventory";
 
         public const string IsIncapableOfViolenceLower = "IsIncapableOfViolenceLower";
+
+        public const string NoEmptyPlaceLower = "NoEmptyPlaceLower";
 
         public const string OK = "OK";
 
@@ -126,6 +130,8 @@ namespace AwesomeInventory.UI
         public const string TenCharsString = "AAAAAAAAAA";
 
         public const string Traits = "Traits";
+
+        public const string UnloadNow = "AwesomeInventory_UnloadNow";
 
         public const string VanillaWear = "AwesomeInventory_VanillaWear";
 

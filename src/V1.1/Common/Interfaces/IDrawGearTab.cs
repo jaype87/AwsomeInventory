@@ -24,14 +24,16 @@ namespace AwesomeInventory.UI
         /// </summary>
         /// <param name="pawn"> Pawn that owns the tab. </param>
         /// <param name="canvas"> Position on screen to draw on. </param>
-        void DrawJealous(Pawn pawn, Rect canvas);
+        /// <param name="apparelChanged"> Indicates whether apparels on pawn have changed. </param>
+        void DrawJealous(Pawn pawn, Rect canvas, bool apparelChanged);
 
         /// <summary>
         /// Draw greedy tab.
         /// </summary>
         /// <param name="pawn"> Pawn that owns the tab. </param>
         /// <param name="canvas"> Position on screen to draw on. </param>
-        void DrawGreedy(Pawn pawn, Rect canvas);
+        /// <param name="apparelChanged"> Indicates whether apparels on pawn have changed. </param>
+        void DrawGreedy(Pawn pawn, Rect canvas, bool apparelChanged);
 
         /// <summary>
         /// Draw ascetic tab.

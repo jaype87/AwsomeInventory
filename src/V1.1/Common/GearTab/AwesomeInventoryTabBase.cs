@@ -7,6 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using AwesomeInventory.Common.HarmonyPatches;
+using AwesomeInventory.HarmonyPatches;
 using AwesomeInventory.Jobs;
 using AwesomeInventory.Loadout;
 using RimWorld;
@@ -37,6 +40,11 @@ namespace AwesomeInventory.UI
             typeof(ITab_Pawn_Gear).GetProperty("SelPawnForGear", _nonPublicInstance);
 
         /// <summary>
+        /// Gets or sets a value indicating whether apparel has chagned.
+        /// </summary>
+        protected bool _apparelChanged;
+
+        /// <summary>
         /// Draw contents in gear tab.
         /// </summary>
         protected IDrawGearTab _drawGearTab;
@@ -49,6 +57,7 @@ namespace AwesomeInventory.UI
         private static bool _isAscetic = false;
 
         private Pawn _selPawn;
+        private object _apparelChangedLock = new object();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AwesomeInventoryTabBase"/> class.
@@ -58,6 +67,14 @@ namespace AwesomeInventory.UI
             this.size = new Vector2(550f, 500f);
             this.labelKey = "TabGear";
             this.tutorTag = "Gear";
+            Pawn_ApparelTracker_ApparelChanged_Patch.ApparelChangedEvent +=
+                (bool changed) =>
+                {
+                    lock (_apparelChangedLock)
+                    {
+                        _apparelChanged = changed;
+                    }
+                };
         }
 
         /// <summary>
@@ -143,6 +160,10 @@ namespace AwesomeInventory.UI
             {
                 _selPawn = selPawn;
                 _drawGearTab.RestScrollPosition();
+                lock (_apparelChangedLock)
+                {
+                    _apparelChanged = true;
+                }
             }
 
             Text.Font = GameFont.Small;
@@ -175,20 +196,30 @@ namespace AwesomeInventory.UI
                 _isAscetic = true;
             }
 
-            if (_isJealous)
+            lock (_apparelChangedLock)
             {
-                _drawGearTab.DrawJealous(_selPawn, new Rect(0, headerRect.yMax, size.x, size.y - headerRect.yMax));
-            }
-            else if (_isGreedy)
-            {
-                _drawGearTab.DrawGreedy(_selPawn, new Rect(0, headerRect.yMax, size.x, size.y - headerRect.yMax));
-            }
-            else if (_isAscetic)
-            {
-            }
-            else
-            {
-                throw new InvalidOperationException(Resources.ErrorMessage.NoDisplayOptionChosen);
+                if (Event.current.type != EventType.Layout)
+                {
+                    if (_isJealous)
+                    {
+                        AIDebug.Timer.Start();
+                        _drawGearTab.DrawJealous(_selPawn, new Rect(0, headerRect.yMax, size.x, size.y - headerRect.yMax), _apparelChanged);
+                        AIDebug.Timer.Stop(AIDebug.Header + Event.current.type.ToString());
+                    }
+                    else if (_isGreedy)
+                    {
+                        _drawGearTab.DrawGreedy(_selPawn, new Rect(0, headerRect.yMax, size.x, size.y - headerRect.yMax), _apparelChanged);
+                    }
+                    else if (_isAscetic)
+                    {
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException(Resources.ErrorMessage.NoDisplayOptionChosen);
+                    }
+
+                    _apparelChanged = false;
+                }
             }
         }
 

@@ -44,10 +44,10 @@ namespace AwesomeInventory.UI
         private const float _apparelRectHeight = 56f;
         private const float _startingXforRect = 150f;
 
-        private static SmartRect<Apparel> _smartRectHead;
-
         private static float _scrollViewHeight;
+        private SmartRectList<Apparel> _smartRectList;
 
+        private Dictionary<StatDef, Tuple<float, string>> _armorStatCache = new Dictionary<StatDef, Tuple<float, string>>();
         private AwesomeInventoryTabBase _gearTab;
 
         /// <summary>
@@ -57,6 +57,7 @@ namespace AwesomeInventory.UI
         public DrawGearTabWorker(AwesomeInventoryTabBase gearTab)
         {
             _gearTab = gearTab;
+
         }
 
         /// <inheritdoc/>
@@ -69,7 +70,7 @@ namespace AwesomeInventory.UI
         public virtual void DrawAscetic() { }
 
         /// <inheritdoc/>
-        public virtual void DrawJealous(Pawn selPawn, Rect canvas)
+        public virtual void DrawJealous(Pawn selPawn, Rect canvas, bool apparelChanged)
         {
             ValidateArg.NotNull(selPawn, nameof(selPawn));
 
@@ -86,7 +87,7 @@ namespace AwesomeInventory.UI
 
             // draw all stats on the right
             Rect statRect = outRect.RightPart(_divider);
-            this.DrawStatPanel(statRect, selPawn, out float statY);
+            this.DrawStatPanel(statRect, selPawn, out float statY, apparelChanged);
 
             // Draw paper doll.
             statY -= WidgetRow.IconSize;
@@ -145,32 +146,14 @@ namespace AwesomeInventory.UI
 
             // List order: Head:200-181, Neck:180-101, Torso:100-51, Waist:50-11, Legs:10-0
             // Check \steamapps\common\RimWorld\Mods\Core\Defs\Bodies\BodyPartGroups.xml
-
-            // Hats. BodyGroup: Fullhead; Layer: Overhead
-            _smartRectHead =
-                new SmartRect<Apparel>(
-                    template: new Rect(outRect.x, outRect.y, _apparelRectWidth, _apparelRectHeight),
-                    (Apparel apparel) =>
-                    {
-                        return apparel.def.apparel.bodyPartGroups[0].listOrder > AIBPGDef.Neck.listOrder;
-                    },
-                    xLeftCurPosition: _startingXforRect,
-                    xRightCurPosition: _startingXforRect,
-                    null,
-                    xLeftEdge: 10,
-                    xRightEdge: statRect.x);
-
-            SmartRectList<Apparel> smartRectList = new SmartRectList<Apparel>();
-            smartRectList.Init(_smartRectHead);
-
-            this.DrawDefaultThingIconRects(selPawn.apparel.WornApparel, _smartRectHead);
-            IEnumerable<Apparel> extraApparels = this.DrawApparels(selPawn, selPawn.apparel.WornApparel, smartRectList);
+            this.DrawDefaultThingIconRects(selPawn.apparel.WornApparel, outRect.LeftPart(1 - _divider), apparelChanged);
+            IEnumerable<Apparel> extraApparels = this.DrawApparels(selPawn, selPawn.apparel.WornApparel, _smartRectList);
 
             #endregion
 
             #region Draw Traits
 
-            SmartRect<Apparel> lastSmartRect = smartRectList.SmartRects.Last();
+            SmartRect<Apparel> lastSmartRect = _smartRectList.SmartRects.Last();
             float traitY = lastSmartRect.yMax + lastSmartRect.HeightGap;
             WidgetRow traitRow = new WidgetRow(viewRect.x, traitY, UIDirection.RightThenDown, statRect.x - viewRect.x);
             List<Trait> traits = selPawn.story.traits.allTraits;
@@ -207,6 +190,8 @@ namespace AwesomeInventory.UI
                         x = viewRect.x;
                     }
                 }
+
+                rollingY += _apparelRectHeight + GenUI.GapSmall;
             }
 
             #endregion Extra Apparels
@@ -304,7 +289,7 @@ namespace AwesomeInventory.UI
         }
 
         /// <inheritdoc/>
-        public virtual void DrawGreedy(Pawn selPawn, Rect canvas)
+        public virtual void DrawGreedy(Pawn selPawn, Rect canvas, bool apparelChanged)
         {
             // set up rects
             Rect listRect = new Rect(
@@ -600,7 +585,8 @@ namespace AwesomeInventory.UI
         /// <param name="rect"> Rect for drawing. </param>
         /// <param name="pawn"> Selected pawn. </param>
         /// <param name="rollingY"> The yMax coordinate when stat panel is drawn. </param>
-        protected virtual void DrawStatPanel(Rect rect, Pawn pawn, out float rollingY)
+        /// <param name="apparelChanged"> Indicates whether apparels on pawn have changed. </param>
+        protected virtual void DrawStatPanel(Rect rect, Pawn pawn, out float rollingY, bool apparelChanged)
         {
             ValidateArg.NotNull(pawn, nameof(pawn));
 
@@ -626,19 +612,18 @@ namespace AwesomeInventory.UI
             // Draw minimum comfy temperature
             row.Icon(ContentFinder<Texture2D>.Get(RPGIIcons.MinTemperature, true), UIText.ComfyTemperatureRange.Translate());
             row.Label(pawn.GetStatValue(StatDefOf.ComfyTemperatureMin, true).ToStringTemperature());
-            row.Gap(int.MaxValue);
+            row.Gap(GenUI.Gap);
 
             // Draw maximum comfy temperature
-            row.Icon(ContentFinder<Texture2D>.Get(RPGIIcons.MaxTemperature, true), UIText.ComfyTemperatureRange.Translate());
+            row.Icon(TexResource.IconFlame, UIText.ComfyTemperatureRange.Translate());
             row.Label(pawn.GetStatValue(StatDefOf.ComfyTemperatureMax, true).ToStringTemperature());
             row.Gap(int.MaxValue);
 
             // Draw armor stats
-            DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Blunt, RPGIIcons.ArmorBlunt);
+            DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Blunt, TexResource.ArmorBlunt, apparelChanged);
+            DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Sharp, TexResource.ArmorSharp, apparelChanged);
+            DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Heat, TexResource.ArmorHeat, apparelChanged);
 
-            DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Sharp, RPGIIcons.ArmorSharp);
-
-            DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Heat, RPGIIcons.ArmorHeat);
             rollingY = row.FinalY;
         }
 
@@ -648,20 +633,34 @@ namespace AwesomeInventory.UI
         /// <param name="row"> A drawing helper for drawing in a row. </param>
         /// <param name="pawn"> Selected pawn. </param>
         /// <param name="stat"> Stat to draw. </param>
-        /// <param name="iconPath"> Icon for <paramref name="stat"/>. </param>
-        protected virtual void DrawArmorStats(WidgetRow row, Pawn pawn, StatDef stat, string iconPath)
+        /// <param name="icon"> Icon for <paramref name="stat"/>. </param>
+        /// <param name="apparelChanged"> Indicates whether apparels on pawn have changed. </param>
+        /// <remarks> It costs 1ms to calculate one stat for a pawn with 16 apparels, therefore the cache. </remarks>
+        protected virtual void DrawArmorStats(WidgetRow row, Pawn pawn, StatDef stat, Texture2D icon, bool apparelChanged)
         {
             ValidateArg.NotNull(row, nameof(row));
 
-            float value = Utility.CalculateArmorByParts(pawn, stat, out string tip);
+            Tuple<float, string> tuple;
+            if (apparelChanged)
+            {
+                float value = Utility.CalculateArmorByParts(pawn, stat, out string tip);
+                _armorStatCache[stat] = tuple = Tuple.Create(value, tip);
+            }
+            else
+            {
+                if (!_armorStatCache.TryGetValue(stat, out tuple))
+                {
+                    Log.Error("Armor stat is not initiated.");
+                }
+            }
 
-            row.Icon(ContentFinder<Texture2D>.Get(iconPath, true), UIText.ArmorBlunt.Translate());
-            Rect tipRect = row.Label(value.ToStringPercent());
+            row.Icon(icon, UIText.ArmorBlunt.Translate());
+            Rect tipRect = row.Label(tuple.Item1.ToStringPercent());
 
             // Move row to next level.
             row.Gap(int.MaxValue);
 
-            TooltipHandler.TipRegion(tipRect, tip);
+            TooltipHandler.TipRegion(tipRect, tuple.Item2);
         }
 
         /// <summary>
@@ -694,6 +693,7 @@ namespace AwesomeInventory.UI
             ValidateArg.NotNull(selPawn, nameof(selPawn));
 
             DrawQualityFrame(thing, rect);
+            GUI.DrawTexture(rect, Command.BGTex);
             DrawHitpointBackground(thing, rect);
 
             // Draw thing icon.
@@ -706,24 +706,14 @@ namespace AwesomeInventory.UI
                 GUI.DrawTexture(rect, TexUI.HighlightTex);
                 Widgets.InfoCardButton(rect.x, rect.y, thing);
 
-                // Draw drop button
-                //Rect buttonRect = new Rect(rect.xMax - DrawUtility.IconSize, rect.y, DrawUtility.IconSize, DrawUtility.IconSize);
-                //TooltipHandler.TipRegion(buttonRect, UIText.DropThing.Translate());
-                //if (Widgets.ButtonImage(buttonRect, ContentFinder<Texture2D>.Get("UI/Buttons/Drop", true)))
-                //{
-                //    SoundDefOf.Tick_High.PlayOneShotOnCamera(null);
-                //    AwesomeInventoryTabBase.InterfaceDrop.Invoke((ITab_Pawn_Gear)_gearTab, new object[] { thing });
-                //}
-
                 Rect buttonRect;
 
                 // Draw Unload Now button
                 buttonRect = new Rect(rect.xMax - DrawUtility.SmallIconSize, rect.yMax - DrawUtility.SmallIconSize, DrawUtility.SmallIconSize, DrawUtility.SmallIconSize);
-                TooltipHandler.TipRegion(buttonRect, "Corgi_UnloadNow".Translate());
-                Texture2D image = ContentFinder<Texture2D>.Get("UI/Icons/DoubleDownArrow", true);
+                TooltipHandler.TipRegion(buttonRect, UIText.UnloadNow.Translate());
                 if (thing.GetComp<CompRPGIUnload>()?.Unload ?? false)
                 {
-                    if (Widgets.ButtonImage(buttonRect, image, DrawUtility.HighlightBrown, DrawUtility.HighlightGreen))
+                    if (Widgets.ButtonImage(buttonRect, TexResource.DoubleDownArrow, DrawUtility.HighlightBrown, DrawUtility.HighlightGreen))
                     {
                         SoundDefOf.Tick_High.PlayOneShotOnCamera();
                         AwesomeInventoryTabBase.InterfaceUnloadNow(thing, selPawn);
@@ -731,7 +721,7 @@ namespace AwesomeInventory.UI
                 }
                 else
                 {
-                    if (Widgets.ButtonImage(buttonRect, image, Color.white, DrawUtility.HighlightGreen))
+                    if (Widgets.ButtonImage(buttonRect, TexResource.DoubleDownArrow, Color.white, DrawUtility.HighlightGreen))
                     {
                         SoundDefOf.Tick_High.PlayOneShotOnCamera();
                         AwesomeInventoryTabBase.InterfaceUnloadNow(thing, selPawn);
@@ -748,16 +738,16 @@ namespace AwesomeInventory.UI
                 isForced = selPawn.outfits.forcedHandler.IsForced(apparel);
                 if (apparel.WornByCorpse)
                 {
-                    Rect rect3 = new Rect(rect.xMax - DrawUtility.IconSize, rect.y, DrawUtility.SmallIconSize, DrawUtility.SmallIconSize);
-                    GUI.DrawTexture(rect3, ContentFinder<Texture2D>.Get("UI/Icons/Sandy_Tainted_Icon", true));
+                    Rect rect3 = new Rect(rect.xMax - DrawUtility.SmallIconSize, rect.y, DrawUtility.SmallIconSize, DrawUtility.SmallIconSize);
+                    GUI.DrawTexture(rect3, TexResource.IconTainted);
                     TooltipHandler.TipRegion(rect3, "WasWornByCorpse".Translate());
                 }
 
                 if (isForced)
                 {
                     Rect rect4 = new Rect(rect.x, rect.yMax - 20f, 20f, 20f);
-                    GUI.DrawTexture(rect4, ContentFinder<Texture2D>.Get("UI/Icons/Sandy_Forced_Icon", true));
-                    TooltipHandler.TipRegion(rect4, "ForcedApparel".Translate());
+                    GUI.DrawTexture(rect4, TexResource.IconForced);
+                    TooltipHandler.TipRegion(rect4, UIText.ForcedApparel.Translate());
                 }
             }
 
@@ -956,11 +946,26 @@ namespace AwesomeInventory.UI
         /// Draw default rects for apparels.
         /// </summary>
         /// <param name="apparels"> An IEnumerable of <see cref="Apparel"/>. </param>
-        /// <param name="smartRect"> The smart rect used for drawing apparels on the gear tab. </param>
-        protected virtual void DrawDefaultThingIconRects(IEnumerable<Apparel> apparels, SmartRect<Apparel> smartRect)
+        protected virtual void DrawDefaultThingIconRects(IEnumerable<Apparel> apparels, Rect canvas, bool apparelChanged)
         {
             ValidateArg.NotNull(apparels, nameof(apparels));
-            ValidateArg.NotNull(smartRect, nameof(smartRect));
+
+            // Hats. BodyGroup: Fullhead; Layer: Overhead
+            SmartRect<Apparel> smartRect =
+                new SmartRect<Apparel>(
+                    template: new Rect(canvas.x, canvas.y, _apparelRectWidth, _apparelRectHeight),
+                    (Apparel apparel) =>
+                    {
+                        return apparel.def.apparel.bodyPartGroups[0].listOrder > AIBPGDef.Neck.listOrder;
+                    },
+                    xLeftCurPosition: _startingXforRect,
+                    xRightCurPosition: _startingXforRect,
+                    null,
+                    xLeftEdge: 10,
+                    xRightEdge: canvas.xMax);
+
+            _smartRectList = new SmartRectList<Apparel>();
+            _smartRectList.Init(smartRect);
 
             float xLeftCurrentPosition = smartRect.XLeftCurrentPosition;
             float xRightCurrentPosition = smartRect.XRightCurrentPosition;
@@ -1070,7 +1075,7 @@ namespace AwesomeInventory.UI
                 },
                 UIText.Pant);
 
-            this.DrawDefaultThingIconRectsWorker(smartRect.List);
+            this.DrawDefaultThingIconRectsWorker(_smartRectList);
         }
 
         /// <summary>
