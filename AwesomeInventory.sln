@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SolutionItems\GlobalSuppressions.cs = SolutionItems\GlobalSuppressions.cs
 		SolutionItems\Notes.txt = SolutionItems\Notes.txt
 		About\preview.png = About\preview.png
+		README.md = README.md
 		SolutionItems\stylecop.json = SolutionItems\stylecop.json
 		SolutionItems\Tips and tricks.txt = SolutionItems\Tips and tricks.txt
 	EndProjectSection

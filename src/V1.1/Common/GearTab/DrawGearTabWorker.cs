@@ -11,7 +11,6 @@ using AwesomeInventory.Jobs;
 using AwesomeInventory.Loadout;
 using AwesomeInventory.Utilities;
 using RimWorld;
-using RimWorld.Planet;
 using RPG_Inventory_Remake_Common;
 using UnityEngine;
 using Verse;
@@ -361,31 +360,31 @@ namespace AwesomeInventory.UI
                 switch (c)
                 {
                     case QualityCategory.Legendary:
-                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Lengendary);
+                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Lengendary, 2);
                         break;
 
                     case QualityCategory.Masterwork:
-                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Masterwork);
+                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Masterwork, 2);
                         break;
 
                     case QualityCategory.Excellent:
-                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Excellent);
+                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Excellent, 2);
                         break;
 
                     case QualityCategory.Good:
-                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Good);
+                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Good, 2);
                         break;
 
                     case QualityCategory.Normal:
-                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Normal);
+                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Normal, 2);
                         break;
 
                     case QualityCategory.Poor:
-                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Poor);
+                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Poor, 2);
                         break;
 
                     case QualityCategory.Awful:
-                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Awful);
+                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Awful, 2);
                         break;
                 }
             }
@@ -819,9 +818,9 @@ namespace AwesomeInventory.UI
         {
             ValidateArg.NotNull(selPawn, nameof(selPawn));
 
-            DrawQualityFrame(thing, rect);
             GUI.DrawTexture(rect, Command.BGTex);
             DrawHitpointBackground(thing, rect);
+            DrawQualityFrame(thing, rect);
 
             // Draw thing icon.
             Rect rect1 = new Rect(rect.x + 4f, rect.y + 4f, rect.width - 8f, rect.height - 8f);

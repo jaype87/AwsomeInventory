@@ -127,12 +127,14 @@ namespace AwesomeInventory.UI
                 b.x = a.x;
                 a.x = x;
             }
+
             if (b.y > a.y)
             {
                 float y = b.y;
                 b.y = a.y;
                 a.y = y;
             }
+
             Vector3 vector = a - b;
             GUI.DrawTexture(new Rect(b.x, b.y, thickness, vector.y), texture);
             GUI.DrawTexture(new Rect(a.x - (float)thickness, b.y, thickness, vector.y), texture);
@@ -140,6 +142,12 @@ namespace AwesomeInventory.UI
             GUI.DrawTexture(new Rect(b.x + (float)thickness, a.y - (float)thickness, vector.x - (float)(thickness * 2), thickness), texture);
         }
 
+        /// <summary>
+        /// Color <paramref name="s"/> based on <paramref name="thing"/> quality.
+        /// </summary>
+        /// <param name="s"> String to color. </param>
+        /// <param name="thing"> Thing with quality. </param>
+        /// <returns> Colored string. </returns>
         public static string ColorizeByQuality(this string s, Thing thing)
         {
             if (thing.TryGetQuality(out QualityCategory qualityCategory))
@@ -147,9 +155,9 @@ namespace AwesomeInventory.UI
                 switch (qualityCategory)
                 {
                     case QualityCategory.Awful:
-                        return s.Colorize(ColorLibrary.BrickRed);
+                        return s.Colorize(GenColor.FromHex("cc1a00"));
                     case QualityCategory.Poor:
-                        return s.Colorize(ColorLibrary.Grey);
+                        return s.Colorize(GenColor.FromHex("b0b3af"));
                     case QualityCategory.Normal:
                         return s.Colorize(Color.white);
                     case QualityCategory.Good:

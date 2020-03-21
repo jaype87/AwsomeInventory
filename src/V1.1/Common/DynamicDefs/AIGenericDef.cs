@@ -55,12 +55,24 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         protected Predicate<ThingDef> Filter { get; }
 
+        /// <summary>
+        /// Compare equality between <paramref name="a"/> and <paramref name="b"/>.
+        /// </summary>
+        /// <param name="a"> Def to compare to <paramref name="b"/>. </param>
+        /// <param name="b"> Def to compare to <paramref name="a"/>. </param>
+        /// <returns> Returns true if <paramref name="a"/> equals <paramref name="b"/>. </returns>
         [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Bug of StyleCop")]
         public static bool operator ==(AIGenericDef a, AIGenericDef b)
         {
             return object.ReferenceEquals(a, b);
         }
 
+        /// <summary>
+        /// Compare inequality between <paramref name="a"/> and <paramref name="b"/>.
+        /// </summary>
+        /// <param name="a"> Def to compare to <paramref name="b"/>. </param>
+        /// <param name="b"> Def to compare to <paramref name="a"/>. </param>
+        /// <returns> Returns true if <paramref name="a"/> is not equal to <paramref name="b"/>. </returns>
         public static bool operator !=(AIGenericDef a, AIGenericDef b)
         {
             return !(a == b);

@@ -1,15 +1,14 @@
-﻿using System;
+﻿// <copyright file="LoadoutGenericDef.cs" company="Zizhen Li">
+// Copyright (c) Zizhen Li. All rights reserved.
+// Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using Verse;
 
-/* Keep the following list up to date:
- * Currently defined Generics:
- * -for Meals - Pawns auto fetch a best food, generaly meals
- * -for Raw Foodstuff - Pawns can auto fetch raw food if no meals, also will fetch for animal training.
- * -for Drugs - Pawns can auto fetch drugs to fit a schedule.
- */
 // TODO Map generic type to ThingRequestGroup so to get rid of querying ListerThing.AllThings
 namespace AwesomeInventory.Loadout
 {
@@ -64,6 +63,7 @@ namespace AwesomeInventory.Loadout
                 thingClass = typeof(ThingWithComps),
                 description = "Generic Loadout for Raw Food.  Intended for compatibility with pawns automatically picking up raw food to train animals.",
                 label = "Corgi_Generic_RawFood".Translate(),
+
                 // Exclude drugs and corpses.  Also exclude any food worse than RawBad as in testing the pawns would not even pick it up for training.
                 Validator = (ThingDef thingDef) => thingDef.IsNutritionGivingIngestible && !thingDef.IsCorpse && thingDef.ingestible.HumanEdible && !thingDef.HasComp(typeof(CompHatcher)) && (int)thingDef.ingestible.preferability < 6,
                 defaultCount = Convert.ToInt32(Math.Floor(targetNutrition / everything.Where(td => generic.Validator(td)).Average(td => td.ingestible.CachedNutrition)))
