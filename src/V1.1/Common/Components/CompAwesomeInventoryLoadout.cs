@@ -154,7 +154,7 @@ namespace AwesomeInventory.Loadout
 
             foreach (var pair in InventoryTracker)
             {
-                if (pair.Key.def is LoadoutGenericDef genericDef)
+                if (pair.Key.def is AIGenericDef genericDef)
                 {
                     if (genericDef.Includes(thing.def))
                     {

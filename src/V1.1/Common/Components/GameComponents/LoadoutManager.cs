@@ -51,7 +51,7 @@ namespace AwesomeInventory.Loadout
         #region Override Methods
 
         /// <summary>
-        /// Called by RimWorld when the game is basically ready to be played.
+        /// Called by RimWorld when the game is ready to be played.
         /// </summary>
         public override void FinalizeInit()
         {

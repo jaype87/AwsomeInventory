@@ -26,7 +26,7 @@ namespace AwesomeInventory.Loadout
                   DefNames.AIGenericMedicine,
                   Descriptions.AIGenericMedicine,
                   Labels.AIGenericMedicine,
-                  typeof(ThingWithComps),
+                  typeof(Medicine),
                   ThingRequestGroup.Medicine,
                   null)
         {

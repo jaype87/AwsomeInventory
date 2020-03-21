@@ -19,7 +19,7 @@ namespace AwesomeInventory.Loadout
     /// </summary>
     public class AIGenericRawFood : AIGenericDef
     {
-        private AIGenericRawFood _instance = null;
+        private static AIGenericRawFood _instance = null;
 
         private AIGenericRawFood()
             : base(
@@ -28,7 +28,7 @@ namespace AwesomeInventory.Loadout
                   Labels.AIGenericRawFood.TranslateSimple(),
                   typeof(ThingWithComps),
                   ThingRequestGroup.HaulableAlways,
-                  (ThingDef thingDef) => thingDef.IsNutritionGivingIngestible && !thingDef.IsCorpse && thingDef.ingestible.HumanEdible && !thingDef.HasComp(typeof(CompHatcher)) && (int)thingDef.ingestible.preferability < 6)
+                  (ThingDef thingDef) => thingDef.IsNutritionGivingIngestible && !thingDef.IsCorpse && thingDef.ingestible.HumanEdible && !thingDef.HasComp(typeof(CompHatcher)) && thingDef.ingestible.preferability < FoodPreferability.MealAwful)
         {
             this.statBases = new List<StatModifier>() { new StatModifier() { stat = StatDefOf.Mass, value = ThingDefOf.Meat_Human.BaseMass } };
         }
@@ -36,6 +36,6 @@ namespace AwesomeInventory.Loadout
         /// <summary>
         /// Gets a singleton instance of <see cref="AIGenericRawFood"/>.
         /// </summary>
-        public AIGenericRawFood Instance { get => _instance ?? (_instance = new AIGenericRawFood()); }
+        public static AIGenericRawFood Instance { get => _instance ?? (_instance = new AIGenericRawFood()); }
     }
 }

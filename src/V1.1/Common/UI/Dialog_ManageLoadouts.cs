@@ -27,7 +27,7 @@ namespace AwesomeInventory.UI
         All // All things, won't include generics, can include minified/able now.
     }
 
-    public class Dialog_ManageLoadouts : Window
+    public sealed class Dialog_ManageLoadouts : Window
     {
         #region Fields
         #region Static Fields
@@ -55,7 +55,6 @@ namespace AwesomeInventory.UI
         private float _scrollViewHeight;
         private Vector2 _slotScrollPosition = Vector2.zero;
         private List<SelectableItem> _source;
-        private List<LoadoutGenericDef> _sourceGeneric;
         private SourceSelection _sourceType = SourceSelection.Ranged;
 
         #endregion Fields
@@ -253,16 +252,18 @@ namespace AwesomeInventory.UI
             foreach (ThingDef td in _allSuitableDefs)
             {
                 SelectableItem selectableItem = new SelectableItem() { thingDef = td };
-                if (td is LoadoutGenericDef genericDef)
+                if (td is AIGenericDef genericDef)
                 {
-                    selectableItem.isGreyedOut = visibleDefs.Any(def => genericDef.Validator(def));
+                    selectableItem.isGreyedOut = visibleDefs.Any(def => genericDef.Includes(def));
                 }
                 else
                 {
                     selectableItem.isGreyedOut = !visibleDefs.Contains(td);
                 }
+
                 _selectableItems.Add(selectableItem);
             }
+
             _selectableItems = _selectableItems.OrderBy(td => td.thingDef.label).ToList();
             SetSource(SourceSelection.Ranged);
         }
@@ -298,7 +299,6 @@ namespace AwesomeInventory.UI
 
         public void SetSource(SourceSelection source, bool preserveFilter = false)
         {
-            _sourceGeneric = LoadoutGenericDef.GenericDefs;
             if (!preserveFilter)
                 _filter = "";
 
@@ -326,7 +326,7 @@ namespace AwesomeInventory.UI
 
                 case SourceSelection.Generic:
                     _sourceType = SourceSelection.Generic;
-                    _source = _selectableItems.Where(row => row.thingDef is LoadoutGenericDef).ToList();
+                    _source = _selectableItems.Where(row => row.thingDef is AIGenericDefManager).ToList();
                     break;
 
                 case SourceSelection.All:

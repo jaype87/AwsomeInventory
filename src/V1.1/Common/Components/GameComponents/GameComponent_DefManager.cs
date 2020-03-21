@@ -3,10 +3,8 @@
 // Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using AwesomeInventory.Loadout;
 using Verse;
 
@@ -16,11 +14,27 @@ namespace AwesomeInventory
     {
         private static HashSet<ThingDef> _allSuitableDefs;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GameComponent_DefManager"/> class.
+        /// </summary>
+        /// <param name="game"> Current game. </param>
         public GameComponent_DefManager(Game game)
         {
             AIDebug.Init(new Logger());
         }
 
+        /// <summary>
+        /// Return a copy of a cached AllSuitableDefs.
+        /// </summary>
+        /// <returns> A set of defs available to be selected in loadout dialog. </returns>
+        public static HashSet<ThingDef> GetSuitableDefs()
+        {
+            return new HashSet<ThingDef>(_allSuitableDefs.AsEnumerable(), _allSuitableDefs.Comparer);
+        }
+
+        /// <summary>
+        /// Get called by the game just before the game is about to start.
+        /// </summary>
         public override void FinalizeInit()
         {
             List<ThingDef> allSuitableDefs;
@@ -31,16 +45,7 @@ namespace AwesomeInventory
                                                 && IsSuitableThingDef(thingDef))
                                 .ToList();
             _allSuitableDefs = new HashSet<ThingDef>(allSuitableDefs, new CompareThingDef());
-            _allSuitableDefs.AddRange(LoadoutGenericDef.GenericDefsToThingDefs);
-        }
-
-        /// <summary>
-        /// Return a copy of a cached AllSuitableDefs
-        /// </summary>
-        /// <returns></returns>
-        public static HashSet<ThingDef> GetSuitableDefs()
-        {
-            return new HashSet<ThingDef>(_allSuitableDefs.AsEnumerable(), _allSuitableDefs.Comparer);
+            _allSuitableDefs.AddRange(DefDatabase<AIGenericDef>.AllDefs);
         }
 
         private bool IsSuitableThingDef(ThingDef td)

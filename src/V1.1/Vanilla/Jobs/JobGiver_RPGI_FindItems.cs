@@ -26,13 +26,12 @@ namespace AwesomeInventory.Jobs
 
             foreach (Thing item in RPGIloadout.ItemsToRestock)
             {
-                if (!item.def.IsApparel || !item.def.IsWeapon)
+                if (!item.def.IsApparel && !item.def.IsWeapon)
                 {
                     ThingFilterAll filter = RPGIloadout.Loadout[item.MakeThingStuffPairWithQuality()];
-                    
-                    if (item.def is LoadoutGenericDef genericDef)
+                    if (item.def is AIGenericDef genericDef)
                     {
-                        targetA = FindItem(pawn, null, genericDef.thingRequestGroup, (Thing thing) => genericDef.Validator(thing.def));
+                        targetA = FindItem(pawn, null, genericDef.ThingRequestGroup, (Thing thing) => genericDef.Includes(thing.def));
                     }
                     else if (targetA.Stuff == RPGI_StuffDefOf.RPGIGenericResource)
                     {
@@ -44,17 +43,14 @@ namespace AwesomeInventory.Jobs
                     }
                 }
             }
+
             if (targetA == null)
             {
                 return null;
             }
             else
             {
-                return new Job(JobDefOf.TakeInventory, targetA)
-                {
-                    // Check JobDriver_RPGI_ApparelOptions for details
-                    count = 0
-                };
+                return JobMaker.MakeJob(JobDefOf.TakeInventory, targetA);
             }
         }
     }

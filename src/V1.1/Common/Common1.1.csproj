@@ -108,7 +108,7 @@
     <Compile Include="Jobs\ThinkNode_AwesomeInventory_Core.cs" />
     <Compile Include="Loadout\AILoadout.cs" />
     <Compile Include="Loadout\LoadoutComparer.cs" />
-    <Compile Include="Loadout\LoadoutGenericDef.cs" />
+    <Compile Include="DynamicDefs\AIGenericDefManager.cs" />
     <Compile Include="Loadout\LoadoutUtilities.cs" />
     <Compile Include="PawnModal.cs" />
     <Compile Include="Resources\DefNames.Designer.cs">
