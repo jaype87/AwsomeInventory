@@ -13,7 +13,6 @@ using AwesomeInventory.Utilities;
 using RimWorld;
 using RimWorld.Planet;
 using RPG_Inventory_Remake_Common;
-using RPGIResource;
 using UnityEngine;
 using Verse;
 using Verse.AI;
@@ -38,8 +37,6 @@ namespace AwesomeInventory.UI
         /// </summary>
         protected float _divider = 0.35f;
 
-        private const float _margin = 15f;
-        private const float _topPadding = 50f;
         private const float _apparelRectWidth = 56f;
         private const float _apparelRectHeight = 56f;
         private const float _startingXforRect = 150f;
@@ -89,19 +86,19 @@ namespace AwesomeInventory.UI
         }
 
         /// <inheritdoc/>
-        public virtual void DrawAscetic() { }
+        public virtual void DrawAscetic()
+        {
+        }
 
         /// <inheritdoc/>
-        public virtual void DrawJealous(Pawn selPawn, Rect canvas, bool apparelChanged)
+        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Bug in style cop.")]
+        public virtual void DrawJealous(Pawn selPawn, Rect outRect, bool apparelChanged)
         {
             ValidateArg.NotNull(selPawn, nameof(selPawn));
 
-            Rect innerCanvas = canvas.ContractedBy(GenUI.GapSmall);
-            GUI.BeginGroup(innerCanvas);
-            Rect outRect = innerCanvas.AtZero();
             Rect viewRect = outRect;
             viewRect.height = _scrollViewHeight;
-            viewRect.width -= GenUI.Gap;
+            viewRect.width -= GenUI.ScrollBarWidth;
 
             // start drawing the view
             Text.Font = GameFont.Small;
@@ -127,7 +124,7 @@ namespace AwesomeInventory.UI
                     xRightCurPosition: pawnRect.x,
                     list: null,
                     xLeftEdge: pawnRect.x,
-                    xRightEdge: canvas.x - DrawUtility.SmallIconSize);
+                    xRightEdge: outRect.xMax - GenUI.ScrollBarWidth);
 
             SmartRectList<ThingWithComps> equipementRectList = new SmartRectList<ThingWithComps>();
             equipementRectList.Init(rectForEquipment);
@@ -213,7 +210,7 @@ namespace AwesomeInventory.UI
             {
                 rollingY += Utility.StandardLineHeight;
                 float x = viewRect.x;
-                Widgets.ListSeparator(ref rollingY, viewRect.width, "Corgi_ExtraApparels".Translate());
+                Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.ExtraApparels.TranslateSimple());
 
                 foreach (Apparel extraApparel in extraApparels)
                 {
@@ -268,30 +265,23 @@ namespace AwesomeInventory.UI
             _scrollViewHeight = rollingY + InspectPaneUtility.TabHeight;
 
             Widgets.EndScrollView();
-            GUI.EndGroup();
             GUI.color = Color.white;
             Text.Anchor = TextAnchor.UpperLeft;
         }
 
         /// <inheritdoc/>
-        public virtual void DrawGreedy(Pawn selPawn, Rect canvas, bool apparelChanged)
+        public virtual void DrawGreedy(Pawn selPawn, Rect outRect, bool apparelChanged)
         {
             ValidateArg.NotNull(selPawn, nameof(selPawn));
-            ValidateArg.NotNull(canvas, nameof(canvas));
-
-            // set up rects
-            Rect listRect = new Rect(
-                GenUI.Gap,
-                _topPadding,
-                canvas.width - InspectPaneUtility.TabHeight,
-                canvas.height - _topPadding - _margin);
 
             // start drawing list
-            GUI.BeginGroup(listRect);
             Text.Font = GameFont.Small;
             GUI.color = Color.white;
-            Rect outRect = new Rect(0f, 0f, listRect.width, listRect.height);
-            Rect viewRect = new Rect(0f, 0f, listRect.width - GenUI.Gap, _scrollViewHeight);
+
+            Rect viewRect = outRect;
+            viewRect.height = _scrollViewHeight;
+            viewRect.width -= GenUI.ScrollBarWidth;
+
             Widgets.BeginScrollView(outRect, ref _scrollPosition, viewRect);
 
             float rollingY;
@@ -303,38 +293,38 @@ namespace AwesomeInventory.UI
             rollingY = row.FinalY;
 
             // draw overall armor
-            Widgets.ListSeparator(ref rollingY, viewRect.width, "OverallArmor".Translate());
+            Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.OverallArmor.TranslateSimple());
             row.Init(viewRect.x, rollingY, UIDirection.RightThenDown, viewRect.width);
 
-            this.DrawArmorStatsRow(row, selPawn, StatDefOf.ArmorRating_Sharp, UIText.ArmorSharp.Translate(), apparelChanged);
-            this.DrawArmorStatsRow(row, selPawn, StatDefOf.ArmorRating_Blunt, UIText.ArmorBlunt.Translate(), apparelChanged);
-            this.DrawArmorStatsRow(row, selPawn, StatDefOf.ArmorRating_Heat, UIText.ArmorHeat.Translate(), apparelChanged);
+            this.DrawArmorStatsRow(row, selPawn, StatDefOf.ArmorRating_Sharp, UIText.ArmorSharp.TranslateSimple(), apparelChanged);
+            this.DrawArmorStatsRow(row, selPawn, StatDefOf.ArmorRating_Blunt, UIText.ArmorBlunt.TranslateSimple(), apparelChanged);
+            this.DrawArmorStatsRow(row, selPawn, StatDefOf.ArmorRating_Heat, UIText.ArmorHeat.TranslateSimple(), apparelChanged);
             rollingY = row.FinalY;
 
             if ((bool)AwesomeInventoryTabBase.ShouldShowEquipment.Invoke(_gearTab, new object[] { selPawn }))
             {
-                Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Equipment.Translate());
-                foreach (ThingWithComps current in selPawn.equipment.AllEquipmentListForReading)
+                Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Equipment.TranslateSimple());
+                foreach (ThingWithComps equipment in selPawn.equipment.AllEquipmentListForReading)
                 {
-                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, current);
+                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, equipment);
                 }
             }
 
             if ((bool)AwesomeInventoryTabBase.ShouldShowApparel.Invoke(_gearTab, new object[] { selPawn }))
             {
-                Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Apparel.Translate());
-                foreach (Apparel current2 in from ap in selPawn.apparel.WornApparel
+                Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Apparel.TranslateSimple());
+                foreach (Apparel apparel in from ap in selPawn.apparel.WornApparel
                                              orderby ap.def.apparel.bodyPartGroups[0].listOrder descending
                                              select ap)
                 {
-                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, current2);
+                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, apparel);
                 }
             }
 
             if ((bool)AwesomeInventoryTabBase.ShouldShowInventory.Invoke(_gearTab, new object[] { selPawn }))
             {
                 this.DrawLoadoutButtons(selPawn, viewRect.xMax, ref rollingY, viewRect.width);
-                Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Inventory.Translate());
+                Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Inventory.TranslateSimple());
 
                 ThingOwner<Thing> things = selPawn.inventory.innerContainer;
                 for (int i = 0; i < things.Count; i++)
@@ -344,20 +334,90 @@ namespace AwesomeInventory.UI
             }
 
             //// Add support for smart medicine
+            /*
             //if (AccessTools.TypeByName("SmartMedicine.FillTab_Patch") is Type smartMedicine)
             //{
             //    smartMedicine.GetMethod("DrawStockUpButton", BindingFlags.Public | BindingFlags.Static)
             //    .Invoke(null, new object[] { selPawn, rollingY, viewRect.width });
             //}
+            */
 
-            _scrollViewHeight = rollingY + 30f;
+            _scrollViewHeight = rollingY + InspectPaneUtility.TabHeight;
 
             Widgets.EndScrollView();
-            GUI.EndGroup();
             GUI.color = Color.white;
             Text.Anchor = TextAnchor.UpperLeft;
         }
 
+        /// <summary>
+        /// Draw frames, which indicates quality, around <paramref name="thing"/>.
+        /// </summary>
+        /// <param name="thing"> Target item. </param>
+        /// <param name="rect"> Position on screen. </param>
+        protected static void DrawQualityFrame(ThingWithComps thing, Rect rect)
+        {
+            if (thing.TryGetQuality(out QualityCategory c))
+            {
+                switch (c)
+                {
+                    case QualityCategory.Legendary:
+                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Lengendary);
+                        break;
+
+                    case QualityCategory.Masterwork:
+                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Masterwork);
+                        break;
+
+                    case QualityCategory.Excellent:
+                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Excellent);
+                        break;
+
+                    case QualityCategory.Good:
+                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Good);
+                        break;
+
+                    case QualityCategory.Normal:
+                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Normal);
+                        break;
+
+                    case QualityCategory.Poor:
+                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Poor);
+                        break;
+
+                    case QualityCategory.Awful:
+                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Awful);
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Draw hitpoint background for <paramref name="thing"/>.
+        /// </summary>
+        /// <param name="thing"> Target item. </param>
+        /// <param name="rect"> Position of screen. </param>
+        protected static void DrawHitpointBackground(Thing thing, Rect rect)
+        {
+            ValidateArg.NotNull(thing, nameof(thing));
+            Rect hitpointsBG = rect.ContractedBy(2f);
+            float hitpointPercentage = hitpointsBG.height * (thing.HitPoints / (float)thing.MaxHitPoints);
+            hitpointsBG.yMin = hitpointsBG.yMax - hitpointPercentage;
+
+            // draw background indicator for hitpoints
+            GUI.DrawTexture(hitpointsBG, SolidColorMaterials.NewSolidColorTexture(new Color(0.4f, 0.47f, 0.53f, 0.44f)));
+            if (thing.HitPoints <= ((float)thing.MaxHitPoints / 2))
+            {
+                GUI.DrawTexture(hitpointsBG, SolidColorMaterials.NewSolidColorTexture(new Color(1f, 0.5f, 0.31f, 0.44f)));
+            }
+        }
+
+        /// <summary>
+        /// Draw loadout buttons from the right on gear tab.
+        /// </summary>
+        /// <param name="selPawn"> Selected pawn. </param>
+        /// <param name="x"> Start position for drawing buttons. </param>
+        /// <param name="rollingY"> Y position. </param>
+        /// <param name="width"> Width of available space for drawing. </param>
         protected virtual void DrawLoadoutButtons(Pawn selPawn, float x, ref float rollingY, float width)
         {
             ValidateArg.NotNull(selPawn, nameof(selPawn));
@@ -413,6 +473,13 @@ namespace AwesomeInventory.UI
             }
         }
 
+        /// <summary>
+        /// Get armor stats for <paramref name="pawn"/>.
+        /// </summary>
+        /// <param name="pawn"> Selected pawn. </param>
+        /// <param name="stat"> Stat for armor rating. </param>
+        /// <param name="apparelChanged"> Indicates if apparels have changed since last call. </param>
+        /// <returns> A tuple contains value and tooltip for <paramref name="stat"/>. </returns>
         protected virtual Tuple<float, string> GetArmorStat(Pawn pawn, StatDef stat, bool apparelChanged)
         {
             Tuple<float, string> tuple;
@@ -499,68 +566,6 @@ namespace AwesomeInventory.UI
         }
 
         /// <summary>
-        /// Draw frames, which indicates quality, around <paramref name="thing"/>.
-        /// </summary>
-        /// <param name="thing"> Target item. </param>
-        /// <param name="rect"> Position on screen. </param>
-        protected static void DrawQualityFrame(ThingWithComps thing, Rect rect)
-        {
-            if (thing.TryGetQuality(out QualityCategory c))
-            {
-                switch (c)
-                {
-                    case QualityCategory.Legendary:
-                        DrawUtility.DrawBoxWithColor(rect, RPGITex.Lengendary);
-                        break;
-
-                    case QualityCategory.Masterwork:
-                        DrawUtility.DrawBoxWithColor(rect, RPGITex.Masterwork);
-                        break;
-
-                    case QualityCategory.Excellent:
-                        DrawUtility.DrawBoxWithColor(rect, RPGITex.Excellent);
-                        break;
-
-                    case QualityCategory.Good:
-                        DrawUtility.DrawBoxWithColor(rect, RPGITex.Good);
-                        break;
-
-                    case QualityCategory.Normal:
-                        DrawUtility.DrawBoxWithColor(rect, RPGITex.Normal);
-                        break;
-
-                    case QualityCategory.Poor:
-                        DrawUtility.DrawBoxWithColor(rect, RPGITex.Poor);
-                        break;
-
-                    case QualityCategory.Awful:
-                        DrawUtility.DrawBoxWithColor(rect, RPGITex.Awful);
-                        break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Draw hitpoint background for <paramref name="thing"/>.
-        /// </summary>
-        /// <param name="thing"> Target item. </param>
-        /// <param name="rect"> Position of screen. </param>
-        protected static void DrawHitpointBackground(Thing thing, Rect rect)
-        {
-            ValidateArg.NotNull(thing, nameof(thing));
-            Rect hitpointsBG = rect.ContractedBy(2f);
-            float hitpointPercentage = hitpointsBG.height * (thing.HitPoints / (float)thing.MaxHitPoints);
-            hitpointsBG.yMin = hitpointsBG.yMax - hitpointPercentage;
-
-            // draw background indicator for hitpoints
-            GUI.DrawTexture(hitpointsBG, SolidColorMaterials.NewSolidColorTexture(new Color(0.4f, 0.47f, 0.53f, 0.44f)));
-            if (thing.HitPoints <= ((float)thing.MaxHitPoints / 2))
-            {
-                GUI.DrawTexture(hitpointsBG, SolidColorMaterials.NewSolidColorTexture(new Color(1f, 0.5f, 0.31f, 0.44f)));
-            }
-        }
-
-        /// <summary>
         /// Draw thing icon, description and function buttons in a row.
         /// </summary>
         /// <param name="selPawn"> Selected Pawn.</param>
@@ -572,30 +577,26 @@ namespace AwesomeInventory.UI
             ValidateArg.NotNull(selPawn, nameof(selPawn));
             ValidateArg.NotNull(thing, nameof(thing));
 
-            Rect rect = new Rect(0f, y, width, 28f);
-            rect.width -= GenUI.SmallIconSize;
-            Widgets.InfoCardButton(rect.width, y, thing);
-            rect.width -= GenUI.SmallIconSize;
-            Rect rect2 = new Rect(rect.width, y, DrawUtility.IconSize, DrawUtility.IconSize);
+            float xInfoButton = width - GenUI.SmallIconSize;
+            Widgets.InfoCardButton(xInfoButton, y, thing);
+
+            WidgetRow row = new WidgetRow(xInfoButton, y, UIDirection.LeftThenDown, xInfoButton);
 
             // Draw drop button.
-            TooltipHandler.TipRegion(rect2, UIText.DropThing.Translate());
-            if (Widgets.ButtonImage(rect2, TexResource.Drop))
+            if (row.ButtonIcon(TexResource.Drop, UIText.DropThing.TranslateSimple()))
             {
-                SoundDefOf.Tick_High.PlayOneShotOnCamera();
                 AwesomeInventoryTabBase.InterfaceDrop.Invoke(_gearTab, new object[] { thing });
             }
 
             if (thing is ThingWithComps thingWithComps)
             {
+                Rect unloadButtonRect = new Rect(row.FinalX - GenUI.SmallIconSize, row.FinalY, GenUI.SmallIconSize, GenUI.ListSpacing);
+
                 // Draw unload now button
-                rect.width -= 24f;
-                Rect rect3 = new Rect(rect.width, y, DrawUtility.IconSize, DrawUtility.IconSize);
-                TooltipHandler.TipRegion(rect3, "Corgi_UnloadNow".Translate());
-                Texture2D image = ContentFinder<Texture2D>.Get("UI/Icons/DoubleDownArrow", true);
+                TooltipHandler.TipRegion(unloadButtonRect, UIText.UnloadNow.TranslateSimple());
                 if (thingWithComps.GetComp<CompRPGIUnload>()?.Unload ?? false)
                 {
-                    if (Widgets.ButtonImage(rect3, image, DrawUtility.HighlightBrown, DrawUtility.HighlightGreen))
+                    if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, DrawUtility.HighlightBrown, DrawUtility.HighlightGreen))
                     {
                         SoundDefOf.Tick_High.PlayOneShotOnCamera();
                         InterfaceUnloadNow(thingWithComps, selPawn);
@@ -603,65 +604,75 @@ namespace AwesomeInventory.UI
                 }
                 else
                 {
-                    if (Widgets.ButtonImage(rect3, image, Color.white, DrawUtility.HighlightGreen))
+                    if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, Color.white, DrawUtility.HighlightGreen))
                     {
                         SoundDefOf.Tick_High.PlayOneShotOnCamera();
                         InterfaceUnloadNow(thingWithComps, selPawn);
                     }
                 }
+
+                row.GapButtonIcon();
             }
 
             // Draw ingest button.
             if ((thing.def.IsNutritionGivingIngestible || thing.def.IsNonMedicalDrug) && thing.IngestibleNow && selPawn.WillEat(thing))
             {
-                Rect rect3 = new Rect(rect.width - 24f, y, 24f, 24f);
-                TooltipHandler.TipRegion(rect3, "ConsumeThing".Translate(thing.LabelNoCount, thing));
-                if (Widgets.ButtonImage(rect3, TexResource.Ingest))
+                if (row.ButtonIcon(TexResource.Ingest, UIText.ConsumeThing.Translate(thing.LabelNoCount, thing)))
                 {
                     SoundDefOf.Tick_High.PlayOneShotOnCamera();
                     AwesomeInventoryTabBase.InterfaceIngest.Invoke(_gearTab, new object[] { thing });
                 }
             }
-
-            rect.width -= 24f;
-            Rect rect4 = rect;
-            rect4.xMin = rect4.xMax - 60f;
-            CaravanThingsTabUtility.DrawMass(thing, rect4);
-            rect.width -= 60f;
-            if (Mouse.IsOver(rect))
+            else
             {
-                GUI.color = ITab_Pawn_Gear.HighlightColor;
-                GUI.DrawTexture(rect, TexUI.HighlightTex);
+                row.GapButtonIcon();
             }
 
+            // Draw mass.
+            row.Label((thing.GetStatValue(StatDefOf.Mass) * thing.stackCount).ToStringMass());
+
+            Rect labelRect = new Rect(0, row.FinalY, row.FinalX, GenUI.ListSpacing);
+            if (Mouse.IsOver(labelRect))
+            {
+                // Get tooltip.
+                if (!_thingTooltipCache.TryGetValue(thing, out Tuple<string, string> tuple))
+                {
+                    _thingTooltipCache[thing] = Tuple.Create(this.DrawHelper.TooltipTextFor(thing, true), this.DrawHelper.TooltipTextFor(thing, false));
+                    tuple = _thingTooltipCache[thing];
+                }
+
+                GUI.color = ITab_Pawn_Gear.HighlightColor;
+                GUI.DrawTexture(labelRect, TexUI.HighlightTex);
+                this.MouseContextMenu(selPawn, thing, labelRect);
+                TooltipHandler.TipRegion(labelRect, tuple.Item2);
+            }
+
+            // Draw icon.
             if (thing.def.DrawMatSingle != null && thing.def.DrawMatSingle.mainTexture != null)
             {
-                Widgets.ThingIcon(new Rect(4f, y, 28f, 28f), thing);
+                Widgets.ThingIcon(new Rect(labelRect.position, new Vector2(GenUI.ListSpacing, GenUI.ListSpacing)), thing);
+                labelRect.x += GenUI.ListSpacing;
             }
 
             Text.Anchor = TextAnchor.MiddleLeft;
             GUI.color = ITab_Pawn_Gear.ThingLabelColor;
-            Rect rect5 = new Rect(36f, y, rect.width - 36f, rect.height);
 
-            // Draw label for thing in a row
-            string text = thing.LabelCap;
+            // Draw label.
+            string text = thing.LabelCap.ColorizeByQuality(thing);
             bool isForced = thing is Apparel apparel
                          && selPawn.outfits != null
                          && selPawn.outfits.forcedHandler.IsForced(apparel);
             Text.WordWrap = false;
-            Widgets.Label(rect5, text.Truncate(rect5.width));
-            Text.WordWrap = true;
-
-            if (!_thingTooltipCache.TryGetValue(thing, out Tuple<string, string> tuple))
+            string trimmedText = text.Truncate(labelRect.width - GenUI.SmallIconSize);
+            Widgets.Label(labelRect, trimmedText);
+            if (isForced)
             {
-                _thingTooltipCache[thing] = Tuple.Create(this.DrawHelper.TooltipTextFor(thing, true), this.DrawHelper.TooltipTextFor(thing, false));
-                tuple = _thingTooltipCache[thing];
+                Widgets.ButtonImage(new Rect(labelRect.x + Text.CalcSize(trimmedText).x + WidgetRow.LabelGap, labelRect.y, GenUI.SmallIconSize, GenUI.SmallIconSize), TexResource.IconForced);
             }
 
-            this.MouseContextMenu(selPawn, thing, rect);
-            TooltipHandler.TipRegion(rect, tuple.Item2);
+            Text.WordWrap = true;
 
-            y += 28f;
+            y += GenUI.ListSpacing;
         }
 
         /// <summary>
@@ -681,26 +692,19 @@ namespace AwesomeInventory.UI
                 return;
             }
 
+            Text.Anchor = TextAnchor.MiddleLeft;
             WidgetRow row = new WidgetRow(rect.x, rect.y, UIDirection.RightThenDown, rect.width);
 
             // Draw Mass
-            if (Utility.ShouldShowInventory(pawn))
-            {
-                float carried = MassUtility.GearAndInventoryMass(pawn);
-                float capacity = MassUtility.Capacity(pawn);
-
-                row.Icon(TexResource.Mass, UIText.AIMassCarried.Translate());
-                row.Label(string.Concat(carried, "/", capacity));
-                row.Gap(int.MaxValue);
-            }
+            this.DrawMassInfo(pawn, row);
 
             // Draw minimum comfy temperature
-            row.Icon(TexResource.MinTemperature, UIText.ComfyTemperatureRange.Translate());
+            row.Icon(TexResource.MinTemperature, UIText.ComfyTemperatureRange.TranslateSimple());
             row.Label(this.GetTemperatureStats(pawn, StatDefOf.ComfyTemperatureMin, apparelChanged).ToStringTemperature());
             row.Gap(GenUI.Gap);
 
             // Draw maximum comfy temperature
-            row.Icon(TexResource.MaxTemperature, UIText.ComfyTemperatureRange.Translate());
+            row.Icon(TexResource.MaxTemperature, UIText.ComfyTemperatureRange.TranslateSimple());
             row.Label(this.GetTemperatureStats(pawn, StatDefOf.ComfyTemperatureMax, apparelChanged).ToStringTemperature());
             row.Gap(int.MaxValue);
 
@@ -709,9 +713,37 @@ namespace AwesomeInventory.UI
             this.DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Sharp, TexResource.ArmorSharp, UIText.ArmorSharp.TranslateSimple(), apparelChanged);
             this.DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Heat, TexResource.ArmorHeat, UIText.ArmorHeat.TranslateSimple(), apparelChanged);
 
+            Text.Anchor = TextAnchor.UpperLeft;
             rollingY = row.FinalY;
         }
 
+        /// <summary>
+        /// Draw mass info in Jealous tab.
+        /// </summary>
+        /// <param name="pawn"> Selected pawn. </param>
+        /// <param name="row"> Helper to draw contents in a row. </param>
+        protected virtual void DrawMassInfo(Pawn pawn, WidgetRow row)
+        {
+            ValidateArg.NotNull(row, nameof(row));
+
+            if (Utility.ShouldShowInventory(pawn))
+            {
+                float carried = MassUtility.GearAndInventoryMass(pawn);
+                float capacity = MassUtility.Capacity(pawn);
+
+                row.Icon(TexResource.Mass, UIText.AIMassCarried.TranslateSimple());
+                row.Label(string.Concat(carried, "/", capacity));
+                row.Gap(int.MaxValue);
+            }
+        }
+
+        /// <summary>
+        /// Get comfortable temperature stats for <paramref name="pawn"/>.
+        /// </summary>
+        /// <param name="pawn"> Selected pawn. </param>
+        /// <param name="stat"> Temperature stat. </param>
+        /// <param name="apparelChanged"> Indicates if apparels have changed since last call. </param>
+        /// <returns> Value for comfortable temperature. </returns>
         protected virtual float GetTemperatureStats(Pawn pawn, StatDef stat, bool apparelChanged)
         {
             float value;
@@ -1047,6 +1079,8 @@ namespace AwesomeInventory.UI
         /// Draw default rects for apparels.
         /// </summary>
         /// <param name="apparels"> An IEnumerable of <see cref="Apparel"/>. </param>
+        /// <param name="canvas"> Space available for drawing. </param>
+        /// <param name="apparelChanged"> Indicates if apparels have changed since last call. </param>
         protected virtual void DrawDefaultThingIconRects(IEnumerable<Apparel> apparels, Rect canvas, bool apparelChanged)
         {
             ValidateArg.NotNull(apparels, nameof(apparels));

@@ -9,9 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using AwesomeInventory.UI;
 using RimWorld;
-using RPG_Inventory_Remake_Common;
-using RPGIResource;
 using UnityEngine;
 using Verse;
 
@@ -80,7 +79,9 @@ namespace AwesomeInventory.Loadout
                 DrawBarThreshold(barRect, capacity / current, 1f);
             }
             else
-                Widgets.FillableBar(barRect, fillPercentage, RPGITex.RoyalBlueTex as Texture2D);
+            {
+                Widgets.FillableBar(barRect, fillPercentage, AwesomeInventoryTex.RoyalBlueTex as Texture2D);
+            }
 
             // tooltip
             if (!tooltip.NullOrEmpty())

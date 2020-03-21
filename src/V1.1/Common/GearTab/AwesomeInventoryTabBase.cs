@@ -94,6 +94,7 @@ namespace AwesomeInventory.UI
         public static void InterfaceUnloadNow(ThingWithComps thing, Pawn pawn)
         {
             ValidateArg.NotNull(thing, nameof(thing));
+            ValidateArg.NotNull(pawn, nameof(pawn));
 
             // TODO examine HaulToContainer code path
             // If there is no comps in def, AllComps will always return an empty list
@@ -121,8 +122,7 @@ namespace AwesomeInventory.UI
 
                     QueuedJob queuedJob = pawn.jobs.jobQueue.FirstOrDefault(
                             j => j.job.def == AwesomeInventory_JobDefOf.AwesomeInventory_Fake &&
-                            j.job.targetA.Thing == thing
-                        );
+                            j.job.targetA.Thing == thing);
 
                     if (queuedJob != null)
                     {
@@ -209,16 +209,19 @@ namespace AwesomeInventory.UI
             {
                 lock (_apparelChangedLock)
                 {
+                    Rect canvas = new Rect(0, headerRect.yMax, size.x, size.y - headerRect.yMax).ContractedBy(GenUI.GapSmall);
+                    GUI.BeginGroup(canvas);
+                    Rect outRect = canvas.AtZero();
                     if (_isJealous)
                     {
                         AIDebug.Timer.Start();
-                        _drawGearTab.DrawJealous(_selPawn, new Rect(0, headerRect.yMax, size.x, size.y - headerRect.yMax), _apparelChanged);
+                        _drawGearTab.DrawJealous(_selPawn, outRect, _apparelChanged);
                         AIDebug.Timer.Stop(AIDebug.Header + Event.current.type.ToString());
                     }
                     else if (_isGreedy)
                     {
                         AIDebug.Timer.Start();
-                        _drawGearTab.DrawGreedy(_selPawn, new Rect(0, headerRect.yMax, size.x, size.y - headerRect.yMax), _apparelChanged);
+                        _drawGearTab.DrawGreedy(_selPawn, outRect, _apparelChanged);
                         AIDebug.Timer.Stop(AIDebug.Header + Event.current.type.ToString());
                     }
                     else if (_isAscetic)
@@ -229,6 +232,7 @@ namespace AwesomeInventory.UI
                         throw new InvalidOperationException(Resources.ErrorMessage.NoDisplayOptionChosen);
                     }
 
+                    GUI.EndGroup();
                     _apparelChanged = false;
                 }
             }

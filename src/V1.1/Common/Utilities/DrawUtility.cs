@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AwesomeInventory.UI;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -137,6 +138,32 @@ namespace AwesomeInventory.UI
             GUI.DrawTexture(new Rect(a.x - (float)thickness, b.y, thickness, vector.y), texture);
             GUI.DrawTexture(new Rect(b.x + (float)thickness, b.y, vector.x - (float)(thickness * 2), thickness), texture);
             GUI.DrawTexture(new Rect(b.x + (float)thickness, a.y - (float)thickness, vector.x - (float)(thickness * 2), thickness), texture);
+        }
+
+        public static string ColorizeByQuality(this string s, Thing thing)
+        {
+            if (thing.TryGetQuality(out QualityCategory qualityCategory))
+            {
+                switch (qualityCategory)
+                {
+                    case QualityCategory.Awful:
+                        return s.Colorize(ColorLibrary.BrickRed);
+                    case QualityCategory.Poor:
+                        return s.Colorize(ColorLibrary.Grey);
+                    case QualityCategory.Normal:
+                        return s.Colorize(Color.white);
+                    case QualityCategory.Good:
+                        return s.Colorize(ColorLibrary.LightGreen);
+                    case QualityCategory.Excellent:
+                        return s.Colorize(ColorLibrary.Cyan);
+                    case QualityCategory.Masterwork:
+                        return s.Colorize(ColorLibrary.Sand);
+                    case QualityCategory.Legendary:
+                        return s.Colorize(ColorLibrary.Orange);
+                }
+            }
+
+            return s;
         }
     }
 }

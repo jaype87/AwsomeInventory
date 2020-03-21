@@ -142,11 +142,11 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="GearTab\SmartRect.cs" />
-    <Compile Include="TexResource.cs" />
+    <Compile Include="Resources\TexResource.cs" />
     <Compile Include="UI\Dialog_InstantMessage.cs" />
     <Compile Include="UI\Dialog_ManageLoadouts.cs" />
     <Compile Include="UI\Dialog_StuffAndQuality.cs" />
-    <Compile Include="UI\RPGITex.cs" />
+    <Compile Include="UI\AwesomeInventoryTex.cs" />
     <Compile Include="UI\Theme.cs" />
     <Compile Include="UI\WindowOnMouseDrag.cs" />
     <Compile Include="UnitTest\AssertUtility.cs" />

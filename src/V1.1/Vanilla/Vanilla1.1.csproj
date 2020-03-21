@@ -101,9 +101,6 @@
     <Compile Include="..\Common\UI\Dialog_InstantMessage.cs">
       <Link>UI\Dialog_InstantMessage.cs</Link>
     </Compile>
-    <Compile Include="..\Common\UI\RPGITex.cs">
-      <Link>UI\RPGITex.cs</Link>
-    </Compile>
     <Compile Include="..\Common\UI\Theme.cs">
       <Link>UI\Theme.cs</Link>
     </Compile>

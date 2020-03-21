@@ -6,7 +6,6 @@
     
     
 
-    <Corgi_ExtraApparels>Extra Apparels</Corgi_ExtraApparels>
     <Corgi_KeepOldApparel>and keep old apparel</Corgi_KeepOldApparel>
     <Corgi_UseLoadout>Use Loadout</Corgi_UseLoadout>
     <Corgi_RPGStyleInventoryRemake>RPG Style Inventory Remake</Corgi_RPGStyleInventoryRemake>
@@ -14,6 +13,7 @@
 
     <!-- Inventory Window -->
     <AwesomeInventory_Belt>Belt</AwesomeInventory_Belt>
+    <AwesomeInventory_ExtraApparels>Extra Apparels</AwesomeInventory_ExtraApparels>
     <AwesomeInventory_GreedyTab>Greedy (List)</AwesomeInventory_GreedyTab>
     <AwesomeInventory_Head>Head Overhead</AwesomeInventory_Head>
     <AwesomeInventory_JealousTab>Jealous (RPG Style)</AwesomeInventory_JealousTab>

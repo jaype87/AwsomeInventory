@@ -31,6 +31,8 @@ namespace AwesomeInventory.UI
 
         public const string CannotEquip = "CannotEquip";
 
+        public const string ConsumeThing = "ConsumeThing";
+
         public const string Delete = "Delete";
 
         public const string DropThing = "DropThing";
@@ -59,6 +61,8 @@ namespace AwesomeInventory.UI
 
         public const string OK = "OK";
 
+        public const string OverallArmor = "OverallArmor";
+
         public const string AIEquip = "AwesomeInventory_Equip";
 
         public const string AIForceWear = "AwesomeInventory_ForceWear";
@@ -82,6 +86,8 @@ namespace AwesomeInventory.UI
         public const string DeleteLoadout = "AwesomeInventory_DeleteLoadout";
 
         public const string DragToReorder = "AwesomeInventory_DragToReorder";
+
+        public const string ExtraApparels = "AwesomeInventory_ExtraApparels";
 
         public const string FailToDrop = "AwesomeInventory_FailToDrop";
 
