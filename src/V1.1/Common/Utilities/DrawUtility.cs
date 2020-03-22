@@ -23,8 +23,8 @@ namespace AwesomeInventory.UI
         public static readonly Color HighlightBrown = new Color(212 / 255f, 141 / 255f, 0, 1);
 
         public static Vector2 MouseDownPos;
-        private static Vector2 _dragStartPos;
         public static bool isDrag;
+        private static Vector2 _dragStartPos;
 
         /// <summary>
         /// Gets padding between the border of window and its content.

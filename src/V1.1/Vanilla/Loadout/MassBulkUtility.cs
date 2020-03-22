@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using RimWorld;
-using Verse;
 using UnityEngine;
+using Verse;
 
 namespace RPG_Inventory_Remake.Loadout
 {
@@ -49,11 +49,11 @@ namespace RPG_Inventory_Remake.Loadout
                 {
                     return 1f;
                 }
+
                 return weightPercent - 1;
             }
             else
                 return 0f;
         }
-
     }
 }

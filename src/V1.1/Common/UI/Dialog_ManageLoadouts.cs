@@ -23,7 +23,7 @@ namespace AwesomeInventory.UI
     public class Dialog_ManageLoadouts : Window
     {
         private const float _paneDivider = 5 / 9f;
-        protected static readonly float _overburdenThresold;
+        private const int _loadoutNameMaxLength = 50;
         private static readonly HashSet<ThingDef> _allSuitableDefs = GameComponent_DefManager.GetSuitableDefs();
 
         /// <summary>
@@ -34,14 +34,8 @@ namespace AwesomeInventory.UI
         private static List<SelectableItem> _selectableItems;
 
         private Vector2 _availableScrollPosition = Vector2.zero;
-        private readonly int _loadoutNameMaxLength = 50;
-        private const float _barHeight = 24f;
-        private Vector2 _countFieldSize = new Vector2(40f, 24f);
         private AILoadout _currentLoadout;
         private string _filter = string.Empty;
-        private const float _iconSize = 16f;
-        private const float _margin = 6f;
-        private const float _topAreaHeight = 30f;
         private float _scrollViewHeight;
         private Vector2 _slotScrollPosition = Vector2.zero;
         private List<SelectableItem> _source;
@@ -68,8 +62,9 @@ namespace AwesomeInventory.UI
             doCloseX = true;
             forcePause = true;
             absorbInputAroundWindow = false;
-            closeOnClickedOutside = true;
+            closeOnClickedOutside = false;
             closeOnAccept = false;
+            draggable = true;
         }
 
         #endregion Constructors
@@ -130,6 +125,24 @@ namespace AwesomeInventory.UI
              * ||        Weight Bar       ||
              *
              */
+
+            if (Find.Selector.SingleSelectedThing is Pawn pawn && pawn.IsColonist && !pawn.Dead)
+            {
+                _pawn = pawn;
+                AILoadout loadout = _pawn.GetLoadout();
+                if (loadout == null)
+                {
+                    loadout = new AILoadout(pawn);
+                    LoadoutManager.AddLoadout(loadout);
+                    pawn.SetLoadout(loadout);
+                }
+
+                _currentLoadout = loadout;
+            }
+            else
+            {
+                this.Close();
+            }
 
             GUI.BeginGroup(canvas);
             Text.Font = GameFont.Small;
