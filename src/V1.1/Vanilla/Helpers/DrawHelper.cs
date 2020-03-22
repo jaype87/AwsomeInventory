@@ -3,6 +3,9 @@
 // Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using RimWorld;
 using Verse;
@@ -68,6 +71,61 @@ namespace AwesomeInventory.UI
             }
 
             return text.ToString();
+        }
+
+        /// <inheritdoc/>
+        public string WeightTextFor(Pawn pawn)
+        {
+            ValidateArg.NotNull(pawn, nameof(pawn));
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            if (pawn.equipment != null)
+            {
+                IEnumerable<Tuple<ThingWithComps, float>> tuples =
+                    pawn.equipment.AllEquipmentListForReading
+                    .Select(e => Tuple.Create(e, e.GetStatValue(StatDefOf.Mass)))
+                    .OrderByDescending(t => t.Item2);
+
+                foreach (var tuple in tuples)
+                {
+                    stringBuilder.Append(tuple.Item1.LabelCap);
+                    stringBuilder.AppendWithSeparator(tuple.Item2.ToStringMass(), ": ");
+                    stringBuilder.AppendLine();
+                }
+            }
+
+            if (pawn.apparel != null)
+            {
+                IEnumerable<Tuple<Apparel, float>> tuples =
+                    pawn.apparel.WornApparel
+                    .Select(e => Tuple.Create(e, e.GetStatValue(StatDefOf.Mass)))
+                    .OrderByDescending(t => t.Item2);
+
+                foreach (var tuple in tuples)
+                {
+                    stringBuilder.Append(tuple.Item1.LabelCap);
+                    stringBuilder.AppendWithSeparator(tuple.Item2.ToStringMass(), ": ");
+                    stringBuilder.AppendLine();
+                }
+            }
+
+            if (pawn.inventory != null)
+            {
+                IEnumerable<Tuple<Thing, float>> tuples =
+                    pawn.inventory.innerContainer
+                    .Select(e => Tuple.Create(e, e.GetStatValue(StatDefOf.Mass) * e.stackCount))
+                    .OrderByDescending(t => t.Item2);
+
+                foreach (var tuple in tuples)
+                {
+                    stringBuilder.Append(tuple.Item1.LabelCap);
+                    stringBuilder.AppendWithSeparator(tuple.Item2.ToStringMass(), ": ");
+                    stringBuilder.AppendLine();
+                }
+            }
+
+            return stringBuilder.ToString();
         }
     }
 }

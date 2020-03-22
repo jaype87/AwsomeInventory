@@ -25,5 +25,12 @@ namespace AwesomeInventory.UI
         /// <param name="isForced"> Indicates if <paramref name="thing"/> is forced on pawn. </param>
         /// <returns> A tooltip string. </returns>
         string TooltipTextFor(Thing thing, bool isForced);
+
+        /// <summary>
+        /// Get tooltip text for weight bar of <paramref name="pawn"/>.
+        /// </summary>
+        /// <param name="pawn"> Selected pawn. </param>
+        /// <returns> Tooltip text. </returns>
+        string WeightTextFor(Pawn pawn);
     }
 }

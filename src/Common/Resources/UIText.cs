@@ -81,6 +81,8 @@ namespace AwesomeInventory.UI
 
         public const string CountFieldTip = "AwesomeInventory_CountFieldTip";
 
+        public const string CurrentTemperature = "AwesomeInventory_CurrentTemperature";
+
         public const string Customize = "AwesomeInventory_Customize";
 
         public const string DeleteLoadout = "AwesomeInventory_DeleteLoadout";

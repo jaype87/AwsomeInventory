@@ -82,6 +82,7 @@
 
     <!-- Tooltips -->
     <AwesomeInventory_Ascetic>Ascetic</AwesomeInventory_Ascetic>
+    <AwesomeInventory_CurrentTemperature>Current Temperature</AwesomeInventory_CurrentTemperature>
 
     <!-- Messages -->
     <AwesomeInventory_FailToDrop>{0} failed to drop {1}</AwesomeInventory_FailToDrop>

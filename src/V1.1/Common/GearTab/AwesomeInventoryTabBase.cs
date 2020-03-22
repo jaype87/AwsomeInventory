@@ -73,7 +73,7 @@ namespace AwesomeInventory.UI
         /// </summary>
         public AwesomeInventoryTabBase()
         {
-            this.size = new Vector2(550f, 500f);
+            this.size = new Vector2(575f, 500f);
             this.labelKey = "TabGear";
             this.tutorTag = "Gear";
             Pawn_ApparelTracker_ApparelChanged_Patch.ApparelChangedEvent +=

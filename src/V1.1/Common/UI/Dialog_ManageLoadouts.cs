@@ -17,38 +17,28 @@ using Verse;
 
 namespace AwesomeInventory.UI
 {
-    public enum SourceSelection
+    /// <summary>
+    /// A dialog window for managing loadouts.
+    /// </summary>
+    public class Dialog_ManageLoadouts : Window
     {
-        Ranged,
-        Melee,
-        Apparel,
-        Minified,
-        Generic,
-        All // All things, won't include generics, can include minified/able now.
-    }
-
-    public sealed class Dialog_ManageLoadouts : Window
-    {
-        #region Fields
-        #region Static Fields
-
-        private static Pawn _pawn;
+        private const float _paneDivider = 5 / 9f;
+        protected static readonly float _overburdenThresold;
+        private static readonly HashSet<ThingDef> _allSuitableDefs = GameComponent_DefManager.GetSuitableDefs();
 
         /// <summary>
-        /// Controls the window size and position
+        /// Controls the window size and position.
         /// </summary>
         private static Vector2 _initialSize;
+        private static Pawn _pawn;
         private static List<SelectableItem> _selectableItems;
-        private readonly static HashSet<ThingDef> _allSuitableDefs;
-
-        #endregion Statis Fields
 
         private Vector2 _availableScrollPosition = Vector2.zero;
         private readonly int _loadoutNameMaxLength = 50;
         private const float _barHeight = 24f;
         private Vector2 _countFieldSize = new Vector2(40f, 24f);
         private AILoadout _currentLoadout;
-        private string _filter = "";
+        private string _filter = string.Empty;
         private const float _iconSize = 16f;
         private const float _margin = 6f;
         private const float _topAreaHeight = 30f;
@@ -57,21 +47,21 @@ namespace AwesomeInventory.UI
         private List<SelectableItem> _source;
         private SourceSelection _sourceType = SourceSelection.Ranged;
 
-        #endregion Fields
-
         #region Constructors
 
-        static Dialog_ManageLoadouts()
-        {
-            float width = GenUI.GetWidthCached(UIText.TenCharsString.Times(10));
-
-            _initialSize = new Vector2(width, Verse.UI.screenHeight / 2f);
-            _allSuitableDefs = GameComponent_DefManager.GetSuitableDefs();
-        }
-
-        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Dialog_ManageLoadouts"/> class.
+        /// </summary>
+        /// <param name="loadout"> Selected loadout. </param>
+        /// <param name="pawn"> Selected pawn. </param>
         public Dialog_ManageLoadouts(AILoadout loadout, Pawn pawn)
         {
+            ValidateArg.NotNull(loadout, nameof(loadout));
+            ValidateArg.NotNull(pawn, nameof(pawn));
+
+            float width = GenUI.GetWidthCached(UIText.TenCharsString.Times(10));
+            _initialSize = new Vector2(width, Verse.UI.screenHeight / 2f);
+
             _pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
             _currentLoadout = loadout;
 
@@ -84,100 +74,119 @@ namespace AwesomeInventory.UI
 
         #endregion Constructors
 
-        #region Properties
-        public override Vector2 InitialSize => _initialSize;
+        /// <summary>
+        /// Source categories for loadout dialog.
+        /// </summary>
+        public enum SourceSelection
+        {
+            /// <summary>
+            /// Ranged weapons.
+            /// </summary>
+            Ranged,
 
-        #endregion Properties
+            /// <summary>
+            /// Melee weapons.
+            /// </summary>
+            Melee,
+
+            /// <summary>
+            /// Apparels.
+            /// </summary>
+            Apparel,
+
+            /// <summary>
+            /// Things that are minified.
+            /// </summary>
+            Minified,
+
+            /// <summary>
+            /// Generic thing def.
+            /// </summary>
+            Generic,
+
+            /// <summary>
+            /// All things, won't include generics, can include minified/able now.
+            /// </summary>
+            All,
+        }
+
+        /// <summary>
+        /// Gets initial window size for this dialog.
+        /// </summary>
+        public override Vector2 InitialSize => _initialSize;
 
         #region Methods
 
+        /// <summary>
+        /// Draw contents in window.
+        /// </summary>
+        /// <param name="canvas"> Canvas to draw. </param>
         public override void DoWindowContents(Rect canvas)
         {
+            /*
+             * ||        Buttons          ||
+             * || Loadout Name Text Field ||    Category Button Image   ||
+             * ||     Items in Loadout    || Avaialable Items to Choose ||
+             * ||        Weight Bar       ||
+             *
+             */
+
             GUI.BeginGroup(canvas);
             Text.Font = GameFont.Small;
+            Vector2 useableSize = new Vector2(
+                canvas.width - DrawUtility.CurrentPadding * 2,
+                canvas.height - DrawUtility.CurrentPadding * 2);
 
-            // SET UP RECTS
-            // top buttons
-            Rect selectRect = new Rect(0f, 0f, canvas.width * .2f, _topAreaHeight);
-            Rect newRect = new Rect(selectRect.xMax + _margin, 0f, canvas.width * .2f, _topAreaHeight);
-            Rect copyRect = new Rect(newRect.xMax + _margin, 0f, canvas.width * .2f, _topAreaHeight);
-            Rect deleteRect = new Rect(copyRect.xMax + _margin, 0f, canvas.width * .2f, _topAreaHeight);
-
-            // main areas
-            Rect nameRect = new Rect(
-                0f,
-                _topAreaHeight + _margin * 2,
-                (canvas.width - _margin) / 2f,
-                24f);
-
-            Rect slotListRect = new Rect(
-                0f,
-                nameRect.yMax + _margin,
-                (canvas.width * 5 / 9 - _margin),
-                canvas.height - _topAreaHeight - nameRect.height - _barHeight - _margin * 5);
-
-            Rect weightBarRect = new Rect(slotListRect.xMin, slotListRect.yMax + _margin, slotListRect.width, _barHeight);
-
-            Rect sourceButtonRect = new Rect(
-                slotListRect.xMax + _margin,
-                _topAreaHeight + _margin * 2,
-                (canvas.width * 4 / 9 - _margin),
-                24f);
-
-            Rect selectionRect = new Rect(
-                slotListRect.xMax + _margin,
-                sourceButtonRect.yMax + _margin,
-                (canvas.width * 4 / 9 - _margin),
-                canvas.height - 24f - _topAreaHeight - _margin * 3);
+            // Top buttons
+            WidgetRow row = new WidgetRow(0, 0, UIDirection.RightThenDown, useableSize.y);
 
             List<AILoadout> loadouts = LoadoutManager.Loadouts;
-            // DRAW CONTENTS
-            // buttons
-            // select loadout
-            if (Widgets.ButtonText(selectRect, UIText.SelectLoadout.Translate()))
+
+            if (row.ButtonText(UIText.SelectLoadout.TranslateSimple()))
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
                 if (loadouts.Count == 0)
+                {
                     options.Add(new FloatMenuOption(UIText.NoLoadout.Translate(), null));
+                }
                 else
                 {
                     for (int j = 0; j < loadouts.Count; j++)
                     {
                         int i = j;
-                        options.Add(new FloatMenuOption(loadouts[i].label,
-                                                        delegate
-                                                        {
-                                                            _currentLoadout = loadouts[i];
-                                                            _slotScrollPosition = Vector2.zero;
-                                                            _pawn.SetLoadout(_currentLoadout);
-                                                        }));
+                        options.Add(new FloatMenuOption(
+                            loadouts[i].label,
+                            () =>
+                            {
+                                _currentLoadout = loadouts[i];
+                                _slotScrollPosition = Vector2.zero;
+                                _pawn.SetLoadout(_currentLoadout);
+                            }));
                     }
                 }
+
                 Find.WindowStack.Add(new FloatMenu(options));
             }
 
-            // create loadout
-            if (Widgets.ButtonText(newRect, UIText.NewLoadout.Translate()))
+            if (row.ButtonText(UIText.NewLoadout.TranslateSimple()))
             {
                 AILoadout loadout = new AILoadout()
                 {
-                    label = LoadoutManager.GetIncrementalLabel(_currentLoadout.label)
+                    label = LoadoutManager.GetIncrementalLabel(_currentLoadout.label),
                 };
                 LoadoutManager.AddLoadout(loadout);
                 _currentLoadout = loadout;
                 _pawn.SetLoadout(loadout);
             }
 
-            // copy loadout
-            if (_currentLoadout != null && Widgets.ButtonText(copyRect, UIText.CopyLoadout.Translate()))
+            if (row.ButtonText(UIText.CopyLoadout.TranslateSimple()))
             {
                 _currentLoadout = new AILoadout(_currentLoadout);
                 LoadoutManager.AddLoadout(_currentLoadout);
                 _pawn.SetLoadout(_currentLoadout);
             }
 
-            // delete loadout
-            if (Widgets.ButtonText(deleteRect, UIText.DeleteLoadout.Translate()))
+            if (row.ButtonText(UIText.DeleteLoadout.TranslateSimple()))
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
 
@@ -204,42 +213,46 @@ namespace AwesomeInventory.UI
                             }
                         }));
                 }
+
                 Find.WindowStack.Add(new FloatMenu(options));
             }
 
-            // draw notification if no loadout selected
-            if (_currentLoadout == null)
-            {
-                Text.Anchor = TextAnchor.MiddleCenter;
-                GUI.color = Color.grey;
-                Widgets.Label(canvas, UIText.NoLoadoutSelected.Translate());
-                GUI.color = Color.white;
-                Text.Anchor = TextAnchor.UpperLeft;
+            Rect nameFieldRect = new Rect(
+                0,
+                row.FinalY + GenUI.ListSpacing,
+                useableSize.x * _paneDivider,
+                GenUI.SmallIconSize);
 
-                // and stop further drawing
-                return;
-            }
+            Rect loadoutItemsRect = new Rect(
+                0,
+                nameFieldRect.yMax + GenUI.GapTiny,
+                useableSize.x * _paneDivider,
+                canvas.height - nameFieldRect.yMax - GenUI.GapTiny - GenUI.ListSpacing * 2 - DrawUtility.CurrentPadding);
 
-            DrawLoadoutTextField(nameRect);
+            Rect sourceButtonRect = new Rect(
+                nameFieldRect.xMax + Listing.ColumnSpacing, 
+                nameFieldRect.y,
+                useableSize.x - nameFieldRect.xMax - Listing.ColumnSpacing,
+                GenUI.SmallIconSize);
 
-            DrawCategoryIcon(sourceButtonRect);
+            Rect sourceItemsRect = new Rect(
+                sourceButtonRect.x,
+                sourceButtonRect.yMax + GenUI.GapTiny,
+                sourceButtonRect.width,
+                useableSize.y - sourceButtonRect.yMax - GenUI.GapTiny);
 
-            DrawItemsInCategory(selectionRect);
+            Rect weightBarRect = new Rect(
+                0,
+                loadoutItemsRect.yMax + GenUI.GapTiny,
+                nameFieldRect.width,
+                GenUI.SmallIconSize);
 
-            DrawItemsInLoadout(slotListRect);
+            this.DrawLoadoutNameField(nameFieldRect);
+            this.DrawItemsInLoadout(loadoutItemsRect);
+            this.DrawCategoryIcon(sourceButtonRect);
+            this.DrawItemsInSourceCategory(sourceItemsRect);
+            this.DrawWeightBar(weightBarRect);
 
-            // bars
-            if (_currentLoadout != null)
-            {
-                LoadoutUtilities.DrawBar(weightBarRect, _currentLoadout.Weight, MassUtility.Capacity(_pawn), UIText.Weight.Translate(), null);
-                // draw text overlays on bars
-                Text.Font = GameFont.Small;
-                Text.Anchor = TextAnchor.MiddleCenter;
-                Widgets.Label(weightBarRect, _currentLoadout.Weight.ToString("0.#") + "/" + MassUtility.Capacity(_pawn).ToStringMass());
-                GUI.color = Color.white;
-                Text.Anchor = TextAnchor.UpperLeft;
-            }
-            // done!
             GUI.EndGroup();
         }
 
@@ -326,7 +339,7 @@ namespace AwesomeInventory.UI
 
                 case SourceSelection.Generic:
                     _sourceType = SourceSelection.Generic;
-                    _source = _selectableItems.Where(row => row.thingDef is AIGenericDefManager).ToList();
+                    _source = _selectableItems.Where(row => row.thingDef is AIGenericDef).ToList();
                     break;
 
                 case SourceSelection.All:
@@ -365,59 +378,39 @@ namespace AwesomeInventory.UI
             }
         }
 
-        private void DrawLoadoutTextField(Rect canvas)
+        private void DrawLoadoutNameField(Rect canvas)
         {
-            _currentLoadout.label = Widgets.TextField
-                (canvas, _currentLoadout.label, _loadoutNameMaxLength, Outfit.ValidNameRegex);
+            _currentLoadout.label = Widgets.TextField(canvas, _currentLoadout.label, _loadoutNameMaxLength, Outfit.ValidNameRegex);
         }
 
-        private void DrawItem(Rect row, Thing thing, int reorderableGroup, bool drawShadow = false)
+        protected virtual void DrawItemRow(Rect row, Thing thing, int reorderableGroup, bool drawShadow = false)
         {
-            // set up rects
-            // label (fill) | gear icon | count | delete (iconSize)
+            /* label (fill) | gear icon | count | delete (iconSize) */
 
-            // Set up rects
-            Rect labelRect = new Rect(row);
-            labelRect.xMax = row.xMax - row.height - _countFieldSize.x - _iconSize - GenUI.GapSmall;
-            if (!drawShadow)
+            WidgetRow widgetRow = new WidgetRow(row.width, row.y, UIDirection.LeftThenDown, row.width);
+
+            if (widgetRow.ButtonIcon(TexResource.CloseXSmall, UIText.Delete.TranslateSimple()))
             {
-                ReorderableWidget.Reorderable(reorderableGroup, labelRect);
+                _currentLoadout.Remove(thing);
             }
 
-            Rect gearIconRect = new Rect(labelRect.xMax, row.y, row.height, row.height);
+            DrawCountField(new Rect(widgetRow.FinalX - WidgetRow.IconSize * 2 - WidgetRow.DefaultGap, widgetRow.FinalY, WidgetRow.IconSize * 2, GenUI.ListSpacing), thing);
+            widgetRow.GapButtonIcon();
+            widgetRow.GapButtonIcon();
 
-            Rect countRect = new Rect(
-                gearIconRect.xMax,
-                row.yMin + (row.height - _countFieldSize.y) / 2f,
-                _countFieldSize.x,
-                _countFieldSize.y);
-
-            Rect deleteRect = new Rect(countRect.xMax + GenUI.GapSmall, row.yMin + (row.height - _iconSize) / 2f, _iconSize, _iconSize);
-
-            // label
-            Text.Anchor = TextAnchor.MiddleLeft;
-            Text.WordWrap = false;
-            Widgets.Label(labelRect, thing.LabelCapNoCount);
-            Text.WordWrap = true;
-            Text.Anchor = TextAnchor.UpperLeft;
-
-            // gear icon
             if ((thing.def.MadeFromStuff || thing.TryGetQuality(out _))
                 && !thing.def.IsArt
-                && Widgets.ButtonImage(gearIconRect, TexResource.Gear))
+                && widgetRow.ButtonIcon(TexResource.Gear))
             {
                 Find.WindowStack.Add(new Dialog_StuffAndQuality(thing, _currentLoadout));
             }
 
-            // count
-            DrawCountField(countRect, thing);
-
-            // delete
-            if (Mouse.IsOver(deleteRect))
-                GUI.DrawTexture(row, TexUI.HighlightTex);
-            if (Widgets.ButtonImage(deleteRect, TexResource.IconClear))
+            Text.WordWrap = false;
+            Rect labelRect = widgetRow.Label(drawShadow ? thing.LabelCapNoCount.Colorize(Theme.MilkySlicky.ForeGround) : thing.LabelCapNoCount, widgetRow.FinalX);
+            Text.WordWrap = true;
+            if (!drawShadow)
             {
-                _currentLoadout.Remove(thing);
+                ReorderableWidget.Reorderable(reorderableGroup, labelRect);
             }
 
             if (!drawShadow)
@@ -432,22 +425,82 @@ namespace AwesomeInventory.UI
                 {
                     TooltipHandler.TipRegion(labelRect, string.Concat(thing.GetWeightTip(), '\n', UIText.DragToReorder.Translate()));
                 }
-                TooltipHandler.TipRegion(deleteRect, UIText.Delete.Translate());
             }
+
+            //// Set up rects
+            //Rect labelRect = new Rect(row);
+            //labelRect.xMax -= row.height + _countFieldSize.x + _iconSize + GenUI.GapSmall;
+            //if (!drawShadow)
+            //{
+            //    ReorderableWidget.Reorderable(reorderableGroup, labelRect);
+            //}
+
+            //Rect gearIconRect = new Rect(labelRect.xMax, row.y, row.height, row.height);
+
+            //Rect countRect = new Rect(
+            //    gearIconRect.xMax,
+            //    row.yMin + (row.height - _countFieldSize.y) / 2f,
+            //    _countFieldSize.x,
+            //    _countFieldSize.y);
+
+            //Rect deleteRect = new Rect(countRect.xMax + GenUI.GapSmall, row.yMin + (row.height - _iconSize) / 2f, _iconSize, _iconSize);
+
+            //// label
+            //Text.Anchor = TextAnchor.MiddleLeft;
+            //Text.WordWrap = false;
+            //Widgets.Label(labelRect, thing.LabelCapNoCount);
+            //Text.WordWrap = true;
+            //Text.Anchor = TextAnchor.UpperLeft;
+
+            //// gear icon
+            //if ((thing.def.MadeFromStuff || thing.TryGetQuality(out _))
+            //    && !thing.def.IsArt
+            //    && Widgets.ButtonImage(gearIconRect, TexResource.Gear))
+            //{
+            //    Find.WindowStack.Add(new Dialog_StuffAndQuality(thing, _currentLoadout));
+            //}
+
+            //// count
+            //DrawCountField(countRect, thing);
+
+            //// delete
+            //if (Mouse.IsOver(deleteRect))
+            //    GUI.DrawTexture(row, TexUI.HighlightTex);
+            //if (Widgets.ButtonImage(deleteRect, TexResource.IconClear))
+            //{
+            //    _currentLoadout.Remove(thing);
+            //}
+
+            //if (!drawShadow)
+            //{
+            //    // Tooltips && Highlights
+            //    Widgets.DrawHighlightIfMouseover(row);
+            //    if (Event.current.type == EventType.MouseDown)
+            //    {
+            //        TooltipHandler.ClearTooltipsFrom(labelRect);
+            //    }
+            //    else
+            //    {
+            //        TooltipHandler.TipRegion(labelRect, string.Concat(thing.GetWeightTip(), '\n', UIText.DragToReorder.Translate()));
+            //    }
+
+            //    TooltipHandler.TipRegion(deleteRect, UIText.Delete.Translate());
+            //}
         }
 
         private void DrawItemsInLoadout(Rect canvas)
         {
-            // set up content canvas
             Rect listRect = new Rect(0, 0, canvas.width - GenUI.ScrollBarWidth, _scrollViewHeight);
+
             // darken whole area
             GUI.DrawTexture(canvas, TexResource.DarkBackground);
             Widgets.BeginScrollView(canvas, ref _slotScrollPosition, listRect);
+
             // Set up reorder functionality
             int reorderableGroup = ReorderableWidget.NewGroup(
-                delegate (int from, int to)
+                (int from, int to) =>
                 {
-                    ReorderItems(from, to);
+                    this.ReorderItems(from, to);
                     DrawUtility.ResetDrag();
                 }
                 , ReorderableDirection.Vertical
@@ -456,16 +509,17 @@ namespace AwesomeInventory.UI
                 {
                     Vector2 position = DrawUtility.GetPostionForDrag(windowRect.ContractedBy(Margin), new Vector2(canvas.x, canvas.y), index, GenUI.ListSpacing);
                     Rect dragRect = new Rect(position, new Vector2(listRect.width, GenUI.ListSpacing));
-                    Find.WindowStack.ImmediateWindow(Rand.Int, dragRect, WindowLayer.Super,
+                    Find.WindowStack.ImmediateWindow(
+                        Rand.Int,
+                        dragRect,
+                        WindowLayer.Super,
                         () =>
                         {
                             GUI.DrawTexture(dragRect.AtZero(), SolidColorMaterials.NewSolidColorTexture(Theme.MilkySlicky.BackGround));
-                            GUI.color = Theme.MilkySlicky.ForeGround;
-                            DrawItem(dragRect.AtZero(), _currentLoadout.CachedList[index], 0, true);
-                            GUI.color = Color.white;
+                            this.DrawItemRow(dragRect.AtZero(), _currentLoadout.CachedList[index], 0, true);
+                            //GUI.color = Color.white;
                         }, false);
-                }
-                );
+                });
 
             float curY = 0f;
             for (int i = 0; i < _currentLoadout.CachedList.Count; i++)
@@ -478,18 +532,16 @@ namespace AwesomeInventory.UI
                 if (i % 2 == 0)
                     GUI.DrawTexture(row, TexResource.DarkBackground);
 
-                DrawItem(row, _currentLoadout.CachedList[i], reorderableGroup);
+                this.DrawItemRow(row, _currentLoadout.CachedList[i], reorderableGroup);
                 GUI.color = Color.white;
             }
 
-            if (Event.current.type == EventType.Layout)
-            {
-                _scrollViewHeight = curY + GenUI.ListSpacing;
-            }
+            _scrollViewHeight = curY + GenUI.ListSpacing;
+
             Widgets.EndScrollView();
         }
 
-        private void DrawItemsInCategory(Rect canvas)
+        private void DrawItemsInSourceCategory(Rect canvas)
         {
             GUI.DrawTexture(canvas, TexResource.DarkBackground);
 
@@ -526,6 +578,7 @@ namespace AwesomeInventory.UI
 
                 GUI.color = baseColor;
             }
+
             Widgets.EndScrollView();
         }
 
@@ -545,6 +598,23 @@ namespace AwesomeInventory.UI
                 SetSource(sourceSelected);
                 _availableScrollPosition = Vector2.zero;
             }
+        }
+
+        protected virtual void DrawWeightBar(Rect canvas)
+        {
+            float fillPercent = Mathf.Clamp01(_currentLoadout.Weight / MassUtility.Capacity(_pawn));
+            GenBar.BarWithOverlay(
+                canvas,
+                fillPercent,
+                this.IsOverEncumbered(_pawn, _currentLoadout) ? AwesomeInventoryTex.ValvetTex as Texture2D : AwesomeInventoryTex.RMPrimaryTex as Texture2D,
+                UIText.Weight.Translate(),
+                _currentLoadout.Weight.ToString("0.#") + "/" + MassUtility.Capacity(_pawn).ToStringMass(),
+                string.Empty);
+        }
+
+        protected virtual bool IsOverEncumbered(Pawn pawn, AILoadout loadout)
+        {
+            return loadout.Weight / MassUtility.Capacity(pawn) > 1f;
         }
 
         #endregion Methods

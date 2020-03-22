@@ -27,7 +27,18 @@ namespace AwesomeInventory.UI
         public static bool isDrag;
 
         /// <summary>
-        /// Draw title at "position" and return next available Y as rollingY
+        /// Gets padding between the border of window and its content.
+        /// </summary>
+        public static float CurrentPadding
+        {
+            get
+            {
+                return Text.CurFontStyle.margin.top + Text.CurFontStyle.padding.top;
+            }
+        }
+
+        /// <summary>
+        /// Draw title at "position" and return next available Y as rollingY.
         /// </summary>
         /// <param name="position"></param>
         /// <param name="title"></param>

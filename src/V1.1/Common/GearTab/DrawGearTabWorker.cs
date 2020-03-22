@@ -91,10 +91,11 @@ namespace AwesomeInventory.UI
 
         /// <inheritdoc/>
         [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Bug in style cop.")]
-        public virtual void DrawJealous(Pawn selPawn, Rect outRect, bool apparelChanged)
+        public virtual void DrawJealous(Pawn selPawn, Rect canvas, bool apparelChanged)
         {
             ValidateArg.NotNull(selPawn, nameof(selPawn));
 
+            Rect outRect = new Rect(canvas.x, canvas.y, canvas.width, canvas.height - GenUI.ListSpacing);
             Rect viewRect = outRect;
             viewRect.height = _scrollViewHeight;
             viewRect.width -= GenUI.ScrollBarWidth;
@@ -104,11 +105,10 @@ namespace AwesomeInventory.UI
             Widgets.BeginScrollView(outRect, ref _scrollPosition, viewRect);
 
             // draw all stats on the right
-            Rect statRect = outRect.RightPart(_divider);
+            Rect statRect = viewRect.RightPart(_divider);
             this.DrawStatPanel(statRect, selPawn, out float statY, apparelChanged);
 
             // Draw paper doll.
-            statY -= WidgetRow.IconSize;
             Rect pawnRect = new Rect(new Vector2(statRect.x + GenUI.GapSmall, statY), UtilityConstant.PaperDollSize);
             Utility.DrawColonist(pawnRect, selPawn);
 
@@ -165,7 +165,7 @@ namespace AwesomeInventory.UI
 
             // List order: Head:200-181, Neck:180-101, Torso:100-51, Waist:50-11, Legs:10-0
             // Check \steamapps\common\RimWorld\Mods\Core\Defs\Bodies\BodyPartGroups.xml
-            this.DrawDefaultThingIconRects(selPawn.apparel.WornApparel, outRect.LeftPart(1 - _divider), apparelChanged);
+            this.DrawDefaultThingIconRects(selPawn.apparel.WornApparel, viewRect.LeftPart(1 - _divider), apparelChanged);
             IEnumerable<Apparel> extraApparels = this.DrawApparels(selPawn, selPawn.apparel.WornApparel, _smartRectList);
 
             #endregion
@@ -264,18 +264,23 @@ namespace AwesomeInventory.UI
             _scrollViewHeight = rollingY + InspectPaneUtility.TabHeight;
 
             Widgets.EndScrollView();
+
+            this.DrawWeightBar(new Rect(outRect.x, outRect.yMax, viewRect.width, GenUI.ListSpacing), selPawn);
+
             GUI.color = Color.white;
             Text.Anchor = TextAnchor.UpperLeft;
         }
 
         /// <inheritdoc/>
-        public virtual void DrawGreedy(Pawn selPawn, Rect outRect, bool apparelChanged)
+        public virtual void DrawGreedy(Pawn selPawn, Rect canvas, bool apparelChanged)
         {
             ValidateArg.NotNull(selPawn, nameof(selPawn));
 
             // start drawing list
             Text.Font = GameFont.Small;
             GUI.color = Color.white;
+
+            Rect outRect = new Rect(canvas.x, canvas.y, canvas.width, canvas.height - GenUI.ListSpacing);
 
             Rect viewRect = outRect;
             viewRect.height = _scrollViewHeight;
@@ -287,7 +292,7 @@ namespace AwesomeInventory.UI
             WidgetRow row = new WidgetRow(viewRect.x, viewRect.y, UIDirection.RightThenDown, viewRect.width);
 
             // draw mass info and temperature
-            this.DrawMassInfoRow(row, selPawn, apparelChanged);
+            //this.DrawMassInfoRow(row, selPawn, apparelChanged);
             this.DrawComfyTemperatureRow(row, selPawn, apparelChanged);
             rollingY = row.FinalY;
 
@@ -344,8 +349,22 @@ namespace AwesomeInventory.UI
             _scrollViewHeight = rollingY + InspectPaneUtility.TabHeight;
 
             Widgets.EndScrollView();
+
+            this.DrawWeightBar(new Rect(outRect.x, outRect.yMax, viewRect.width, GenUI.ListSpacing), selPawn);
+
             GUI.color = Color.white;
             Text.Anchor = TextAnchor.UpperLeft;
+        }
+
+        protected virtual void DrawWeightBar(Rect rect, Pawn selPawn)
+        {
+            GenBar.BarWithOverlay(
+                rect,
+                MassUtility.EncumbrancePercent(selPawn),
+                MassUtility.IsOverEncumbered(selPawn) ? AwesomeInventoryTex.ValvetTex as Texture2D : AwesomeInventoryTex.RMPrimaryTex as Texture2D,
+                UIText.Weight.TranslateSimple(),
+                MassUtility.GearAndInventoryMass(selPawn).ToString("0.#") + "/" + MassUtility.Capacity(selPawn).ToStringMass(),
+                this.DrawHelper.WeightTextFor(selPawn));
         }
 
         /// <summary>
@@ -694,23 +713,33 @@ namespace AwesomeInventory.UI
             Text.Anchor = TextAnchor.MiddleLeft;
             WidgetRow row = new WidgetRow(rect.x, rect.y, UIDirection.RightThenDown, rect.width);
 
-            // Draw Mass
-            this.DrawMassInfo(pawn, row);
+            float minTemperature = this.GetTemperatureStats(pawn, StatDefOf.ComfyTemperatureMin, apparelChanged);
+            float maxTemperature = this.GetTemperatureStats(pawn, StatDefOf.ComfyTemperatureMax, apparelChanged);
+            float ambientTemperature = pawn.AmbientTemperature;
+
+            row.Icon(TexResource.ThermometerGen, UIText.CurrentTemperature.TranslateSimple());
+            row.Label(
+                ambientTemperature < minTemperature
+                ? ambientTemperature.ToStringTemperature().Colorize(ColorLibrary.SkyBlue)
+                : ambientTemperature > maxTemperature
+                ? ambientTemperature.ToStringTemperature().Colorize(ColorLibrary.Red)
+                : ambientTemperature.ToStringTemperature());
+            row.Gap(int.MaxValue);
 
             // Draw minimum comfy temperature
-            row.Icon(TexResource.MinTemperature, UIText.ComfyTemperatureRange.TranslateSimple());
-            row.Label(this.GetTemperatureStats(pawn, StatDefOf.ComfyTemperatureMin, apparelChanged).ToStringTemperature());
+            row.Icon(TexResource.ThermometerCold, UIText.ComfyTemperatureRange.TranslateSimple());
+            row.Label(minTemperature.ToStringTemperature());
             row.Gap(GenUI.Gap);
 
             // Draw maximum comfy temperature
-            row.Icon(TexResource.MaxTemperature, UIText.ComfyTemperatureRange.TranslateSimple());
-            row.Label(this.GetTemperatureStats(pawn, StatDefOf.ComfyTemperatureMax, apparelChanged).ToStringTemperature());
+            row.Icon(TexResource.ThermometerHot, UIText.ComfyTemperatureRange.TranslateSimple());
+            row.Label(maxTemperature.ToStringTemperature());
             row.Gap(int.MaxValue);
 
             // Draw armor stats
-            this.DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Blunt, TexResource.ArmorBlunt, UIText.ArmorBlunt.TranslateSimple(), apparelChanged);
-            this.DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Sharp, TexResource.ArmorSharp, UIText.ArmorSharp.TranslateSimple(), apparelChanged);
-            this.DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Heat, TexResource.ArmorHeat, UIText.ArmorHeat.TranslateSimple(), apparelChanged);
+            this.DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Blunt, TexResource.ArmorBlunt, UIText.ArmorBlunt.TranslateSimple(), apparelChanged, false);
+            this.DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Sharp, TexResource.ArmorSharp, UIText.ArmorSharp.TranslateSimple(), apparelChanged, false);
+            this.DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Heat, TexResource.ArmorHeat, UIText.ArmorHeat.TranslateSimple(), apparelChanged, true);
 
             Text.Anchor = TextAnchor.UpperLeft;
             rollingY = row.FinalY;
@@ -768,8 +797,9 @@ namespace AwesomeInventory.UI
         /// <param name="icon"> Icon for <paramref name="stat"/>. </param>
         /// <param name="altIconText"> Description for <paramref name="icon"/>. </param>
         /// <param name="apparelChanged"> Indicates whether apparels on pawn have changed. </param>
+        /// <param name="changeLine"> If true, move <paramref name="row"/> to next line. </param>
         /// <remarks> It costs 1ms to calculate one stat for a pawn with 16 apparels, therefore the cache. </remarks>
-        protected virtual void DrawArmorStats(WidgetRow row, Pawn pawn, StatDef stat, Texture2D icon, string altIconText, bool apparelChanged)
+        protected virtual void DrawArmorStats(WidgetRow row, Pawn pawn, StatDef stat, Texture2D icon, string altIconText, bool apparelChanged, bool changeLine)
         {
             ValidateArg.NotNull(row, nameof(row));
 
@@ -780,7 +810,9 @@ namespace AwesomeInventory.UI
             Rect tipRect = new Rect(iconRect) { xMax = numberRect.xMax };
 
             // Move row to next level.
-            row.Gap(int.MaxValue);
+            float length = GenUI.SmallIconSize + Text.CalcSize(tuple.Item1.ToStringPercent()).x;
+            if (changeLine || row.AvailableWidth() < length)
+                row.Gap(int.MaxValue);
 
             if (Mouse.IsOver(tipRect))
             {

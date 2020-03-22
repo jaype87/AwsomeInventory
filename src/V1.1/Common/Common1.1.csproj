@@ -186,6 +186,8 @@
     <Compile Include="UnitTest\UnitTest_Start.cs" />
     <Compile Include="UnitTest\UnitTest_Root.cs" />
     <Compile Include="UnitTest\RPGIUnitTest.cs" />
+    <Compile Include="Utilities\GenBar.cs" />
+    <Compile Include="Utilities\ReflectionUtility.cs" />
     <Compile Include="Utilities\ValidateArg.cs" />
     <Compile Include="Utilities\Utility.cs" />
     <Compile Include="Utilities\UtilityConstant.cs" />

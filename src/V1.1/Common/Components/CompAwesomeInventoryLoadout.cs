@@ -309,6 +309,7 @@ namespace AwesomeInventory.Loadout
             {
                 eqWeight = pawn.equipment.Primary.GetStatValue(StatDefOf.Mass);
             }
+
             // Calculate how many items we can fit into our inventory
             float amountByWeight = thingWeight <= 0 ? thing.stackCount : (MassUtility.FreeSpace(pawn) + eqWeight) / thingWeight;
             count = Mathf.FloorToInt(Mathf.Min(amountByWeight, thing.stackCount));

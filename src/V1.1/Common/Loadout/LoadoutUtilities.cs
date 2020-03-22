@@ -57,37 +57,6 @@ namespace AwesomeInventory.Loadout
 
         #region Methods
 
-        public static void DrawBar(Rect canvas, float current, float capacity, string label = "", string tooltip = "")
-        {
-            // rects
-            Rect labelRect = new Rect(canvas);
-            Rect barRect = new Rect(canvas);
-            if (!label.NullOrEmpty())
-                barRect.xMin += LabelSize;
-            labelRect.width = LabelSize;
-
-            // label
-            if (!label.NullOrEmpty())
-                Widgets.Label(labelRect, label);
-
-            // bar
-            bool overburdened = current > capacity;
-            float fillPercentage = overburdened ? 1f : (float.IsNaN(current / capacity) ? 1f : current / capacity);
-            if (overburdened)
-            {
-                Widgets.FillableBar(barRect, fillPercentage, OverburdenedTex);
-                DrawBarThreshold(barRect, capacity / current, 1f);
-            }
-            else
-            {
-                Widgets.FillableBar(barRect, fillPercentage, AwesomeInventoryTex.RoyalBlueTex as Texture2D);
-            }
-
-            // tooltip
-            if (!tooltip.NullOrEmpty())
-                TooltipHandler.TipRegion(canvas, tooltip);
-        }
-
         public static void DrawBarThreshold(Rect barRect, float pct, float curLevel = 1f)
         {
             float thresholdBarWidth = (float)((barRect.width <= 60f) ? 1 : 2);
@@ -133,15 +102,14 @@ namespace AwesomeInventory.Loadout
         public static string GetWeightTip(this ThingDef def, int count = 1)
         {
             return
-                "Corgi_Weight".Translate() + ": " + StatDefOf.Mass.ValueToString(def.GetStatValueAbstract(StatDefOf.Mass) * count, StatDefOf.Mass.toStringNumberSense);
+                UIText.Weight.Translate() + ": " + StatDefOf.Mass.ValueToString(def.GetStatValueAbstract(StatDefOf.Mass) * count, StatDefOf.Mass.toStringNumberSense);
         }
 
         public static string GetWeightTip(this Thing thing)
         {
             if (thing == null) throw new ArgumentNullException(nameof(thing));
             return
-                //"Corgi_Weight".Translate() + ": " + StatDefOf.Mass.ValueToString(thing.GetStatValue(StatDefOf.Mass) * thing.stackCount, StatDefOf.Mass.toStringNumberSense);
-                "Corgi_Weight".Translate() + ": " + (thing.GetStatValue(StatDefOf.Mass) * thing.stackCount).ToStringMass();
+                UIText.Weight.Translate() + ": " + (thing.GetStatValue(StatDefOf.Mass) * thing.stackCount).ToStringMass();
         }
 
         /// <summary>

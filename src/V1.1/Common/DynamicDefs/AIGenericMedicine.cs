@@ -24,8 +24,8 @@ namespace AwesomeInventory.Loadout
         private AIGenericMedicine()
             : base(
                   DefNames.AIGenericMedicine,
-                  Descriptions.AIGenericMedicine,
-                  Labels.AIGenericMedicine,
+                  Descriptions.AIGenericMedicine.TranslateSimple(),
+                  Labels.AIGenericMedicine.TranslateSimple(),
                   typeof(Medicine),
                   ThingRequestGroup.Medicine,
                   null)

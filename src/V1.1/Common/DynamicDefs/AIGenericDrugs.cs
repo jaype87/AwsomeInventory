@@ -25,8 +25,8 @@ namespace AwesomeInventory.Loadout
         private AIGenericDrugs()
             : base(
                   DefNames.AIGenericDrugs,
-                  Descriptions.AIGenericDrugs,
-                  Labels.AIGenericDrugs,
+                  Descriptions.AIGenericDrugs.TranslateSimple(),
+                  Labels.AIGenericDrugs.TranslateSimple(),
                   typeof(ThingWithComps),
                   ThingRequestGroup.Drug,
                   null)
