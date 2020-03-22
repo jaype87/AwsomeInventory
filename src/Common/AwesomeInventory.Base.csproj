@@ -89,9 +89,10 @@
     <Error Condition="!Exists('..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>call $(SolutionDir)SolutionItems\Deploy.bat $(ProjectDir) $(OutDir)
-xcopy /d /y $(SolutionDir)src\LoadFolders.xml $(OutDir)..\..\.
-xcopy /i /e /d /y $(SolutionDir)src\About $(OutDir)..\..\About
-xcopy /i /d /y $(SolutionDir)packages\Lib.Harmony.2.0.0.8\lib\net472\* $(OutDir)..\..\Common\Assemblies</PostBuildEvent>
+    <PostBuildEvent>
+      call "$(SolutionDir)SolutionItems\Deploy.bat" "$(ProjectDir)" "$(OutDir)"
+      xcopy /d /y " $(SolutionDir)src\LoadFolders.xml" "$(OutDir)..\..\."
+      xcopy /i /e /d /y "$(SolutionDir)src\About" "$(OutDir)..\..\About"
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
