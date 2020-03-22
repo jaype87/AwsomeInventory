@@ -40,19 +40,18 @@ namespace AwesomeInventory.UI
 
         private void ToggleTab()
         {
-            Type inspectTabType = _tabType;
-            MainTabWindow_Inspect mainTabWindow_Inspect = (MainTabWindow_Inspect)MainButtonDefOf.Inspect.TabWindow;
+            MainTabWindow_Inspect mainTabWindow_Inspect = (MainTabWindow_Inspect)Find.MainTabsRoot.OpenTab.TabWindow;
 
-            if (inspectTabType == mainTabWindow_Inspect.OpenTabType)
+            if (_tabType == mainTabWindow_Inspect.OpenTabType)
             {
                 mainTabWindow_Inspect.OpenTabType = null;
                 SoundDefOf.TabClose.PlayOneShotOnCamera();
             }
             else
             {
-                InspectTabBase inspectTabBase = mainTabWindow_Inspect.CurTabs.Where((InspectTabBase t) => inspectTabType.IsAssignableFrom(t.GetType())).FirstOrDefault();
+                InspectTabBase inspectTabBase = mainTabWindow_Inspect.CurTabs.Where((InspectTabBase t) => _tabType.IsAssignableFrom(t.GetType())).FirstOrDefault();
                 inspectTabBase.OnOpen();
-                mainTabWindow_Inspect.OpenTabType = inspectTabType;
+                mainTabWindow_Inspect.OpenTabType = _tabType;
                 SoundDefOf.TabOpen.PlayOneShotOnCamera();
             }
         }

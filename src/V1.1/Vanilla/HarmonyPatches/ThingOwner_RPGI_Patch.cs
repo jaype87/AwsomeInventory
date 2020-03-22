@@ -14,7 +14,7 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace AwesomeInventory.Common.HarmonyPatches
+namespace AwesomeInventory.HarmonyPatches
 {
     [StaticConstructorOnStartup]
     public class ThingOwner_RPGI_Patch

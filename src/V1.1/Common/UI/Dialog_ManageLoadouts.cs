@@ -240,7 +240,7 @@ namespace AwesomeInventory.UI
                 0,
                 nameFieldRect.yMax + GenUI.GapTiny,
                 useableSize.x * _paneDivider,
-                canvas.height - nameFieldRect.yMax - GenUI.GapTiny - GenUI.ListSpacing * 2 - DrawUtility.CurrentPadding);
+                useableSize.y - nameFieldRect.yMax - GenUI.ListSpacing);
 
             Rect sourceButtonRect = new Rect(
                 nameFieldRect.xMax + Listing.ColumnSpacing, 
@@ -252,19 +252,21 @@ namespace AwesomeInventory.UI
                 sourceButtonRect.x,
                 sourceButtonRect.yMax + GenUI.GapTiny,
                 sourceButtonRect.width,
-                useableSize.y - sourceButtonRect.yMax - GenUI.GapTiny);
+                useableSize.y - sourceButtonRect.yMax);
 
             Rect weightBarRect = new Rect(
                 0,
-                loadoutItemsRect.yMax + GenUI.GapTiny,
+                canvas.yMax - DrawUtility.CurrentPadding - GenUI.SmallIconSize,
                 nameFieldRect.width,
                 GenUI.SmallIconSize);
 
             this.DrawLoadoutNameField(nameFieldRect);
             this.DrawItemsInLoadout(loadoutItemsRect);
+            GUI.DrawTexture(new Rect(loadoutItemsRect.x, loadoutItemsRect.yMax, loadoutItemsRect.width, 1f), BaseContent.GreyTex);
+            this.DrawWeightBar(weightBarRect);
+
             this.DrawCategoryIcon(sourceButtonRect);
             this.DrawItemsInSourceCategory(sourceItemsRect);
-            this.DrawWeightBar(weightBarRect);
 
             GUI.EndGroup();
         }
@@ -398,6 +400,9 @@ namespace AwesomeInventory.UI
 
         protected virtual void DrawItemRow(Rect row, Thing thing, int reorderableGroup, bool drawShadow = false)
         {
+            ValidateArg.NotNull(row, nameof(row));
+            ValidateArg.NotNull(thing, nameof(thing));
+
             /* label (fill) | gear icon | count | delete (iconSize) */
 
             WidgetRow widgetRow = new WidgetRow(row.width, row.y, UIDirection.LeftThenDown, row.width);
@@ -443,66 +448,6 @@ namespace AwesomeInventory.UI
                     TooltipHandler.TipRegion(labelRect, string.Concat(thing.GetWeightTip(), '\n', UIText.DragToReorder.Translate()));
                 }
             }
-
-            //// Set up rects
-            //Rect labelRect = new Rect(row);
-            //labelRect.xMax -= row.height + _countFieldSize.x + _iconSize + GenUI.GapSmall;
-            //if (!drawShadow)
-            //{
-            //    ReorderableWidget.Reorderable(reorderableGroup, labelRect);
-            //}
-
-            //Rect gearIconRect = new Rect(labelRect.xMax, row.y, row.height, row.height);
-
-            //Rect countRect = new Rect(
-            //    gearIconRect.xMax,
-            //    row.yMin + (row.height - _countFieldSize.y) / 2f,
-            //    _countFieldSize.x,
-            //    _countFieldSize.y);
-
-            //Rect deleteRect = new Rect(countRect.xMax + GenUI.GapSmall, row.yMin + (row.height - _iconSize) / 2f, _iconSize, _iconSize);
-
-            //// label
-            //Text.Anchor = TextAnchor.MiddleLeft;
-            //Text.WordWrap = false;
-            //Widgets.Label(labelRect, thing.LabelCapNoCount);
-            //Text.WordWrap = true;
-            //Text.Anchor = TextAnchor.UpperLeft;
-
-            //// gear icon
-            //if ((thing.def.MadeFromStuff || thing.TryGetQuality(out _))
-            //    && !thing.def.IsArt
-            //    && Widgets.ButtonImage(gearIconRect, TexResource.Gear))
-            //{
-            //    Find.WindowStack.Add(new Dialog_StuffAndQuality(thing, _currentLoadout));
-            //}
-
-            //// count
-            //DrawCountField(countRect, thing);
-
-            //// delete
-            //if (Mouse.IsOver(deleteRect))
-            //    GUI.DrawTexture(row, TexUI.HighlightTex);
-            //if (Widgets.ButtonImage(deleteRect, TexResource.IconClear))
-            //{
-            //    _currentLoadout.Remove(thing);
-            //}
-
-            //if (!drawShadow)
-            //{
-            //    // Tooltips && Highlights
-            //    Widgets.DrawHighlightIfMouseover(row);
-            //    if (Event.current.type == EventType.MouseDown)
-            //    {
-            //        TooltipHandler.ClearTooltipsFrom(labelRect);
-            //    }
-            //    else
-            //    {
-            //        TooltipHandler.TipRegion(labelRect, string.Concat(thing.GetWeightTip(), '\n', UIText.DragToReorder.Translate()));
-            //    }
-
-            //    TooltipHandler.TipRegion(deleteRect, UIText.Delete.Translate());
-            //}
         }
 
         private void DrawItemsInLoadout(Rect canvas)
@@ -534,7 +479,6 @@ namespace AwesomeInventory.UI
                         {
                             GUI.DrawTexture(dragRect.AtZero(), SolidColorMaterials.NewSolidColorTexture(Theme.MilkySlicky.BackGround));
                             this.DrawItemRow(dragRect.AtZero(), _currentLoadout.CachedList[index], 0, true);
-                            //GUI.color = Color.white;
                         }, false);
                 });
 
@@ -584,8 +528,8 @@ namespace AwesomeInventory.UI
                     GUI.DrawTexture(row, TexResource.DarkBackground);
 
                 int j = i;
-                DrawUtility.DrawLineButton
-                    (labelRect
+                DrawUtility.DrawLineButton(
+                    labelRect
                     , _source[j].thingDef.LabelCap
                     , _source[j].thingDef
                     , (target) =>

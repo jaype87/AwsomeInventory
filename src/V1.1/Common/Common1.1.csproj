@@ -77,7 +77,7 @@
     <Compile Include="Jobs\JobDriver_AwesomeInventory_Undress.cs" />
     <Compile Include="Jobs\JobDriver_AwesomeInventory_Unload.cs" />
     <Compile Include="Services\Logger.cs" />
-    <Compile Include="Services\RegisterServices.cs" />
+    <Compile Include="Services\ServiceRegistration.cs" />
     <Compile Include="UI\Dialog_Mod.cs" />
     <Compile Include="ModSettings\AwesomeInventorySetting.cs" />
     <Compile Include="Components\CompAwesomeInventoryLoadout.cs" />
@@ -97,7 +97,7 @@
     <Compile Include="Gizmos\ToggleGearTab.cs" />
     <Compile Include="HarmonyPatches\OutfitDatabase_TryDelete.cs" />
     <Compile Include="DefOfs\AwesomeInventory_JobDefOf.cs" />
-    <Compile Include="HarmonyPatches\Pawn_GetGizmos_RPGI_Patch.cs" />
+    <Compile Include="HarmonyPatches\Pawn_GetGizmos_AwesomeInventory_Patch.cs" />
     <Compile Include="HarmonyPatches\Pawn_OutfitTracker_CurrentOutfit.cs" />
     <Compile Include="HarmonyPatches\Thing_RPGI_Patch.cs" />
     <Compile Include="Interfaces\IDrawGearTab.cs" />
@@ -287,7 +287,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>call "$(SolutionDir)SolutionItems\Deploy.bat" "$(ProjectDir)" "$(OutDir)"</PostBuildEvent>
+    <PostBuildEvent>call $(SolutionDir)SolutionItems\Deploy.bat $(ProjectDir) $(OutDir)</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

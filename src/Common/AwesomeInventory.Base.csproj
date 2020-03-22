@@ -90,9 +90,9 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>
-      call "$(SolutionDir)SolutionItems\Deploy.bat" "$(ProjectDir)" "$(OutDir)"
-      xcopy /d /y " $(SolutionDir)src\LoadFolders.xml" "$(OutDir)..\..\."
+call "$(SolutionDir)SolutionItems\Deploy.bat" "$(ProjectDir)" "$(OutDir)"
+      xcopy /y "$(SolutionDir)src\LoadFolders.xml" "$(OutDir)..\..\."
       xcopy /i /e /d /y "$(SolutionDir)src\About" "$(OutDir)..\..\About"
-    </PostBuildEvent>
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

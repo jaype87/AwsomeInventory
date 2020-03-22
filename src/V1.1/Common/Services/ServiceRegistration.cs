@@ -1,4 +1,4 @@
-﻿// <copyright file="RegisterServices.cs" company="Zizhen Li">
+﻿// <copyright file="ServiceRegistration.cs" company="Zizhen Li">
 // Copyright (c) 2019 - 2020 Zizhen Li. All rights reserved.
 // Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -17,24 +17,38 @@ namespace AwesomeInventory
     /// Register services provided either by the vanilla or the CE assembly.
     /// It provides a template of services for vanilla and CE implementation.
     /// </summary>
-    public static class RegisterServices
+    public abstract class ServiceRegistration
     {
         /// <summary>
-        /// Register IInventoryHelper.
+        /// Register <see cref="IInventoryHelper"/>.
         /// </summary>
         /// <param name="inventoryHelper"> Instance of <paramref name="inventoryHelper"/> to register. </param>
-        public static void RegisterIInventoryHelper(IInventoryHelper inventoryHelper)
+        protected static void RegisterIInventoryHelper(IInventoryHelper inventoryHelper)
         {
             AwesomeInventoryServiceProvider.AddService(typeof(IInventoryHelper), inventoryHelper);
         }
 
         /// <summary>
-        /// Register IDrawHelper.
+        /// Register <see cref="IDrawHelper"/>.
         /// </summary>
         /// <param name="drawHelper"> Instance of <paramref name="drawHelper"/> to register. </param>
-        public static void RegisterIDrawHelper(IDrawHelper drawHelper)
+        protected static void RegisterIDrawHelper(IDrawHelper drawHelper)
         {
             AwesomeInventoryServiceProvider.AddService(typeof(IDrawHelper), drawHelper);
         }
+
+        /// <summary>
+        /// Register <see cref="AwesomeInventoryTabBase"/>.
+        /// </summary>
+        /// <param name="awesomeInventoryTabBase"> Implementation of <paramref name="awesomeInventoryTabBase"/>. </param>
+        protected static void RegisterAwesomeInventoryTabBase(AwesomeInventoryTabBase awesomeInventoryTabBase)
+        {
+            AwesomeInventoryServiceProvider.AddService(typeof(AwesomeInventoryTabBase), awesomeInventoryTabBase);
+        }
+
+        /// <summary>
+        /// Register all services needed for Awesome Inventory.
+        /// </summary>
+        protected abstract void RegisterAllServies();
     }
 }

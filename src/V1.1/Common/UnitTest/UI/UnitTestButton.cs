@@ -33,14 +33,20 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             if (Prefs.DevMode)
             {
                 Vector2 vector = new Vector2((float)UI.screenWidth * 0.5f - WidgetRow.IconSize, 3f);
-                Find.WindowStack.ImmediateWindow(typeof(UnitTestButton).GetHashCode(), new Rect(vector.x, vector.y, WidgetRow.IconSize, WidgetRow.IconSize).Rounded(), WindowLayer.GameUI, delegate
-                {
-                    WidgetRow row = new WidgetRow(WidgetRow.IconSize, 0, UIDirection.LeftThenDown);
-                    if (row.ButtonIcon(UnitTextIcon, "Restart Rimworld"))
+                Find.WindowStack.ImmediateWindow(
+                    typeof(UnitTestButton).GetHashCode(),
+                    new Rect(vector.x, vector.y, WidgetRow.IconSize, WidgetRow.IconSize).Rounded(),
+                    WindowLayer.GameUI,
+                    () =>
                     {
-                        GenCommandLine.Restart();
-                    }
-                }, doBackground: false, absorbInputAroundWindow: false, 0f);
+                        WidgetRow row = new WidgetRow(WidgetRow.IconSize, 0, UIDirection.LeftThenDown);
+                        if (row.ButtonIcon(UnitTextIcon, "Restart Rimworld"))
+                        {
+                            GenCommandLine.Restart();
+                        }
+                    },
+                    doBackground: false,
+                    absorbInputAroundWindow: false, 0f);
             }
         }
     }

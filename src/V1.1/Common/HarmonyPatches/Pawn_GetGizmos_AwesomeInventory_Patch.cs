@@ -1,4 +1,4 @@
-﻿// <copyright file="Pawn_GetGizmos_RPGI_Patch.cs" company="Zizhen Li">
+﻿// <copyright file="Pawn_GetGizmos_AwesomeInventory_Patch.cs" company="Zizhen Li">
 // Copyright (c) 2019 - 2020 Zizhen Li. All rights reserved.
 // Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -16,12 +16,12 @@ namespace AwesomeInventory.HarmonyPatches
     /// Patch into pawn's gizmos, so to provide a Gear gizmo to open gear tab.
     /// </summary>
     [StaticConstructorOnStartup]
-    public static class Pawn_GetGizmos_RPGI_Patch
+    public static class Pawn_GetGizmos_AwesomeInventory_Patch
     {
-        static Pawn_GetGizmos_RPGI_Patch()
+        static Pawn_GetGizmos_AwesomeInventory_Patch()
         {
             MethodInfo original = AccessTools.Method(typeof(Pawn), "GetGizmos");
-            MethodInfo postfix = AccessTools.Method(typeof(Pawn_GetGizmos_RPGI_Patch), "Postfix");
+            MethodInfo postfix = AccessTools.Method(typeof(Pawn_GetGizmos_AwesomeInventory_Patch), "Postfix");
             Utility.Harmony.Patch(original, null, new HarmonyMethod(postfix));
         }
 
@@ -36,13 +36,19 @@ namespace AwesomeInventory.HarmonyPatches
             if (gizmos == null)
                 gizmos = new List<Gizmo>();
 
-            ToggleGearTab toggleGearTab = new ToggleGearTab(typeof(AwesomeInventoryTabBase));
             foreach (Gizmo gizmo in gizmos)
             {
                 yield return gizmo;
             }
 
-            yield return toggleGearTab;
+            if (Find.Selector.SingleSelectedThing is Pawn pawn && pawn.IsColonist)
+            {
+                if (AwesomeInventoryServiceProvider.TryGetImplementation<AwesomeInventoryTabBase>(out AwesomeInventoryTabBase tab))
+                {
+                    ToggleGearTab toggleGearTab = new ToggleGearTab(tab.GetType());
+                    yield return toggleGearTab;
+                }
+            }
         }
     }
 }
