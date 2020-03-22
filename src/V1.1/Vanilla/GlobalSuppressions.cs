@@ -1,7 +1,7 @@
-﻿// This file is used by Code Analysis to maintain SuppressMessage
-// attributes that are applied to this project.
-// Project-level suppressions either have no target or are given
-// a specific target and scoped to a namespace, type, member, etc.
+﻿// <copyright file="GlobalSuppressions.cs" company="Zizhen Li">
+// Copyright (c) 2019 - 2020 Zizhen Li. All rights reserved.
+// Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
+// </copyright>
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "<Pending>", Scope = "member", Target = "~M:RPG_Inventory_Remake_Common.OutfitDatabase_TryDelete.Postfix(RimWorld.Outfit,Verse.AcceptanceReport)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "<Pending>", Scope = "type", Target = "~T:RPG_Inventory_Remake_Common.OutfitDatabase_TryDelete")]

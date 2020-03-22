@@ -1,6 +1,6 @@
 ﻿// <copyright file="Dialog_ManageLoadouts.cs" company="Zizhen Li">
-// Copyright (c) Zizhen Li. All rights reserved.
-// Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
+// Copyright (c) 2019 - 2020 Zizhen Li. All rights reserved.
+// Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
 using System;
@@ -406,7 +406,11 @@ namespace AwesomeInventory.UI
             }
 
             Text.WordWrap = false;
-            Rect labelRect = widgetRow.Label(drawShadow ? thing.LabelCapNoCount.Colorize(Theme.MilkySlicky.ForeGround) : thing.LabelCapNoCount, widgetRow.FinalX);
+            Rect labelRect = widgetRow.Label(
+                drawShadow
+                ? thing.LabelCapNoCount.Colorize(Theme.MilkySlicky.ForeGround)
+                : thing.LabelCapNoCount.ColorizeByQuality(thing), widgetRow.FinalX);
+
             Text.WordWrap = true;
             if (!drawShadow)
             {
