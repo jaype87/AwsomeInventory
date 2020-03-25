@@ -64,138 +64,21 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityTest|AnyCPU'">
-    <OutputPath>bin\UnityTest\</OutputPath>
+    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.1\Vanilla\Assemblies\</OutputPath>
     <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Common\Gizmos\ToggleGearTab.cs">
-      <Link>Gizmos\ToggleGearTab.cs</Link>
-    </Compile>
     <Compile Include="..\Common\HarmonyPatches\OutfitDatabase_TryDelete.cs">
       <Link>HarmonyPatches\OutfitDatabase_TryDelete.cs</Link>
     </Compile>
     <Compile Include="..\Common\HarmonyPatches\Thing_RPGI_Patch.cs">
       <Link>HarmonyPatches\Thing_RPGI_Patch.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Resources\ErrorMessage.Designer.cs">
-      <Link>Resources\ErrorMessage.Designer.cs</Link>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ErrorMessage.resx</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Resources\RPGIIcons.Designer.cs">
-      <Link>Resources\RPGIIcons.Designer.cs</Link>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RPGIIcons.resx</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\Resources\StringConstant.Designer.cs">
-      <Link>Resources\StringConstant.Designer.cs</Link>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>StringConstant.resx</DependentUpon>
-    </Compile>
-    <Compile Include="..\Common\UI\Dialog_InstantMessage.cs">
-      <Link>UI\Dialog_InstantMessage.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UI\Theme.cs">
-      <Link>UI\Theme.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UI\WindowOnMouseDrag.cs">
-      <Link>UI\WindowOnMouseDrag.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\IntegrationTestHandler.cs">
-      <Link>UnitTest\IntegrationTestHandler.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\compRPGILoadout\TestcompRPGILoadout.cs">
-      <Link>UnitTest\Loadout\compRPGILoadout\TestcompRPGILoadout.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\AssignLoadoutToNull.cs">
-      <Link>UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\AssignLoadoutToNull.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\DifferentInStackCount.cs">
-      <Link>UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\DifferentInStackCount.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\NewLoadoutHasOneLessThing.cs">
-      <Link>UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\NewLoadoutHasOneLessThing.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\NewLoadoutHasOneMoreThing.cs">
-      <Link>UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\NewLoadoutHasOneMoreThing.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\Test_UpdateForNewLoadout.cs">
-      <Link>UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\Test_UpdateForNewLoadout.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\UpdateLoadoutWithInventory.cs">
-      <Link>UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\UpdateLoadoutWithInventory.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\AddItem\AddMergeableItemTwice.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\AddItem\AddMergeableItemTwice.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\AddItem\AddOneItem.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\AddItem\AddOneItem.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\AddItem\AddTwoThingsDifferentInQuality.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\AddItem\AddTwoThingsDifferentInQuality.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\AddItem\AddTwoThingsDifferentInStuff.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\AddItem\AddTwoThingsDifferentInStuff.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\AddItem\AddUnmergeableItemTwice.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\AddItem\AddUnmergeableItemTwice.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\AddItem\Test_AddItem.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\AddItem\Test_AddItem.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveAll.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveAll.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveAllButOne.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveAllButOne.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveOneItem.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveOneItem.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveSameItemTwice.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\RemoveItem\RemoveSameItemTwice.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\RemoveItem\Test_RemoveItem.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\RemoveItem\Test_RemoveItem.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\TestRPGILoadout.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\TestRPGILoadout.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\UpdateItem\Test_UpdateItem.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\UpdateItem\Test_UpdateItem.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateHitPoint.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateHitPoint.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateQualityAndMerged.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateQualityAndMerged.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateQualityNoMerge.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateQualityNoMerge.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateStuffAndMerge.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateStuffAndMerge.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateStuffNoMerge.cs">
-      <Link>UnitTest\Loadout\RPGILoadout\UpdateItem\UpdateStuffNoMerge.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\RPGIIntegrationTest.cs">
-      <Link>UnitTest\RPGIIntegrationTest.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\RPGIUnitTest.cs">
-      <Link>UnitTest\RPGIUnitTest.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\UnitTest_Root.cs">
-      <Link>UnitTest\UnitTest_Root.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\UnitTest\UnitTest_Start.cs">
-      <Link>UnitTest\UnitTest_Start.cs</Link>
     </Compile>
     <Compile Include="Components\GameComponent_AwesomeInventory_Entry.cs" />
     <Compile Include="GearTab\AwesomeInventoryTab.cs" />
@@ -219,14 +102,6 @@
     <Compile Include="HarmonyPatches\Pawn_CarryTracker_CarriedThing_RPGI_Patch.cs" />
     <Compile Include="Loadout\MassBulkUtility.cs" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\..\..\Common\Patches\RPG_Inventory.xml">
-      <Link>Patches\RPG_Inventory.xml</Link>
-    </Content>
-    <Content Include="..\..\..\Languages\English\Keyed\Sandy_Detailed_RPG_Gear.xml">
-      <Link>Languages\Sandy_Detailed_RPG_Gear.xml</Link>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
@@ -274,29 +149,13 @@
     <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Gizmos\" />
     <Folder Include="Interface\" />
-    <Folder Include="UnitTest\Resources\" />
+    <Folder Include="Languages\" />
+    <Folder Include="Patches\" />
+    <Folder Include="Resources\" />
+    <Folder Include="UI\" />
     <Folder Include="Utilities\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\Common\Resources\ErrorMessage.resx">
-      <Link>Resources\ErrorMessage.resx</Link>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ErrorMessage.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>RPGIResource</CustomToolNamespace>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\Common\Resources\RPGIIcons.resx">
-      <Link>Resources\RPGIIcons.resx</Link>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>RPGIIcons.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>RPGIResource</CustomToolNamespace>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\Common\Resources\StringConstant.resx">
-      <Link>Resources\StringConstant.resx</Link>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>StringConstant.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>RPGIResource</CustomToolNamespace>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\AwesomeInventory.Base.csproj">

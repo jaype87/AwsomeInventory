@@ -59,8 +59,11 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityTest|AnyCPU'">
-    <OutputPath>bin\UnityTest\</OutputPath>
+    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.1\Common\Assemblies\</OutputPath>
     <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>TRACE;DEBUG;UnitTest</DefineConstants>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
@@ -69,6 +72,7 @@
     <Compile Include="GearTab\IconRect.cs" />
     <Compile Include="GearTab\SmartRectList.cs" />
     <Compile Include="HarmonyPatches\AddHumanlikeOrders_RPGI_Patch.cs" />
+    <Compile Include="HarmonyPatches\Outfit_ExposeData.cs" />
     <Compile Include="HarmonyPatches\Pawn_ApparelTracker_ApparelChanged_Patch.cs" />
     <Compile Include="Helpers\IDrawHelper.cs" />
     <Compile Include="Interfaces\IInventoryHelper.cs" />
@@ -76,6 +80,11 @@
     <Compile Include="Jobs\JobDriver_AwesomeInventory_Dress.cs" />
     <Compile Include="Jobs\JobDriver_AwesomeInventory_Undress.cs" />
     <Compile Include="Jobs\JobDriver_AwesomeInventory_Unload.cs" />
+    <Compile Include="Loadout\AwesomeInventoryLoadout.cs" />
+    <Compile Include="Loadout\AwesomeInventoryLoadoutTracker.cs" />
+    <Compile Include="Loadout\GenericThingSelector.cs" />
+    <Compile Include="Loadout\SingleThingSelector.cs" />
+    <Compile Include="Loadout\ThingSelector.cs" />
     <Compile Include="Services\Logger.cs" />
     <Compile Include="Services\ServiceRegistration.cs" />
     <Compile Include="UI\Dialog_Mod.cs" />

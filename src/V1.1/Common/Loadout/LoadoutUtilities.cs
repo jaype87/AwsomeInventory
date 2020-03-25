@@ -17,7 +17,7 @@ using Verse;
 namespace AwesomeInventory.Loadout
 {
     [StaticConstructorOnStartup]
-    public static class LoadoutUtilities
+    public static class LoadoutUtility
     {
         #region Fields
 
@@ -125,78 +125,86 @@ namespace AwesomeInventory.Loadout
                 {
                     return;
                 }
+
                 comp.UpdateForNewLoadout(loadout);
                 if (loadout == pawn.outfits.CurrentOutfit)
                 {
                     return;
                 }
+
                 pawn.outfits.CurrentOutfit = loadout;
             }
         }
 
         public static string GetDefaultLoadoutName(this Pawn pawn)
         {
-            if (pawn == null)
-            {
-                throw new ArgumentNullException(nameof(pawn));
-            }
+            ValidateArg.NotNull(pawn, nameof(pawn));
+
             return string.Concat(pawn.Name.ToStringFull, " ", "Corgi_DefaultLoadoutName".Translate());
         }
 
-        public static Thing MakeThingSimple(ThingStuffPairWithQuality pair)
+        public static Thing MakeThing(ThingStuffPairWithQuality pair)
         {
             if (pair.thing.MadeFromStuff && pair.stuff == null)
             {
                 pair.stuff = RPGI_StuffDefOf.RPGIGenericResource;
             }
+
             Thing thing = pair.MakeThing();
             if (thing.def.useHitPoints)
             {
                 thing.HitPoints = thing.MaxHitPoints;
             }
+
             return thing;
         }
 
         /// <summary>
-        /// Copy def, stuff, quality and stackCount
+        /// Creata a carbon copy of <paramref name="thing"/> except <see cref="Thing.stackCount"/>.
         /// </summary>
-        /// <param name="thing"></param>
-        /// <returns></returns>
-        public static Thing DeepCopySimple(this Thing thing, bool withID = true)
+        /// <param name="thing"> Thing to copy. </param>
+        /// <param name="withID"> If true, assign ID to the newly created thing. </param>
+        /// <returns> A copy of <paramref name="thing"/>. </returns>
+        public static Thing DeepCopy(this Thing thing, bool withID = true)
         {
             if (thing == null)
             {
                 throw new ArgumentNullException(nameof(thing));
             }
+
             Thing copy;
             if (withID)
             {
-                copy = MakeThingSimple(thing.MakeThingStuffPairWithQuality());
+                copy = MakeThing(thing.MakeThingStuffPairWithQuality());
             }
             else
             {
                 copy = MakeThingWithoutID(thing.MakeThingStuffPairWithQuality());
             }
+
             copy.stackCount = thing.stackCount;
             return copy;
         }
 
-        private static Thing MakeThingWithoutID(this ThingStuffPairWithQuality pair)
+        public static Thing MakeThingWithoutID(this ThingStuffPairWithQuality pair)
         {
             if (pair.thing.MadeFromStuff && pair.stuff == null)
             {
                 pair.stuff = RPGI_StuffDefOf.RPGIGenericResource;
             }
+
             if (pair.stuff != null && !pair.stuff.IsStuff)
             {
                 Log.Error("MakeThing error: Tried to make " + pair.thing + " from " + pair.stuff + " which is not a stuff. Assigning default.");
                 pair.stuff = GenStuff.DefaultStuffFor(pair.thing);
             }
+
             if (!pair.thing.MadeFromStuff && pair.stuff != null)
             {
                 Log.Error("MakeThing error: " + pair.thing + " is not madeFromStuff but stuff=" + pair.stuff + ". Setting to null.");
                 pair.stuff = null;
             }
+
             Thing thing = (Thing)Activator.CreateInstance(pair.thing.thingClass);
             thing.def = pair.thing;
             thing.SetStuffDirect(pair.stuff);
@@ -204,6 +212,7 @@ namespace AwesomeInventory.Loadout
             {
                 thing.HitPoints = thing.MaxHitPoints;
             }
+
             thing.TryGetComp<CompQuality>()?.SetQuality(pair.Quality, ArtGenerationContext.Outsider);
             return thing;
         }

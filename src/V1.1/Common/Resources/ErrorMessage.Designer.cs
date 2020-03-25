@@ -106,11 +106,11 @@ namespace AwesomeInventory.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Margin is not match in compRPGILoadout.
+        ///   Looks up a localized string similar to Margin is not match in CompAwesomeInventoryLoadout.
         /// </summary>
-        public static string MarginNotMatchIncompRPGILoadout {
+        public static string MarginNotMatchInCompAwesomeInventoryLoadout {
             get {
-                return ResourceManager.GetString("MarginNotMatchIncompRPGILoadout", resourceCulture);
+                return ResourceManager.GetString("MarginNotMatchInCompAwesomeInventoryLoadout", resourceCulture);
             }
         }
         

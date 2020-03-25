@@ -132,8 +132,8 @@
   <data name="InvTrackerAndLoadoutOutOfSync" xml:space="preserve">
     <value>Inventory tracker and Loadout is out of sync</value>
   </data>
-  <data name="MarginNotMatchIncompRPGILoadout" xml:space="preserve">
-    <value>Margin is not match in compRPGILoadout</value>
+  <data name="MarginNotMatchInCompAwesomeInventoryLoadout" xml:space="preserve">
+    <value>Margin is not match in CompAwesomeInventoryLoadout</value>
   </data>
   <data name="NoDisplayOptionChosen" xml:space="preserve">
     <value>No Display Option is chosen.</value>

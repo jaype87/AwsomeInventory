@@ -8,13 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Verse;
+using AwesomeInventory.Loadout;
 using RimWorld;
-
-#if RPG_Inventory_Remake
-using RPG_Inventory_Remake.Loadout;
-using RPG_Inventory_Remake;
-#endif
+using Verse;
 
 namespace RPG_Inventory_Remake_Common.UnitTest
 {
@@ -22,10 +18,10 @@ namespace RPG_Inventory_Remake_Common.UnitTest
     {
         public override void Run(out bool result)
         {
-            compRPGILoadout compRPGI = _pawn.GetComp<compRPGILoadout>();
+            CompAwesomeInventoryLoadout compRPGI = _pawn.GetComp<CompAwesomeInventoryLoadout>();
             result = true;
 
-            foreach (RPGILoadout loadout in _loadouts)
+            foreach (AILoadout loadout in _loadouts)
             {
                 _pawn.SetLoadout(loadout);
                 result &= AssertUtility.AreEqual(loadout, compRPGI.Loadout, nameof(loadout), nameof(compRPGI.Loadout));
@@ -50,10 +46,12 @@ namespace RPG_Inventory_Remake_Common.UnitTest
                             , string.Format(StringResource.ObjectCount, nameof(compRPGI.InventoryTracker)));
                     }
                 }
+
                 _pawn.outfits.CurrentOutfit = null;
                 compRPGI.Loadout = null;
                 compRPGI.InventoryTracker = null;
             }
+
             return;
         }
     }

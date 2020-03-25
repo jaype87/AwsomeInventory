@@ -8,15 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Verse;
+using AwesomeInventory.Loadout;
 using RimWorld;
-using UnityEngine;
-using System.Diagnostics;
-
-#if RPG_Inventory_Remake
-using RPG_Inventory_Remake.Loadout;
-using RPG_Inventory_Remake;
-#endif
+using Verse;
 
 namespace RPG_Inventory_Remake_Common.UnitTest
 {
@@ -25,7 +19,7 @@ namespace RPG_Inventory_Remake_Common.UnitTest
         private Thing _toAdd;
         public override void Setup()
         {
-            _toAdd = things[0].DeepCopySimple();
+            _toAdd = things[0].DeepCopy();
             loadoutInstance.Add(_toAdd, true);
             loadoutInstance.Add(_toAdd, true);
         }

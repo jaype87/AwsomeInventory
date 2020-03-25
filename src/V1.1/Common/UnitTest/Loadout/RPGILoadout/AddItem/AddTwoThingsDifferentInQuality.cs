@@ -8,13 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using RPG_Inventory_Remake_Common.UnitTest;
-using Verse;
 using RimWorld;
-
-#if RPG_Inventory_Remake
-using RPG_Inventory_Remake.Loadout;
-using RPG_Inventory_Remake;
+using Verse;
 
 namespace RPG_Inventory_Remake_Common.UnitTest
 {
@@ -25,6 +20,7 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             loadoutInstance.Add(things[1], false);
             loadoutInstance.Add(things[2], false);
         }
+
         public override void Run(out bool result)
         {
             result = true;
@@ -57,5 +53,4 @@ namespace RPG_Inventory_Remake_Common.UnitTest
         }
     }
 }
-#endif
 #endif

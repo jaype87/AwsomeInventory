@@ -3,6 +3,7 @@
 // Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using System;
 using System.Reflection;
 using Verse;
 

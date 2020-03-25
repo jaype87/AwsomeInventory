@@ -217,13 +217,12 @@ namespace AwesomeInventory.UI
                 GUI.DrawTexture(row, texture2D);
 
                 ThingDef stuff = stuffs[i];
-                DrawUtility.DrawLineButton
-                    (row
+                DrawUtility.DrawLableButton(
+                    row
                     , stuff.LabelAsStuff.CapitalizeFirst()
-                    , _thing
-                    , (thing) =>
+                    , () =>
                     {
-                        _loadout.UpdateItem(thing, stuff);
+                        _loadout.UpdateItem(_thing, stuff);
                         _pair.stuff = stuff;
                         _thing = _loadout[_pair].Thing;
                     });
@@ -272,7 +271,7 @@ namespace AwesomeInventory.UI
                 {
                     if (row.ButtonIcon(TexResource.Info))
                     {
-                        Thing temp = _thing.DeepCopySimple(false);
+                        Thing temp = _thing.DeepCopy(false);
                         temp.SetStuffDirect(pair.stuff);
                         temp.HitPoints = temp.MaxHitPoints;
                         Find.WindowStack.Add(new Dialog_InfoCard(temp));

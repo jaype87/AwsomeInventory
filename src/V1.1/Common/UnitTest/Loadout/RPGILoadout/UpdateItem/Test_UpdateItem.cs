@@ -8,19 +8,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Verse;
+using AwesomeInventory.Loadout;
 using RimWorld;
-
-#if RPG_Inventory_Remake
-using RPG_Inventory_Remake.Loadout;
-using RPG_Inventory_Remake;
-#endif
+using Verse;
 
 namespace RPG_Inventory_Remake_Common.UnitTest
 {
     public class Test_UpdateItem : RPGIUnitTest
     {
-        public static RPGILoadout loadoutInstance = new RPGILoadout();
+        public static AILoadout loadoutInstance = new AILoadout();
         public static List<Thing> things = new List<Thing>();
 
         static Test_UpdateItem()

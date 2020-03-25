@@ -20,7 +20,7 @@ using Verse;
 using Verse.AI;
 using Verse.Sound;
 
-namespace AwesomeInventory.Utilities
+namespace AwesomeInventory
 {
     public static class Utility
     {

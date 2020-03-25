@@ -8,9 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Verse;
 using RimWorld;
-using RPG_Inventory_Remake.Loadout;
+using Verse;
 
 namespace RPG_Inventory_Remake_Common.UnitTest
 {

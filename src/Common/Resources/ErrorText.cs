@@ -23,6 +23,10 @@ namespace AwesomeInventory
 
         public const string DrawHelperIsMissing = "Draw helper service is not found.";
 
+        public const string SetMoreThanOneThingAllowed = "Setting thing selector to allow more than one thing.";
+
+        public const string InventoryStackcountLessThanZero = "Stackcount of {0} in inventory is less than 0.";
+
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning restore SA1600 // Elements should be documented
     }

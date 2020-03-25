@@ -54,7 +54,13 @@ namespace AwesomeInventory.UI
             return rectToDraw;
         }
 
-        public static void DrawLineButton<Target>(Rect rect, string label, Target target, Action<Target> action)
+        /// <summary>
+        /// Draw a lable which doubles as a button.
+        /// </summary>
+        /// <param name="rect"> Rect for drawing. </param>
+        /// <param name="label"> Label to draw in <paramref name="rect"/>. </param>
+        /// <param name="action"> Action to take when it is clicked. </param>
+        public static void DrawLableButton(Rect rect, string label, Action action)
         {
             Text.WordWrap = false;
             Text.Anchor = TextAnchor.MiddleLeft;
@@ -63,7 +69,7 @@ namespace AwesomeInventory.UI
             Widgets.DrawHighlightIfMouseover(rect);
             if (Widgets.ButtonInvisible(rect))
             {
-                action?.Invoke(target);
+                action?.Invoke();
             }
 
             Text.Anchor = TextAnchor.UpperLeft;

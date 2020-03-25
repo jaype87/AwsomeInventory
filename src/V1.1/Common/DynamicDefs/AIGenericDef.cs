@@ -4,7 +4,9 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using RimWorld;
 using Verse;
 
@@ -33,12 +35,18 @@ namespace AwesomeInventory.Loadout
             this.Filter = filter;
             this.ThingRequestGroup = thingRequestGroup;
             this.Includes = (thingDef) => this.ThingRequestGroup.Includes(thingDef) && (filter?.Invoke(thingDef) ?? true);
+            this.AvailableDefs = DefDatabase<ThingDef>.AllDefsListForReading.Where(def => this.Includes(def));
         }
 
         /// <remarks> Enforce singleton pattern. </remarks>
         private AIGenericDef()
         {
         }
+
+        /// <summary>
+        /// Gets available <see cref="ThingDef"/> in this generic category.
+        /// </summary>
+        public IEnumerable<ThingDef> AvailableDefs { get; }
 
         /// <summary>
         /// Gets a group used for requesting things from <see cref="ListerThings"/>.

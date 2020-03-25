@@ -8,8 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Verse;
+using AwesomeInventory.Loadout;
 using RimWorld;
+using Verse;
 
 #if RPG_Inventory_Remake
 using RPG_Inventory_Remake.Loadout;
@@ -20,13 +21,13 @@ namespace RPG_Inventory_Remake_Common.UnitTest
 {
     public class NewLoadoutHasOneMoreThing : Test_UpdateForNewLoadout
     {
-        private compRPGILoadout _compRPGI;
+        private CompAwesomeInventoryLoadout _compRPGI;
         public override void Run(out bool result)
         {
-            _compRPGI = _pawn.GetComp<compRPGILoadout>();
+            _compRPGI = _pawn.GetComp<CompAwesomeInventoryLoadout>();
             result = true;
 
-            foreach (RPGILoadout loadout in _loadouts)
+            foreach (AILoadout loadout in _loadouts)
             {
                 _pawn.SetLoadout(loadout);
                 result &= AssertUtility.AreEqual(loadout, _compRPGI.Loadout, nameof(loadout), nameof(_compRPGI.Loadout));

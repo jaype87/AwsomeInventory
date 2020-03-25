@@ -33,7 +33,7 @@ namespace AwesomeInventory.Loadout
         /// Value in this dictionary acts as a margin. If the amount set in loadout is met, the margin is 0.
         /// Excessive amount has a positive margin, and vice versa.
         /// </summary>
-        public Dictionary<Thing, int> InventoryTracker = null;
+        public Dictionary<Thing, int> InventoryMargins = null;
         public AILoadout Loadout = null;
 
         #endregion
@@ -55,7 +55,7 @@ namespace AwesomeInventory.Loadout
         {
             get
             {
-                if (InventoryTracker == null)
+                if (InventoryMargins == null)
                 {
                     return false;
                 }
@@ -63,17 +63,18 @@ namespace AwesomeInventory.Loadout
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.Append(((Pawn)parent).Name + "'s inventory");
                 stringBuilder.AppendLine();
-                foreach (var item in InventoryTracker)
+                foreach (var item in InventoryMargins)
                 {
                     stringBuilder.AppendFormat(ErrorMessage.ReportString, nameof(NeedRestock), item.Key.LabelCap, item.Value);
                     stringBuilder.AppendLine();
                 }
+
                 Log.Warning(stringBuilder.ToString(), true);
 
                 var curInventory = MakeLookupForPawnGearAndInventory(_pawn);
                 foreach (Thing thing in Loadout)
                 {
-                    if (!InventoryTracker.ContainsKey(thing))
+                    if (!InventoryMargins.ContainsKey(thing))
                     {
                         string message
                             = string.Concat(ErrorMessage.InvTrackerAndLoadoutOutOfSync
@@ -83,19 +84,20 @@ namespace AwesomeInventory.Loadout
                     }
                     else
                     {
-                        int expected = (curInventory.TryGetValue(thing, out int count) ? count : 0) - Loadout[thing].Thing.stackCount;
-                        if (InventoryTracker[thing] != expected)
+                        int countToFetch = Loadout[thing].Thing.stackCount;
+                        int expected = (curInventory.TryGetValue(thing, out int count) ? count : 0) - countToFetch;
+                        if (InventoryMargins[thing] != expected)
                         {
                             string message
                             = string.Concat(ErrorMessage.InvTrackerAndLoadoutOutOfSync
                                             , "\n"
-                                            , string.Format(ErrorMessage.ExpectedString, thing.LabelCap, expected, InventoryTracker[thing]));
+                                            , string.Format(ErrorMessage.ExpectedString, thing.LabelCap, expected, InventoryMargins[thing]));
                             Log.ErrorOnce(message, Rand.Int, true);
                         }
                     }
                 }
 #endif
-                return InventoryTracker.Values.Any(m => m < 0);
+                return InventoryMargins.Values.Any(m => m < 0);
             }
         }
 
@@ -107,14 +109,15 @@ namespace AwesomeInventory.Loadout
                 {
                     yield break;
                 }
-                foreach (var item in InventoryTracker)
+
+                foreach (var item in InventoryMargins)
                 {
                     if (item.Value < 0)
                     {
-                        item.Key.stackCount = item.Value;
                         yield return item.Key;
                     }
                 }
+
                 yield break;
             }
         }
@@ -142,23 +145,23 @@ namespace AwesomeInventory.Loadout
 
         private void NotifiedThingChanged(Thing thing, int count, bool isAdd)
         {
-            if (thing == null || Loadout == null || !InventoryTracker.ContainsKey(thing))
+            if (thing == null || Loadout == null || !InventoryMargins.ContainsKey(thing))
             {
                 return;
             }
 
-            if (InventoryTracker.ContainsKey(thing))
+            if (InventoryMargins.ContainsKey(thing))
             {
-                InventoryTracker[thing] = InventoryTracker[thing] + count * (isAdd ? 1 : -1);
+                InventoryMargins[thing] = InventoryMargins[thing] + count * (isAdd ? 1 : -1);
             }
 
-            foreach (var pair in InventoryTracker)
+            foreach (var pair in InventoryMargins)
             {
                 if (pair.Key.def is AIGenericDef genericDef)
                 {
                     if (genericDef.Includes(thing.def))
                     {
-                        InventoryTracker[pair.Key] = InventoryTracker[pair.Key] + count * (isAdd ? 1 : -1);
+                        InventoryMargins[pair.Key] = InventoryMargins[pair.Key] + count * (isAdd ? 1 : -1);
                     }
                 }
             }
@@ -193,18 +196,18 @@ namespace AwesomeInventory.Loadout
 
             if (Loadout == null)
             {
-                InventoryTracker = new Dictionary<Thing, int>(new LoadoutComparer<Thing>());
+                InventoryMargins = new Dictionary<Thing, int>(new LoadoutComparer<Thing>());
                 Dictionary<Thing, int> curInventory = MakeLookupForPawnGearAndInventory(_pawn);
 
                 foreach (Thing thing in newLoadout)
                 {
                     if (curInventory.TryGetValue(thing, out int curStack))
                     {
-                        InventoryTracker[thing] = curStack - thing.stackCount;
+                        InventoryMargins[thing] = curStack - thing.stackCount;
                     }
                     else
                     {
-                        InventoryTracker[thing] = -thing.stackCount;
+                        InventoryMargins[thing] = -thing.stackCount;
                     }
                 }
             }
@@ -215,11 +218,11 @@ namespace AwesomeInventory.Loadout
             else
             {
                 // Remove deleted items
-                foreach (Thing thing in InventoryTracker.Keys.ToList())
+                foreach (Thing thing in InventoryMargins.Keys.ToList())
                 {
                     if (!newLoadout.Contains(thing))
                     {
-                        InventoryTracker.Remove(thing);
+                        InventoryMargins.Remove(thing);
                     }
                 }
 
@@ -229,16 +232,16 @@ namespace AwesomeInventory.Loadout
                 {
                     if (Loadout.TryGetThing(thing.MakeThingStuffPairWithQuality(), out Thing oldThing))
                     {
-                        InventoryTracker[thing] += (oldThing.stackCount - thing.stackCount);
+                        InventoryMargins[thing] += (oldThing.stackCount - thing.stackCount);
                     }
                     else
                     {
                         if (curInventory.TryGetValue(thing, out int curStack))
                         {
-                            InventoryTracker[thing] = curStack - thing.stackCount;
+                            InventoryMargins[thing] = curStack - thing.stackCount;
                         }
 
-                        InventoryTracker[thing] = -thing.stackCount;
+                        InventoryMargins[thing] = -thing.stackCount;
                     }
                 }
 
@@ -253,17 +256,17 @@ namespace AwesomeInventory.Loadout
         {
             if (removed)
             {
-                InventoryTracker.Remove(thing);
+                InventoryMargins.Remove(thing);
             }
             else
             {
-                if (InventoryTracker.ContainsKey(thing))
+                if (InventoryMargins.ContainsKey(thing))
                 {
-                    InventoryTracker[thing] -= thing.stackCount;
+                    InventoryMargins[thing] -= thing.stackCount;
                 }
                 else
                 {
-                    InventoryTracker[thing] = -thing.stackCount;
+                    InventoryMargins[thing] = -thing.stackCount;
                 }
             }
         }
@@ -321,7 +324,7 @@ namespace AwesomeInventory.Loadout
             List<Thing> things = new List<Thing>();
             List<int> margins = new List<int>();
             Scribe_References.Look(ref Loadout, nameof(Loadout));
-            Scribe_Collections.Look(ref InventoryTracker, nameof(InventoryTracker), LookMode.Reference, LookMode.Value, ref things, ref margins);
+            Scribe_Collections.Look(ref InventoryMargins, nameof(InventoryMargins), LookMode.Reference, LookMode.Value, ref things, ref margins);
         }
 
         #endregion Methods

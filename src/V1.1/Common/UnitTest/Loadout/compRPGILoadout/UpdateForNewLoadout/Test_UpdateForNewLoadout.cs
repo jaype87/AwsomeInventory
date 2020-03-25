@@ -8,8 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Verse;
+using AwesomeInventory.Loadout;
 using RimWorld;
+using Verse;
 
 #if RPG_Inventory_Remake
 using RPG_Inventory_Remake.Loadout;
@@ -21,12 +22,12 @@ namespace RPG_Inventory_Remake_Common.UnitTest
     public class Test_UpdateForNewLoadout : RPGIUnitTest
     {
         protected static readonly Pawn _pawn;
-        protected static readonly RPGILoadout _loadout0;
-        protected static readonly RPGILoadout _loadout1;
-        protected static readonly RPGILoadout _loadout2;
-        protected static readonly RPGILoadout _loadout3;
-        protected static readonly RPGILoadout _loadout4;
-        protected static readonly List<RPGILoadout> _loadouts;
+        protected static readonly AILoadout _loadout0;
+        protected static readonly AILoadout _loadout1;
+        protected static readonly AILoadout _loadout2;
+        protected static readonly AILoadout _loadout3;
+        protected static readonly AILoadout _loadout4;
+        protected static readonly List<AILoadout> _loadouts;
 
         protected static readonly Thing _knifePlasteelLegendary;
         protected static readonly Thing _knifePlasteelGood;
@@ -46,47 +47,47 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             ThingDef shirtDef = ThingDef.Named("Apparel_BasicShirt");
 
             _knifePlasteelLegendary
-                = (new ThingStuffPairWithQuality(
+                = new ThingStuffPairWithQuality(
                     knifeDef
                     , ThingDefOf.Plasteel
                     , QualityCategory.Legendary)
-                ).MakeThing();
+                .MakeThing();
 
             _knifePlasteelGood
-                = (new ThingStuffPairWithQuality(
+                = new ThingStuffPairWithQuality(
                     knifeDef
                     , ThingDefOf.Plasteel
                     , QualityCategory.Good)
-                ).MakeThing();
+                .MakeThing();
 
             _knifeSteelGood
-                = (new ThingStuffPairWithQuality(
+                = new ThingStuffPairWithQuality(
                     knifeDef
                     , ThingDefOf.Steel
                     , QualityCategory.Good)
-                ).MakeThing();
+                .MakeThing();
 
             _shirtClothNormal
-                = (new ThingStuffPairWithQuality(
+                = new ThingStuffPairWithQuality(
                     shirtDef
                     , ThingDefOf.Cloth
                     , QualityCategory.Normal)
-                ).MakeThing();
+                .MakeThing();
 
             _finemeal = ThingMaker.MakeThing(ThingDefOf.MealFine);
             _finemeal.stackCount = 11;
 
             _loadout0 = null;
-            _loadout1 = new RPGILoadout(_pawn);
+            _loadout1 = new AILoadout(_pawn);
             LoadoutManager.AddLoadout(_loadout1);
 
-            _loadout2 = new RPGILoadout(_pawn);
+            _loadout2 = new AILoadout(_pawn);
             LoadoutManager.AddLoadout(_loadout2);
 
-            _loadout3 = new RPGILoadout(_pawn);
+            _loadout3 = new AILoadout(_pawn);
             LoadoutManager.AddLoadout(_loadout3);
 
-            _loadout4 = new RPGILoadout(_pawn);
+            _loadout4 = new AILoadout(_pawn);
             LoadoutManager.AddLoadout(_loadout4);
 
             _loadout1.Add(_knifePlasteelLegendary);
@@ -104,13 +105,13 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             _loadout4.Add(_shirtClothNormal);
             _loadout4.Add(_finemeal);
 
-            _loadouts = new List<RPGILoadout>()
+            _loadouts = new List<AILoadout>()
             {
                 _loadout0,
                 _loadout1,
                 _loadout2,
                 _loadout3,
-                _loadout4
+                _loadout4,
             };
         }
 

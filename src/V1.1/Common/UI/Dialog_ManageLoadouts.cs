@@ -377,9 +377,10 @@ namespace AwesomeInventory.UI
             if (countInt != thing.stackCount)
             {
                 int delta = countInt - thing.stackCount;
-                _pawn.GetComp<CompAwesomeInventoryLoadout>().InventoryTracker[thing] -= delta;
+                _pawn.GetComp<CompAwesomeInventoryLoadout>().InventoryMargins[thing] -= delta;
                 _currentLoadout.SetDirtyAll();
             }
+
             thing.stackCount = countInt;
         }
 
@@ -398,6 +399,13 @@ namespace AwesomeInventory.UI
             _currentLoadout.label = Widgets.TextField(canvas, _currentLoadout.label, _loadoutNameMaxLength, Outfit.ValidNameRegex);
         }
 
+        /// <summary>
+        /// Draw item information in a row.
+        /// </summary>
+        /// <param name="row"> Rect used for drawing. </param>
+        /// <param name="thing"> Thing to draw. </param>
+        /// <param name="reorderableGroup"> The group this <paramref name="row"/> belongs to. </param>
+        /// <param name="drawShadow"> If true, it draws a shadow copy of the row. It is used for drawing a row when it is dragged. </param>
         protected virtual void DrawItemRow(Rect row, Thing thing, int reorderableGroup, bool drawShadow = false)
         {
             ValidateArg.NotNull(row, nameof(row));
@@ -412,7 +420,9 @@ namespace AwesomeInventory.UI
                 _currentLoadout.Remove(thing);
             }
 
-            DrawCountField(new Rect(widgetRow.FinalX - WidgetRow.IconSize * 2 - WidgetRow.DefaultGap, widgetRow.FinalY, WidgetRow.IconSize * 2, GenUI.ListSpacing), thing);
+            this.DrawCountField(
+                new Rect(widgetRow.FinalX - WidgetRow.IconSize * 2 - WidgetRow.DefaultGap, widgetRow.FinalY, WidgetRow.IconSize * 2, GenUI.ListSpacing),
+                thing);
             widgetRow.GapButtonIcon();
             widgetRow.GapButtonIcon();
 
@@ -528,13 +538,12 @@ namespace AwesomeInventory.UI
                     GUI.DrawTexture(row, TexResource.DarkBackground);
 
                 int j = i;
-                DrawUtility.DrawLineButton(
+                DrawUtility.DrawLableButton(
                     labelRect
                     , _source[j].thingDef.LabelCap
-                    , _source[j].thingDef
-                    , (target) =>
+                    , () =>
                     {
-                        _currentLoadout.Add(target);
+                        _currentLoadout.Add(_source[j].thingDef);
                     });
 
                 GUI.color = baseColor;

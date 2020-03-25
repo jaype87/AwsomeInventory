@@ -70,6 +70,7 @@ namespace RPG_Inventory_Remake_Common.UnitTest
             {
                 return 0;
             }
+
             if (!tests.Tests.Any())
             {
                 return 1;
@@ -84,11 +85,13 @@ namespace RPG_Inventory_Remake_Common.UnitTest
                 sb.AppendLine(string.Format(StringResource.KeyValuePair, test.FullName, tests.TestResults[test.FullName]));
                 num += Report(test, ref sb, string.Concat(indent, StringResource.Indent));
             }
+
             sb.AppendLine();
             if (indent.NullOrEmpty())
             {
                 sb.AppendLine(string.Format(StringResource.TotalTests, num));
             }
+
             return num;
         }
     }

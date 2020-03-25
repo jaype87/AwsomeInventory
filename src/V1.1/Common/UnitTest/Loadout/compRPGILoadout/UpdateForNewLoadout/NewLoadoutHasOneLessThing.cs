@@ -8,19 +8,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Verse;
+using AwesomeInventory.Loadout;
 using RimWorld;
-
-#if RPG_Inventory_Remake
-using RPG_Inventory_Remake.Loadout;
-using RPG_Inventory_Remake;
-#endif
+using Verse;
 
 namespace RPG_Inventory_Remake_Common.UnitTest
 {
     public class NewLoadoutHasOneLessThing : Test_UpdateForNewLoadout
     {
-        private compRPGILoadout _compRPGI;
+        private CompAwesomeInventoryLoadout _compRPGI;
 
         public override void Setup()
         {
@@ -29,12 +25,12 @@ namespace RPG_Inventory_Remake_Common.UnitTest
 
         public override void Run(out bool result)
         {
-            _compRPGI = _pawn.GetComp<compRPGILoadout>();
+            _compRPGI = _pawn.GetComp<CompAwesomeInventoryLoadout>();
             result = true;
 
             for (int i = _loadouts.Count - 2; i > -1; i--)
             {
-                RPGILoadout loadout = _loadouts[i];
+                AILoadout loadout = _loadouts[i];
                 if (loadout != null)
                 {
                     _pawn.SetLoadout(loadout);

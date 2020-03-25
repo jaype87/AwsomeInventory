@@ -16,8 +16,8 @@ namespace RPG_Inventory_Remake_Common.UnitTest
     {
         public override void Setup()
         {
-            Tests.Add(new TestRPGILoadout());
-            Tests.Add(new TestcompRPGILoadout());
+            Tests.Add(new TestAILoadout());
+            Tests.Add(new TestCompAwesomeInventoryLoadout());
         }
     }
 }

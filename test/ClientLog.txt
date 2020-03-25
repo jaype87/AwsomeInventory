@@ -1,0 +1,31 @@
+[4:02:23 AM Information] Logger will record messages of level: Information, Warning, Error, Trace, Debug
+[4:02:23 AM Trace] Loading tests from: G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.1\Common\Assemblies\Common1.1.Test.dll
+[4:02:23 AM Information] System.IO.FileLoadException: Could not load file or assembly 'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089' or one of its dependencies. Strong name validation failed. (Exception from HRESULT: 0x8013141A)
+File name: 'mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089' ---> System.Security.SecurityException: Strong name validation failed. (Exception from HRESULT: 0x8013141A)
+The Zone of the assembly that failed was:
+MyComputer
+   at System.Reflection.RuntimeAssembly._nLoad(AssemblyName fileName, String codeBase, Evidence assemblySecurity, RuntimeAssembly locationHint, StackCrawlMark& stackMark, IntPtr pPrivHostBinder, Boolean throwOnFileNotFound, Boolean forIntrospection, Boolean suppressSecurityChecks)
+   at System.Reflection.RuntimeAssembly.nLoad(AssemblyName fileName, String codeBase, Evidence assemblySecurity, RuntimeAssembly locationHint, StackCrawlMark& stackMark, IntPtr pPrivHostBinder, Boolean throwOnFileNotFound, Boolean forIntrospection, Boolean suppressSecurityChecks)
+   at System.Reflection.RuntimeAssembly.InternalLoadAssemblyName(AssemblyName assemblyRef, Evidence assemblySecurity, RuntimeAssembly reqAssembly, StackCrawlMark& stackMark, IntPtr pPrivHostBinder, Boolean throwOnFileNotFound, Boolean forIntrospection, Boolean suppressSecurityChecks)
+   at System.Reflection.RuntimeAssembly.InternalLoadFrom(String assemblyFile, Evidence securityEvidence, Byte[] hashValue, AssemblyHashAlgorithm hashAlgorithm, Boolean forIntrospection, Boolean suppressSecurityChecks, StackCrawlMark& stackMark)
+   at System.Reflection.Assembly.LoadFrom(String assemblyFile)
+   at MUnit.Engine.NSD20TestSource.TryLoaded(String source, Assembly& target, IMUnitLogger logger) in D:\Modding\MUnit\MUnit\Engine\PlatformService\NetStandard2.0\NSD20TestSource.cs:line 87
+
+
+[4:02:23 AM Information] System.IO.FileNotFoundException: Could not load file or assembly 'file:///G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\0MUnit.dll' or one of its dependencies. The system cannot find the file specified.
+File name: 'file:///G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\0MUnit.dll'
+   at System.Reflection.RuntimeAssembly._nLoad(AssemblyName fileName, String codeBase, Evidence assemblySecurity, RuntimeAssembly locationHint, StackCrawlMark& stackMark, IntPtr pPrivHostBinder, Boolean throwOnFileNotFound, Boolean forIntrospection, Boolean suppressSecurityChecks)
+   at System.Reflection.RuntimeAssembly.nLoad(AssemblyName fileName, String codeBase, Evidence assemblySecurity, RuntimeAssembly locationHint, StackCrawlMark& stackMark, IntPtr pPrivHostBinder, Boolean throwOnFileNotFound, Boolean forIntrospection, Boolean suppressSecurityChecks)
+   at System.Reflection.RuntimeAssembly.InternalLoadAssemblyName(AssemblyName assemblyRef, Evidence assemblySecurity, RuntimeAssembly reqAssembly, StackCrawlMark& stackMark, IntPtr pPrivHostBinder, Boolean throwOnFileNotFound, Boolean forIntrospection, Boolean suppressSecurityChecks)
+   at System.Reflection.RuntimeAssembly.InternalLoadFrom(String assemblyFile, Evidence securityEvidence, Byte[] hashValue, AssemblyHashAlgorithm hashAlgorithm, Boolean forIntrospection, Boolean suppressSecurityChecks, StackCrawlMark& stackMark)
+   at System.Reflection.Assembly.LoadFrom(String assemblyFile)
+   at MUnit.Engine.NSD20TestSource.TryLoaded(String source, Assembly& target, IMUnitLogger logger) in D:\Modding\MUnit\MUnit\Engine\PlatformService\NetStandard2.0\NSD20TestSource.cs:line 87
+
+WRN: Assembly binding logging is turned OFF.
+To enable assembly bind failure logging, set the registry value [HKLM\Software\Microsoft\Fusion!EnableLog] (DWORD) to 1.
+Note: There is some performance penalty associated with assembly bind failure logging.
+To turn this feature off, remove the registry value [HKLM\Software\Microsoft\Fusion!EnableLog].
+
+[4:02:23 AM Trace] Create root test cycle with full name: testhost.x86.exe and parent ID: 00000000-0000-0000-0000-000000000000
+[4:02:23 AM Trace] Found test method : AwesomeInventory.Test.Class1.Test .
+[4:02:23 AM Information] Total tests found: 1

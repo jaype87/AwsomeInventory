@@ -11,7 +11,6 @@ using System.Linq;
 using System.Text;
 using AwesomeInventory.Resources;
 using RimWorld;
-using RPGIResource;
 using UnityEngine;
 using Verse;
 
@@ -20,16 +19,18 @@ namespace AwesomeInventory.Loadout
     /// <summary>
     /// It inherits from the "Outfit" class, is added to outfitDatabase and holds information about loadout
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <remarks>It uses LoadoutCaomparer to generate hash value for keys</remarks>
+    /// <remarks>It uses LoadoutCaomparer to generate hash value for keys. </remarks>
     public class AILoadout : Outfit, ILoadReferenceable, IExposable, IEnumerable<Thing>, ICollection<Thing>
     {
+        /// <summary>
+        /// Suggest if loadout has changed since last call.
+        /// </summary>
         [Flags]
-        enum DirtyBits
+        private enum DirtyBits
         {
             Read = 1,
             ReStock = 2,
-            All = Read | ReStock
+            All = Read | ReStock,
         }
 
         // Sole purpose of the _cachedList is for reordering in loadout window
@@ -43,54 +44,58 @@ namespace AwesomeInventory.Loadout
 
         #region Constructor
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AILoadout"/> class.
+        /// </summary>
         public AILoadout()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AILoadout"/> class.
+        /// </summary>
+        /// <param name="oldLabel"></param>
         public AILoadout(string oldLabel)
         {
-            if (oldLabel.NullOrEmpty())
-            {
-                throw new ArgumentNullException(nameof(oldLabel));
-            }
+            ValidateArg.NotNullOrEmpty(oldLabel, nameof(oldLabel));
+
             label = LoadoutManager.GetIncrementalLabel(oldLabel);
             Init();
         }
 
         /// <summary>
-        /// Create loadout from pawn's current outfit
+        /// Initializes a new instance of the <see cref="AILoadout"/> class.
+        /// Create loadout from pawn's current outfit.
         /// </summary>
         /// <param name="pawn"></param>
         public AILoadout(Pawn pawn)
             : this(LoadoutManager.GetIncrementalLabel(pawn.GetLoadout() != null ? pawn.GetLoadout().label : pawn.GetDefaultLoadoutName()))
         {
-            if (pawn == null)
-            {
-                throw new ArgumentNullException(nameof(pawn));
-            }
+            ValidateArg.NotNull(pawn, nameof(pawn));
+
             AddItemFromIEnumerable(pawn.equipment?.AllEquipmentListForReading);
             AddItemFromIEnumerable(pawn.apparel?.WornApparel);
             AddItemFromIEnumerable(pawn.inventory?.innerContainer);
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="AILoadout"/> class.
         /// Copy constructor, except the label is different.
         /// </summary>
         /// <param name="loadout"></param>
         public AILoadout(AILoadout loadout) : this(loadout?.label)
         {
-            if (loadout == null)
-            {
-                throw new ArgumentNullException(nameof(loadout));
-            }
+            ValidateArg.NotNull(loadout, nameof(loadout));
+
             _loadoutDic = new Dictionary<ThingStuffPairWithQuality, ThingFilterAll>();
             foreach (Thing thing in loadout.CachedList)
             {
-                Thing item = thing.DeepCopySimple();
+                Thing item = thing.DeepCopy();
                 ThingStuffPairWithQuality pair = item.MakeThingStuffPairWithQuality();
                 _loadoutDic.Add(pair, new ThingFilterAll(item, loadout[pair]));
                 _cachedList.Add(item);
             }
+
             filter.CopyAllowancesFrom(loadout.filter);
         }
 
@@ -130,7 +135,6 @@ namespace AwesomeInventory.Loadout
                 {
                     dicToSave.Add(new SavePairFilter(pair.Key), pair.Value);
                 }
-
             }
 
             Scribe_Collections.Look(ref dicToSave, nameof(dicToSave), LookMode.Deep, LookMode.Deep);
@@ -143,8 +147,9 @@ namespace AwesomeInventory.Loadout
                     _loadoutDic.Add(pair.Key.Restore(), pair.Value);
                 }
             }
+
             // TEST
-#if TEST
+#if LIVETEST
             if (Scribe.mode == LoadSaveMode.LoadingVars)
             {
                 foreach (var pair in _loadoutDic.ToList())
@@ -207,7 +212,6 @@ namespace AwesomeInventory.Loadout
             get => _loadoutDic[thing];
         }
 
-
         [SuppressMessage("Design", "CA1043:Use Integral Or String Argument For Indexers", Justification = "<Pending>")]
         public ThingFilterAll this[Thing thing]
         {
@@ -225,34 +229,31 @@ namespace AwesomeInventory.Loadout
             {
                 value = null;
             }
+
             return result;
         }
 
         /// <summary>
-        ///     Called when user chooses items from loadout window
+        /// It is called when user chooses items from loadout window.
         /// </summary>
-        /// <param name="thingDef"></param>
+        /// <param name="thingDef"> <see cref="ThingDef"/> to add to <see cref="AILoadout"/>. </param>
         public void Add(ThingDef thingDef)
         {
-            if (thingDef == null)
-            {
-                throw new ArgumentNullException(nameof(thingDef));
-            }
-            Thing thing = LoadoutUtilities.MakeThingSimple(new ThingStuffPairWithQuality(thingDef, null, QualityCategory.Normal));
-            Add(thing, true);
+            ValidateArg.NotNull(thingDef, nameof(thingDef));
+
+            Thing thing = LoadoutUtility.MakeThing(new ThingStuffPairWithQuality(thingDef, null, QualityCategory.Normal));
+            this.Add(thing, true);
         }
 
         /// <summary>
-        ///     Implementation of adding item to loadout
+        ///     Implementation of adding item to loadout.
         /// </summary>
-        /// <param name="thing">the thing to add</param>
-        /// <param name="owned">if the thing is owned by this loadout</param>
+        /// <param name="thing">the thing to add. </param>
+        /// <param name="owned">if the thing is owned by this loadout. </param>
         public void Add(Thing thing, bool owned)
         {
-            if (thing == null)
-            {
-                throw new ArgumentNullException(nameof(thing));
-            }
+            ValidateArg.NotNull(thing, nameof(thing));
+
             ThingStuffPairWithQuality pair = thing.MakeThingStuffPairWithQuality();
             if (_loadoutDic.ContainsKey(pair))
             {
@@ -260,18 +261,19 @@ namespace AwesomeInventory.Loadout
             }
             else
             {
-                Thing toAdd = owned ? thing : thing.DeepCopySimple(true);
+                Thing toAdd = owned ? thing : thing.DeepCopy(true);
 
                 _loadoutDic.Add(pair, new ThingFilterAll(toAdd));
                 _cachedList.Add(toAdd);
             }
+
             _dirty = DirtyBits.All;
             InvokeCallbacks(thing, false);
         }
 
         public void Add(Thing item)
         {
-            Add(item, false);
+            this.Add(item, false);
         }
 
         private void Add(ThingFilterAll thingFilter, int index)
@@ -287,6 +289,7 @@ namespace AwesomeInventory.Loadout
                 _loadoutDic.Add(pair, thingFilter);
                 _cachedList.Insert(index, thing);
             }
+
             _dirty = DirtyBits.All;
             InvokeCallbacks(thing, false);
         }
@@ -307,6 +310,7 @@ namespace AwesomeInventory.Loadout
                 removed = null;
                 return false;
             }
+
             removed = this[thing].Thing;
             _loadoutDic.Remove(thing.MakeThingStuffPairWithQuality());
             _cachedList.Remove(removed);
