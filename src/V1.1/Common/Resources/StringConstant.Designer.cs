@@ -61,38 +61,11 @@ namespace RPGIResource {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ArmorPenetration.
-        /// </summary>
-        public static string ArmorPenetration {
-            get {
-                return ResourceManager.GetString("ArmorPenetration", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Damage.
-        /// </summary>
-        public static string Damage {
-            get {
-                return ResourceManager.GetString("Damage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to GenericResource.
         /// </summary>
         public static string GenericResource {
             get {
                 return ResourceManager.GetString("GenericResource", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to MeleeWeapon_AverageArmorPenetration.
-        /// </summary>
-        public static string MeleeWeapon_AverageArmorPenetration {
-            get {
-                return ResourceManager.GetString("MeleeWeapon_AverageArmorPenetration", resourceCulture);
             }
         }
     }

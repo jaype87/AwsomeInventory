@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AwesomeInventory.Loadout;
+using RimWorld;
 using Verse;
 
 namespace AwesomeInventory
@@ -29,7 +30,7 @@ namespace AwesomeInventory
         /// <returns> A set of defs available to be selected in loadout dialog. </returns>
         public static HashSet<ThingDef> GetSuitableDefs()
         {
-            return new HashSet<ThingDef>(_allSuitableDefs.AsEnumerable(), _allSuitableDefs.Comparer);
+            return new HashSet<ThingDef>(_allSuitableDefs.AsEnumerable(), ThingDefComparer.Instance);
         }
 
         /// <summary>
@@ -40,33 +41,22 @@ namespace AwesomeInventory
             List<ThingDef> allSuitableDefs;
             allSuitableDefs = DefDatabase<ThingDef>
                                 .AllDefsListForReading
-                                .Where(thingDef => (thingDef.EverHaulable || thingDef.Minifiable)
-                                                && !thingDef.menuHidden
-                                                && IsSuitableThingDef(thingDef))
+                                .Where(thingDef => IsSuitableThingDef(thingDef))
                                 .ToList();
-            _allSuitableDefs = new HashSet<ThingDef>(allSuitableDefs, new CompareThingDef());
+            _allSuitableDefs = new HashSet<ThingDef>(allSuitableDefs, ThingDefComparer.Instance);
             _allSuitableDefs.AddRange(DefDatabase<AIGenericDef>.AllDefs);
         }
 
         private bool IsSuitableThingDef(ThingDef td)
         {
-            return td.Minifiable
-                    || (td.thingClass != typeof(Corpse)
-                        && !td.IsFrame
-                        && !td.destroyOnDrop);
-        }
-
-        private class CompareThingDef : EqualityComparer<ThingDef>
-        {
-            public override bool Equals(ThingDef x, ThingDef y)
-            {
-                return x.defName == y.defName;
-            }
-
-            public override int GetHashCode(ThingDef obj)
-            {
-                return obj.defName.GetHashCode();
-            }
+            return (td.EverHaulable
+                && !td.menuHidden
+                && !td.IsFrame
+                && !td.destroyOnDrop
+                && !typeof(UnfinishedThing).IsAssignableFrom(td.thingClass)
+                && !typeof(MinifiedThing).IsAssignableFrom(td.thingClass))
+                ||
+                td.Minifiable;
         }
     }
 }

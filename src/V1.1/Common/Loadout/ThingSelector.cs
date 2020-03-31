@@ -19,7 +19,8 @@ namespace AwesomeInventory.Loadout
     public abstract class ThingSelector : IExposable, IEquatable<ThingSelector>
     {
         /// <summary>
-        /// Filter used for screening things.
+        /// Only its <see cref="ThingFilter.AllowedThingDefs"/>, <see cref="ThingFilter.AllowedQualityLevels"/>
+        /// and <see cref="ThingFilter.AllowedHitPointsPercents"/> are used for filter purpose.
         /// </summary>
         protected ThingFilter _thingFilter;
 
@@ -28,24 +29,30 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         protected int _allowedStackCount;
 
-        /// <summary>
-        /// Gets a list of callbacks to be invoked whenever stack count for this selector is changed.
-        /// </summary>
-        protected List<Action<int>> _stackCountChangedCallback = new List<Action<int>>();
-
         private static uint nextID = 0;
+
+        /// <summary>
+        /// A callback which will be invoked whenever there is a change in the <see cref="ThingSelector._thingFilter"/>.
+        /// </summary>
+        private Action<ThingFilter> _qualityAndHitpointsChangedCallback;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThingSelector"/> class.
         /// </summary>
         public ThingSelector()
         {
+            _thingFilter = new ThingFilter(this.QualityAndHitpointsChangedCallbackHandler);
         }
 
         /// <summary>
-        /// Gets a label without count that describes this selector.
+        /// Gets a colored label without count that describes this selector.
         /// </summary>
-        public abstract string LabelNoCount { get; }
+        public abstract string LabelCapNoCount { get; }
+
+        /// <summary>
+        /// Gets weight of the selected thing.
+        /// </summary>
+        public abstract float Weight { get; }
 
         /// <summary>
         /// Gets the ID for this selector.
@@ -67,7 +74,7 @@ namespace AwesomeInventory.Loadout
         {
             if (ReferenceEquals(A, B))
                 return true;
-            else if (ReferenceEquals(A, null))
+            else if (A is null)
                 return false;
             else
                 return A.Equals(B);
@@ -88,39 +95,33 @@ namespace AwesomeInventory.Loadout
         /// Update stack count.
         /// </summary>
         /// <param name="stackCount"> Number to replace the old count. </param>
-        public void SetStackCount(int stackCount)
+        public virtual void SetStackCount(int stackCount)
         {
             _allowedStackCount = stackCount;
-            _stackCountChangedCallback.ForEach(a => a.Invoke(stackCount));
         }
 
         /// <summary>
-        /// Add callback to stack count changed event.
-        /// </summary>
-        /// <param name="callback"> Callback to add. </param>
-        public void AddStackCountChangedCallback(Action<int> callback)
-        {
-            ValidateArg.NotNull(callback, nameof(callback));
-            _stackCountChangedCallback.Add(callback);
-        }
-
-        /// <summary>
-        /// Remove callback from stack count changed event.
-        /// </summary>
-        /// <param name="callback"> Callback to remove. </param>
-        public void RemoveStackCountChangedCallback(Action<int> callback)
-        {
-            ValidateArg.NotNull(callback, nameof(callback));
-            _stackCountChangedCallback.Remove(callback);
-        }
-
-        /// <summary>
-        /// Check if <paramref name="thing"/> is allowed to add to inventory given current <paramref name="inventoryLevel"/>.
+        /// Check if <paramref name="thing"/> is allowed to add to inventory.
         /// </summary>
         /// <param name="thing"> <see cref="Thing"/> to add. </param>
-        /// <param name="inventoryLevel"> Current inventory level. </param>
         /// <returns> Returns true, if <paramref name="thing"/> is allowed to add. </returns>
-        public abstract bool Allows(Thing thing, int inventoryLevel);
+        public abstract bool Allows(Thing thing);
+
+        /// <summary>
+        /// Add callback to the quality-hitpoints-changed event.
+        /// </summary>
+        /// <param name="callback"> Callback to add. </param>
+        /// <returns> Returns true if <paramref name="callback"/> is added, otherwise, false when there is already a callback in place. </returns>
+        public bool AddQualityAndHitpointsChangedCallback(Action<ThingFilter> callback)
+        {
+            if (_qualityAndHitpointsChangedCallback == null)
+            {
+                _qualityAndHitpointsChangedCallback = callback;
+                return true;
+            }
+
+            return false;
+        }
 
         /// <summary>
         /// Save state.
@@ -128,11 +129,11 @@ namespace AwesomeInventory.Loadout
         public virtual void ExposeData()
         {
             Scribe_Values.Look(ref _allowedStackCount, nameof(_allowedStackCount));
-            Scribe_Deep.Look(ref _thingFilter, nameof(_thingFilter));
+            Scribe_Deep.Look(ref _thingFilter, nameof(_thingFilter), new Action(this.QualityAndHitpointsChangedCallbackHandler));
         }
 
         /// <inheritdoc/>
-        public bool Equals(ThingSelector other)
+        public virtual bool Equals(ThingSelector other)
         {
             if (ReferenceEquals(other, null))
                 return false;
@@ -150,6 +151,14 @@ namespace AwesomeInventory.Loadout
         public override int GetHashCode()
         {
             return this.ID.GetHashCode();
+        }
+
+        /// <summary>
+        /// Bubble up thing filter changed callback.
+        /// </summary>
+        private void QualityAndHitpointsChangedCallbackHandler()
+        {
+            _qualityAndHitpointsChangedCallback?.Invoke(_thingFilter);
         }
     }
 }

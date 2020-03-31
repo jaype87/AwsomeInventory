@@ -25,20 +25,7 @@ namespace AwesomeInventory.Loadout
     /// </remarks>
     public class CompAwesomeInventoryLoadout : ThingComp, IExposable
     {
-        #region Fields
-
         private Pawn _pawn;
-
-        /// <summary>
-        /// Value in this dictionary acts as a margin. If the amount set in loadout is met, the margin is 0.
-        /// Excessive amount has a positive margin, and vice versa.
-        /// </summary>
-        public Dictionary<Thing, int> InventoryMargins = null;
-        public AILoadout Loadout = null;
-
-        #endregion
-
-        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompAwesomeInventoryLoadout"/> class.
@@ -47,10 +34,20 @@ namespace AwesomeInventory.Loadout
         {
         }
 
-        #endregion
+        /// <summary>
+        /// Gets a dictionary acts as a inventory margin tracker. If the amount set in loadout is met, the margin is 0.
+        /// Excessive amount has a positive margin, and vice versa.
+        /// </summary>
+        public Dictionary<ThingGroupSelector, int> InventoryMargins { get; private set; }
 
-        #region Properties
+        /// <summary>
+        /// Gets a <see cref="AwesomeInventoryLoadout"/> this comp holds.
+        /// </summary>
+        public AwesomeInventoryLoadout Loadout { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating whether loadout on this <see cref="Pawn"/> needs to restock.
+        /// </summary>
         public bool NeedRestock
         {
             get
@@ -65,33 +62,35 @@ namespace AwesomeInventory.Loadout
                 stringBuilder.AppendLine();
                 foreach (var item in InventoryMargins)
                 {
-                    stringBuilder.AppendFormat(ErrorMessage.ReportString, nameof(NeedRestock), item.Key.LabelCap, item.Value);
+                    stringBuilder.AppendFormat(ErrorMessage.ReportString, nameof(NeedRestock), item.Key.LabelCapNoCount, item.Value);
                     stringBuilder.AppendLine();
                 }
 
                 Log.Warning(stringBuilder.ToString(), true);
 
-                var curInventory = MakeLookupForPawnGearAndInventory(_pawn);
-                foreach (Thing thing in Loadout)
+                List<Thing> curInventory = MakeListForPawnGearAndInventory(_pawn);
+                foreach (ThingGroupSelector groupSelector in Loadout)
                 {
-                    if (!InventoryMargins.ContainsKey(thing))
+                    if (!InventoryMargins.ContainsKey(groupSelector))
                     {
                         string message
-                            = string.Concat(ErrorMessage.InvTrackerAndLoadoutOutOfSync
-                                           , "\n"
-                                           , string.Format(ErrorMessage.ExpectedString, thing.LabelCap, thing.stackCount, 0));
+                            = string.Concat(
+                                ErrorMessage.InvTrackerAndLoadoutOutOfSync
+                                , "\n"
+                                , string.Format(ErrorMessage.ExpectedString, groupSelector.LabelCapNoCount, groupSelector.AllowedStackCount, 0));
                         Log.ErrorOnce(message, Rand.Int, true);
                     }
                     else
                     {
-                        int countToFetch = Loadout[thing].Thing.stackCount;
-                        int expected = (curInventory.TryGetValue(thing, out int count) ? count : 0) - countToFetch;
-                        if (InventoryMargins[thing] != expected)
+                        int countToFetch = groupSelector.AllowedStackCount;
+                        int expected = curInventory.Sum(t => groupSelector.Allows(t) ? t.stackCount : 0) - countToFetch;
+                        if (InventoryMargins[groupSelector] != expected)
                         {
                             string message
-                            = string.Concat(ErrorMessage.InvTrackerAndLoadoutOutOfSync
-                                            , "\n"
-                                            , string.Format(ErrorMessage.ExpectedString, thing.LabelCap, expected, InventoryMargins[thing]));
+                            = string.Concat(
+                                ErrorMessage.InvTrackerAndLoadoutOutOfSync
+                                , "\n"
+                                , string.Format(ErrorMessage.ExpectedString, groupSelector.LabelCapNoCount, expected, InventoryMargins[groupSelector]));
                             Log.ErrorOnce(message, Rand.Int, true);
                         }
                     }
@@ -101,7 +100,10 @@ namespace AwesomeInventory.Loadout
             }
         }
 
-        public IEnumerable<Thing> ItemsToRestock
+        /// <summary>
+        /// Gets a list of items that are needed to restock.
+        /// </summary>
+        public IEnumerable<ThingGroupSelector> ItemsToRestock
         {
             get
             {
@@ -122,211 +124,145 @@ namespace AwesomeInventory.Loadout
             }
         }
 
-        #endregion
-
-        #region Methods
-
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
             _pawn = (Pawn)parent;
         }
 
+        /// <summary>
+        /// Called by the game root code post spawn setup.
+        /// </summary>
+        /// <param name="respawningAfterLoad"> True if the <see cref="ThingComp.parent"/> is respawned after load. </param>
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
             if (parent is Pawn pawn)
             {
-                if (pawn.outfits?.CurrentOutfit is AILoadout loadout)
+                if (pawn.outfits?.CurrentOutfit is AwesomeInventoryLoadout loadout)
                 {
                     Loadout = loadout;
                 }
             }
         }
 
-        private void NotifiedThingChanged(Thing thing, int count, bool isAdd)
-        {
-            if (thing == null || Loadout == null || !InventoryMargins.ContainsKey(thing))
-            {
-                return;
-            }
-
-            if (InventoryMargins.ContainsKey(thing))
-            {
-                InventoryMargins[thing] = InventoryMargins[thing] + count * (isAdd ? 1 : -1);
-            }
-
-            foreach (var pair in InventoryMargins)
-            {
-                if (pair.Key.def is AIGenericDef genericDef)
-                {
-                    if (genericDef.Includes(thing.def))
-                    {
-                        InventoryMargins[pair.Key] = InventoryMargins[pair.Key] + count * (isAdd ? 1 : -1);
-                    }
-                }
-            }
-        }
-
+        /// <summary>
+        /// Update internal tracking info when notified <paramref name="thing"/> are added.
+        /// </summary>
+        /// <param name="thing"> <see cref="Thing"/> that is added. </param>
         public void NotifiedAdded(Thing thing)
         {
+            ValidateArg.NotNull(thing, nameof(thing));
+
             this.NotifiedThingChanged(thing, thing.stackCount, true);
         }
 
+        /// <summary>
+        /// Update internal tracking info when notified <paramref name="thing"/> is added and merged.
+        /// </summary>
+        /// <param name="thing"> <see cref="Thing"/> that has been added and merged. </param>
+        /// <param name="mergedAmount"> Number of <paramref name="thing"/> that is added and merged. </param>
         public void NotifiedAddedAndMergedWith(Thing thing, int mergedAmount)
         {
             this.NotifiedThingChanged(thing, mergedAmount, true);
         }
 
+        /// <summary>
+        /// Update internal tracking info when notified <paramref name="thing"/> has been removed.
+        /// </summary>
+        /// <param name="thing"> <see cref="Thing"/> that has been removed. </param>
         public void NotifiedRemoved(Thing thing)
         {
+            ValidateArg.NotNull(thing, nameof(thing));
+
             this.NotifiedThingChanged(thing, thing.stackCount, false);
         }
 
-        public void NotifiedSplitOff(Thing thing, int count)
+        /// <summary>
+        /// Update internal tracking info when notified <paramref name="thing"/> has splitted off.
+        /// </summary>
+        /// <param name="thing"> <see cref="Thing"/> that has splitted off. </param>
+        /// <param name="count"> Number of splitted <paramref name="thing"/>. </param>
+        public void NotifiedSplitOffHandler(Thing thing, int count)
         {
             this.NotifiedThingChanged(thing, count, false);
         }
 
-        public void UpdateForNewLoadout(AILoadout newLoadout)
+        /// <summary>
+        /// Update <see cref="CompAwesomeInventoryLoadout.InventoryMargins"/> whenever a new loadout is assigned to pawn.
+        /// </summary>
+        /// <param name="newLoadout"> The new loadout assigned to pawn. </param>
+        public void UpdateForNewLoadout(AwesomeInventoryLoadout newLoadout)
         {
-            if (newLoadout == null)
-            {
+            if (newLoadout == null || this.Loadout == newLoadout)
                 return;
-            }
 
-            if (Loadout == null)
-            {
-                InventoryMargins = new Dictionary<Thing, int>(new LoadoutComparer<Thing>());
-                Dictionary<Thing, int> curInventory = MakeLookupForPawnGearAndInventory(_pawn);
-
-                foreach (Thing thing in newLoadout)
-                {
-                    if (curInventory.TryGetValue(thing, out int curStack))
-                    {
-                        InventoryMargins[thing] = curStack - thing.stackCount;
-                    }
-                    else
-                    {
-                        InventoryMargins[thing] = -thing.stackCount;
-                    }
-                }
-            }
-            else if (Loadout == newLoadout)
-            {
-                return;
-            }
+            if (this.InventoryMargins == null)
+                this.InventoryMargins = new Dictionary<ThingGroupSelector, int>();
             else
+                this.InventoryMargins.Clear();
+
+            List<Thing> curInventory = MakeListForPawnGearAndInventory(_pawn);
+
+            foreach (ThingGroupSelector groupSelector in newLoadout)
             {
-                // Remove deleted items
-                foreach (Thing thing in InventoryMargins.Keys.ToList())
-                {
-                    if (!newLoadout.Contains(thing))
-                    {
-                        InventoryMargins.Remove(thing);
-                    }
-                }
-
-                // Add new items or updated the old ones
-                Dictionary<Thing, int> curInventory = MakeLookupForPawnGearAndInventory(_pawn);
-                foreach (Thing thing in newLoadout)
-                {
-                    if (Loadout.TryGetThing(thing.MakeThingStuffPairWithQuality(), out Thing oldThing))
-                    {
-                        InventoryMargins[thing] += (oldThing.stackCount - thing.stackCount);
-                    }
-                    else
-                    {
-                        if (curInventory.TryGetValue(thing, out int curStack))
-                        {
-                            InventoryMargins[thing] = curStack - thing.stackCount;
-                        }
-
-                        InventoryMargins[thing] = -thing.stackCount;
-                    }
-                }
-
-                Loadout.CallbacksOnAddOrRemove.Remove(UpdateInventoryTracker);
+                this.UpdateInventoryMargin(groupSelector);
             }
 
-            newLoadout.CallbacksOnAddOrRemove.Add(UpdateInventoryTracker);
+            newLoadout.AddAddNewThingGroupSelectorCallback(this.UpdateInventoryMargin);
+            newLoadout.AddRemoveThingGroupSelectorCallback(this.RemoveThingGroupSelector);
+            newLoadout.AddStackCountChangedCallback(this.UpdateInventoryMargin);
+
             Loadout = newLoadout;
         }
 
-        private void UpdateInventoryTracker(Thing thing, bool removed)
+        /// <summary>
+        /// Save state.
+        /// </summary>
+        public void ExposeData()
         {
-            if (removed)
-            {
-                InventoryMargins.Remove(thing);
-            }
-            else
-            {
-                if (InventoryMargins.ContainsKey(thing))
-                {
-                    InventoryMargins[thing] -= thing.stackCount;
-                }
-                else
-                {
-                    InventoryMargins[thing] = -thing.stackCount;
-                }
-            }
+            AwesomeInventoryLoadout loadout = this.Loadout;
+            Scribe_References.Look(ref loadout, nameof(this.Loadout));
+
+            List<ThingGroupSelector> things = new List<ThingGroupSelector>();
+            List<int> margins = new List<int>();
+            Dictionary<ThingGroupSelector, int> inventoryMargins = this.InventoryMargins;
+            Scribe_Collections.Look(ref inventoryMargins, nameof(InventoryMargins), LookMode.Reference, LookMode.Value, ref things, ref margins);
+
+            this.Loadout = loadout;
+            this.InventoryMargins = inventoryMargins;
         }
 
-        private static Dictionary<Thing, int> MakeLookupForPawnGearAndInventory(Pawn pawn)
+        private static List<Thing> MakeListForPawnGearAndInventory(Pawn pawn)
         {
             List<Thing> things = new List<Thing>();
             things.AddRange(pawn.equipment.AllEquipmentListForReading.Cast<Thing>());
             things.AddRange(pawn.apparel.WornApparel.Cast<Thing>());
             things.AddRange(pawn.inventory.innerContainer);
-            return things.ToDictionary(
-                (Thing thing) => thing
-                , (Thing thing) => thing.stackCount
-                , new LoadoutComparer<Thing>());
+
+            return things;
         }
 
-        /// <summary>
-        /// Determines if and how many of an item currently fit into the inventory with regards to weight constraints.
-        /// </summary>
-        /// <param name="thing">Thing to check</param>
-        /// <param name="count">Maximum amount of the thing, first param, that can fit into the inventory</param>
-        /// <param name="ignoreEquipment">Whether to include currently equipped weapons when calculating current weight/bulk</param>
-        /// <returns>True if one or more items fit into the inventory</returns>
-        public bool CanFitInInventory(Thing thing, out int count, bool ignoreEquipment = false)
+        private void NotifiedThingChanged(Thing thing, int count, bool isAdd)
         {
-            if (!(parent is Pawn pawn))
+            if (thing == null || Loadout == null)
+                return;
+
+            foreach (KeyValuePair<ThingGroupSelector, int> pair in InventoryMargins)
             {
-                count = 0;
-                return false;
+                if (pair.Key.Allows(thing))
+                {
+                    InventoryMargins[pair.Key] = pair.Value + count * (isAdd ? 1 : -1);
+                }
             }
-            if (thing == null)
-            {
-                throw new ArgumentNullException(nameof(thing));
-            }
-
-            float thingWeight;
-
-            thingWeight = thing.GetStatValue(StatDefOf.Mass);
-
-            // Subtract weight of currently equipped weapon
-            float eqWeight = 0f;
-            if (ignoreEquipment && pawn?.equipment?.Primary != null)
-            {
-                eqWeight = pawn.equipment.Primary.GetStatValue(StatDefOf.Mass);
-            }
-
-            // Calculate how many items we can fit into our inventory
-            float amountByWeight = thingWeight <= 0 ? thing.stackCount : (MassUtility.FreeSpace(pawn) + eqWeight) / thingWeight;
-            count = Mathf.FloorToInt(Mathf.Min(amountByWeight, thing.stackCount));
-            return count > 0;
         }
 
-        public void ExposeData()
+        private void RemoveThingGroupSelector(ThingGroupSelector groupSelector) => this.InventoryMargins.Remove(groupSelector);
+
+        private void UpdateInventoryMargin(ThingGroupSelector groupSelector)
         {
-            List<Thing> things = new List<Thing>();
-            List<int> margins = new List<int>();
-            Scribe_References.Look(ref Loadout, nameof(Loadout));
-            Scribe_Collections.Look(ref InventoryMargins, nameof(InventoryMargins), LookMode.Reference, LookMode.Value, ref things, ref margins);
+            this.InventoryMargins[groupSelector] =
+                    MakeListForPawnGearAndInventory(_pawn).Sum(t => groupSelector.Allows(t) ? t.stackCount : 0)
+                    - groupSelector.AllowedStackCount;
         }
-
-        #endregion Methods
     }
 }

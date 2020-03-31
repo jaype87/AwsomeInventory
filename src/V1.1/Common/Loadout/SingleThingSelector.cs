@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using AwesomeInventory.UI;
 using RimWorld;
 using Verse;
 
@@ -23,7 +24,7 @@ namespace AwesomeInventory.Loadout
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SingleThingSelector"/> class.
-        /// Used by xml serialization.
+        /// Used by xml serialization, should not be called anywhere else.
         /// </summary>
         public SingleThingSelector()
         {
@@ -36,9 +37,60 @@ namespace AwesomeInventory.Loadout
         /// <param name="stuff"> Stuff to make <paramref name="thingDef"/>. </param>
         public SingleThingSelector(ThingDef thingDef, ThingDef stuff = null)
         {
-            _thingFilter = new ThingFilter();
             _thingFilter.SetAllow(thingDef, true);
             _allowedStuff = stuff;
+            _thingFilter.AllowedQualityLevels = new QualityRange(QualityCategory.Normal, QualityCategory.Legendary);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SingleThingSelector"/> class.
+        /// </summary>
+        /// <param name="thing"> A template for initializing the selector. </param>
+        public SingleThingSelector(Thing thing)
+        {
+            ValidateArg.NotNull(thing, nameof(thing));
+
+            _allowedStuff = thing.Stuff;
+            _allowedStackCount = thing.stackCount;
+
+            _thingFilter.SetAllow(thing.def, true);
+
+            if (thing.TryGetQuality(out QualityCategory qualityCategory))
+            {
+                _thingFilter.allowedQualitiesConfigurable = true;
+                _thingFilter.AllowedQualityLevels = new QualityRange(qualityCategory, QualityCategory.Legendary);
+            }
+            else
+            {
+                _thingFilter.allowedQualitiesConfigurable = false;
+            }
+
+            if (thing.def.useHitPoints)
+            {
+                _thingFilter.allowedHitPointsConfigurable = true;
+                _thingFilter.AllowedHitPointsPercents = new FloatRange(0.5f, 1);
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SingleThingSelector"/> class.
+        /// </summary>
+        /// <param name="other"> Copy <paramref name="other"/> to this selector. </param>
+        public SingleThingSelector(SingleThingSelector other)
+        {
+            ValidateArg.NotNull(other, nameof(other));
+
+            _allowedStuff = other._allowedStuff;
+            _allowedStackCount = other._allowedStackCount;
+
+            _thingFilter = new ThingFilter();
+            _thingFilter.SetAllow(other.AllowedThing, true);
+
+            _thingFilter.allowedQualitiesConfigurable = other._thingFilter.allowedQualitiesConfigurable;
+            _thingFilter.AllowedQualityLevels = other._thingFilter.AllowedQualityLevels;
+
+            _thingFilter.allowedHitPointsConfigurable = other._thingFilter.allowedHitPointsConfigurable;
+            _thingFilter.AllowedHitPointsPercents = other._thingFilter.AllowedHitPointsPercents;
         }
 
         /// <summary>
@@ -62,17 +114,15 @@ namespace AwesomeInventory.Loadout
         public ThingDef AllowedStuff { get => _allowedStuff; }
 
         /// <summary>
-        /// Gets the allowed quality range.
-        /// </summary>
-        public QualityRange AllowedQualityRange { get => _thingFilter.AllowedQualityLevels; }
-
-        /// <summary>
         /// Gets the allowed hit points range.
         /// </summary>
         public FloatRange AllowedHitPoints { get => _thingFilter.AllowedHitPointsPercents; }
 
         /// <inheritdoc/>
-        public override string LabelNoCount { get => this.ThingSample.LabelCapNoCount; }
+        public override string LabelCapNoCount { get => this.ThingSample.LabelCapNoCount.ColorizeByQuality(this.ThingSample); }
+
+        /// <inheritdoc/>
+        public override float Weight => this.ThingSample.GetStatValue(StatDefOf.Mass);
 
         /// <summary>
         /// Compare equality between <paramref name="A"/> and <paramref name="B"/>.
@@ -120,6 +170,8 @@ namespace AwesomeInventory.Loadout
             _thingFilter.AllowedQualityLevels = qualityRange;
         }
 
+        public QualityRange AllowedQualityLevel { get => _thingFilter.AllowedQualityLevels; }
+
         /// <summary>
         /// Set hit points.
         /// </summary>
@@ -129,14 +181,15 @@ namespace AwesomeInventory.Loadout
             _thingFilter.AllowedHitPointsPercents = floatRange;
         }
 
+        public FloatRange AllowedHitPointsPercent { get => _thingFilter.AllowedHitPointsPercents; }
+
         /// <inheritdoc/>
-        public override bool Allows(Thing thing, int inventoryLevel)
+        public override bool Allows(Thing thing)
         {
             ValidateArg.NotNull(thing, nameof(thing));
 
             return _thingFilter.Allows(thing)
-                && _allowedStuff == null ? true : _allowedStuff.defName == thing.Stuff.defName
-                && inventoryLevel + thing.stackCount <= _allowedStackCount;
+                && (_allowedStuff == null ? true : _allowedStuff.shortHash == thing.Stuff.shortHash);
         }
 
         /// <inheritdoc />
@@ -148,8 +201,7 @@ namespace AwesomeInventory.Loadout
             if (ReferenceEquals(this, other))
                 return true;
 
-            return this.AllowedThing.defName == other.AllowedThing.defName
-                && this._allowedStuff == other._allowedStuff;
+            return this.ID == other.ID;
         }
 
         /// <inheritdoc />
@@ -162,6 +214,15 @@ namespace AwesomeInventory.Loadout
         public override int GetHashCode()
         {
             return this.GetHashCode();
+        }
+
+        /// <summary>
+        /// Save state.
+        /// </summary>
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Defs.Look(ref _allowedStuff, nameof(_allowedStuff));
         }
     }
 }

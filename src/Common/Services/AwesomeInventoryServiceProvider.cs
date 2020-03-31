@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,6 +18,7 @@ namespace AwesomeInventory
     public static class AwesomeInventoryServiceProvider
     {
         private static Dictionary<Type, object> _services = new Dictionary<Type, object>();
+        private static Dictionary<Type, Type> _typeDictionary = new Dictionary<Type, Type>();
 
         /// <summary>
         /// Get service of <typeparamref name="T"/>.
@@ -75,7 +77,35 @@ namespace AwesomeInventory
         /// <param name="servie"> Service to add. </param>
         public static void AddService(Type type, object servie)
         {
+            ValidateArg.NotNull(type, nameof(type));
+            ValidateArg.NotNull(servie, nameof(servie));
+
             _services[type] = servie;
+        }
+
+        /// <summary>
+        /// Add <paramref name="baseType"/> and <paramref name="derivedType"/> as a <see cref="KeyValuePair{TKey, TValue}"/> to a type dictionary.
+        /// </summary>
+        /// <param name="baseType"> Typs as a key. </param>
+        /// <param name="derivedType"> Type as a value. </param>
+        public static void AddType(Type baseType, Type derivedType)
+        {
+            ValidateArg.NotNull(baseType, nameof(baseType));
+            ValidateArg.NotNull(derivedType, nameof(derivedType));
+
+            _typeDictionary[baseType] = derivedType;
+        }
+
+        /// <summary>
+        /// Create instance of a certain type, which is a result after querying a type dictionary with <paramref name="type"/>.
+        /// </summary>
+        /// <typeparam name="T"> A <see cref="Type"/> used for querying a type dictionary. </typeparam>
+        /// <param name="ctorArgs"> Arguments passed to constructor.</param>
+        /// <returns> Instance created after querying a type dictionary. </returns>
+        public static T MakeInstanceOf<T>(params object[] ctorArgs)
+        {
+            Type concreteType = _typeDictionary[typeof(T)];
+            return (T)Activator.CreateInstance(concreteType, ctorArgs);
         }
     }
 }

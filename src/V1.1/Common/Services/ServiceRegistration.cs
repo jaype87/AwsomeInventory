@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AwesomeInventory.Loadout;
 using AwesomeInventory.UI;
 using AwesomeInventory.Utilities;
 
@@ -45,6 +46,30 @@ namespace AwesomeInventory
         {
             AwesomeInventoryServiceProvider.AddService(typeof(AwesomeInventoryTabBase), awesomeInventoryTabBase);
         }
+
+        /// <summary>
+        /// Register derived type of <see cref="SingleThingSelector"/>.
+        /// </summary>
+        /// <typeparam name="T"> Derived Type of <see cref="SingleThingSelector"/>. </typeparam>
+        protected static void RegisterSingleThingSelector<T>()
+            where T : SingleThingSelector
+                => AwesomeInventoryServiceProvider.AddType(typeof(SingleThingSelector), typeof(T));
+
+        /// <summary>
+        /// Register derived type of <see cref="GenericThingSelector"/>.
+        /// </summary>
+        /// <typeparam name="T"> Derived Type of <see cref="GenericThingSelector"/>. </typeparam>
+        protected static void RegisterGenericThingSelector<T>()
+            where T : GenericThingSelector
+                => AwesomeInventoryServiceProvider.AddType(typeof(GenericThingSelector), typeof(T));
+
+        /// <summary>
+        /// Register derived type of <see cref="ThingGroupSelector"/>.
+        /// </summary>
+        /// <typeparam name="T"> Derived Type of <see cref="ThingGroupSelector"/>. </typeparam>
+        protected static void RegisterThingGroupSelector<T>()
+            where T : ThingGroupSelector
+                => AwesomeInventoryServiceProvider.AddType(typeof(ThingGroupSelector), typeof(T));
 
         /// <summary>
         /// Register all services needed for Awesome Inventory.

@@ -81,9 +81,9 @@
     <Compile Include="Jobs\JobDriver_AwesomeInventory_Undress.cs" />
     <Compile Include="Jobs\JobDriver_AwesomeInventory_Unload.cs" />
     <Compile Include="Loadout\AwesomeInventoryLoadout.cs" />
-    <Compile Include="Loadout\AwesomeInventoryLoadoutTracker.cs" />
     <Compile Include="Loadout\GenericThingSelector.cs" />
     <Compile Include="Loadout\SingleThingSelector.cs" />
+    <Compile Include="Loadout\ThingGroupSelector.cs" />
     <Compile Include="Loadout\ThingSelector.cs" />
     <Compile Include="Services\Logger.cs" />
     <Compile Include="Services\ServiceRegistration.cs" />
@@ -100,7 +100,6 @@
     <Compile Include="DynamicDefs\AIGenericMeal.cs" />
     <Compile Include="DynamicDefs\AIGenericMedicine.cs" />
     <Compile Include="DynamicDefs\AIGenericRawFood.cs" />
-    <Compile Include="Exceptions\ArgumentEmtpyException.cs" />
     <Compile Include="GearTab\DrawGearTabWorker.cs" />
     <Compile Include="GearTab\AwesomeInventoryTabBase.cs" />
     <Compile Include="Gizmos\ToggleGearTab.cs" />
@@ -115,7 +114,7 @@
     <Compile Include="Jobs\JobDriver_AwesomeInventory_MapEquip.cs" />
     <Compile Include="Jobs\JobGiver_AwesomeInventory_Unload.cs" />
     <Compile Include="Jobs\ThinkNode_AwesomeInventory_Core.cs" />
-    <Compile Include="Loadout\AILoadout.cs" />
+    <None Include="Loadout\AILoadout.cs" />
     <Compile Include="Loadout\LoadoutComparer.cs" />
     <Compile Include="DynamicDefs\AIGenericDefManager.cs" />
     <Compile Include="Loadout\LoadoutUtilities.cs" />
@@ -196,10 +195,9 @@
     <Compile Include="UnitTest\UnitTest_Root.cs" />
     <Compile Include="UnitTest\RPGIUnitTest.cs" />
     <Compile Include="Utilities\GenBar.cs" />
-    <Compile Include="Utilities\ReflectionUtility.cs" />
-    <Compile Include="Utilities\ValidateArg.cs" />
+    <Compile Include="Utilities\RectUtility.cs" />
+    <Compile Include="Utilities\WidgetRowUtility.cs" />
     <Compile Include="Utilities\Utility.cs" />
-    <Compile Include="Utilities\UtilityConstant.cs" />
     <Compile Include="Utilities\DrawUtility.cs" />
   </ItemGroup>
   <ItemGroup>

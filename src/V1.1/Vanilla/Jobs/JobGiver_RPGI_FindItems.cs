@@ -18,28 +18,28 @@ namespace AwesomeInventory.Jobs
     {
         protected override Job TryGiveJob(Pawn pawn)
         {
-            CompAwesomeInventoryLoadout RPGIloadout = ((ThingWithComps)pawn).TryGetComp<CompAwesomeInventoryLoadout>();
+            CompAwesomeInventoryLoadout aiLoadout = ((ThingWithComps)pawn).TryGetComp<CompAwesomeInventoryLoadout>();
             Thing targetA = null;
 
-            if (RPGIloadout == null || !RPGIloadout.NeedRestock)
+            if (aiLoadout == null || !aiLoadout.NeedRestock)
                 return null;
 
-            foreach (Thing item in RPGIloadout.ItemsToRestock)
+            foreach (ThingGroupSelector groupSelector in aiLoadout.ItemsToRestock)
             {
-                if (!item.def.IsApparel && !item.def.IsWeapon)
+                if (!groupSelector.AllowedThing.IsApparel && !groupSelector.AllowedThing.IsWeapon)
                 {
-                    ThingFilterAll filter = RPGIloadout.Loadout[item.MakeThingStuffPairWithQuality()];
-                    if (item.def is AIGenericDef genericDef)
+                    if (groupSelector.AllowedThing is AIGenericDef genericDef)
                     {
-                        targetA = FindItem(pawn, null, genericDef.ThingRequestGroup, (Thing thing) => genericDef.Includes(thing.def));
-                    }
-                    else if (targetA.Stuff == RPGI_StuffDefOf.RPGIGenericResource)
-                    {
-                        targetA = FindItem(pawn, item.def, ThingRequestGroup.Undefined, (thing) => filter.Allows(thing, false));
+                        targetA = FindItem(
+                            pawn,
+                            null,
+                            ThingListGroupHelper.AllGroups.Where(
+                                g => genericDef.ThingCategoryDefs.SelectMany(c => c.DescendantThingDefs).Any(t => g.Includes(t))),
+                            (Thing thing) => genericDef.Includes(thing.def));
                     }
                     else
                     {
-                        targetA = FindItem(pawn, item.def, ThingRequestGroup.Undefined, (thing) => filter.Allows(thing));
+                        targetA = FindItem(pawn, groupSelector.AllowedThing, new[] { ThingRequestGroup.Undefined }, (thing) => groupSelector.Allows(thing));
                     }
                 }
             }

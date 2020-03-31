@@ -27,35 +27,23 @@ namespace AwesomeInventory.Loadout
         protected override Job TryGiveJob(Pawn pawn)
         {
             CompAwesomeInventoryLoadout ailoadout = ((ThingWithComps)pawn).TryGetComp<CompAwesomeInventoryLoadout>();
-            Apparel targetA = null;
 
             if (ailoadout == null || !ailoadout.NeedRestock)
                 return null;
 
-            foreach (Thing item in ailoadout.ItemsToRestock)
+            foreach (ThingGroupSelector groupSelector in ailoadout.ItemsToRestock)
             {
-                if (item is Apparel apparel)
+                if (groupSelector.AllowedThing.IsApparel)
                 {
-                    ThingFilterAll filter = ailoadout.Loadout[apparel.MakeThingStuffPairWithQuality()];
-                    if (apparel.Stuff == RPGI_StuffDefOf.RPGIGenericResource)
+                    Apparel targetA = this.FindItem(pawn, groupSelector.AllowedThing, new[] { ThingRequestGroup.Apparel }, (thing) => groupSelector.Allows(thing));
+                    if (targetA != null)
                     {
-                        targetA = FindItem(pawn, apparel.def, ThingRequestGroup.Undefined, (thing) => filter.Allows(thing, false));
-                    }
-                    else
-                    {
-                        targetA = FindItem(pawn, apparel.def, ThingRequestGroup.Undefined, (thing) => filter.Allows(thing));
+                        return new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, targetA, false);
                     }
                 }
             }
 
-            if (targetA == null)
-            {
-                return null;
-            }
-            else
-            {
-                return new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, targetA, false);
-            }
+            return null;
         }
     }
 }

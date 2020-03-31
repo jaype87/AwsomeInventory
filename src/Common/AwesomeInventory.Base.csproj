@@ -23,7 +23,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\Common\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -51,13 +51,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\ArgumentEmtpyException.cs" />
     <Compile Include="Resources\ErrorText.cs" />
+    <Compile Include="Resources\RangedWeaponStats.cs" />
     <Compile Include="Services\AIDebug.cs" />
     <Compile Include="Services\AwesomeInventoryServiceProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\UIText.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
     <Compile Include="Services\Timer.cs" />
+    <Compile Include="Utilities\ValidateArg.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ItemGroup Condition="Exists('$(SolutionDir)stylecop.json')" />

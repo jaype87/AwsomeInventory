@@ -9,9 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using AwesomeInventory.Jobs;
 using AwesomeInventory.Loadout;
-using AwesomeInventory.Utilities;
 using RimWorld;
-using RPG_Inventory_Remake_Common;
 using UnityEngine;
 using Verse;
 using Verse.AI;
@@ -39,6 +37,7 @@ namespace AwesomeInventory.UI
         private const float _apparelRectWidth = 56f;
         private const float _apparelRectHeight = 56f;
         private const float _startingXforRect = 150f;
+        private static readonly Vector2 PaperDollSize = new Vector2(128f, 128f);
 
         private static float _scrollViewHeight;
         private SmartRectList<Apparel> _smartRectList;
@@ -109,7 +108,7 @@ namespace AwesomeInventory.UI
             this.DrawStatPanel(statRect, selPawn, out float statY, apparelChanged);
 
             // Draw paper doll.
-            Rect pawnRect = new Rect(new Vector2(statRect.x + GenUI.GapSmall, statY), UtilityConstant.PaperDollSize);
+            Rect pawnRect = new Rect(new Vector2(statRect.x + GenUI.GapSmall, statY), PaperDollSize);
             Utility.DrawColonist(pawnRect, selPawn);
 
             #region Weapon
@@ -448,7 +447,7 @@ namespace AwesomeInventory.UI
                 {
                     if (selPawn.IsColonist && selPawn.GetLoadout() == null)
                     {
-                        AILoadout loadout = new AILoadout(selPawn);
+                        AwesomeInventoryLoadout loadout = new AwesomeInventoryLoadout(selPawn);
                         LoadoutManager.AddLoadout(loadout);
                         selPawn.SetLoadout(loadout);
                     }
@@ -458,7 +457,7 @@ namespace AwesomeInventory.UI
 
                 if (row.ButtonText(UIText.SelectLoadout.Translate()))
                 {
-                    List<AILoadout> loadouts = LoadoutManager.Loadouts;
+                    List<AwesomeInventoryLoadout> loadouts = LoadoutManager.Loadouts;
                     List<FloatMenuOption> list = new List<FloatMenuOption>();
                     if (loadouts.Count == 0)
                     {

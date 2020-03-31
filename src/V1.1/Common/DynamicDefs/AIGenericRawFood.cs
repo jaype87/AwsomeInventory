@@ -27,8 +27,8 @@ namespace AwesomeInventory.Loadout
                   Descriptions.AIGenericRawFood.TranslateSimple(),
                   Labels.AIGenericRawFood.TranslateSimple(),
                   typeof(ThingWithComps),
-                  ThingRequestGroup.HaulableAlways,
-                  (ThingDef thingDef) => thingDef.IsNutritionGivingIngestible && !thingDef.IsCorpse && thingDef.ingestible.HumanEdible && !thingDef.HasComp(typeof(CompHatcher)) && thingDef.ingestible.preferability < FoodPreferability.MealAwful)
+                  new[] { ThingCategoryDefOf.MeatRaw, ThingCategoryDefOf.PlantFoodRaw },
+                  null)
         {
             this.statBases = new List<StatModifier>() { new StatModifier() { stat = StatDefOf.Mass, value = ThingDefOf.Meat_Human.BaseMass } };
         }

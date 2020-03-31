@@ -27,7 +27,7 @@ namespace AwesomeInventory.Loadout
                   Descriptions.AIGenericMedicine.TranslateSimple(),
                   Labels.AIGenericMedicine.TranslateSimple(),
                   typeof(Medicine),
-                  ThingRequestGroup.Medicine,
+                  new[] { ThingCategoryDefOf.Medicine },
                   null)
         {
             this.statBases = new List<StatModifier>() { new StatModifier() { stat = StatDefOf.Mass, value = DefDatabase<ThingDef>.GetNamed("Penoxycyline").BaseMass } };

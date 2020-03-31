@@ -45,6 +45,8 @@ namespace AwesomeInventory.UI
 
         public const string ForcedApparel = "ForcedApparel";
 
+        public const string HitPoints = "HitPoints";
+
         public const string HitPointsBasic = "HitPointsBasic";
 
         public const string Incapable = "Incapable";
@@ -85,7 +87,11 @@ namespace AwesomeInventory.UI
 
         public const string Customize = "AwesomeInventory_Customize";
 
+        public const string LoadoutName = "AwesomeInventory_LoadoutName";
+
         public const string DeleteLoadout = "AwesomeInventory_DeleteLoadout";
+
+        public const string Assorted = "AwesomeInventory_Assorted";
 
         public const string DragToReorder = "AwesomeInventory_DragToReorder";
 
@@ -117,9 +123,19 @@ namespace AwesomeInventory.UI
 
         public const string PrimaryWeapon = "AwesomeInventory_PrimaryWeapon";
 
+        public const string PreviewQuality = "AwesomeInventory_PreviewQuality";
+
+        public const string PreviewQualityTooltip = "AwesomeInventory_PreviewQuality_Tooltip";
+
         public const string PutAway = "AwesomeInventory_PutAway";
 
         public const string SelectLoadout = "AwesomeInventory_SelectLoadout";
+
+        public const string SelectedStuff = "AwesomeInventory_SelectorStuff";
+
+        public const string Separate = "AwesomeInventory_Separate";
+
+        public const string SeparateTooltip = "AwesomeInventory_Separate_Tooltip";
 
         public const string SourceAllTip = "AwesomeInventory_SourceAllTip";
 
@@ -132,6 +148,8 @@ namespace AwesomeInventory.UI
         public const string SourceMinifiedTip = "AwesomeInventory_SourceMinifiedTip";
 
         public const string SourceRangedTip = "AwesomeInventory_SourceRangedTip";
+
+        public const string StuffSource = "AwesomeInventory_StuffSource";
 
         public const string TorsoMiddleLayer = "AwesomeInventory_TorsoMiddle";
 

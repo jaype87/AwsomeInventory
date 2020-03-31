@@ -28,7 +28,7 @@ namespace AwesomeInventory.Loadout
                   Descriptions.AIGenericDrugs.TranslateSimple(),
                   Labels.AIGenericDrugs.TranslateSimple(),
                   typeof(ThingWithComps),
-                  ThingRequestGroup.Drug,
+                  new[] { ThingCategoryDefOf.Drugs },
                   null)
         {
             this.statBases = new List<StatModifier>() { new StatModifier() { stat = StatDefOf.Mass, value = DefDatabase<ThingDef>.GetNamed("Flake").BaseMass } };

@@ -24,8 +24,9 @@ namespace AwesomeInventory.UI
         /************
          *  Colors  *
          ************/
-        public static readonly Color Valvet = GenColor.FromHex("cc1a00");
+        public static readonly Color Lavendar = GenColor.FromHex("dda0dd");
         public static readonly Color LightGrey = GenColor.FromHex("b0b3af");
+        public static readonly Color Valvet = GenColor.FromHex("cc1a00");
         public static readonly Color RWPrimaryColor = GenColor.FromHex("6a512e");
 
         // For Lighter Colorful Traits

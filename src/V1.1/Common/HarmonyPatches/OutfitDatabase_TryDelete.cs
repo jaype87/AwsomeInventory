@@ -34,7 +34,7 @@ namespace AwesomeInventory.Common.HarmonyPatches
         {
             if (__result.Accepted)
             {
-                if (outfit is AILoadout loadout)
+                if (outfit is AwesomeInventoryLoadout loadout)
                 {
                     LoadoutManager.TryRemoveLoadout(loadout, true);
                 }

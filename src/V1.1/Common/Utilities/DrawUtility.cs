@@ -21,6 +21,7 @@ namespace AwesomeInventory.UI
 
         public static readonly Color HighlightGreen = new Color(134 / 255f, 206 / 255f, 0, 1);
         public static readonly Color HighlightBrown = new Color(212 / 255f, 141 / 255f, 0, 1);
+        public static readonly float TwentyCharsWidth = UIText.TenCharsString.Times(2f).GetWidthCached();
 
         public static Vector2 MouseDownPos;
         public static bool isDrag;
@@ -60,13 +61,34 @@ namespace AwesomeInventory.UI
         /// <param name="rect"> Rect for drawing. </param>
         /// <param name="label"> Label to draw in <paramref name="rect"/>. </param>
         /// <param name="action"> Action to take when it is clicked. </param>
-        public static void DrawLableButton(Rect rect, string label, Action action)
+        public static void DrawLabelButton(Rect rect, string label, Action action)
+        {
+            DrawLabelButton(rect, label, action, false);
+        }
+
+        /// <summary>
+        /// Draw a lable which doubles as a button.
+        /// </summary>
+        /// <param name="rect"> Rect for drawing. </param>
+        /// <param name="label"> Label to draw in <paramref name="rect"/>. </param>
+        /// <param name="action"> Action to take when it is clicked. </param>
+        /// <param name="toggleable"> Indicates if button can be toggled and uses a selected texture if true. </param>
+        public static void DrawLabelButton(Rect rect, string label, Action action, bool toggleable)
         {
             Text.WordWrap = false;
             Text.Anchor = TextAnchor.MiddleLeft;
 
             Widgets.Label(rect, label);
-            Widgets.DrawHighlightIfMouseover(rect);
+            if (toggleable)
+            {
+                if (Mouse.IsOver(rect))
+                    Widgets.DrawHighlightSelected(rect);
+            }
+            else
+            {
+                Widgets.DrawHighlightIfMouseover(rect);
+            }
+
             if (Widgets.ButtonInvisible(rect))
             {
                 action?.Invoke();
@@ -169,23 +191,36 @@ namespace AwesomeInventory.UI
         {
             if (thing.TryGetQuality(out QualityCategory qualityCategory))
             {
-                switch (qualityCategory)
-                {
-                    case QualityCategory.Awful:
-                        return s.Colorize(GenColor.FromHex("cc1a00"));
-                    case QualityCategory.Poor:
-                        return s.Colorize(GenColor.FromHex("b0b3af"));
-                    case QualityCategory.Normal:
-                        return s.Colorize(Color.white);
-                    case QualityCategory.Good:
-                        return s.Colorize(ColorLibrary.LightGreen);
-                    case QualityCategory.Excellent:
-                        return s.Colorize(ColorLibrary.Cyan);
-                    case QualityCategory.Masterwork:
-                        return s.Colorize(ColorLibrary.Sand);
-                    case QualityCategory.Legendary:
-                        return s.Colorize(ColorLibrary.Orange);
-                }
+                s = s.ColorizeByQuality(qualityCategory);
+            }
+
+            return s;
+        }
+
+        /// <summary>
+        /// Color <paramref name="s"/> based on <paramref name="qualityCategory"/>.
+        /// </summary>
+        /// <param name="s"> String to color. </param>
+        /// <param name="qualityCategory"> Quality value. </param>
+        /// <returns> Colored string. </returns>
+        public static string ColorizeByQuality(this string s, QualityCategory qualityCategory)
+        {
+            switch (qualityCategory)
+            {
+                case QualityCategory.Awful:
+                    return s.Colorize(GenColor.FromHex("cc1a00"));
+                case QualityCategory.Poor:
+                    return s.Colorize(GenColor.FromHex("b0b3af"));
+                case QualityCategory.Normal:
+                    return s.Colorize(Color.white);
+                case QualityCategory.Good:
+                    return s.Colorize(ColorLibrary.LightGreen);
+                case QualityCategory.Excellent:
+                    return s.Colorize(ColorLibrary.Cyan);
+                case QualityCategory.Masterwork:
+                    return s.Colorize(ColorLibrary.Sand);
+                case QualityCategory.Legendary:
+                    return s.Colorize(ColorLibrary.Orange);
             }
 
             return s;

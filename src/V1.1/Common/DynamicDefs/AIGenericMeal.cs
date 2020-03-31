@@ -27,8 +27,8 @@ namespace AwesomeInventory.Loadout
                   Descriptions.AIGenericMeal.TranslateSimple(),
                   Labels.AIGenericMeal.TranslateSimple(),
                   typeof(ThingWithComps),
-                  ThingRequestGroup.FoodSourceNotPlantOrTree,
-                  (ThingDef thingDef) => thingDef.IsNutritionGivingIngestible && thingDef.ingestible.preferability >= FoodPreferability.MealAwful && thingDef.GetCompProperties<CompProperties_Rottable>()?.daysToRotStart <= 5 && !thingDef.IsDrug)
+                  new[] { ThingCategoryDefOf.FoodMeals },
+                  null)
         {
             // Use fine meal for mass.
             this.statBases = new List<StatModifier>() { new StatModifier() { stat = StatDefOf.Mass, value = ThingDefOf.MealFine.BaseMass } };
