@@ -20,11 +20,8 @@ namespace AwesomeInventory.Loadout
     /// </summary>
     public class LoadoutManager : GameComponent
     {
-        #region Fields
-        private static readonly List<AILoadout> _loadouts = new List<AILoadout>();
+        private static readonly List<AwesomeInventoryLoadout> _loadouts = new List<AwesomeInventoryLoadout>();
         private static readonly Regex _pattern = new Regex(@"^(.*?)(\d*)$");
-        private static List<Outfit> _outfits;
-        #endregion Fields
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LoadoutManager"/> class.
@@ -46,7 +43,7 @@ namespace AwesomeInventory.Loadout
         /// <summary>
         /// Gets a cache of loadouts used in this game.
         /// </summary>
-        public static List<AILoadout> Loadouts => _loadouts;
+        public static List<AwesomeInventoryLoadout> Loadouts => _loadouts;
 
         #region Override Methods
 
@@ -56,10 +53,9 @@ namespace AwesomeInventory.Loadout
         public override void FinalizeInit()
         {
             _loadouts.Clear();
-            _outfits = Current.Game.outfitDatabase.AllOutfits;
-            foreach (Outfit outfit in _outfits)
+            foreach (Outfit outfit in Current.Game.outfitDatabase.AllOutfits)
             {
-                if (outfit is AILoadout loadout)
+                if (outfit is AwesomeInventoryLoadout loadout)
                 {
                     _loadouts.Add(loadout);
                 }
@@ -75,17 +71,14 @@ namespace AwesomeInventory.Loadout
 
         #endregion Override Methods
 
-        public static void AddLoadout(AILoadout loadout)
+        public static void AddLoadout(AwesomeInventoryLoadout loadout)
         {
-            if (loadout == null)
-            {
-                throw new ArgumentNullException(nameof(loadout));
-            }
-            _outfits.Add(loadout);
+            ValidateArg.NotNull(loadout, nameof(loadout));
+
             _loadouts.Add(loadout);
         }
 
-        public static bool TryRemoveLoadout(AILoadout loadout, bool fromOutfit = false)
+        public static bool TryRemoveLoadout(AwesomeInventoryLoadout loadout, bool fromOutfit = false)
         {
             if (!fromOutfit)
             {
@@ -94,6 +87,7 @@ namespace AwesomeInventory.Loadout
                 {
                     return true;
                 }
+
                 Messages.Message(report.Reason, MessageTypeDefOf.RejectInput, historical: false);
                 return false;
             }
@@ -106,7 +100,7 @@ namespace AwesomeInventory.Loadout
 
         public static string GetIncrementalLabel(object obj)
         {
-            if (obj is AILoadout loadout)
+            if (obj is AwesomeInventoryLoadout loadout)
             {
                 return GetIncrementalLabel(loadout.label);
             }
@@ -114,6 +108,7 @@ namespace AwesomeInventory.Loadout
             {
                 return GetIncrementalLabel(previousLabel);
             }
+
             throw new ArgumentException(ErrorMessage.WrongArgumentType, nameof(obj));
         }
 
@@ -123,11 +118,12 @@ namespace AwesomeInventory.Loadout
             {
                 throw new ArgumentNullException(nameof(previousLabel));
             }
+
             string onlyName = _pattern.Match(previousLabel).Groups[1].Value;
             Regex namePattern = new Regex(string.Concat("^(", onlyName, @")(\d*)", '$'));
 
             List<int> numsPostfix = new List<int>();
-            foreach (AILoadout loadout in _loadouts)
+            foreach (AwesomeInventoryLoadout loadout in _loadouts)
             {
                 Match match = namePattern.Match(loadout.label);
                 if (match.Success)

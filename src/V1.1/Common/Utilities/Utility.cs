@@ -439,13 +439,31 @@ namespace AwesomeInventory
             {
                 return string.Empty;
             }
+
             int length = Mathf.RoundToInt(str.Length * num);
             char[] array = new char[length];
             for (int i = 0; i < length; i++)
             {
                 array[i] = 'A';
             }
+
             return new string(array);
+        }
+
+        public static T Next<T>(this T src)
+            where T : Enum
+        {
+            T[] array = (T[])Enum.GetValues(src.GetType());
+            int j = Array.IndexOf(array, src) + 1;
+            return (array.Length == j) ? array[0] : array[j];
+        }
+
+        public static T Previous<T>(this T src)
+            where T : Enum
+        {
+            T[] array = (T[])Enum.GetValues(src.GetType());
+            int j = Array.IndexOf(array, src) - 1;
+            return (j == -1) ? array.Last() : array[j];
         }
     }
 }

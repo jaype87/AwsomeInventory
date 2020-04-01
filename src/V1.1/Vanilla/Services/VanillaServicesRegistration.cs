@@ -3,6 +3,7 @@
 // Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using AwesomeInventory.Loadout;
 using AwesomeInventory.UI;
 using AwesomeInventory.Utilities;
 using Verse;
@@ -26,6 +27,8 @@ namespace AwesomeInventory
             ServiceRegistration.RegisterIInventoryHelper(new InventoryHelper());
             ServiceRegistration.RegisterIDrawHelper(new DrawHelper());
             ServiceRegistration.RegisterAwesomeInventoryTabBase(new AwesomeInventoryTab());
+            ServiceRegistration.RegisterSingleThingSelector<SingleThingSelector>();
+            ServiceRegistration.RegisterGenericThingSelector<GenericThingSelector>();
         }
     }
 }

@@ -202,6 +202,10 @@ namespace AwesomeInventory.UI
 
         public static readonly Texture2D ThermometerGen = ContentFinder<Texture2D>.Get("UI/Icons/Gen_Thermometer");
 
+        public static readonly Texture2D TriangleLeft = ContentFinder<Texture2D>.Get("UI/Icons/LeftTriangle");
+
+        public static readonly Texture2D TriangleRight = ContentFinder<Texture2D>.Get("UI/Icons/RightTriangle");
+
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning restore SA1600 // Elements should be documented
     }

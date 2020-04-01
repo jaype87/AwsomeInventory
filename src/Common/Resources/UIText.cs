@@ -14,7 +14,8 @@ namespace AwesomeInventory.UI
     /// <summary>
     /// Text displayed on UI. Call Translate() on members whenever they are referenced, e.g., UIText.Equip.Translate(); .
     /// </summary>
-    public static class UIText
+    public static class 
+        UIText
     {
 #pragma warning disable SA1600 // Elements should be documented
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
@@ -45,6 +46,8 @@ namespace AwesomeInventory.UI
 
         public const string ForcedApparel = "ForcedApparel";
 
+        public const string HitPoints = "HitPoints";
+
         public const string HitPointsBasic = "HitPointsBasic";
 
         public const string Incapable = "Incapable";
@@ -63,6 +66,8 @@ namespace AwesomeInventory.UI
 
         public const string OverallArmor = "OverallArmor";
 
+        /****************** AwesomeInventory texts ********************/
+
         public const string AIEquip = "AwesomeInventory_Equip";
 
         public const string AIForceWear = "AwesomeInventory_ForceWear";
@@ -72,6 +77,8 @@ namespace AwesomeInventory.UI
         public const string AsceticTab = "AwesomeInventory_Ascetic";
 
         public const string Belt = "AwesomeInventory_Belt";
+
+        public const string Blacklist = "AweseomInventory_Blacklist";
 
         public const string ChooseMaterialAndQuality = "AwesomeInventory_ChooseMaterialAndQuality";
 
@@ -85,7 +92,11 @@ namespace AwesomeInventory.UI
 
         public const string Customize = "AwesomeInventory_Customize";
 
+        public const string LoadoutName = "AwesomeInventory_LoadoutName";
+
         public const string DeleteLoadout = "AwesomeInventory_DeleteLoadout";
+
+        public const string Assorted = "AwesomeInventory_Assorted";
 
         public const string DragToReorder = "AwesomeInventory_DragToReorder";
 
@@ -117,9 +128,19 @@ namespace AwesomeInventory.UI
 
         public const string PrimaryWeapon = "AwesomeInventory_PrimaryWeapon";
 
+        public const string PreviewQuality = "AwesomeInventory_PreviewQuality";
+
+        public const string PreviewQualityTooltip = "AwesomeInventory_PreviewQuality_Tooltip";
+
         public const string PutAway = "AwesomeInventory_PutAway";
 
         public const string SelectLoadout = "AwesomeInventory_SelectLoadout";
+
+        public const string SelectedStuff = "AwesomeInventory_SelectorStuff";
+
+        public const string Separate = "AwesomeInventory_Separate";
+
+        public const string SeparateTooltip = "AwesomeInventory_Separate_Tooltip";
 
         public const string SourceAllTip = "AwesomeInventory_SourceAllTip";
 
@@ -133,6 +154,8 @@ namespace AwesomeInventory.UI
 
         public const string SourceRangedTip = "AwesomeInventory_SourceRangedTip";
 
+        public const string StuffSource = "AwesomeInventory_StuffSource";
+
         public const string TorsoMiddleLayer = "AwesomeInventory_TorsoMiddle";
 
         public const string TorsoOnSkinLayer = "AwesomeInventory_TorsoOnSkin";
@@ -140,6 +163,8 @@ namespace AwesomeInventory.UI
         public const string TorsoShellLayer = "AwesomeInventory_TorsoShell";
 
         public const string Weight = "AwesomeInventory_Weight";
+
+        public const string Whitelist = "AwesomeInventory_Whitelist";
 
         public const string OutfitAnything = "OutfitAnything";
 

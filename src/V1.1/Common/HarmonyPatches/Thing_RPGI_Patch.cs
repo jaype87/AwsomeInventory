@@ -37,7 +37,7 @@ namespace AwesomeInventory.Common.HarmonyPatches
             {
                 if (pawn.TryGetComp<CompAwesomeInventoryLoadout>() is CompAwesomeInventoryLoadout compRPGI)
                 {
-                    compRPGI.NotifiedSplitOff(__instance, count);
+                    compRPGI.NotifiedSplitOffHandler(__instance, count);
                 }
             }
         }

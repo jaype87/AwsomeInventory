@@ -54,3 +54,9 @@ dotnet_diagnostic.CA1303.severity = none
 
 # SA1407: Arithmetic expressions should declare precedence
 dotnet_diagnostic.SA1407.severity = none
+
+# SA1117: Parameters should be on same line or separate lines
+dotnet_diagnostic.SA1117.severity = silent
+
+# CA1810: Initialize reference type static fields inline
+dotnet_diagnostic.CA1810.severity = none

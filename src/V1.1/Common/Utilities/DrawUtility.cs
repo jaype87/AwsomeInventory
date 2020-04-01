@@ -16,11 +16,11 @@ namespace AwesomeInventory.UI
 {
     public static class DrawUtility
     {
-        public const float SmallIconSize = 20f;
-        public const float IconSize = ContentSourceUtility.IconSize;
+        public const float TinyIconSize = 20f;
 
         public static readonly Color HighlightGreen = new Color(134 / 255f, 206 / 255f, 0, 1);
         public static readonly Color HighlightBrown = new Color(212 / 255f, 141 / 255f, 0, 1);
+        public static readonly float TwentyCharsWidth = UIText.TenCharsString.Times(2f).GetWidthCached();
 
         public static Vector2 MouseDownPos;
         public static bool isDrag;
@@ -38,20 +38,14 @@ namespace AwesomeInventory.UI
         }
 
         /// <summary>
-        /// Draw title at "position" and return next available Y as rollingY.
+        /// Draw a lable which doubles as a button.
         /// </summary>
-        /// <param name="position"></param>
-        /// <param name="title"></param>
-        /// <param name="rollingY"></param>
-        public static Rect DrawTitle(Vector2 position, string title, ref float rollingY)
+        /// <param name="rect"> Rect for drawing. </param>
+        /// <param name="label"> Label to draw in <paramref name="rect"/>. </param>
+        /// <param name="action"> Action to take when it is clicked. </param>
+        public static void DrawLabelButton(Rect rect, string label, Action action)
         {
-            Text.Font = GameFont.Medium;
-            Vector2 titleSize = Text.CalcSize(title);
-            Rect rectToDraw = new Rect(position, titleSize);
-            Widgets.Label(rectToDraw, title);
-            Text.Font = GameFont.Small;
-            rollingY = rectToDraw.yMax;
-            return rectToDraw;
+            DrawLabelButton(rect, label, action, false);
         }
 
         /// <summary>
@@ -60,13 +54,23 @@ namespace AwesomeInventory.UI
         /// <param name="rect"> Rect for drawing. </param>
         /// <param name="label"> Label to draw in <paramref name="rect"/>. </param>
         /// <param name="action"> Action to take when it is clicked. </param>
-        public static void DrawLableButton(Rect rect, string label, Action action)
+        /// <param name="toggleable"> Indicates if button can be toggled and uses a selected texture if true. </param>
+        public static void DrawLabelButton(Rect rect, string label, Action action, bool toggleable)
         {
             Text.WordWrap = false;
             Text.Anchor = TextAnchor.MiddleLeft;
 
             Widgets.Label(rect, label);
-            Widgets.DrawHighlightIfMouseover(rect);
+            if (toggleable)
+            {
+                if (Mouse.IsOver(rect))
+                    Widgets.DrawHighlightSelected(rect);
+            }
+            else
+            {
+                Widgets.DrawHighlightIfMouseover(rect);
+            }
+
             if (Widgets.ButtonInvisible(rect))
             {
                 action?.Invoke();
@@ -169,26 +173,53 @@ namespace AwesomeInventory.UI
         {
             if (thing.TryGetQuality(out QualityCategory qualityCategory))
             {
-                switch (qualityCategory)
-                {
-                    case QualityCategory.Awful:
-                        return s.Colorize(GenColor.FromHex("cc1a00"));
-                    case QualityCategory.Poor:
-                        return s.Colorize(GenColor.FromHex("b0b3af"));
-                    case QualityCategory.Normal:
-                        return s.Colorize(Color.white);
-                    case QualityCategory.Good:
-                        return s.Colorize(ColorLibrary.LightGreen);
-                    case QualityCategory.Excellent:
-                        return s.Colorize(ColorLibrary.Cyan);
-                    case QualityCategory.Masterwork:
-                        return s.Colorize(ColorLibrary.Sand);
-                    case QualityCategory.Legendary:
-                        return s.Colorize(ColorLibrary.Orange);
-                }
+                s = s.ColorizeByQuality(qualityCategory);
             }
 
             return s;
+        }
+
+        /// <summary>
+        /// Color <paramref name="s"/> based on <paramref name="qualityCategory"/>.
+        /// </summary>
+        /// <param name="s"> String to color. </param>
+        /// <param name="qualityCategory"> Quality value. </param>
+        /// <returns> Colored string. </returns>
+        public static string ColorizeByQuality(this string s, QualityCategory qualityCategory)
+        {
+            switch (qualityCategory)
+            {
+                case QualityCategory.Awful:
+                    return s.Colorize(GenColor.FromHex("cc1a00"));
+                case QualityCategory.Poor:
+                    return s.Colorize(GenColor.FromHex("b0b3af"));
+                case QualityCategory.Normal:
+                    return s.Colorize(Color.white);
+                case QualityCategory.Good:
+                    return s.Colorize(ColorLibrary.LightGreen);
+                case QualityCategory.Excellent:
+                    return s.Colorize(ColorLibrary.Cyan);
+                case QualityCategory.Masterwork:
+                    return s.Colorize(ColorLibrary.Sand);
+                case QualityCategory.Legendary:
+                    return s.Colorize(ColorLibrary.Orange);
+            }
+
+            return s;
+        }
+
+        /// <summary>
+        /// Get the index range for a list whose content will be rendered on screen.
+        /// </summary>
+        /// <param name="totalLength"> The length of a scrollable list. </param>
+        /// <param name="scrollPosition"> Scroll position for the list view. </param>
+        /// <param name="from"> Start index of a list where drawing begins. </param>
+        /// <param name="to"> <paramref name="to"/> is positioned at one element behind the index where drawing should stop. </param>
+        /// <param name="unitLength"> The length of a unit elemnt in the list. </param>
+        public static void GetIndexRangeFromScrollPosition(float totalLength, float scrollPosition, out int from, out int to, float unitLength)
+        {
+            from = Mathf.FloorToInt(scrollPosition / unitLength);
+            to = from + (int)Math.Ceiling(totalLength / unitLength);
         }
     }
 }

@@ -24,21 +24,22 @@ namespace AwesomeInventory.Loadout
         /// <param name="description"> Description for this def. </param>
         /// <param name="label"> Label to display. </param>
         /// <param name="thingClass"> Type of Thing that this def defines. </param>
-        /// <param name="thingRequestGroup"> Group the this def belongs. </param>
-        /// <param name="filter"> Filter that help defines this def. </param>
-        protected AIGenericDef(string defName, string description, string label, Type thingClass, ThingRequestGroup thingRequestGroup, Predicate<ThingDef> filter = null)
+        /// <param name="thingCategoryDefs"> Group the this def belongs. </param>
+        /// <param name="exceptDefs"> Defs should not be in this category. </param>
+        protected AIGenericDef(string defName, string description, string label, Type thingClass, IEnumerable<ThingCategoryDef> thingCategoryDefs, IEnumerable<ThingDef> exceptDefs = null)
         {
             this.defName = defName;
             this.description = description;
             this.label = label;
             this.thingClass = thingClass;
-            this.Filter = filter;
-            this.ThingRequestGroup = thingRequestGroup;
-            this.Includes = (thingDef) => this.ThingRequestGroup.Includes(thingDef) && (filter?.Invoke(thingDef) ?? true);
-            this.AvailableDefs = DefDatabase<ThingDef>.AllDefsListForReading.Where(def => this.Includes(def));
+            this.ExcepDefs = exceptDefs;
+            this.ThingCategoryDefs = thingCategoryDefs;
+            this.Includes = (thingDef) => this.AvailableDefs.Contains(thingDef);
+            this.AvailableDefs = from thingDef in this.ThingCategoryDefs.SelectMany(t => t.DescendantThingDefs)
+                                 where !this.ExcepDefs.EnumerableNullOrEmpty() && !this.ExcepDefs.Contains(thingDef)
+                                 select thingDef;
         }
 
-        /// <remarks> Enforce singleton pattern. </remarks>
         private AIGenericDef()
         {
         }
@@ -51,7 +52,7 @@ namespace AwesomeInventory.Loadout
         /// <summary>
         /// Gets a group used for requesting things from <see cref="ListerThings"/>.
         /// </summary>
-        public ThingRequestGroup ThingRequestGroup { get; }
+        public IEnumerable<ThingCategoryDef> ThingCategoryDefs { get; }
 
         /// <summary>
         /// Gets a predicate function which returns true if <see cref="ThingDef"/> belongs.
@@ -61,7 +62,7 @@ namespace AwesomeInventory.Loadout
         /// <summary>
         /// Gets a filter that rules out <see cref="ThingDef"/> that does not belong.
         /// </summary>
-        protected Predicate<ThingDef> Filter { get; }
+        public IEnumerable<ThingDef> ExcepDefs { get; }
 
         /// <summary>
         /// Compare equality between <paramref name="a"/> and <paramref name="b"/>.

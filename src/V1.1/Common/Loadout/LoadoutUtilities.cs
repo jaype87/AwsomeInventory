@@ -28,56 +28,9 @@ namespace AwesomeInventory.Loadout
 
         #endregion Fields
 
-        #region Properties
-
-        public static float LabelSize
-        {
-            get
-            {
-                if (_labelSize < 0)
-                {
-                    // get size of label
-                    _labelSize = (_margin + Text.CalcSize("Corgi_Weight".Translate()).x);
-                }
-                return _labelSize;
-            }
-        }
-
-        public static Texture2D OverburdenedTex
-        {
-            get
-            {
-                if (_overburdenedTex == null)
-                    _overburdenedTex = SolidColorMaterials.NewSolidColorTexture(Color.red);
-                return _overburdenedTex;
-            }
-        }
-
-        #endregion Properties
-
         #region Methods
 
-        public static void DrawBarThreshold(Rect barRect, float pct, float curLevel = 1f)
-        {
-            float thresholdBarWidth = (float)((barRect.width <= 60f) ? 1 : 2);
-
-            Rect position = new Rect(barRect.x + barRect.width * pct - (thresholdBarWidth - 1f), barRect.y + barRect.height / 2f, thresholdBarWidth, barRect.height / 2f);
-            Texture2D image;
-            if (pct < curLevel)
-            {
-                image = BaseContent.BlackTex;
-                GUI.color = new Color(1f, 1f, 1f, 0.9f);
-            }
-            else
-            {
-                image = BaseContent.GreyTex;
-                GUI.color = new Color(1f, 1f, 1f, 0.5f);
-            }
-            GUI.DrawTexture(position, image);
-            GUI.color = Color.white;
-        }
-
-        public static AILoadout GetLoadout(this Pawn pawn)
+        public static AwesomeInventoryLoadout GetLoadout(this Pawn pawn)
         {
             if (pawn == null)
             {
@@ -85,11 +38,6 @@ namespace AwesomeInventory.Loadout
             }
 
             return pawn.TryGetComp<CompAwesomeInventoryLoadout>()?.Loadout;
-        }
-
-        public static int GetLoadoutId(this Pawn pawn)
-        {
-            return 0;
         }
 
         public static string GetWeightAndBulkTip(this ThingDef def, int count = 1)
@@ -115,9 +63,9 @@ namespace AwesomeInventory.Loadout
         /// <summary>
         /// Set Pawn's loadout. Called by a harmony patch, Pawn_OutfitTracker_CurrentOutfit.
         /// </summary>
-        /// <param name="pawn"></param>
-        /// <param name="loadout"></param>
-        public static void SetLoadout(this Pawn pawn, AILoadout loadout)
+        /// <param name="pawn"> Set loadout on this <paramref name="pawn"/>. </param>
+        /// <param name="loadout"> Loadout to assign to <paramref name="pawn"/>. </param>
+        public static void SetLoadout(this Pawn pawn, AwesomeInventoryLoadout loadout)
         {
             if (pawn.TryGetComp<CompAwesomeInventoryLoadout>() is CompAwesomeInventoryLoadout comp)
             {
@@ -134,13 +82,6 @@ namespace AwesomeInventory.Loadout
 
                 pawn.outfits.CurrentOutfit = loadout;
             }
-        }
-
-        public static string GetDefaultLoadoutName(this Pawn pawn)
-        {
-            ValidateArg.NotNull(pawn, nameof(pawn));
-
-            return string.Concat(pawn.Name.ToStringFull, " ", "Corgi_DefaultLoadoutName".Translate());
         }
 
         public static Thing MakeThing(ThingStuffPairWithQuality pair)
@@ -211,6 +152,11 @@ namespace AwesomeInventory.Loadout
             if (thing.def.useHitPoints)
             {
                 thing.HitPoints = thing.MaxHitPoints;
+            }
+
+            if (thing is ThingWithComps thingWithComps)
+            {
+                thingWithComps.InitializeComps();
             }
 
             thing.TryGetComp<CompQuality>()?.SetQuality(pair.Quality, ArtGenerationContext.Outsider);

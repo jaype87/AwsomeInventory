@@ -34,7 +34,7 @@ namespace AwesomeInventory.Common.HarmonyPatches
         [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Postfix patch")]
         public static void Postfix(Outfit value, Pawn_OutfitTracker __instance)
         {
-            if (value is AILoadout loadout)
+            if (value is AwesomeInventoryLoadout loadout)
             {
                 __instance.pawn.SetLoadout(loadout);
             }

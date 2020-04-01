@@ -34,29 +34,34 @@ namespace AwesomeInventory.Jobs
 
         protected Func<Pawn, Thing, bool> ValidatorBase = (Pawn p, Thing x) => p.CanReserve(x) && !x.IsBurning();
 
-        protected virtual T FindItem(Pawn pawn, ThingDef thingDef = null, ThingRequestGroup thingRequestGroup = 0, Func<Thing, bool> validator = null, Func<Thing, float> priorityGetter = null, int searchLevel = 2)
+        // TODO coordinate between the use of ThingDef and ThingRequestGroup, e.g., use ThingRequestGroup to narrow down the search.
+        protected virtual T FindItem(Pawn pawn, ThingDef thingDef = null, IEnumerable<ThingRequestGroup> thingRequestGroups = null, Func<Thing, bool> validator = null, Func<Thing, float> priorityGetter = null, int searchLevel = 2)
         {
-            if (thingDef == null && thingRequestGroup == ThingRequestGroup.Undefined)
+            if (thingDef == null && thingRequestGroups.EnumerableNullOrEmpty())
             {
-                Log.Error(string.Format(ErrorMessage.BothArgumentsAreNull, nameof(thingDef), nameof(thingRequestGroup)));
+                Log.Error(string.Format(ErrorMessage.BothArgumentsAreNull, nameof(thingDef), nameof(thingRequestGroups)));
                 return null;
             }
-            if (thingDef != null && thingRequestGroup != ThingRequestGroup.Undefined)
-            {
-                Log.Error(string.Format(ErrorMessage.BothArgumentsAreNotNull, nameof(thingDef), nameof(thingRequestGroup)));
-                return null;
-            }
+
+            //if (thingDef != null && thingRequestGroup != ThingRequestGroup.Undefined)
+            //{
+            //    Log.Error(string.Format(ErrorMessage.BothArgumentsAreNotNull, nameof(thingDef), nameof(thingRequestGroup)));
+            //    return null;
+            //}
+
             if (pawn == null)
             {
                 Log.Error(ErrorMessage.ArgumentIsNull + nameof(pawn));
                 return null;
             }
+
             if (_itemFound)
             {
                 if (--_lastRadiusIndex < 0)
                 {
                     ++_lastRadiusIndex;
                 }
+
                 if (--searchLevel < 1)
                 {
                     ++searchLevel;
@@ -67,19 +72,19 @@ namespace AwesomeInventory.Jobs
                 Log.Message(string.Format(ErrorMessage.ExpectedString, nameof(searchLevel), "-", searchLevel));
 #endif
             }
+
             Thing thing = null;
             while (thing == null && searchLevel-- > 0)
             {
-                thing = GenClosest.ClosestThing_Global_Reachable
-                    (pawn.Position
+                thing = GenClosest.ClosestThing_Global_Reachable(
+                    pawn.Position
                     , pawn.Map
-                    , thingDef != null ? pawn.Map.listerThings.ThingsOfDef(thingDef) : pawn.Map.listerThings.ThingsInGroup(thingRequestGroup)
+                    , thingDef != null ? pawn.Map.listerThings.ThingsOfDef(thingDef) : thingRequestGroups.SelectMany(g => pawn.Map.listerThings.ThingsInGroup(g))
                     , PathEndMode.OnCell
                     , TraverseParms.For(pawn)
                     , _radius[_lastRadiusIndex]
                     , (Thing x) => ValidatorBase(pawn, x) && validator == null ? true : validator(x)
-                    , priorityGetter
-                    );
+                    , priorityGetter);
                 if (thing == null)
                 {
                     _itemFound = false;
@@ -102,6 +107,7 @@ namespace AwesomeInventory.Jobs
                 Log.Message(string.Format(ErrorMessage.ReportString, "While loop end", nameof(_lastRadiusIndex), _lastRadiusIndex));
 #endif
             }
+
             return thing as T;
         }
 
