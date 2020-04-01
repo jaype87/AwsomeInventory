@@ -20,7 +20,7 @@ namespace AwesomeInventory.UI
     /// <summary>
     /// A dialog window for managing loadouts.
     /// </summary>
-    public class Dialog_ManageLoadouts : Window
+    public class Dialog_ManageLoadouts : Window, IReset
     {
         private const float _paneDivider = 5 / 9f;
         private const int _loadoutNameMaxLength = 50;
@@ -32,15 +32,15 @@ namespace AwesomeInventory.UI
         private static Vector2 _initialSize;
         private static Pawn _pawn;
         private static List<ItemContext> _itemContexts;
+        private static List<IReset> _resettables = new List<IReset>();
 
-        private Vector2 _availableScrollPosition = Vector2.zero;
+        private Vector2 _sourceListScrollPosition = Vector2.zero;
         private AwesomeInventoryLoadout _currentLoadout;
         private string _filter = string.Empty;
         private float _scrollViewHeight;
-        private Vector2 _slotScrollPosition = Vector2.zero;
+        private Vector2 _loadoutListScrollPosition = Vector2.zero;
         private List<ItemContext> _categorySource;
         private List<ItemContext> _source;
-        private CategorySelection _sourceType = CategorySelection.Ranged;
 
         #region Constructors
 
@@ -52,20 +52,20 @@ namespace AwesomeInventory.UI
         public Dialog_ManageLoadouts(AwesomeInventoryLoadout loadout, Pawn pawn)
         {
             ValidateArg.NotNull(loadout, nameof(loadout));
-            ValidateArg.NotNull(pawn, nameof(pawn));
+            _pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
 
             float width = GenUI.GetWidthCached(UIText.TenCharsString.Times(10));
             _initialSize = new Vector2(width, Verse.UI.screenHeight / 2f);
 
-            _pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
             _currentLoadout = loadout;
+            _resettables.Add(this);
+            _resettables.Add(new WhiteBlacklistView());
 
             doCloseX = true;
             forcePause = true;
             absorbInputAroundWindow = false;
             closeOnClickedOutside = false;
             closeOnAccept = false;
-            draggable = true;
         }
 
         #endregion Constructors
@@ -127,18 +127,25 @@ namespace AwesomeInventory.UI
              *
              */
 
+            if (Event.current.type == EventType.Layout)
+                return;
+
             if (Find.Selector.SingleSelectedThing is Pawn pawn && pawn.IsColonist && !pawn.Dead)
             {
-                _pawn = pawn;
-                AwesomeInventoryLoadout loadout = _pawn.GetLoadout();
-                if (loadout == null)
+                if (pawn != _pawn)
                 {
-                    loadout = new AwesomeInventoryLoadout(pawn);
-                    LoadoutManager.AddLoadout(loadout);
-                    pawn.SetLoadout(loadout);
-                }
+                    _pawn = pawn;
+                    AwesomeInventoryLoadout loadout = _pawn.GetLoadout();
+                    if (loadout == null)
+                    {
+                        loadout = new AwesomeInventoryLoadout(pawn);
+                        LoadoutManager.AddLoadout(loadout);
+                        pawn.SetLoadout(loadout);
+                    }
 
-                _currentLoadout = loadout;
+                    _currentLoadout = loadout;
+                    _resettables.ForEach(r => r.Reset());
+                }
             }
             else
             {
@@ -194,7 +201,12 @@ namespace AwesomeInventory.UI
 
             this.DrawWhiteBlackListOptions(whiteBlackListRect);
             this.DrawLoadoutNameField(nameFieldRect);
-            this.DrawItemsInLoadout(loadoutItemsRect);
+
+            if (WhiteBlacklistView.IsWhitelist)
+                this.DrawItemsInLoadout(loadoutItemsRect, _currentLoadout);
+            else
+                this.DrawItemsInLoadout(loadoutItemsRect, _currentLoadout.BlackList);
+
             GUI.DrawTexture(new Rect(loadoutItemsRect.x, loadoutItemsRect.yMax, loadoutItemsRect.width, 1f), BaseContent.GreyTex);
             this.DrawWeightBar(weightBarRect);
 
@@ -235,16 +247,29 @@ namespace AwesomeInventory.UI
             SetCategory(CategorySelection.Ranged);
         }
 
+        /// <summary>
+        /// Draw whitelist/blacklist choice on screen.
+        /// </summary>
+        /// <param name="canvas"> Rect for drawing. </param>
         protected virtual void DrawWhiteBlackListOptions(Rect canvas)
         {
             Rect drawingRect = new Rect(0, canvas.y, GenUI.SmallIconSize * 2 + DrawUtility.TwentyCharsWidth + GenUI.GapTiny * 2, GenUI.ListSpacing);
             Rect centeredRect = drawingRect.CenteredOnXIn(canvas);
             WidgetRow widgetRow = new WidgetRow(centeredRect.x, centeredRect.y, UIDirection.RightThenDown);
-            widgetRow.ButtonIcon(TexResource.TriangleLeft);
+
+            if (widgetRow.ButtonIcon(TexResource.TriangleLeft))
+                WhiteBlacklistView.IsWhitelist ^= true;
+
             Text.Anchor = TextAnchor.MiddleCenter;
-            widgetRow.LabelWithHighlight("White List", DrawUtility.TwentyCharsWidth);
+            widgetRow.LabelWithHighlight(
+                WhiteBlacklistView.IsWhitelist
+                    ? WhiteBlacklistView.WhitelistDisplayName
+                    : WhiteBlacklistView.BlacklistDisplayName
+                , DrawUtility.TwentyCharsWidth);
             Text.Anchor = TextAnchor.UpperLeft;
-            widgetRow.ButtonIcon(TexResource.TriangleRight);
+
+            if (widgetRow.ButtonIcon(TexResource.TriangleRight))
+                WhiteBlacklistView.IsWhitelist ^= true;
         }
 
         /// <summary>
@@ -324,7 +349,7 @@ namespace AwesomeInventory.UI
                             () =>
                             {
                                 _currentLoadout = loadouts[i];
-                                _slotScrollPosition = Vector2.zero;
+                                _loadoutListScrollPosition = Vector2.zero;
                                 _pawn.SetLoadout(_currentLoadout);
                             }));
                     }
@@ -368,35 +393,36 @@ namespace AwesomeInventory.UI
             {
                 case CategorySelection.Ranged:
                     _source = _categorySource = _itemContexts.Where(context => context.thingDef.IsRangedWeapon).ToList();
-                    _sourceType = CategorySelection.Ranged;
                     break;
 
                 case CategorySelection.Melee:
                     _source = _categorySource = _itemContexts.Where(context => context.thingDef.IsMeleeWeapon).ToList();
-                    _sourceType = CategorySelection.Melee;
                     break;
 
                 case CategorySelection.Apparel:
                     _source = _categorySource = _itemContexts.Where(context => context.thingDef.IsApparel).ToList();
-                    _sourceType = CategorySelection.Apparel;
                     break;
 
                 case CategorySelection.Minified:
                     _source = _categorySource = _itemContexts.Where(context => context.thingDef.Minifiable).ToList();
-                    _sourceType = CategorySelection.Minified;
                     break;
 
                 case CategorySelection.Generic:
                     _source = _categorySource = _itemContexts.Where(context => context.thingDef is AIGenericDef).ToList();
-                    _sourceType = CategorySelection.Generic;
                     break;
 
                 case CategorySelection.All:
                 default:
                     _source = _categorySource = _itemContexts;
-                    _sourceType = CategorySelection.All;
                     break;
             }
+        }
+
+        /// <inheritdoc/>
+        public void Reset()
+        {
+            _sourceListScrollPosition = Vector2.zero;
+            _loadoutListScrollPosition = Vector2.zero;
         }
 
         /// <summary>
@@ -406,36 +432,40 @@ namespace AwesomeInventory.UI
         /// <param name="groupSelector"> Thing to draw. </param>
         /// <param name="reorderableGroup"> The group this <paramref name="row"/> belongs to. </param>
         /// <param name="drawShadow"> If true, it draws a shadow copy of the row. It is used for drawing a row when it is dragged. </param>
-        protected virtual void DrawItemRow(Rect row, ThingGroupSelector groupSelector, int reorderableGroup, bool drawShadow = false)
+        protected virtual void DrawItemRow(Rect row, int index, IList<ThingGroupSelector> groupSelectors, int reorderableGroup, bool drawShadow = false)
         {
             ValidateArg.NotNull(row, nameof(row));
-            ValidateArg.NotNull(groupSelector, nameof(groupSelector));
+            ValidateArg.NotNull(groupSelectors, nameof(groupSelectors));
 
             /* Label (fill) | Weight | Gear Icon | Count Field | Delete Icon */
 
             WidgetRow widgetRow = new WidgetRow(row.width, row.y, UIDirection.LeftThenDown, row.width);
+            ThingGroupSelector groupSelector = groupSelectors[index];
 
             // Draw delete icon.
             if (widgetRow.ButtonIcon(TexResource.CloseXSmall, UIText.Delete.TranslateSimple()))
             {
-                _currentLoadout.Remove(groupSelector);
+                groupSelectors.RemoveAt(index);
             }
 
             Text.Anchor = TextAnchor.MiddleLeft;
 
             // Draw count field.
-            this.DrawCountField(
+            if (WhiteBlacklistView.IsWhitelist)
+            {
+                this.DrawCountField(
                 new Rect(widgetRow.FinalX - WidgetRow.IconSize * 2 - WidgetRow.DefaultGap, widgetRow.FinalY, WidgetRow.IconSize * 2, GenUI.ListSpacing),
                 groupSelector);
-            widgetRow.GapButtonIcon();
-            widgetRow.GapButtonIcon();
+                widgetRow.GapButtonIcon();
+                widgetRow.GapButtonIcon();
+            }
 
             // Draw gear icon.
             ThingDef allowedThing = groupSelector.AllowedThing;
             if ((allowedThing.MadeFromStuff || allowedThing.HasComp(typeof(CompQuality)) || allowedThing.useHitPoints)
                 && widgetRow.ButtonIcon(TexResource.Gear))
             {
-                Find.WindowStack.Add(new Dialog_StuffAndQuality(groupSelector, _currentLoadout));
+                Find.WindowStack.Add(new Dialog_StuffAndQuality(groupSelector));
             }
 
             Text.WordWrap = false;
@@ -501,19 +531,19 @@ namespace AwesomeInventory.UI
             _currentLoadout.label = Widgets.TextField(canvas, _currentLoadout.label, _loadoutNameMaxLength, Outfit.ValidNameRegex);
         }
 
-        private void DrawItemsInLoadout(Rect canvas)
+        private void DrawItemsInLoadout(Rect canvas, IList<ThingGroupSelector> groupSelectors)
         {
             Rect listRect = new Rect(0, 0, canvas.width - GenUI.ScrollBarWidth, _scrollViewHeight);
 
             // darken whole area
             GUI.DrawTexture(canvas, TexResource.DarkBackground);
-            Widgets.BeginScrollView(canvas, ref _slotScrollPosition, listRect);
+            Widgets.BeginScrollView(canvas, ref _loadoutListScrollPosition, listRect);
 
             // Set up reorder functionality
             int reorderableGroup = ReorderableWidget.NewGroup(
                 (int from, int to) =>
                 {
-                    this.ReorderItems(from, to);
+                    ReorderItems(from, to, groupSelectors);
                     DrawUtility.ResetDrag();
                 }
                 , ReorderableDirection.Vertical
@@ -529,12 +559,12 @@ namespace AwesomeInventory.UI
                         () =>
                         {
                             GUI.DrawTexture(dragRect.AtZero(), SolidColorMaterials.NewSolidColorTexture(Theme.MilkySlicky.BackGround));
-                            this.DrawItemRow(dragRect.AtZero(), _currentLoadout[index], 0, true);
+                            this.DrawItemRow(dragRect.AtZero(), index, groupSelectors, 0, true);
                         }, false);
                 });
 
             float curY = 0f;
-            for (int i = 0; i < _currentLoadout.Count; i++)
+            for (int i = 0; i < groupSelectors.Count; i++)
             {
                 // create row rect
                 Rect row = new Rect(0f, curY, listRect.width, GenUI.ListSpacing);
@@ -544,7 +574,7 @@ namespace AwesomeInventory.UI
                 if (i % 2 == 0)
                     GUI.DrawTexture(row, TexResource.DarkBackground);
 
-                this.DrawItemRow(row, _currentLoadout[i], reorderableGroup);
+                this.DrawItemRow(row, i, groupSelectors, reorderableGroup);
                 GUI.color = Color.white;
             }
 
@@ -561,8 +591,9 @@ namespace AwesomeInventory.UI
             viewRect.height = _source.Count * GenUI.ListSpacing;
             viewRect.width -= GenUI.GapWide;
 
-            Widgets.BeginScrollView(canvas, ref _availableScrollPosition, viewRect.AtZero());
-            for (int i = 0; i < _source.Count; i++)
+            Widgets.BeginScrollView(canvas, ref _sourceListScrollPosition, viewRect.AtZero());
+            DrawUtility.GetIndexRangeFromScrollPosition(canvas.height, _sourceListScrollPosition.y, out int from, out int to, GenUI.ListSpacing);
+            for (int i = from; i < to && i < _source.Count; i++)
             {
                 Color baseColor = GUI.color;
 
@@ -598,9 +629,12 @@ namespace AwesomeInventory.UI
                         }
 
                         groupSelector.SetStackCount(1);
-
                         groupSelector.Add(thingSelector);
-                        _currentLoadout.Add(groupSelector);
+
+                        if (WhiteBlacklistView.IsWhitelist)
+                            _currentLoadout.Add(groupSelector);
+                        else
+                            _currentLoadout.AddToBlacklist(groupSelector);
                     });
 
                 GUI.color = baseColor;
@@ -609,12 +643,12 @@ namespace AwesomeInventory.UI
             Widgets.EndScrollView();
         }
 
-        private void ReorderItems(int oldIndex, int newIndex)
+        private static void ReorderItems(int oldIndex, int newIndex, IList<ThingGroupSelector> groupSelectors)
         {
             if (oldIndex != newIndex)
             {
-                _currentLoadout.Insert(newIndex, _currentLoadout[oldIndex]);
-                _currentLoadout.RemoveAt((oldIndex >= newIndex) ? (oldIndex + 1) : oldIndex);
+                groupSelectors.Insert(newIndex, groupSelectors[oldIndex]);
+                groupSelectors.RemoveAt((oldIndex >= newIndex) ? (oldIndex + 1) : oldIndex);
             }
         }
 
@@ -624,7 +658,7 @@ namespace AwesomeInventory.UI
             {
                 SetCategory(sourceSelected);
                 _filter = string.Empty;
-                _availableScrollPosition = Vector2.zero;
+                _sourceListScrollPosition = Vector2.zero;
             }
         }
 
@@ -646,6 +680,20 @@ namespace AwesomeInventory.UI
         }
 
         #endregion Methods
+
+        private class WhiteBlacklistView : IReset
+        {
+            public static readonly string WhitelistDisplayName = UIText.Whitelist.TranslateSimple();
+
+            public static readonly string BlacklistDisplayName = UIText.Blacklist.TranslateSimple();
+
+            public static bool IsWhitelist { get; set; } = true;
+
+            public void Reset()
+            {
+                IsWhitelist = true;
+            }
+        }
 
         private class ItemContext
         {

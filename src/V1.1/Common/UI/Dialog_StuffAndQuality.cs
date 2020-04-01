@@ -41,10 +41,29 @@ namespace AwesomeInventory.UI
     /// </summary>
     public class Dialog_StuffAndQuality : Window
     {
+        /// <summary>
+        /// Armor stats that are displayed in window.
+        /// </summary>
         protected static readonly List<StatDef> _armorStats;
+
+        /// <summary>
+        /// Basic weapon stats that are displayed in window.
+        /// </summary>
         protected static readonly List<StatDef> _baseWeaponStats;
+
+        /// <summary>
+        /// Melee weapon stats that are displayed in window.
+        /// </summary>
         protected static readonly List<StatDef> _meleeWeaponStats;
+
+        /// <summary>
+        /// Ranged weapon stats that are displayed in window.
+        /// </summary>
         protected static readonly List<StatDef> _rangedWeaponStats;
+
+        /// <summary>
+        /// General item stats that are displayed in window.
+        /// </summary>
         protected static readonly List<StatDef> _generalItemStats;
 
         private static readonly Regex _regex = new Regex(@"\d*", RegexOptions.Compiled);
@@ -56,6 +75,8 @@ namespace AwesomeInventory.UI
         private static float _lineHeaderWidth = UIText.TenCharsString.Times(1.6f).GetWidthCached();
         private static float _statColumnWidth = UIText.TenCharsString.Times(1.6f).GetWidthCached();
         private static float _lineHeaderWidthForWeapon = UIText.TenCharsString.Times(2.5f).GetWidthCached();
+        private static Dictionary<TSPWQuality, Dictionary<StatDef, float>> _statCache = new Dictionary<TSPWQuality, Dictionary<StatDef, float>>();
+        private static Dictionary<TSPWQuality, Dictionary<StatDef, string>> _statTipCache = new Dictionary<TSPWQuality, Dictionary<StatDef, string>>();
 
         private bool _isSeparated;
         private bool _useSeparateButton;
@@ -71,7 +92,6 @@ namespace AwesomeInventory.UI
         private Vector2 _statScrollPosition = Vector2.zero;
 
         private ThingGroupSelector _groupSelector;
-        private AwesomeInventoryLoadout _loadout;
 
         /// <summary>
         /// Initializes static members of the <see cref="Dialog_StuffAndQuality"/> class.
@@ -126,10 +146,8 @@ namespace AwesomeInventory.UI
         /// Initializes a new instance of the <see cref="Dialog_StuffAndQuality"/> class.
         /// </summary>
         /// <param name="groupSelector"> Draw dialog from this selector. </param>
-        /// <param name="loadout"> Current selected loadout. </param>
-        public Dialog_StuffAndQuality(ThingGroupSelector groupSelector, AwesomeInventoryLoadout loadout)
+        public Dialog_StuffAndQuality(ThingGroupSelector groupSelector)
         {
-            _loadout = loadout ?? throw new ArgumentNullException(nameof(loadout));
             _groupSelector = groupSelector ?? throw new ArgumentNullException(nameof(groupSelector));
 
             IEnumerable<SingleThingSelector> singleThingSelectors = _groupSelector.OfType<SingleThingSelector>();
@@ -184,23 +202,25 @@ namespace AwesomeInventory.UI
              * Preview quality  |     Separate     |
             */
 
+            if (Event.current.type == EventType.Layout)
+                return;
+
             if (_groupSelector.AllowedThing.MadeFromStuff)
                 this.DoWindowContentsGeneral(canvas);
             else
                 this.DoWindowContentsForNoStuffItem(canvas);
         }
 
-        public override void PreClose()
-        {
-            _availableStuffscrollPosition = Vector2.zero;
-        }
-
+        /// <summary>
+        /// Draw contents for items that are not made from stuff.
+        /// </summary>
+        /// <param name="canvas"> Rect for drawing. </param>
         protected virtual void DoWindowContentsForNoStuffItem(Rect canvas)
         {
             float rollingY = 0;
 
             // Draw Title
-            Rect titleRec = DrawUtility.DrawTitle(
+            Rect titleRec = DrawTitle(
                 canvas.position,
                 string.Concat(UIText.Customize.TranslateSimple(), " ", _groupSelector.AllowedThing.LabelCap),
                 ref rollingY);
@@ -221,12 +241,18 @@ namespace AwesomeInventory.UI
             this.DrawSliders(new Rect(statRect.x, statRect.yMax, statRect.width / 2, GenUI.SmallIconSize).CenteredOnXIn(canvas));
         }
 
+        /// <summary>
+        /// Draw items that are made of stuff.
+        /// </summary>
+        /// <param name="canvas"> Rect for drawing. </param>
         protected virtual void DoWindowContentsGeneral(Rect canvas)
         {
             float rollingY = 0;
 
+            AIDebug.Timer.Start();
+
             // Draw Title
-            Rect titleRec = DrawUtility.DrawTitle(
+            Rect titleRec = DrawTitle(
                 canvas.position,
                 string.Concat(UIText.Customize.TranslateSimple(), " ", _groupSelector.AllowedThing.LabelCap),
                 ref rollingY);
@@ -269,6 +295,28 @@ namespace AwesomeInventory.UI
             this.DrawSliders(new Rect(0, rect.yMax + GenUI.GapTiny, rect.width * 0.6f, GenUI.SmallIconSize).CenteredOnXIn(rect));
         }
 
+        /// <summary>
+        /// Draw title at "position" and return next available Y as rollingY.
+        /// </summary>
+        /// <param name="position"> The x and y position for drawing. </param>
+        /// <param name="title"> Text of the title. </param>
+        /// <param name="rollingY"> The y coordinate that can be used for drawing next element without overlapping. </param>
+        /// <returns> The rect in which the title is drawn. </returns>
+        protected virtual Rect DrawTitle(Vector2 position, string title, ref float rollingY)
+        {
+            Text.Font = GameFont.Medium;
+            Vector2 titleSize = Text.CalcSize(title);
+            Rect rectToDraw = new Rect(position, titleSize);
+            Widgets.Label(rectToDraw, title);
+            Text.Font = GameFont.Small;
+            rollingY = rectToDraw.yMax;
+            return rectToDraw;
+        }
+
+        /// <summary>
+        /// Draw quality and hit points sliders.
+        /// </summary>
+        /// <param name="rect"> Rect for drawing. </param>
         protected virtual void DrawSliders(Rect rect)
         {
             // Draw hitpoint slider
@@ -290,6 +338,11 @@ namespace AwesomeInventory.UI
                 this.DrawQualitySlider(qualityRect, ++dragID);
         }
 
+        /// <summary>
+        /// Draw quality slider.
+        /// </summary>
+        /// <param name="qualityRect"> Rect for drawing. </param>
+        /// <param name="dragID"> A unique drag ID that can be used for identifying this slider. </param>
         protected virtual void DrawQualitySlider(Rect qualityRect, int dragID)
         {
             QualityRange qualityRange = _isSeparated ? _selectedSingleThingSelector.AllowedQualityLevel : _groupSelector.SingleThingSelectors.First().AllowedQualityLevel;
@@ -300,6 +353,11 @@ namespace AwesomeInventory.UI
                 _groupSelector.SingleThingSelectors.ForEach(s => s.SetQualityRange(qualityRange));
         }
 
+        /// <summary>
+        /// Draw hit point slider.
+        /// </summary>
+        /// <param name="hitpointRect"> Rect for drawing. </param>
+        /// <param name="dragID"> A unique drag ID that can be used for identifying this slider. </param>
         protected virtual void DrawHitPointsSlider(Rect hitpointRect, int dragID)
         {
             FloatRange hitpointRange = _groupSelector.SingleThingSelectors.First().AllowedHitPointsPercent;
@@ -374,7 +432,7 @@ namespace AwesomeInventory.UI
             }
             else
             {
-                this.DrawEmptyStuffList(canvas);
+                DrawEmptyStuffList(canvas);
             }
         }
 
@@ -382,6 +440,9 @@ namespace AwesomeInventory.UI
         /// Draw list of stuffs that can be used to make thing.
         /// </summary>
         /// <param name="outRect"> Rect for drawing. </param>
+        /// <param name="stuffList"> A list of stuff to draw. </param>
+        /// <param name="scrollPosition"> Position of the scroll bar in the list. </param>
+        /// <param name="scrollViewHeight"> The height of the scrollable list. </param>
         protected virtual void DrawStuffSourceScrollableList(Rect outRect, IList<ThingDef> stuffList, ref Vector2 scrollPosition, ref float scrollViewHeight)
         {
             ValidateArg.NotNull(stuffList, nameof(stuffList));
@@ -489,6 +550,7 @@ namespace AwesomeInventory.UI
 
                     Rect closeRect = new Rect(row.x, row.y, GenUI.SmallIconSize, GenUI.SmallIconSize);
 
+                    // Draw close button
                     if (Widgets.ButtonImage(closeRect.ContractedBy(GenUI.GapTiny), TexResource.CloseXSmall))
                     {
                         _groupSelector.Remove(singleThingSelectors[i]);
@@ -512,10 +574,11 @@ namespace AwesomeInventory.UI
                         }
                     }
 
+                    // Draw stuff label
                     ThingDef stuff = singleThingSelectors[i].AllowedStuff;
                     DrawUtility.DrawLabelButton(
                         row.ReplaceX(row.x + GenUI.SmallIconSize)
-                        , stuff.LabelAsStuff.CapitalizeFirst()
+                        , stuff.LabelAsStuff.CapitalizeFirst().ColorizeByQuality(singleThingSelectors[i].AllowedQualityLevel.min)
                         , () =>
                         {
                             if (_isSeparated)
@@ -530,19 +593,36 @@ namespace AwesomeInventory.UI
             Widgets.EndScrollView();
         }
 
-        private static void DrawStatTableHeader(WidgetRow row, float columnWidth, List<TSPWQuality> pairListToDraw)
+        /// <summary>
+        /// Draw stuff names and info icon buttons as headers for stat table.
+        /// </summary>
+        /// <param name="startRect"> Rect for drawing stats. </param>
+        /// <param name="start"> Start index from which <paramref name="pairListToDraw"/> should begin to read. </param>
+        /// <param name="end"> End index which is one greater than the index at which <paramref name="pairListToDraw"/> should stop reading. </param>
+        /// <param name="pairListToDraw"> A working set of <see cref="TSPWQuality"/>. </param>
+        private static void DrawStatTableHeader(Rect startRect, int start, int end, List<TSPWQuality> pairListToDraw)
         {
             Text.Anchor = TextAnchor.MiddleCenter;
             Text.WordWrap = false;
-            foreach (TSPWQuality pair in pairListToDraw)
+            for (int i = start; i < pairListToDraw.Count && i < end; i++)
             {
-                if (row.ButtonIcon(TexResource.Info))
+                TSPWQuality pair = pairListToDraw[i];
+                Rect buttonRect = startRect.ReplaceWidth(GenUI.SmallIconSize);
+                if (Widgets.ButtonImage(buttonRect, TexResource.Info))
                 {
                     Thing thing = pair.MakeThingWithoutID();
                     Find.WindowStack.Add(new Dialog_InfoCard(thing));
                 }
 
-                row.Label(pair.stuff != null ? pair.stuff.LabelAsStuff.CapitalizeFirst().ColorizeByQuality(pair.Quality) : pair.thing.LabelCap.ToString(), columnWidth - WidgetRow.IconSize - 2 * WidgetRow.DefaultGap);
+                Rect labelRect = startRect.ReplacexMin(buttonRect.xMax + GenUI.GapTiny);
+
+                string text = pair.stuff != null ? pair.stuff.LabelAsStuff.CapitalizeFirst().ColorizeByQuality(pair.Quality) : pair.thing.LabelCap.ToString();
+                labelRect.width -= GenUI.GapTiny;
+                if (text.StripTags().GetWidthCached() > labelRect.width)
+                    Text.Anchor = TextAnchor.MiddleLeft;
+
+                Widgets.Label(labelRect, text);
+                startRect = startRect.ReplaceX(startRect.xMax);
             }
 
             Text.Anchor = TextAnchor.UpperLeft;
@@ -562,8 +642,186 @@ namespace AwesomeInventory.UI
             rollingY = cell.y;
         }
 
+        private static void DrawEmptyStuffList(Rect rect)
+        {
+            Widgets.NoneLabelCenteredVertically(rect, UIText.NoMaterial.TranslateSimple());
+        }
+
+        private static void DrawRangedStatRows(List<TSPWQuality> pairList, Rect startRect, int from, int to)
+        {
+            List<List<StatDrawInfo>> listHolder = new List<List<StatDrawInfo>>();
+            List<List<StatDrawInfo>> transposedLists = new List<List<StatDrawInfo>>();
+
+            // listHolder[0]  listHolder[1]
+            // | stuff1 |     | stuff2 |
+            // | Damage |     | Damage |
+            // | AP     |     | AP     |
+
+            /*                       stuff1   stuff2
+             * transposedLists[0]    Damage   Damage
+             * transposedLists[1]    AP       AP
+            */
+
+            for (int i = from; i < to && i < pairList.Count; i++)
+            {
+                TSPWQuality pair = pairList[i];
+                List<StatDrawInfo> infoList = new List<StatDrawInfo>();
+
+                infoList.AddRange(pair.thing.SpecialDisplayStats(StatRequest.For(pair.thing, pair.stuff, pair.Quality))
+                                .Where(r => _rangedWeaponStats.Any(s => s.label.CapitalizeFirst() == r.LabelCap))
+                                .Select(r => (StatDrawInfo)r)
+                                .ToList());
+                listHolder.Add(infoList);
+            }
+
+            // Transpose lists
+            for (int i = 0; i < _rangedWeaponStats.Count; i++)
+            {
+                List<StatDrawInfo> newList = new List<StatDrawInfo>();
+                foreach (List<StatDrawInfo> list in listHolder)
+                {
+                    newList.Add(
+                        list.Find(s => s.LabelCap == _rangedWeaponStats[i].label.CapitalizeFirst())
+                        ?? new StatDrawInfo() { ValueString = "-", Tip = string.Empty, });
+                }
+
+                if (newList.Count > 1)
+                {
+                    List<StatDrawInfo> orderedList = newList.OrderByDescending(t => t.Value).ToList();
+                    foreach (StatDrawInfo statDrawInfo in orderedList)
+                    {
+                        if (statDrawInfo.Value == orderedList[0].Value)
+                            statDrawInfo.Color = Color.green;
+                    }
+                }
+
+                transposedLists.Add(newList);
+            }
+
+            DrawStatRows(_rangedWeaponStats, null, startRect, from, to, out _, transposedLists, true);
+        }
+
+        private static void DrawStatRows(List<StatDef> stats, List<TSPWQuality> pairs, Rect startRect, int from, int to,
+                                         out float rollingY, List<List<StatDrawInfo>> listHolder = null,
+                                         bool specialStats = false)
+        {
+            float startX = startRect.x;
+            for (int i = 0; i < stats.Count; i++)
+            {
+                List<StatDrawInfo> statInfoList = new List<StatDrawInfo>();
+                if (!specialStats)
+                {
+                    statInfoList = new List<StatDrawInfo>();
+
+                    // Retrieve stat value and create a view model, StatDrawInfo, for drawing.
+                    for (int j = from; j < to && j < pairs.Count; j++)
+                    {
+                        TSPWQuality pair = pairs[j];
+                        StatDrawInfo drawInfo = new StatDrawInfo();
+                        Thing tempThing = pair.MakeThingWithoutID();
+                        StatRequest statRequest = StatRequest.For(tempThing);
+                        if ((stats[i].Worker.ShouldShowFor(statRequest) && !stats[i].Worker.IsDisabledFor(tempThing)) || stats[i] == StatDefOf.MaxHitPoints || stats[i] == StatDefOf.MeleeWeapon_CooldownMultiplier)
+                        {
+                            drawInfo.StatRequest = statRequest;
+                            drawInfo.Value = GetCachedValue(_statCache, () => stats[i].Worker.GetValue(drawInfo.StatRequest), pair, stats[i]);
+                            drawInfo.Tip = GetCachedValue(_statTipCache, () => stats[i].Worker.GetExplanationFull(drawInfo.StatRequest, stats[i].toStringNumberSense, drawInfo.Value), pair, stats[i]);
+                        }
+                        else
+                        {
+                            drawInfo.Value = -1;
+                            drawInfo.Tip = string.Empty;
+                        }
+
+                        statInfoList.Add(drawInfo);
+                    }
+
+                    if (statInfoList.Count > 1)
+                    {
+                        // Highlight highest stat value.
+                        List<StatDrawInfo> orderedList = statInfoList.OrderByDescending(t => t.Value).ToList();
+                        foreach (StatDrawInfo statDrawInfo in orderedList)
+                        {
+                            if (statDrawInfo.Value == orderedList[0].Value)
+                                statDrawInfo.Color = Color.green;
+                        }
+                    }
+                }
+                else
+                {
+                    statInfoList = listHolder[i];
+                }
+
+#pragma warning disable SA1118 // Parameter should not span multiple lines
+
+                // Draw stat for each stuff choice.
+                Text.Anchor = TextAnchor.MiddleCenter;
+                foreach (StatDrawInfo info in statInfoList)
+                {
+                    GUI.color = info.Color;
+                    Widgets.Label(
+                        startRect,
+                        specialStats
+                        ? info.ValueString
+                        : info.Value == -1
+                            ? "-"
+                            : stats[i].Worker.ValueToString(info.Value, true, stats[i].toStringNumberSense));
+                    Widgets.DrawHighlightIfMouseover(startRect);
+                    Text.Anchor = TextAnchor.MiddleLeft;
+                    TooltipHandler.TipRegion(startRect, info.Tip);
+                    Text.Anchor = TextAnchor.MiddleCenter;
+                    startRect = startRect.ReplaceX(startRect.xMax);
+                }
+#pragma warning restore SA1118 // Parameter should not span multiple lines
+
+                startRect = new Rect(startX, startRect.yMax, startRect.width, startRect.height);
+            }
+
+            rollingY = startRect.y;
+            Text.Anchor = TextAnchor.UpperLeft;
+            GUI.color = Color.white;
+        }
+
+        private static StatDef ToStatDef(string str)
+        {
+            StatDef newDef = new StatDef()
+            {
+                label = str.TranslateSimple(),
+                defName = str,
+            };
+            DefUtility.GiveShortHash.Invoke(null, new object[] { newDef, typeof(StatDef) });
+            return newDef;
+        }
+
+        private static T GetCachedValue<T>(Dictionary<TSPWQuality, Dictionary<StatDef, T>> cache, Func<T> valueGetter, TSPWQuality pair, StatDef statDef)
+        {
+            if (cache.TryGetValue(pair, out Dictionary<StatDef, T> cachedValues))
+            {
+                if (cachedValues.TryGetValue(statDef, out T cacheValue))
+                {
+                    return cacheValue;
+                }
+                else
+                {
+                    cacheValue = valueGetter();
+                    cachedValues[statDef] = cacheValue;
+                    return cacheValue;
+                }
+            }
+            else
+            {
+                T statValue = valueGetter();
+                cachedValues = new Dictionary<StatDef, T>();
+
+                cache[pair] = cachedValues;
+                cachedValues[statDef] = statValue;
+
+                return statValue;
+            }
+        }
+
         private void DrawStats(Rect rect, ThingGroupSelector groupSelector)
         {
+            // Create thing stuff pair for drawing.
             List<TSPWQuality> pairListToDraw = new List<TSPWQuality>();
 
             if (groupSelector.AllowedThing.MadeFromStuff)
@@ -597,6 +855,12 @@ namespace AwesomeInventory.UI
 
             Rect outRect = new Rect(row.FinalX, row.FinalY, _statColumnWidth * 3, rect.height);
             Rect viewRect = new Rect(row.FinalX, row.FinalY, _statScrollWidth, rect.height);
+            DrawUtility.GetIndexRangeFromScrollPosition(outRect.width, _statScrollPosition.y, out int from, out int to, _statColumnWidth);
+            Rect startRect = new Rect(
+                rect.x + (_groupSelector.AllowedThing.IsWeapon ? _lineHeaderWidthForWeapon : _lineHeaderWidth) + from * _statColumnWidth,
+                rect.y,
+                _statColumnWidth,
+                GenUI.ListSpacing);
 
             // Draw stats
             if (groupSelector.AllowedThing.IsApparel)
@@ -605,8 +869,8 @@ namespace AwesomeInventory.UI
                 Widgets.ScrollHorizontal(outRect, ref _statScrollPosition, viewRect);
                 Widgets.BeginScrollView(outRect, ref _statScrollPosition, viewRect);
 
-                DrawStatTableHeader(row, _statColumnWidth, pairListToDraw);
-                this.DrawStatRows(_armorStats, pairListToDraw, row, _statColumnWidth);
+                DrawStatTableHeader(startRect, from, to, pairListToDraw);
+                DrawStatRows(_armorStats, pairListToDraw, startRect.ReplaceY(startRect.yMax), from, to, out _);
 
                 Widgets.EndScrollView();
             }
@@ -617,9 +881,9 @@ namespace AwesomeInventory.UI
                 Widgets.ScrollHorizontal(outRect, ref _statScrollPosition, viewRect);
                 Widgets.BeginScrollView(outRect, ref _statScrollPosition, viewRect);
 
-                DrawStatTableHeader(row, _statColumnWidth, pairListToDraw);
-                this.DrawStatRows(_baseWeaponStats, pairListToDraw, row, _statColumnWidth);
-                this.DrawStatRows(_meleeWeaponStats, pairListToDraw, row, _statColumnWidth);
+                DrawStatTableHeader(startRect, from, to, pairListToDraw);
+                DrawStatRows(_baseWeaponStats, pairListToDraw, startRect.ReplaceY(startRect.yMax), from, to, out float rollingY);
+                DrawStatRows(_meleeWeaponStats, pairListToDraw, startRect.ReplaceY(rollingY), from, to, out _);
 
                 Widgets.EndScrollView();
             }
@@ -630,9 +894,9 @@ namespace AwesomeInventory.UI
                 Widgets.ScrollHorizontal(outRect, ref _statScrollPosition, viewRect);
                 Widgets.BeginScrollView(outRect, ref _statScrollPosition, viewRect);
 
-                DrawStatTableHeader(row, _statColumnWidth, pairListToDraw);
-                this.DrawStatRows(_baseWeaponStats, pairListToDraw, row, _statColumnWidth);
-                this.DrawRangedStatRows(pairListToDraw, row, _statColumnWidth);
+                DrawStatTableHeader(startRect, from, to, pairListToDraw);
+                DrawStatRows(_baseWeaponStats, pairListToDraw, startRect.ReplaceY(startRect.yMax), from, to, out float rollingY);
+                DrawRangedStatRows(pairListToDraw, startRect.ReplaceY(rollingY), from, to);
 
                 Widgets.EndScrollView();
             }
@@ -642,141 +906,13 @@ namespace AwesomeInventory.UI
                 Widgets.ScrollHorizontal(outRect, ref _statScrollPosition, viewRect);
                 Widgets.BeginScrollView(outRect, ref _statScrollPosition, viewRect);
 
-                DrawStatTableHeader(row, _statColumnWidth, pairListToDraw);
-                this.DrawStatRows(_generalItemStats, pairListToDraw, row, _statColumnWidth);
+                DrawStatTableHeader(startRect, from, to, pairListToDraw);
+                DrawStatRows(_generalItemStats, pairListToDraw, startRect, from, to, out _);
 
                 Widgets.EndScrollView();
             }
 
             Text.Anchor = TextAnchor.UpperLeft;
-        }
-
-        private void DrawEmptyStuffList(Rect rect)
-        {
-            Widgets.NoneLabelCenteredVertically(rect, UIText.NoMaterial.TranslateSimple());
-        }
-
-        private void DrawRangedStatRows(List<TSPWQuality> pairList, WidgetRow row, float numColumnWidth)
-        {
-            List<List<StatDrawInfo>> listHolder = new List<List<StatDrawInfo>>();
-            List<List<StatDrawInfo>> transposedLists = new List<List<StatDrawInfo>>();
-
-            // listHolder[0]  listHolder[1]
-            // | stuff1 |     | stuff2 |
-            // | Damage |     | Damage |
-            // | AP     |     | AP     |
-
-            /*                       stuff1   stuff2
-             * transposedLists[0]    Damage   Damage
-             * transposedLists[1]    AP       AP
-            */
-
-            foreach (TSPWQuality pair in pairList)
-            {
-                List<StatDrawInfo> infoList = new List<StatDrawInfo>();
-
-                infoList.AddRange(pair.thing.SpecialDisplayStats(StatRequest.For(pair.thing, pair.stuff, pair.Quality))
-                                .Where(r => _rangedWeaponStats.Any(s => s.label.TranslateSimple().CapitalizeFirst() == r.LabelCap))
-                                .Select(r => (StatDrawInfo)r)
-                                .ToList());
-                listHolder.Add(infoList);
-            }
-
-            // Transpose lists
-            for (int i = 0; i < _rangedWeaponStats.Count; i++)
-            {
-                List<StatDrawInfo> newList = new List<StatDrawInfo>();
-                foreach (List<StatDrawInfo> list in listHolder)
-                {
-                    newList.Add(
-                        list.Find(s => s.LabelCap == _rangedWeaponStats[i].label.TranslateSimple().CapitalizeFirst())
-                        ?? new StatDrawInfo() { ValueString = "-", Tip = string.Empty, });
-                }
-
-                if (newList.Count > 1)
-                {
-                    List<StatDrawInfo> orderedList = newList.OrderByDescending(t => t.Value).ToList();
-                    foreach (StatDrawInfo statDrawInfo in orderedList)
-                    {
-                        if (statDrawInfo.Value == orderedList[0].Value)
-                            statDrawInfo.Color = Color.green;
-                    }
-                }
-
-                transposedLists.Add(newList);
-            }
-
-            DrawStatRows(_rangedWeaponStats, null, row, numColumnWidth, transposedLists, true);
-        }
-
-        private void DrawStatRows(List<StatDef> stats, List<TSPWQuality> pairs, WidgetRow row, float numColumnWidth,
-                                  List<List<StatDrawInfo>> listHolder = null, bool specialStats = false)
-        {
-            for (int i = 0; i < stats.Count; i++)
-            {
-                List<StatDrawInfo> statInfoList = new List<StatDrawInfo>();
-                if (!specialStats)
-                {
-                    statInfoList = new List<StatDrawInfo>();
-
-                    // Retrieve stat value and create a view model, StatDrawInfo, for drawing.
-                    foreach (TSPWQuality pair in pairs)
-                    {
-                        StatDrawInfo drawInfo = new StatDrawInfo();
-                        Thing tempThing = pair.MakeThingWithoutID();
-                        StatRequest statRequest = StatRequest.For(tempThing);
-                        if ((stats[i].Worker.ShouldShowFor(statRequest) && !stats[i].Worker.IsDisabledFor(tempThing)) || stats[i] == StatDefOf.MaxHitPoints)
-                        {
-                            drawInfo.StatRequest = StatRequest.For(pair.MakeThingWithoutID());
-                            drawInfo.Value = stats[i].Worker.GetValue(drawInfo.StatRequest);
-                            drawInfo.Tip = stats[i].Worker.GetExplanationFull(drawInfo.StatRequest, stats[i].toStringNumberSense, drawInfo.Value);
-                        }
-                        else
-                        {
-                            drawInfo.Value = -1;
-                            drawInfo.Tip = string.Empty;
-                        }
-
-                        statInfoList.Add(drawInfo);
-                    }
-
-                    if (statInfoList.Count > 1)
-                    {
-                        // Highlight highest stat value.
-                        List<StatDrawInfo> orderedList = statInfoList.OrderByDescending(t => t.Value).ToList();
-                        foreach (StatDrawInfo statDrawInfo in orderedList)
-                        {
-                            if (statDrawInfo.Value == orderedList[0].Value)
-                                statDrawInfo.Color = Color.green;
-                        }
-                    }
-                }
-                else
-                {
-                    statInfoList = listHolder[i];
-                }
-
-                // Draw stat for each stuff choice.
-                Text.Anchor = TextAnchor.MiddleCenter;
-                foreach (StatDrawInfo info in statInfoList)
-                {
-                    GUI.color = info.Color;
-                    info.DrawRect = row.Label(
-                        specialStats
-                        ? info.ValueString
-                        : info.Value != -1
-                            ? stats[i].Worker.ValueToString(info.Value, true, stats[i].toStringNumberSense)
-                            : "-"
-                        , numColumnWidth - WidgetRow.DefaultGap);
-                    Widgets.DrawHighlightIfMouseover(info.DrawRect);
-                    Text.Anchor = TextAnchor.MiddleLeft;
-                    TooltipHandler.TipRegion(info.DrawRect, info.Tip);
-                    Text.Anchor = TextAnchor.MiddleCenter;
-                }
-
-                Text.Anchor = TextAnchor.UpperLeft;
-                GUI.color = Color.white;
-            }
         }
 
         private class StatDrawInfo
@@ -786,7 +922,6 @@ namespace AwesomeInventory.UI
             public string ValueString;
             public StatRequest StatRequest = default;
             public string Tip = string.Empty;
-            public Rect DrawRect;
             public string LabelCap;
 
             /// <summary>
@@ -806,11 +941,6 @@ namespace AwesomeInventory.UI
                 result.Tip = entry.GetExplanationText(StatRequest.ForEmpty());
                 return result;
             }
-        }
-
-        private static StatDef ToStatDef(string str)
-        {
-            return new StatDef() { label = str };
         }
     }
 }

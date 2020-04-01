@@ -867,7 +867,7 @@ namespace AwesomeInventory.UI
                 Rect buttonRect;
 
                 // Draw Unload Now button
-                buttonRect = new Rect(rect.xMax - DrawUtility.SmallIconSize, rect.yMax - DrawUtility.SmallIconSize, DrawUtility.SmallIconSize, DrawUtility.SmallIconSize);
+                buttonRect = new Rect(rect.xMax - DrawUtility.TinyIconSize, rect.yMax - DrawUtility.TinyIconSize, DrawUtility.TinyIconSize, DrawUtility.TinyIconSize);
                 TooltipHandler.TipRegion(buttonRect, UIText.UnloadNow.Translate());
                 if (thing.GetComp<CompRPGIUnload>()?.Unload ?? false)
                 {
@@ -896,7 +896,7 @@ namespace AwesomeInventory.UI
                 isForced = selPawn.outfits.forcedHandler.IsForced(apparel);
                 if (apparel.WornByCorpse)
                 {
-                    Rect rect3 = new Rect(rect.xMax - DrawUtility.SmallIconSize, rect.y, DrawUtility.SmallIconSize, DrawUtility.SmallIconSize);
+                    Rect rect3 = new Rect(rect.xMax - DrawUtility.TinyIconSize, rect.y, DrawUtility.TinyIconSize, DrawUtility.TinyIconSize);
                     GUI.DrawTexture(rect3, TexResource.IconTainted);
                     TooltipHandler.TipRegion(rect3, "WasWornByCorpse".Translate());
                 }

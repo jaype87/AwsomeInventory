@@ -16,8 +16,7 @@ namespace AwesomeInventory.UI
 {
     public static class DrawUtility
     {
-        public const float SmallIconSize = 20f;
-        public const float IconSize = ContentSourceUtility.IconSize;
+        public const float TinyIconSize = 20f;
 
         public static readonly Color HighlightGreen = new Color(134 / 255f, 206 / 255f, 0, 1);
         public static readonly Color HighlightBrown = new Color(212 / 255f, 141 / 255f, 0, 1);
@@ -36,23 +35,6 @@ namespace AwesomeInventory.UI
             {
                 return Text.CurFontStyle.margin.top + Text.CurFontStyle.padding.top;
             }
-        }
-
-        /// <summary>
-        /// Draw title at "position" and return next available Y as rollingY.
-        /// </summary>
-        /// <param name="position"></param>
-        /// <param name="title"></param>
-        /// <param name="rollingY"></param>
-        public static Rect DrawTitle(Vector2 position, string title, ref float rollingY)
-        {
-            Text.Font = GameFont.Medium;
-            Vector2 titleSize = Text.CalcSize(title);
-            Rect rectToDraw = new Rect(position, titleSize);
-            Widgets.Label(rectToDraw, title);
-            Text.Font = GameFont.Small;
-            rollingY = rectToDraw.yMax;
-            return rectToDraw;
         }
 
         /// <summary>
@@ -224,6 +206,20 @@ namespace AwesomeInventory.UI
             }
 
             return s;
+        }
+
+        /// <summary>
+        /// Get the index range for a list whose content will be rendered on screen.
+        /// </summary>
+        /// <param name="totalLength"> The length of a scrollable list. </param>
+        /// <param name="scrollPosition"> Scroll position for the list view. </param>
+        /// <param name="from"> Start index of a list where drawing begins. </param>
+        /// <param name="to"> <paramref name="to"/> is positioned at one element behind the index where drawing should stop. </param>
+        /// <param name="unitLength"> The length of a unit elemnt in the list. </param>
+        public static void GetIndexRangeFromScrollPosition(float totalLength, float scrollPosition, out int from, out int to, float unitLength)
+        {
+            from = Mathf.FloorToInt(scrollPosition / unitLength);
+            to = from + (int)Math.Ceiling(totalLength / unitLength);
         }
     }
 }

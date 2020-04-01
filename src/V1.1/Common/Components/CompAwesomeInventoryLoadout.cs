@@ -205,7 +205,7 @@ namespace AwesomeInventory.Loadout
 
             foreach (ThingGroupSelector groupSelector in newLoadout)
             {
-                this.UpdateInventoryMargin(groupSelector);
+                this.UpdateInventoryMargin(groupSelector, curInventory);
             }
 
             newLoadout.AddAddNewThingGroupSelectorCallback(this.UpdateInventoryMargin);
@@ -258,11 +258,16 @@ namespace AwesomeInventory.Loadout
 
         private void RemoveThingGroupSelector(ThingGroupSelector groupSelector) => this.InventoryMargins.Remove(groupSelector);
 
-        private void UpdateInventoryMargin(ThingGroupSelector groupSelector)
+        private void UpdateInventoryMargin(ThingGroupSelector groupSelector, List<Thing> curInventory)
         {
             this.InventoryMargins[groupSelector] =
-                    MakeListForPawnGearAndInventory(_pawn).Sum(t => groupSelector.Allows(t) ? t.stackCount : 0)
+                    curInventory.Sum(t => groupSelector.Allows(t) ? t.stackCount : 0)
                     - groupSelector.AllowedStackCount;
+        }
+
+        private void UpdateInventoryMargin(ThingGroupSelector groupSelector)
+        {
+            this.UpdateInventoryMargin(groupSelector, MakeListForPawnGearAndInventory(_pawn));
         }
     }
 }

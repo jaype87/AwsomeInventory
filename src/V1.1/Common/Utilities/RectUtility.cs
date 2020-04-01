@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace AwesomeInventory.Utilities
+namespace AwesomeInventory.UI
 {
     /// <summary>
     /// Helper functions for rect.
@@ -59,6 +59,62 @@ namespace AwesomeInventory.Utilities
         public static Rect ReplaceHeight(this Rect rect, float height)
         {
             return new Rect(rect.x, rect.y, rect.width, height);
+        }
+
+        /// <summary>
+        /// Replace the xMin in <paramref name="rect"/> with <paramref name="xMin"/>.
+        /// </summary>
+        /// <param name="rect"> The rect to modify. </param>
+        /// <param name="xMin"> New xMin value for <paramref name="rect"/>. </param>
+        /// <returns> A <see cref="Rect"/> with the new <paramref name="xMin"/> value.</returns>
+        public static Rect ReplacexMin(this Rect rect, float xMin)
+        {
+            return new Rect(rect)
+            {
+                xMin = xMin,
+            };
+        }
+
+        /// <summary>
+        /// Replace the yMin in <paramref name="rect"/> with <paramref name="yMin"/>.
+        /// </summary>
+        /// <param name="rect"> The rect to modify. </param>
+        /// <param name="yMin"> New yMin value for <paramref name="rect"/>. </param>
+        /// <returns> A <see cref="Rect"/> with the new <paramref name="yMin"/> value.</returns>
+        public static Rect ReplaceyMin(this Rect rect, float yMin)
+        {
+            return new Rect(rect)
+            {
+                yMin = yMin,
+            };
+        }
+
+        /// <summary>
+        /// Replace the xMax in <paramref name="rect"/> with <paramref name="xMax"/>.
+        /// </summary>
+        /// <param name="rect"> The rect to modify. </param>
+        /// <param name="xMax"> New xMax value for <paramref name="rect"/>. </param>
+        /// <returns> A <see cref="Rect"/> with the new <paramref name="xMax"/> value.</returns>
+        public static Rect ReplacexMax(this Rect rect, float xMax)
+        {
+            return new Rect(rect)
+            {
+                xMax = xMax,
+            };
+        }
+
+        /// <summary>
+        /// Replace the yMax in <paramref name="rect"/> with <paramref name="yMax"/>.
+        /// </summary>
+        /// <param name="rect"> The rect to modify. </param>
+        /// <param name="yMax"> New yMax value for <paramref name="rect"/>. </param>
+        /// <returns> A <see cref="Rect"/> with the new <paramref name="yMax"/> value.</returns>
+        public static Rect ReplaceyMax(this Rect rect, float yMax)
+        {
+            return new Rect(rect)
+            {
+                yMax = yMax,
+            };
         }
     }
 }

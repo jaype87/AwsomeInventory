@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\ArgumentEmtpyException.cs" />
+    <Compile Include="Interfaces\IReset.cs" />
     <Compile Include="Resources\ErrorText.cs" />
     <Compile Include="Resources\RangedWeaponStats.cs" />
     <Compile Include="Services\AIDebug.cs" />

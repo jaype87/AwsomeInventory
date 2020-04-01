@@ -14,7 +14,8 @@ namespace AwesomeInventory.UI
     /// <summary>
     /// Text displayed on UI. Call Translate() on members whenever they are referenced, e.g., UIText.Equip.Translate(); .
     /// </summary>
-    public static class UIText
+    public static class 
+        UIText
     {
 #pragma warning disable SA1600 // Elements should be documented
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
@@ -65,6 +66,8 @@ namespace AwesomeInventory.UI
 
         public const string OverallArmor = "OverallArmor";
 
+        /****************** AwesomeInventory texts ********************/
+
         public const string AIEquip = "AwesomeInventory_Equip";
 
         public const string AIForceWear = "AwesomeInventory_ForceWear";
@@ -74,6 +77,8 @@ namespace AwesomeInventory.UI
         public const string AsceticTab = "AwesomeInventory_Ascetic";
 
         public const string Belt = "AwesomeInventory_Belt";
+
+        public const string Blacklist = "AweseomInventory_Blacklist";
 
         public const string ChooseMaterialAndQuality = "AwesomeInventory_ChooseMaterialAndQuality";
 
@@ -158,6 +163,8 @@ namespace AwesomeInventory.UI
         public const string TorsoShellLayer = "AwesomeInventory_TorsoShell";
 
         public const string Weight = "AwesomeInventory_Weight";
+
+        public const string Whitelist = "AwesomeInventory_Whitelist";
 
         public const string OutfitAnything = "OutfitAnything";
 

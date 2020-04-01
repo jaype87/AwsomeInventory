@@ -8,7 +8,7 @@ using System.Reflection;
 using UnityEngine;
 using Verse;
 
-namespace AwesomeInventory
+namespace AwesomeInventory.UI
 {
     /// <summary>
     /// Utilities for <see cref="WidgetRow"/>.
@@ -26,6 +26,12 @@ namespace AwesomeInventory
         /// </summary>
         public static FieldInfo StartXField { get; }
             = typeof(WidgetRow).GetField("startX", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        public static FieldInfo CurXField { get; }
+            = typeof(WidgetRow).GetField("curX", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        public static MethodInfo IncrementPosition { get; }
+            = typeof(WidgetRow).GetMethod("IncrementPosition", BindingFlags.NonPublic | BindingFlags.Instance);
 
         /// <summary>
         /// Available width left in <see cref="WidgetRow"/>.
@@ -63,6 +69,19 @@ namespace AwesomeInventory
             TooltipHandler.TipRegion(labelRect, tooltip);
             Widgets.DrawHighlightIfMouseover(labelRect);
             return labelRect;
+        }
+
+        public static void LabelScrollableHorizontal(this WidgetRow widgetRow, string text, ref Vector2 scrollPosition, float width)
+        {
+            Rect outRect = new Rect(widgetRow.FinalX, widgetRow.FinalY, width, GenUI.ListSpacing);
+            Rect viewRect = outRect.ReplaceWidth(text.StripTags().GetWidthCached());
+            float curX = widgetRow.FinalX;
+            Widgets.ScrollHorizontal(outRect, ref scrollPosition, viewRect);
+            Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
+            widgetRow.Label(text);
+            Widgets.EndScrollView();
+            CurXField.SetValue(widgetRow, curX);
+            IncrementPosition.Invoke(widgetRow, new object[] { width });
         }
     }
 }

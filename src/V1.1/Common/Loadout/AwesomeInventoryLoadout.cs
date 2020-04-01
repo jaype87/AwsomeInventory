@@ -36,6 +36,11 @@ namespace AwesomeInventory.Loadout
         private List<ThingGroupSelector> _thingGroupSelectors = new List<ThingGroupSelector>();
 
         /// <summary>
+        /// Items fit in this selectors will be excluded from things the pawn are actively searching for.
+        /// </summary>
+        private List<ThingGroupSelector> _blacklistSelectors = new List<ThingGroupSelector>();
+
+        /// <summary>
         /// Gets callbacks that are raised whenever a <see cref="ThingGroupSelector"/> is added to this loadout.
         /// </summary>
         private List<Action<ThingGroupSelector>> _addNewThingGroupSelectorCallbacks = new List<Action<ThingGroupSelector>>();
@@ -124,14 +129,17 @@ namespace AwesomeInventory.Loadout
             }
         }
 
-        #region ICollection implementation
-
         /// <inheritdoc/>
         [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:Elements should appear in the correct order", Justification = "Interface implementation")]
         public int Count => _thingGroupSelectors.Count;
 
         /// <inheritdoc/>
         public bool IsReadOnly => false;
+
+        /// <summary>
+        /// Gets a read-only copy of the blacklist.
+        /// </summary>
+        internal List<ThingGroupSelector> BlackList => _blacklistSelectors;
 
         /// <inheritdoc/>
         public ThingGroupSelector this[int index]
@@ -201,7 +209,23 @@ namespace AwesomeInventory.Loadout
             return this.GetEnumerator();
         }
 
-        #endregion
+        /// <summary>
+        /// Add <paramref name="groupSelector"/> to blacklist.
+        /// </summary>
+        /// <param name="groupSelector"> <see cref="ThingGroupSelector"/> to add.</param>
+        public void AddToBlacklist(ThingGroupSelector groupSelector)
+        {
+            _blacklistSelectors.Add(groupSelector);
+        }
+
+        /// <summary>
+        /// Remove <paramref name="groupSelector"/> from blacklist.
+        /// </summary>
+        /// <param name="groupSelector"> <see cref="ThingGroupSelector"/> to remove. </param>
+        public void RemoveFromBlacklist(ThingGroupSelector groupSelector)
+        {
+            _blacklistSelectors.Remove(groupSelector);
+        }
 
         /// <inheritdoc/>
         public int IndexOf(ThingGroupSelector item)

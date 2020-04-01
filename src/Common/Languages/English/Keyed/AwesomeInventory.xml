@@ -13,7 +13,7 @@
 
     <!-- Inventory Window -->
     <AwesomeInventory_Belt>Belt</AwesomeInventory_Belt>
-    <AwesomeInventory_ExtraApparels>Extra Apparels</AwesomeInventory_ExtraApparels>
+    <AwesomeInventory_ExtraApparels>Extra Equipped Apparels</AwesomeInventory_ExtraApparels>
     <AwesomeInventory_GreedyTab>Greedy (List)</AwesomeInventory_GreedyTab>
     <AwesomeInventory_Head>Head Overhead</AwesomeInventory_Head>
     <AwesomeInventory_JealousTab>Jealous (RPG Style)</AwesomeInventory_JealousTab>
@@ -27,6 +27,7 @@
 
     <!-- Loadout Window -->
     <AwesomeInventory_Assorted>Assorted {0}</AwesomeInventory_Assorted>
+    <AweseomInventory_Blacklist>Blacklist</AweseomInventory_Blacklist>
     <AwesomeInventory_ChooseMaterialAndQuality>Choose Material and Quality</AwesomeInventory_ChooseMaterialAndQuality>
     <AwesomeInventory_CopyLoadout>Copy Loadout</AwesomeInventory_CopyLoadout>
     <AwesomeInventory_CountFieldTip>Number of items</AwesomeInventory_CountFieldTip>
@@ -51,6 +52,7 @@
     <AwesomeInventory_SelectorStuff>Selected Stuff</AwesomeInventory_SelectorStuff>
     <AwesomeInventory_StuffSource>Stuff Source</AwesomeInventory_StuffSource>
     <AwesomeInventory_Weight>Weight</AwesomeInventory_Weight>
+    <AwesomeInventory_Whitelist>Whitelist</AwesomeInventory_Whitelist>
 
     <AwesomeInventory_LoadoutName>{0}'s Loadout</AwesomeInventory_LoadoutName>
     <Corgi_EmptyLoadoutName>Nothing</Corgi_EmptyLoadoutName>
