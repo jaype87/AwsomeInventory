@@ -14,7 +14,7 @@ using Verse.AI;
 
 namespace AwesomeInventory.Jobs
 {
-    public class JobGiver_RPGI_FindItems : JobGiver_FindItemByRadius<Thing>
+    public class JobGiver_RPGI_FindItems : JobGiver_FindItemByRadius
     {
         protected override Job TryGiveJob(Pawn pawn)
         {
@@ -39,7 +39,7 @@ namespace AwesomeInventory.Jobs
                     }
                     else
                     {
-                        targetA = FindItem(pawn, groupSelector.AllowedThing, new[] { ThingRequestGroup.Undefined }, (thing) => groupSelector.Allows(thing));
+                        targetA = FindItem(pawn, groupSelector.AllowedThing, new[] { ThingRequestGroup.Undefined }, (thing) => groupSelector.Allows(thing, out _));
                     }
                 }
             }

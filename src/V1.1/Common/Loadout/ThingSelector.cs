@@ -29,7 +29,7 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         protected int _allowedStackCount;
 
-        private static uint nextID = 0;
+        private static int nextID = 0;
 
         /// <summary>
         /// A callback which will be invoked whenever there is a change in the <see cref="ThingSelector._thingFilter"/>.
@@ -57,7 +57,7 @@ namespace AwesomeInventory.Loadout
         /// <summary>
         /// Gets the ID for this selector.
         /// </summary>
-        public uint ID { get; } = nextID++;
+        public int ID { get; } = nextID++;
 
         /// <summary>
         /// Gets the stack count that is allowed.

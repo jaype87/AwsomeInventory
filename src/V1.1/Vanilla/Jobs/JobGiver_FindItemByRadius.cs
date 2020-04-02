@@ -16,8 +16,7 @@ using Verse.AI;
 
 namespace AwesomeInventory.Jobs
 {
-    public abstract class JobGiver_FindItemByRadius<T> : ThinkNode_JobGiver
-        where T : Thing
+    public abstract class JobGiver_FindItemByRadius : ThinkNode_JobGiver
     {
         protected bool _itemFound = false;
         protected static List<int> _radius = new List<int>();
@@ -35,7 +34,7 @@ namespace AwesomeInventory.Jobs
         protected Func<Pawn, Thing, bool> ValidatorBase = (Pawn p, Thing x) => p.CanReserve(x) && !x.IsBurning();
 
         // TODO coordinate between the use of ThingDef and ThingRequestGroup, e.g., use ThingRequestGroup to narrow down the search.
-        protected virtual T FindItem(Pawn pawn, ThingDef thingDef = null, IEnumerable<ThingRequestGroup> thingRequestGroups = null, Func<Thing, bool> validator = null, Func<Thing, float> priorityGetter = null, int searchLevel = 2)
+        protected virtual Thing FindItem(Pawn pawn, ThingDef thingDef = null, IEnumerable<ThingRequestGroup> thingRequestGroups = null, Func<Thing, bool> validator = null, Func<Thing, float> priorityGetter = null, int searchLevel = 2)
         {
             if (thingDef == null && thingRequestGroups.EnumerableNullOrEmpty())
             {
@@ -108,7 +107,7 @@ namespace AwesomeInventory.Jobs
 #endif
             }
 
-            return thing as T;
+            return thing;
         }
 
         public static void Reset()

@@ -13,7 +13,7 @@ namespace AwesomeInventory.Loadout
     /// <summary>
     /// Gives out a job if a proper apparel is found on the map.
     /// </summary>
-    public class JobGiver_AwesomeInventory_FindApparels : JobGiver_FindItemByRadius<Apparel>
+    public class JobGiver_AwesomeInventory_FindApparels : JobGiver_FindItemByRadius
     {
         public JobGiver_AwesomeInventory_FindApparels()
         {
@@ -35,7 +35,7 @@ namespace AwesomeInventory.Loadout
             {
                 if (groupSelector.AllowedThing.IsApparel)
                 {
-                    Apparel targetA = this.FindItem(pawn, groupSelector.AllowedThing, new[] { ThingRequestGroup.Apparel }, (thing) => groupSelector.Allows(thing));
+                    Apparel targetA = this.FindItem(pawn, groupSelector.AllowedThing, new[] { ThingRequestGroup.Apparel }, (thing) => groupSelector.Allows(thing, out _)) as Apparel;
                     if (targetA != null)
                     {
                         return new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, targetA, false);

@@ -36,7 +36,7 @@ namespace AwesomeInventory
         public override void FinalizeInit()
         {
             JobGiver_AwesomeInventory_Unload.JobInProgress = false;
-            JobGiver_FindItemByRadius<Thing>.Reset();
+            JobGiver_FindItemByRadius.Reset();
 
             if (LoadedModManager.RunningModsListForReading.Any(m => m.Name == "Simple sidearms"))
             {

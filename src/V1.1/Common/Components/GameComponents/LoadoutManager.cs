@@ -76,11 +76,23 @@ namespace AwesomeInventory.Loadout
             ValidateArg.NotNull(loadout, nameof(loadout));
 
             _loadouts.Add(loadout);
+            Current.Game.outfitDatabase.AllOutfits.Add(loadout);
         }
 
+        /// <summary>
+        /// Remove outfit from <see cref="LoadoutManager"/>.
+        /// </summary>
+        /// <param name="loadout"> Loadout to remove. </param>
+        /// <param name="fromOutfit"> If ture, this method is called from <see cref="OutfitDatabase.TryDelete(Outfit)"/>. </param>
+        /// <returns> Returns true if loadout is rmeoved successfully. </returns>
         public static bool TryRemoveLoadout(AwesomeInventoryLoadout loadout, bool fromOutfit = false)
         {
-            if (!fromOutfit)
+            if (fromOutfit)
+            {
+                _loadouts.Remove(loadout);
+                return true;
+            }
+            else
             {
                 AcceptanceReport report = Current.Game.outfitDatabase.TryDelete(loadout);
                 if (report.Accepted)
@@ -90,11 +102,6 @@ namespace AwesomeInventory.Loadout
 
                 Messages.Message(report.Reason, MessageTypeDefOf.RejectInput, historical: false);
                 return false;
-            }
-            else
-            {
-                _loadouts.Remove(loadout);
-                return true;
             }
         }
 

@@ -19,14 +19,16 @@ namespace AwesomeInventory.Loadout
     /// <summary>
     /// A gorup of <see cref="ThingSelector"/> that shares a common <see cref="ThingDef"/>.
     /// </summary>
-    public class ThingGroupSelector : ICollection<ThingSelector>, IExposable
+    public class ThingGroupSelector : ICollection<ThingSelector>, IExposable, ILoadReferenceable
     {
+        private static int _nextGroupID = 0;
+
         private List<ThingSelector> _selectors = new List<ThingSelector>();
 
         /// <summary>
         /// A callback for stack count changed event.
         /// </summary>
-        private Action<ThingGroupSelector> _stackCountChangedCallback;
+        private Action<ThingGroupSelector, int> _stackCountChangedCallback;
 
         /// <summary>
         /// A callback that would be invoked when a <see cref="ThingSelector"/> is added to this group.
@@ -50,10 +52,9 @@ namespace AwesomeInventory.Loadout
         /// Initializes a new instance of the <see cref="ThingGroupSelector"/> class.
         /// </summary>
         /// <param name="allowedThing"> A <see cref="ThingDef"/> that is allowed by this selector. </param>
-        /// <param name="ID"> ID assigned to this selector. </param>
-        public ThingGroupSelector(ThingDef allowedThing, uint ID)
+        public ThingGroupSelector(ThingDef allowedThing)
         {
-            this.GroupID = ID;
+            this.GroupID = _nextGroupID++;
             this.AllowedThing = allowedThing;
         }
 
@@ -61,12 +62,11 @@ namespace AwesomeInventory.Loadout
         /// Initializes a new instance of the <see cref="ThingGroupSelector"/> class.
         /// </summary>
         /// <param name="other"> Copy <paramref name="other"/> to this selector. </param>
-        /// <param name="ID"> ID assigned to this selector. </param>
-        public ThingGroupSelector(ThingGroupSelector other, uint ID)
+        public ThingGroupSelector(ThingGroupSelector other)
         {
             ValidateArg.NotNull(other, nameof(other));
 
-            this.GroupID = ID;
+            this.GroupID = _nextGroupID;
             AllowedStackCount = other.AllowedStackCount;
             AllowedThing = other.AllowedThing;
 
@@ -119,7 +119,7 @@ namespace AwesomeInventory.Loadout
         /// <summary>
         /// Gets ID for this group of selectors.
         /// </summary>
-        public uint GroupID { get; private set; }
+        public int GroupID { get; private set; }
 
         /// <inheritdoc/>
         public int Count => _selectors.Count;
@@ -132,7 +132,7 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         /// <param name="callback"> It would be invoked when stack count in this <see cref="ThingGroupSelector"/> is changed. </param>
         /// <returns> Returns true if <paramref name="callback"/> is added, otherwise, false when there is already a callback in place. </returns>
-        public bool AddStackCountChangedCallback(Action<ThingGroupSelector> callback)
+        public bool AddStackCountChangedCallback(Action<ThingGroupSelector, int> callback)
         {
             if (_stackCountChangedCallback == null)
             {
@@ -192,25 +192,41 @@ namespace AwesomeInventory.Loadout
         /// <param name="stackCount"> Number to replace the old count. </param>
         public void SetStackCount(int stackCount)
         {
-            AllowedStackCount = stackCount;
+            int oldStackCount = this.AllowedStackCount;
+            this.AllowedStackCount = stackCount;
             _selectors.ForEach(s => s.SetStackCount(stackCount));
-            this._stackCountChangedCallback?.Invoke(this);
+            this._stackCountChangedCallback?.Invoke(this, oldStackCount);
         }
 
         /// <summary>
         /// Check if <paramref name="thing"/> is allowed to add to inventory.
         /// </summary>
         /// <param name="thing"> <see cref="Thing"/> to add. </param>
+        /// <param name="thingSelector"> <see cref="ThingSelector"/> that <paramref name="thing"/> fits. </param>
         /// <returns> Returns true, if <paramref name="thing"/> is allowed to add. </returns>
-        public bool Allows(Thing thing)
+        public bool Allows(Thing thing, out ThingSelector thingSelector)
         {
-            if (_selectors.Count == 1)
+            IEnumerable<ThingSelector> allowedSelectors = _selectors.Where(s => s.Allows(thing));
+            if (allowedSelectors.EnumerableNullOrEmpty())
             {
-                return _selectors[0].Allows(thing);
+                thingSelector = null;
+                return false;
             }
             else
             {
-                return _selectors.Any(s => s.Allows(thing));
+                IEnumerable<SingleThingSelector> singleThingSelectors = allowedSelectors.OfType<SingleThingSelector>();
+
+                // If the selector is of type GenericThingSelector or it only has one SingleThingSelector in the enumerable, return that ThingSelector.
+                if (singleThingSelectors.EnumerableNullOrEmpty() || singleThingSelectors.Count() == 1)
+                {
+                    thingSelector = allowedSelectors.First();
+                    return true;
+                }
+                else
+                {
+                    thingSelector = Enumerable.OrderByDescending(singleThingSelectors, (t) => t, SingleThingSelector.Comparer.Instance).First();
+                    return true;
+                }
             }
         }
 
@@ -269,15 +285,25 @@ namespace AwesomeInventory.Loadout
         }
 
         /// <summary>
+        /// Returns a unique ID for references when save/load the game.
+        /// </summary>
+        /// <returns> A unique string ID for references when save/load the game. </returns>
+        public string GetUniqueLoadID()
+        {
+            return nameof(ThingGroupSelector) + this.GroupID;
+        }
+
+        /// <summary>
         /// Save state.
         /// </summary>
         public void ExposeData()
         {
             ThingDef thingDef = this.AllowedThing;
             int allowedStackCount = this.AllowedStackCount;
-            uint groupID = this.GroupID;
+            int groupID = this.GroupID;
 
             Scribe_Defs.Look(ref thingDef, nameof(this.AllowedThing));
+            Scribe_Values.Look(ref _nextGroupID, nameof(_nextGroupID));
             Scribe_Values.Look(ref allowedStackCount, nameof(this.AllowedStackCount));
             Scribe_Values.Look(ref groupID, nameof(this.GroupID));
             Scribe_Collections.Look(ref _selectors, nameof(_selectors), LookMode.Deep);
