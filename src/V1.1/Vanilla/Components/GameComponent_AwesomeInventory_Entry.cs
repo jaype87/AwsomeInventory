@@ -26,9 +26,9 @@ namespace AwesomeInventory
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the game has loaded the SimpleSidearm mod.
+        /// Gets a value indicating whether the game has loaded the SimpleSidearm mod.
         /// </summary>
-        public static bool HasSimpleSidearm { get; set; } = false;
+        public static bool HasSimpleSidearm { get; private set; } = false;
 
         /// <summary>
         /// This method is called just before the game is ready to play.

@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -146,8 +147,10 @@ namespace AwesomeInventory.Loadout
             {
                 if (pawn.outfits?.CurrentOutfit is AwesomeInventoryLoadout loadout)
                 {
+                    AIDebug.Timer.Start();
                     this.UpdateForNewLoadout(loadout);
                     this.Loadout = loadout;
+                    AIDebug.Timer.Stop(AIDebug.Header + "Update For New Loadout");
                 }
             }
         }
@@ -221,6 +224,10 @@ namespace AwesomeInventory.Loadout
             Loadout = newLoadout;
         }
 
+        /// <summary>
+        /// A callback to handle event where a new <see cref="ThingGroupSelector"/> is added to loadout.
+        /// </summary>
+        /// <param name="groupSelector"> The newly added selector. </param>
         protected virtual void AddNewThingGroupSelectorCallback(ThingGroupSelector groupSelector)
         {
             this.UpdateInventoryMargin(
@@ -230,6 +237,11 @@ namespace AwesomeInventory.Loadout
                 .Append(groupSelector));
         }
 
+        /// <summary>
+        /// A callback to handle event where stack count is changed in <paramref name="groupSelector"/>.
+        /// </summary>
+        /// <param name="groupSelector"> Whose stack count has changed. </param>
+        /// <param name="oldStackCount"> The stack count value before current stack count. </param>
         protected virtual void StackCountChangedCallback(ThingGroupSelector groupSelector, int oldStackCount)
         {
             ValidateArg.NotNull(groupSelector, nameof(groupSelector));
@@ -237,8 +249,18 @@ namespace AwesomeInventory.Loadout
             this.InventoryMargins[groupSelector] += oldStackCount - groupSelector.AllowedStackCount;
         }
 
+        /// <summary>
+        /// A callback to handle event where a <see cref="ThingGroupSelector"/> is removed from loadout.
+        /// </summary>
+        /// <param name="groupSelector"> The selector that has been removed. </param>
         protected virtual void RemoveThingGroupSelectorCallback(ThingGroupSelector groupSelector) => this.InventoryMargins.Remove(groupSelector);
 
+        /// <summary>
+        /// Find <see cref="ThingGroupSelector"/> that allows <paramref name="thing"/>.
+        /// </summary>
+        /// <param name="thing"> Thing to check if there is any selector fits. </param>
+        /// <param name="groupSelectors"> A list of fiiting selectors. </param>
+        /// <returns> A data packet that contains all information needed to find the best suited selector for <paramref name="thing"/>. </returns>
         protected virtual ThingGroupSelectorPool FindPotentialThingGroupSelectors(Thing thing, IEnumerable<ThingGroupSelector> groupSelectors)
         {
             ValidateArg.NotNull(thing, nameof(thing));
@@ -246,8 +268,17 @@ namespace AwesomeInventory.Loadout
             return this.FindPotentialThingGroupSelectors(thing, thing.stackCount, groupSelectors);
         }
 
+        /// <summary>
+        /// Find <see cref="ThingGroupSelector"/> that allows <paramref name="thing"/>.
+        /// </summary>
+        /// <param name="thing"> Thing to check if there is any selector fits. </param>
+        /// <param name="stackCount"> Stack count of <paramref name="thing"/>. </param>
+        /// <param name="groupSelectors"> A list of fiiting selectors. </param>
+        /// <returns> A data packet that contains all information needed to find the best suited selector for <paramref name="thing"/>. </returns>
         protected virtual ThingGroupSelectorPool FindPotentialThingGroupSelectors(Thing thing, int stackCount, IEnumerable<ThingGroupSelector> groupSelectors)
         {
+            ValidateArg.NotNull(groupSelectors, nameof(groupSelectors));
+
             ThingGroupSelectorPool pool = new ThingGroupSelectorPool()
             {
                 Thing = thing,
@@ -266,6 +297,10 @@ namespace AwesomeInventory.Loadout
             return pool;
         }
 
+        /// <summary>
+        /// Keep <see cref="CompAwesomeInventoryLoadout.InventoryMargins" /> in sync with pawn's inventory.
+        /// </summary>
+        /// <param name="thing"> Thing that are being restocked. </param>
         protected virtual void Restock(Thing thing)
         {
             ValidateArg.NotNull(thing, nameof(thing));
@@ -273,11 +308,20 @@ namespace AwesomeInventory.Loadout
             this.Restock(thing, thing.stackCount);
         }
 
+        /// <summary>
+        /// Keep <see cref="CompAwesomeInventoryLoadout.InventoryMargins" /> in sync with pawn's inventory.
+        /// </summary>
+        /// <param name="thing"> Thing that are being restocked. </param>
+        /// <param name="reStockCount"> Stack count to restock. </param>
         protected virtual void Restock(Thing thing, int reStockCount)
         {
             this.Restock(this.FindPotentialThingGroupSelectors(thing, reStockCount, this.InventoryMargins.Keys));
         }
 
+        /// <summary>
+        /// Keep <see cref="CompAwesomeInventoryLoadout.InventoryMargins" /> in sync with pawn's inventory.
+        /// </summary>
+        /// <param name="pool"> A data packet contains all necessary information. </param>
         protected virtual void Restock(ThingGroupSelectorPool pool)
         {
             int restockCount = pool.StackCount;
@@ -302,6 +346,10 @@ namespace AwesomeInventory.Loadout
             }
         }
 
+        /// <summary>
+        /// Remove thing from <see cref="CompAwesomeInventoryLoadout.InventoryMargins"/>.
+        /// </summary>
+        /// <param name="thing"> Thing to remove. </param>
         protected virtual void DeleteStock(Thing thing)
         {
             ValidateArg.NotNull(thing, nameof(thing));
@@ -309,7 +357,12 @@ namespace AwesomeInventory.Loadout
             this.DeleteStock(thing, thing.stackCount);
         }
 
-        private void DeleteStock(Thing thing, int stackCountToDelete)
+        /// <summary>
+        /// Remove thing from <see cref="CompAwesomeInventoryLoadout.InventoryMargins"/>.
+        /// </summary>
+        /// <param name="thing"> Thing to remove. </param>
+        /// <param name="stackCountToDelete"> Stack count to remove. </param>
+        protected virtual void DeleteStock(Thing thing, int stackCountToDelete)
         {
             ThingGroupSelectorPool pool = this.FindPotentialThingGroupSelectors(thing, stackCountToDelete, this.InventoryMargins.Keys);
             foreach (var tuple in pool.OrderedSelectorTuples)
@@ -365,10 +418,25 @@ namespace AwesomeInventory.Loadout
             }
         }
 
+        /// <summary>
+        /// A datat structure thtat contains necessary information for <see cref="CompAwesomeInventoryLoadout.InventoryMargins"/> to update.
+        /// </summary>
+        [SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types", Justification = "Not in design.")]
         protected struct ThingGroupSelectorPool
         {
+            /// <summary>
+            /// The thing for inventory operation.
+            /// </summary>
             public Thing Thing;
+
+            /// <summary>
+            /// Count of Thing.
+            /// </summary>
             public int StackCount;
+
+            /// <summary>
+            /// A list sorted by <see cref="ThingSelector"/>'s criteria strictness in desending order.
+            /// </summary>
             public List<Tuple<ThingSelector, ThingGroupSelector>> OrderedSelectorTuples;
         }
     }
