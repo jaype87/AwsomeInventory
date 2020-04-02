@@ -85,6 +85,7 @@
     <Compile Include="Loadout\SingleThingSelector.cs" />
     <Compile Include="Loadout\ThingGroupSelector.cs" />
     <Compile Include="Loadout\ThingSelector.cs" />
+    <Compile Include="Loadout\ThingSelectorComparer.cs" />
     <Compile Include="Services\Logger.cs" />
     <Compile Include="Services\ServiceRegistration.cs" />
     <Compile Include="UI\Dialog_Mod.cs" />

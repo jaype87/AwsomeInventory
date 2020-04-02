@@ -4,9 +4,11 @@
 // </copyright>
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using AwesomeInventory.Resources;
 using RimWorld;
 using UnityEngine;
@@ -23,7 +25,7 @@ namespace AwesomeInventory.Loadout
     ///     The correct initiate state for this clas is both Loadout and InventoryTracker are null. After moving
     /// to other states, none of them can be null.
     /// </remarks>
-    public class CompAwesomeInventoryLoadout : ThingComp, IExposable
+    public class CompAwesomeInventoryLoadout : ThingComp
     {
         private Pawn _pawn;
 
@@ -83,7 +85,7 @@ namespace AwesomeInventory.Loadout
                     else
                     {
                         int countToFetch = groupSelector.AllowedStackCount;
-                        int expected = curInventory.Sum(t => groupSelector.Allows(t) ? t.stackCount : 0) - countToFetch;
+                        int expected = curInventory.Sum(t => groupSelector.Allows(t, out _) ? t.stackCount : 0) - countToFetch;
                         if (InventoryMargins[groupSelector] != expected)
                         {
                             string message
@@ -124,6 +126,10 @@ namespace AwesomeInventory.Loadout
             }
         }
 
+        /// <summary>
+        /// Called by game code when the game starts.
+        /// </summary>
+        /// <param name="props"> Properties used for initializing this comp. </param>
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
@@ -140,7 +146,8 @@ namespace AwesomeInventory.Loadout
             {
                 if (pawn.outfits?.CurrentOutfit is AwesomeInventoryLoadout loadout)
                 {
-                    Loadout = loadout;
+                    this.UpdateForNewLoadout(loadout);
+                    this.Loadout = loadout;
                 }
             }
         }
@@ -153,7 +160,7 @@ namespace AwesomeInventory.Loadout
         {
             ValidateArg.NotNull(thing, nameof(thing));
 
-            this.NotifiedThingChanged(thing, thing.stackCount, true);
+            this.Restock(thing);
         }
 
         /// <summary>
@@ -163,7 +170,7 @@ namespace AwesomeInventory.Loadout
         /// <param name="mergedAmount"> Number of <paramref name="thing"/> that is added and merged. </param>
         public void NotifiedAddedAndMergedWith(Thing thing, int mergedAmount)
         {
-            this.NotifiedThingChanged(thing, mergedAmount, true);
+            this.Restock(thing, mergedAmount);
         }
 
         /// <summary>
@@ -174,7 +181,7 @@ namespace AwesomeInventory.Loadout
         {
             ValidateArg.NotNull(thing, nameof(thing));
 
-            this.NotifiedThingChanged(thing, thing.stackCount, false);
+            this.DeleteStock(thing);
         }
 
         /// <summary>
@@ -182,9 +189,9 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         /// <param name="thing"> <see cref="Thing"/> that has splitted off. </param>
         /// <param name="count"> Number of splitted <paramref name="thing"/>. </param>
-        public void NotifiedSplitOffHandler(Thing thing, int count)
+        public void NotifiedSplitOff(Thing thing, int count)
         {
-            this.NotifiedThingChanged(thing, count, false);
+            this.DeleteStock(thing, count);
         }
 
         /// <summary>
@@ -201,35 +208,124 @@ namespace AwesomeInventory.Loadout
             else
                 this.InventoryMargins.Clear();
 
-            List<Thing> curInventory = MakeListForPawnGearAndInventory(_pawn);
+            this.Loadout?.RemoveAddNewThingGroupSelectorCallback(this.AddNewThingGroupSelectorCallback);
+            this.Loadout?.RemoveRemoveThingGroupSelectorCallback(this.RemoveThingGroupSelectorCallback);
+            this.Loadout?.RemoveStackCountChangedCallback(this.StackCountChangedCallback);
 
-            foreach (ThingGroupSelector groupSelector in newLoadout)
-            {
-                this.UpdateInventoryMargin(groupSelector, curInventory);
-            }
+            this.UpdateInventoryMargin(newLoadout);
 
-            newLoadout.AddAddNewThingGroupSelectorCallback(this.UpdateInventoryMargin);
-            newLoadout.AddRemoveThingGroupSelectorCallback(this.RemoveThingGroupSelector);
-            newLoadout.AddStackCountChangedCallback(this.UpdateInventoryMargin);
+            newLoadout.AddAddNewThingGroupSelectorCallback(this.AddNewThingGroupSelectorCallback);
+            newLoadout.AddRemoveThingGroupSelectorCallback(this.RemoveThingGroupSelectorCallback);
+            newLoadout.AddStackCountChangedCallback(this.StackCountChangedCallback);
 
             Loadout = newLoadout;
         }
 
-        /// <summary>
-        /// Save state.
-        /// </summary>
-        public void ExposeData()
+        protected virtual void AddNewThingGroupSelectorCallback(ThingGroupSelector groupSelector)
         {
-            AwesomeInventoryLoadout loadout = this.Loadout;
-            Scribe_References.Look(ref loadout, nameof(this.Loadout));
+            this.UpdateInventoryMargin(
+                this.InventoryMargins
+                .Where(pair => ThingDefComparer.Instance.Equals(pair.Key.AllowedThing, groupSelector.AllowedThing))
+                .Select(pair => pair.Key)
+                .Append(groupSelector));
+        }
 
-            List<ThingGroupSelector> things = new List<ThingGroupSelector>();
-            List<int> margins = new List<int>();
-            Dictionary<ThingGroupSelector, int> inventoryMargins = this.InventoryMargins;
-            Scribe_Collections.Look(ref inventoryMargins, nameof(InventoryMargins), LookMode.Reference, LookMode.Value, ref things, ref margins);
+        protected virtual void StackCountChangedCallback(ThingGroupSelector groupSelector, int oldStackCount)
+        {
+            ValidateArg.NotNull(groupSelector, nameof(groupSelector));
 
-            this.Loadout = loadout;
-            this.InventoryMargins = inventoryMargins;
+            this.InventoryMargins[groupSelector] += oldStackCount - groupSelector.AllowedStackCount;
+        }
+
+        protected virtual void RemoveThingGroupSelectorCallback(ThingGroupSelector groupSelector) => this.InventoryMargins.Remove(groupSelector);
+
+        protected virtual ThingGroupSelectorPool FindPotentialThingGroupSelectors(Thing thing, IEnumerable<ThingGroupSelector> groupSelectors)
+        {
+            ValidateArg.NotNull(thing, nameof(thing));
+
+            return this.FindPotentialThingGroupSelectors(thing, thing.stackCount, groupSelectors);
+        }
+
+        protected virtual ThingGroupSelectorPool FindPotentialThingGroupSelectors(Thing thing, int stackCount, IEnumerable<ThingGroupSelector> groupSelectors)
+        {
+            ThingGroupSelectorPool pool = new ThingGroupSelectorPool()
+            {
+                Thing = thing,
+                StackCount = stackCount,
+                OrderedSelectorTuples = new List<Tuple<ThingSelector, ThingGroupSelector>>(),
+            };
+            foreach (ThingGroupSelector groupSelector in groupSelectors)
+            {
+                if (groupSelector.Allows(thing, out ThingSelector thingSelector))
+                    pool.OrderedSelectorTuples.Add(Tuple.Create(thingSelector, groupSelector));
+            }
+
+            if (pool.OrderedSelectorTuples.Count > 1)
+                pool.OrderedSelectorTuples = pool.OrderedSelectorTuples.OrderBy(t => t.Item1, ThingSelectorComparer.Instance).ToList();
+
+            return pool;
+        }
+
+        protected virtual void Restock(Thing thing)
+        {
+            ValidateArg.NotNull(thing, nameof(thing));
+
+            this.Restock(thing, thing.stackCount);
+        }
+
+        protected virtual void Restock(Thing thing, int reStockCount)
+        {
+            this.Restock(this.FindPotentialThingGroupSelectors(thing, reStockCount, this.InventoryMargins.Keys));
+        }
+
+        protected virtual void Restock(ThingGroupSelectorPool pool)
+        {
+            int restockCount = pool.StackCount;
+            foreach (var tuple in pool.OrderedSelectorTuples)
+            {
+                if (this.InventoryMargins[tuple.Item2] + restockCount <= 0)
+                {
+                    this.InventoryMargins[tuple.Item2] += restockCount;
+                    restockCount = 0;
+                    break;
+                }
+                else
+                {
+                    restockCount += this.InventoryMargins[tuple.Item2];
+                    this.InventoryMargins[tuple.Item2] = 0;
+                }
+            }
+
+            if (restockCount != 0)
+            {
+                this.InventoryMargins[pool.OrderedSelectorTuples.First().Item2] += restockCount;
+            }
+        }
+
+        protected virtual void DeleteStock(Thing thing)
+        {
+            ValidateArg.NotNull(thing, nameof(thing));
+
+            this.DeleteStock(thing, thing.stackCount);
+        }
+
+        private void DeleteStock(Thing thing, int stackCountToDelete)
+        {
+            ThingGroupSelectorPool pool = this.FindPotentialThingGroupSelectors(thing, stackCountToDelete, this.InventoryMargins.Keys);
+            foreach (var tuple in pool.OrderedSelectorTuples)
+            {
+                int maxNegativeMargin = tuple.Item2.AllowedStackCount * -1;
+                if (this.InventoryMargins[tuple.Item2] - pool.StackCount < maxNegativeMargin)
+                {
+                    pool.StackCount -= this.InventoryMargins[tuple.Item2] - maxNegativeMargin;
+                    this.InventoryMargins[tuple.Item2] = maxNegativeMargin;
+                }
+                else
+                {
+                    this.InventoryMargins[tuple.Item2] -= pool.StackCount;
+                    break;
+                }
+            }
         }
 
         private static List<Thing> MakeListForPawnGearAndInventory(Pawn pawn)
@@ -242,32 +338,38 @@ namespace AwesomeInventory.Loadout
             return things;
         }
 
-        private void NotifiedThingChanged(Thing thing, int count, bool isAdd)
+        private void UpdateInventoryMargin(IEnumerable<ThingGroupSelector> groupSelectors)
         {
-            if (thing == null || Loadout == null)
-                return;
+            ValidateArg.NotNull(groupSelectors, nameof(groupSelectors));
 
-            foreach (KeyValuePair<ThingGroupSelector, int> pair in InventoryMargins)
+            this.InventoryMargins.Clear();
+            foreach (ThingGroupSelector groupSelector in groupSelectors)
             {
-                if (pair.Key.Allows(thing))
+                this.InventoryMargins[groupSelector] = groupSelector.AllowedStackCount * -1;
+            }
+
+            ConcurrentBag<ThingGroupSelectorPool> pools = new ConcurrentBag<ThingGroupSelectorPool>();
+            Parallel.ForEach(
+                Partitioner.Create(MakeListForPawnGearAndInventory(_pawn)),
+                (Thing thing) =>
                 {
-                    InventoryMargins[pair.Key] = pair.Value + count * (isAdd ? 1 : -1);
-                }
+                    ThingGroupSelectorPool pool = this.FindPotentialThingGroupSelectors(thing, groupSelectors);
+
+                    if (pool.OrderedSelectorTuples.Any())
+                        pools.Add(pool);
+                });
+
+            foreach (ThingGroupSelectorPool pool in pools)
+            {
+                this.Restock(pool);
             }
         }
 
-        private void RemoveThingGroupSelector(ThingGroupSelector groupSelector) => this.InventoryMargins.Remove(groupSelector);
-
-        private void UpdateInventoryMargin(ThingGroupSelector groupSelector, List<Thing> curInventory)
+        protected struct ThingGroupSelectorPool
         {
-            this.InventoryMargins[groupSelector] =
-                    curInventory.Sum(t => groupSelector.Allows(t) ? t.stackCount : 0)
-                    - groupSelector.AllowedStackCount;
-        }
-
-        private void UpdateInventoryMargin(ThingGroupSelector groupSelector)
-        {
-            this.UpdateInventoryMargin(groupSelector, MakeListForPawnGearAndInventory(_pawn));
+            public Thing Thing;
+            public int StackCount;
+            public List<Tuple<ThingSelector, ThingGroupSelector>> OrderedSelectorTuples;
         }
     }
 }

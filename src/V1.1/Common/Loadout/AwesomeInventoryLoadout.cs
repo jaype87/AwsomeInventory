@@ -53,7 +53,7 @@ namespace AwesomeInventory.Loadout
         /// <summary>
         /// Gets callbacks that are raised whenever stack count in a <see cref="ThingGroupSelector"/> is changed..
         /// </summary>
-        private List<Action<ThingGroupSelector>> _thingGroupSelectorStackCountChangedCallbacks = new List<Action<ThingGroupSelector>>();
+        private List<Action<ThingGroupSelector, int>> _thingGroupSelectorStackCountChangedCallbacks = new List<Action<ThingGroupSelector, int>>();
 
         /// <summary>
         /// If true, this loadout has changed since last read.
@@ -61,8 +61,6 @@ namespace AwesomeInventory.Loadout
         private bool _isDirty = true;
 
         private float _weight;
-
-        private uint _nextGroupID = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AwesomeInventoryLoadout"/> class.
@@ -81,7 +79,7 @@ namespace AwesomeInventory.Loadout
 
             foreach (ThingGroupSelector selector in other._thingGroupSelectors)
             {
-                ThingGroupSelector newSelector = new ThingGroupSelector(selector, this.NextGroupID);
+                ThingGroupSelector newSelector = new ThingGroupSelector(selector);
                 this.Add(newSelector);
             }
 
@@ -109,11 +107,6 @@ namespace AwesomeInventory.Loadout
 
             pawn.SetLoadout(this);
         }
-
-        /// <summary>
-        /// Gets ID for a new <see cref="ThingGroupSelector"/>.
-        /// </summary>
-        public uint NextGroupID { get => _nextGroupID++; }
 
         /// <summary>
         /// Gets weight for this loadout.
@@ -160,6 +153,7 @@ namespace AwesomeInventory.Loadout
             this.AddRemoveThingSelectorCallbackTo(item);
             this.AddStackCountChangedCallbackTo(item);
             _thingGroupSelectors.Add(item);
+            this.filter.SetAllow(item.AllowedThing, true);
             _addNewThingGroupSelectorCallbacks.ForEach(c => c.Invoke(item));
         }
 
@@ -249,7 +243,7 @@ namespace AwesomeInventory.Loadout
         /// Add callback to stack-count-changed event.
         /// </summary>
         /// <param name="callback"> Callback to add. </param>
-        public void AddStackCountChangedCallback(Action<ThingGroupSelector> callback) => _thingGroupSelectorStackCountChangedCallbacks.Add(callback);
+        public void AddStackCountChangedCallback(Action<ThingGroupSelector, int> callback) => _thingGroupSelectorStackCountChangedCallbacks.Add(callback);
 
         /// <summary>
         /// Add callback to event in which a new <see cref="ThingGroupSelector"/> is added to this loadout.
@@ -267,7 +261,7 @@ namespace AwesomeInventory.Loadout
         /// Remove a callback from an event in which stack count of a <see cref="ThingGroupSelector"/> is changed.
         /// </summary>
         /// <param name="callback"> Callback to add. </param>
-        public void RemoveStackCountChangedCallback(Action<ThingGroupSelector> callback) => _thingGroupSelectorStackCountChangedCallbacks.Remove(callback);
+        public void RemoveStackCountChangedCallback(Action<ThingGroupSelector, int> callback) => _thingGroupSelectorStackCountChangedCallbacks.Remove(callback);
 
         /// <summary>
         /// Remove a callback from an event in which a new <see cref="ThingGroupSelector"/> is added to this loadout.
@@ -320,7 +314,6 @@ namespace AwesomeInventory.Loadout
         public new void ExposeData()
         {
             List<ThingGroupSelector> groupSelectorsCopy = _thingGroupSelectors;
-            Scribe_Values.Look(ref _nextGroupID, nameof(_nextGroupID));
             Scribe_Collections.Look(ref groupSelectorsCopy, nameof(_thingGroupSelectors), LookMode.Deep);
 
             if (Scribe.mode == LoadSaveMode.LoadingVars)
@@ -359,14 +352,14 @@ namespace AwesomeInventory.Loadout
 
             foreach (Thing thing in things)
             {
-                ThingGroupSelector groupSelector = new ThingGroupSelector(thing.def, this.NextGroupID);
+                ThingGroupSelector groupSelector = new ThingGroupSelector(thing.def);
                 groupSelector.SetStackCount(thing.stackCount);
                 groupSelector.Add(new SingleThingSelector(thing));
                 this.Add(groupSelector);
             }
         }
 
-        private void StackCountChangedCallback(ThingGroupSelector thingGroupSelector)
+        private void StackCountChangedCallback(ThingGroupSelector thingGroupSelector, int oldStackCount)
         {
             if (thingGroupSelector.AllowedStackCount == 0)
             {
@@ -375,7 +368,7 @@ namespace AwesomeInventory.Loadout
             }
             else
             {
-                _thingGroupSelectorStackCountChangedCallbacks.ForEach(c => c.Invoke(thingGroupSelector));
+                _thingGroupSelectorStackCountChangedCallbacks.ForEach(c => c.Invoke(thingGroupSelector, oldStackCount));
             }
 
             _isDirty = true;

@@ -35,7 +35,7 @@ namespace AwesomeInventory.Jobs
                     , enumerable
                     , scanner.PathEndMode
                     , TraverseParms.For(pawn, scanner.MaxPathDanger(pawn))
-                    , JobGiver_FindItemByRadius<Thing>.Radius[0]
+                    , JobGiver_FindItemByRadius.Radius[0]
                     , t => !t.IsForbidden(pawn) && scanner.HasJobOnThing(pawn, t));
                 if (thing != null)
                 {

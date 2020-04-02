@@ -113,13 +113,18 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         public ThingDef AllowedStuff { get => _allowedStuff; }
 
-        /// <summary>
-        /// Gets the allowed hit points range.
-        /// </summary>
-        public FloatRange AllowedHitPoints { get => _thingFilter.AllowedHitPointsPercents; }
-
         /// <inheritdoc/>
         public override string LabelCapNoCount { get => this.ThingSample.LabelCapNoCount.ColorizeByQuality(this.ThingSample); }
+
+        /// <summary>
+        /// Gets hit points percentage of items that is allowed by this selector.
+        /// </summary>
+        public FloatRange AllowedHitPointsPercent { get => _thingFilter.AllowedHitPointsPercents; }
+
+        /// <summary>
+        /// Gets quality level of items that is allowed by this selector.
+        /// </summary>
+        public QualityRange AllowedQualityLevel { get => _thingFilter.AllowedQualityLevels; }
 
         /// <inheritdoc/>
         public override float Weight => this.ThingSample.GetStatValue(StatDefOf.Mass);
@@ -170,8 +175,6 @@ namespace AwesomeInventory.Loadout
             _thingFilter.AllowedQualityLevels = qualityRange;
         }
 
-        public QualityRange AllowedQualityLevel { get => _thingFilter.AllowedQualityLevels; }
-
         /// <summary>
         /// Set hit points.
         /// </summary>
@@ -180,8 +183,6 @@ namespace AwesomeInventory.Loadout
         {
             _thingFilter.AllowedHitPointsPercents = floatRange;
         }
-
-        public FloatRange AllowedHitPointsPercent { get => _thingFilter.AllowedHitPointsPercents; }
 
         /// <inheritdoc/>
         public override bool Allows(Thing thing)
@@ -213,7 +214,7 @@ namespace AwesomeInventory.Loadout
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            return this.GetHashCode();
+            return base.GetHashCode();
         }
 
         /// <summary>
@@ -223,6 +224,54 @@ namespace AwesomeInventory.Loadout
         {
             base.ExposeData();
             Scribe_Defs.Look(ref _allowedStuff, nameof(_allowedStuff));
+        }
+
+        /// <summary>
+        /// Implements <see cref="IComparer{T}"/> for <see cref="SingleThingSelector"/>.
+        /// </summary>
+        public class Comparer : IComparer<SingleThingSelector>
+        {
+            /// <summary>
+            /// Gets a comparer instance for <see cref="SingleThingSelector"/>.
+            /// </summary>
+            public static readonly Comparer Instance = new Comparer();
+
+            /// <inheritdoc />
+            /// <remarks> Selector with more stringent criteria precedes the lesser one. </remarks>
+            public int Compare(SingleThingSelector x, SingleThingSelector y)
+            {
+                if (ReferenceEquals(x, y))
+                    return 0;
+
+                if (x is null)
+                    return 1;
+                else if (y is null)
+                    return -1;
+
+                if (x.AllowedQualityLevel.min > y.AllowedQualityLevel.min)
+                {
+                    return -1;
+                }
+                else if (x.AllowedQualityLevel.min == y.AllowedQualityLevel.min)
+                {
+                    if (x.AllowedHitPointsPercent.min > y.AllowedHitPointsPercent.min)
+                    {
+                        return -1;
+                    }
+                    else if (x.AllowedHitPointsPercent.min == y.AllowedHitPointsPercent.min)
+                    {
+                        return 0;
+                    }
+                    else
+                    {
+                        return 01;
+                    }
+                }
+                else
+                {
+                    return 1;
+                }
+            }
         }
     }
 }

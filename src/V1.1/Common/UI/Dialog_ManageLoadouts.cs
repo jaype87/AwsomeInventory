@@ -230,7 +230,7 @@ namespace AwesomeInventory.UI
             _itemContexts = new List<ItemContext>();
             foreach (ThingDef td in _allSuitableDefs)
             {
-                ItemContext itemContext = new ItemContext() { thingDef = td };
+                ItemContext itemContext = new ItemContext() { ThingDef = td };
                 if (td is AIGenericDef genericDef)
                 {
                     itemContext.IsVisible = !visibleDefs.Any(def => genericDef.Includes(def));
@@ -243,8 +243,74 @@ namespace AwesomeInventory.UI
                 _itemContexts.Add(itemContext);
             }
 
-            _itemContexts = _itemContexts.OrderBy(td => td.thingDef.label).ToList();
+            _itemContexts = _itemContexts.OrderBy(td => td.ThingDef.label).ToList();
             SetCategory(CategorySelection.Ranged);
+        }
+
+        /// <summary>
+        /// Draw icon for source category.
+        /// </summary>
+        /// <param name="canvas"> <see cref="Rect"/> for drawing. </param>
+        public void DrawCategoryIcon(Rect canvas)
+        {
+            WidgetRow row = new WidgetRow(canvas.x, canvas.y);
+            DrawCategoryIcon(CategorySelection.Ranged, TexResource.IconRanged, ref row, UIText.SourceRangedTip.TranslateSimple());
+            DrawCategoryIcon(CategorySelection.Melee, TexResource.IconMelee, ref row, UIText.SourceMeleeTip.TranslateSimple());
+            DrawCategoryIcon(CategorySelection.Apparel, TexResource.Apparel, ref row, UIText.SourceApparelTip.TranslateSimple());
+            DrawCategoryIcon(CategorySelection.Minified, TexResource.IconMinified, ref row, UIText.SourceMinifiedTip.TranslateSimple());
+            DrawCategoryIcon(CategorySelection.Generic, TexResource.IconGeneric, ref row, UIText.SourceGenericTip.TranslateSimple());
+            DrawCategoryIcon(CategorySelection.All, TexResource.IconAll, ref row, UIText.SourceAllTip.TranslateSimple());
+
+            float nameFieldLen = GenUI.GetWidthCached(UIText.TenCharsString);
+            float incrementX = canvas.xMax - row.FinalX - nameFieldLen - WidgetRow.IconSize - WidgetRow.ButtonExtraSpace;
+            row.Gap(incrementX);
+            row.Icon(TexResource.IconSearch, UIText.SourceFilterTip.TranslateSimple());
+
+            Rect textFilterRect = new Rect(row.FinalX, canvas.y, nameFieldLen, canvas.height);
+            this.DrawTextFilter(textFilterRect);
+            TooltipHandler.TipRegion(textFilterRect, UIText.SourceFilterTip.TranslateSimple());
+        }
+
+        /// <summary>
+        /// Set category for drawing available items in selection.
+        /// </summary>
+        /// <param name="category"> Category for selection. </param>
+        public void SetCategory(CategorySelection category)
+        {
+            switch (category)
+            {
+                case CategorySelection.Ranged:
+                    _source = _categorySource = _itemContexts.Where(context => context.ThingDef.IsRangedWeapon).ToList();
+                    break;
+
+                case CategorySelection.Melee:
+                    _source = _categorySource = _itemContexts.Where(context => context.ThingDef.IsMeleeWeapon).ToList();
+                    break;
+
+                case CategorySelection.Apparel:
+                    _source = _categorySource = _itemContexts.Where(context => context.ThingDef.IsApparel).ToList();
+                    break;
+
+                case CategorySelection.Minified:
+                    _source = _categorySource = _itemContexts.Where(context => context.ThingDef.Minifiable).ToList();
+                    break;
+
+                case CategorySelection.Generic:
+                    _source = _categorySource = _itemContexts.Where(context => context.ThingDef is AIGenericDef).ToList();
+                    break;
+
+                case CategorySelection.All:
+                default:
+                    _source = _categorySource = _itemContexts;
+                    break;
+            }
+        }
+
+        /// <inheritdoc/>
+        public void Reset()
+        {
+            _sourceListScrollPosition = Vector2.zero;
+            _loadoutListScrollPosition = Vector2.zero;
         }
 
         /// <summary>
@@ -360,76 +426,11 @@ namespace AwesomeInventory.UI
         }
 
         /// <summary>
-        /// Draw icon for source category.
-        /// </summary>
-        /// <param name="canvas"> <see cref="Rect"/> for drawing. </param>
-        public void DrawCategoryIcon(Rect canvas)
-        {
-            WidgetRow row = new WidgetRow(canvas.x, canvas.y);
-            DrawCategoryIcon(CategorySelection.Ranged, TexResource.IconRanged, ref row, UIText.SourceRangedTip.TranslateSimple());
-            DrawCategoryIcon(CategorySelection.Melee, TexResource.IconMelee, ref row, UIText.SourceMeleeTip.TranslateSimple());
-            DrawCategoryIcon(CategorySelection.Apparel, TexResource.Apparel, ref row, UIText.SourceApparelTip.TranslateSimple());
-            DrawCategoryIcon(CategorySelection.Minified, TexResource.IconMinified, ref row, UIText.SourceMinifiedTip.TranslateSimple());
-            DrawCategoryIcon(CategorySelection.Generic, TexResource.IconGeneric, ref row, UIText.SourceGenericTip.TranslateSimple());
-            DrawCategoryIcon(CategorySelection.All, TexResource.IconAll, ref row, UIText.SourceAllTip.TranslateSimple());
-
-            float nameFieldLen = GenUI.GetWidthCached(UIText.TenCharsString);
-            float incrementX = canvas.xMax - row.FinalX - nameFieldLen - WidgetRow.IconSize - WidgetRow.ButtonExtraSpace;
-            row.Gap(incrementX);
-            row.Icon(TexResource.IconSearch, UIText.SourceFilterTip.TranslateSimple());
-
-            Rect textFilterRect = new Rect(row.FinalX, canvas.y, nameFieldLen, canvas.height);
-            this.DrawTextFilter(textFilterRect);
-            TooltipHandler.TipRegion(textFilterRect, UIText.SourceFilterTip.TranslateSimple());
-        }
-
-        /// <summary>
-        /// Set category for drawing available items in selection.
-        /// </summary>
-        /// <param name="category"> Category for selection. </param>
-        public void SetCategory(CategorySelection category)
-        {
-            switch (category)
-            {
-                case CategorySelection.Ranged:
-                    _source = _categorySource = _itemContexts.Where(context => context.thingDef.IsRangedWeapon).ToList();
-                    break;
-
-                case CategorySelection.Melee:
-                    _source = _categorySource = _itemContexts.Where(context => context.thingDef.IsMeleeWeapon).ToList();
-                    break;
-
-                case CategorySelection.Apparel:
-                    _source = _categorySource = _itemContexts.Where(context => context.thingDef.IsApparel).ToList();
-                    break;
-
-                case CategorySelection.Minified:
-                    _source = _categorySource = _itemContexts.Where(context => context.thingDef.Minifiable).ToList();
-                    break;
-
-                case CategorySelection.Generic:
-                    _source = _categorySource = _itemContexts.Where(context => context.thingDef is AIGenericDef).ToList();
-                    break;
-
-                case CategorySelection.All:
-                default:
-                    _source = _categorySource = _itemContexts;
-                    break;
-            }
-        }
-
-        /// <inheritdoc/>
-        public void Reset()
-        {
-            _sourceListScrollPosition = Vector2.zero;
-            _loadoutListScrollPosition = Vector2.zero;
-        }
-
-        /// <summary>
         /// Draw item information in a row.
         /// </summary>
         /// <param name="row"> Rect used for drawing. </param>
-        /// <param name="groupSelector"> Thing to draw. </param>
+        /// <param name="index"> Position of a <see cref="ThingGroupSelector"/> in <paramref name="groupSelectors"/>. </param>
+        /// <param name="groupSelectors"> Thing to draw. </param>
         /// <param name="reorderableGroup"> The group this <paramref name="row"/> belongs to. </param>
         /// <param name="drawShadow"> If true, it draws a shadow copy of the row. It is used for drawing a row when it is dragged. </param>
         protected virtual void DrawItemRow(Rect row, int index, IList<ThingGroupSelector> groupSelectors, int reorderableGroup, bool drawShadow = false)
@@ -500,6 +501,18 @@ namespace AwesomeInventory.UI
             }
         }
 
+        protected virtual void DrawWeightBar(Rect canvas)
+        {
+            float fillPercent = Mathf.Clamp01(_currentLoadout.Weight / MassUtility.Capacity(_pawn));
+            GenBar.BarWithOverlay(
+                canvas,
+                fillPercent,
+                this.IsOverEncumbered(_pawn, _currentLoadout) ? AwesomeInventoryTex.ValvetTex as Texture2D : AwesomeInventoryTex.RMPrimaryTex as Texture2D,
+                UIText.Weight.Translate(),
+                _currentLoadout.Weight.ToString("0.#") + "/" + MassUtility.Capacity(_pawn).ToStringMass(),
+                string.Empty);
+        }
+
         private void DrawCountField(Rect canvas, ThingGroupSelector groupSelector)
         {
             int countInt = groupSelector.AllowedStackCount;
@@ -522,7 +535,7 @@ namespace AwesomeInventory.UI
             if (filter != _filter)
             {
                 _filter = filter;
-                _source = _categorySource.Where(td => td.thingDef.label.ToUpperInvariant().Contains(_filter.ToUpperInvariant())).ToList();
+                _source = _categorySource.Where(td => td.ThingDef.label.ToUpperInvariant().Contains(_filter.ToUpperInvariant())).ToList();
             }
         }
 
@@ -603,7 +616,7 @@ namespace AwesomeInventory.UI
 
                 Rect row = new Rect(0f, i * GenUI.ListSpacing, canvas.width, GenUI.ListSpacing);
                 Rect labelRect = new Rect(row);
-                TooltipHandler.TipRegion(row, _source[i].thingDef.GetWeightAndBulkTip());
+                TooltipHandler.TipRegion(row, _source[i].ThingDef.GetWeightAndBulkTip());
 
                 labelRect.xMin += GenUI.GapTiny;
                 if (i % 2 == 0)
@@ -612,11 +625,11 @@ namespace AwesomeInventory.UI
                 int j = i;
                 DrawUtility.DrawLabelButton(
                     labelRect
-                    , _source[j].thingDef.LabelCap
+                    , _source[j].ThingDef.LabelCap
                     , () =>
                     {
-                        ThingDef thingDef = _source[j].thingDef;
-                        ThingGroupSelector groupSelector = new ThingGroupSelector(thingDef, _currentLoadout.NextGroupID);
+                        ThingDef thingDef = _source[j].ThingDef;
+                        ThingGroupSelector groupSelector = new ThingGroupSelector(thingDef);
 
                         ThingSelector thingSelector;
                         if (thingDef is AIGenericDef genericDef)
@@ -662,20 +675,10 @@ namespace AwesomeInventory.UI
             }
         }
 
-        protected virtual void DrawWeightBar(Rect canvas)
-        {
-            float fillPercent = Mathf.Clamp01(_currentLoadout.Weight / MassUtility.Capacity(_pawn));
-            GenBar.BarWithOverlay(
-                canvas,
-                fillPercent,
-                this.IsOverEncumbered(_pawn, _currentLoadout) ? AwesomeInventoryTex.ValvetTex as Texture2D : AwesomeInventoryTex.RMPrimaryTex as Texture2D,
-                UIText.Weight.Translate(),
-                _currentLoadout.Weight.ToString("0.#") + "/" + MassUtility.Capacity(_pawn).ToStringMass(),
-                string.Empty);
-        }
-
         protected virtual bool IsOverEncumbered(Pawn pawn, AwesomeInventoryLoadout loadout)
         {
+            ValidateArg.NotNull(loadout, nameof(loadout));
+
             return loadout.Weight / MassUtility.Capacity(pawn) > 1f;
         }
 
@@ -697,7 +700,7 @@ namespace AwesomeInventory.UI
 
         private class ItemContext
         {
-            public ThingDef thingDef;
+            public ThingDef ThingDef;
             public bool IsVisible;
         }
     }
