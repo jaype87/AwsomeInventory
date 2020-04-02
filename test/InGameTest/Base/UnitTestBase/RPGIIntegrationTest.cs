@@ -3,13 +3,12 @@
 // Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-#if UnitTest
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RPG_Inventory_Remake_Common.UnitTest
+namespace AwesomeInventory.UnitTest
 {
     [Flags]
     public enum TestFlags : uint
@@ -78,4 +77,3 @@ namespace RPG_Inventory_Remake_Common.UnitTest
         #endregion
     }
 }
-#endif

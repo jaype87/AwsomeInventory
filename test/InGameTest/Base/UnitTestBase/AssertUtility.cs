@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Verse;
 
-namespace RPG_Inventory_Remake_Common.UnitTest
+namespace AwesomeInventory.UnitTest
 {
     public static class AssertUtility
     {

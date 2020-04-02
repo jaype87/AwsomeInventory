@@ -54,7 +54,7 @@
     <Compile Include="Exceptions\ArgumentEmtpyException.cs" />
     <Compile Include="Interfaces\IReset.cs" />
     <Compile Include="Resources\ErrorText.cs" />
-    <Compile Include="Resources\RangedWeaponStats.cs" />
+    <Compile Include="Resources\RangedWeaponStatsString.cs" />
     <Compile Include="Services\AIDebug.cs" />
     <Compile Include="Services\AwesomeInventoryServiceProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -95,9 +95,14 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>
-call "$(SolutionDir)SolutionItems\Deploy.bat" "$(ProjectDir)" "$(OutDir)"
-      xcopy /y "$(SolutionDir)src\LoadFolders.xml" "$(OutDir)..\..\."
-      xcopy /i /e /d /y "$(SolutionDir)src\About" "$(OutDir)..\..\About"
+            call "$(SolutionDir)SolutionItems\Deploy.bat" "$(ProjectDir)" "$(OutDir)"
+            xcopy /i /e /d /y "$(SolutionDir)src\About" "$(OutDir)..\..\About"
 </PostBuildEvent>
   </PropertyGroup>
+  <Target Name="CopyLoadFolderXML" AfterTargets="Build">
+    <Copy Condition=" '$(Configuration)'=='debug' " SourceFiles="$(SolutionDir)src\LoadFoldersTest.xml" DestinationFiles="$(OutDir)..\..\LoadFolders.xml" SkipUnchangedFiles="false">
+    </Copy>
+    <Copy Condition=" '$(Configuration)'!='debug' " SourceFiles="$(SolutionDir)src\LoadFolders.xml" DestinationFiles="$(OutDir)..\..\LoadFolders.xml" SkipUnchangedFiles="false">
+    </Copy>
+  </Target>
 </Project>

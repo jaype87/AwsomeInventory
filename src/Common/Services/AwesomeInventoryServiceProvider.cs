@@ -97,7 +97,7 @@ namespace AwesomeInventory
         }
 
         /// <summary>
-        /// Create instance of a certain type, which is a result after querying a type dictionary with <paramref name="type"/>.
+        /// Create instance of a certain type, which is a result after querying a type dictionary with <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T"> A <see cref="Type"/> used for querying a type dictionary. </typeparam>
         /// <param name="ctorArgs"> Arguments passed to constructor.</param>

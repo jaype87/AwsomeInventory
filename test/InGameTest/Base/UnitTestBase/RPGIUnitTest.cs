@@ -3,14 +3,13 @@
 // Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-#if UnitTest
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Verse;
 
-namespace RPG_Inventory_Remake_Common.UnitTest
+namespace AwesomeInventory.UnitTest
 {
     public abstract class RPGIUnitTest
     {
@@ -96,4 +95,3 @@ namespace RPG_Inventory_Remake_Common.UnitTest
         }
     }
 }
-#endif

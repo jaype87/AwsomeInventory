@@ -1,20 +1,15 @@
-﻿// <copyright file="AssemblyInfo.cs" company="Zizhen Li">
-// Copyright (c) 2019 - 2020 Zizhen Li. All rights reserved.
-// Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
-// </copyright>
-
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AwesomeInventoryBase")]
+[assembly: AssemblyTitle("UnitTestBase")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("AwesomeInventoryBase")]
+[assembly: AssemblyProduct("UnitTestBase")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -25,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("b08984e0-c241-4fee-b9a1-fff9adef5bb2")]
+[assembly: Guid("97365338-16d6-4866-952b-4d690c566ff9")]
 
 // Version information for an assembly consists of the following four values:
 //

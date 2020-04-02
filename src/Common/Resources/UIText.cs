@@ -14,7 +14,7 @@ namespace AwesomeInventory.UI
     /// <summary>
     /// Text displayed on UI. Call Translate() on members whenever they are referenced, e.g., UIText.Equip.Translate(); .
     /// </summary>
-    public static class 
+    public static class
         UIText
     {
 #pragma warning disable SA1600 // Elements should be documented
