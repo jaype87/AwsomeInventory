@@ -66,6 +66,14 @@ namespace AwesomeInventory.UI
 
         public const string OverallArmor = "OverallArmor";
 
+        public const string ReportHauling = "ReportHauling";
+
+        public const string ReportHaulingTo = "ReportHaulingTo";
+
+        public const string ReportHaulingToGrave = "ReportHaulingToGrave";
+
+        public const string ReportHaulingUnknown = "ReportHaulingUnknown";
+
         /****************** AwesomeInventory texts ********************/
 
         public const string AIEquip = "AwesomeInventory_Equip";
@@ -78,7 +86,9 @@ namespace AwesomeInventory.UI
 
         public const string Belt = "AwesomeInventory_Belt";
 
-        public const string Blacklist = "AweseomInventory_Blacklist";
+        public const string Blacklist = "AwesomeInventory_Blacklist";
+
+        public const string CantUnloadIncapableManipulation = "AwesomeInventory_CantUnloadIncapableManipulation";
 
         public const string ChooseMaterialAndQuality = "AwesomeInventory_ChooseMaterialAndQuality";
 

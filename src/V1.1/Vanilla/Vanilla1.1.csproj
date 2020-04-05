@@ -36,10 +36,11 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.1\Vanilla\Assemblies\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -74,12 +75,6 @@
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Common\HarmonyPatches\OutfitDatabase_TryDelete.cs">
-      <Link>HarmonyPatches\OutfitDatabase_TryDelete.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\HarmonyPatches\Thing_RPGI_Patch.cs">
-      <Link>HarmonyPatches\Thing_RPGI_Patch.cs</Link>
-    </Compile>
     <Compile Include="Components\GameComponent_AwesomeInventory_Entry.cs" />
     <Compile Include="GearTab\AwesomeInventoryTab.cs" />
     <Compile Include="GearTab\VanillaGearTabWorker.cs" />
@@ -87,19 +82,17 @@
     <Compile Include="HarmonyPatches\ThingOwner_RPGI_Patch.cs" />
     <Compile Include="Helpers\DrawHelper.cs" />
     <Compile Include="Helpers\InventoryHelper.cs" />
-    <Compile Include="Jobs\JobDriver_RPGI_DressAndUndress.cs" />
     <Compile Include="Jobs\JobGiver_AwesomeInventory_FindApparels.cs" />
-    <Compile Include="Jobs\JobGiver_RPGI_FindItems.cs" />
-    <Compile Include="Jobs\JobGiver_RPGI_FindWeapon.cs" />
+    <Compile Include="Jobs\JobGiver_AwesomeInventory_FindItems.cs" />
+    <Compile Include="Jobs\JobGiver_AwesomeInventory_FindWeapon.cs" />
+    <Compile Include="Jobs\JobGiver_AwesomeInventory_TakeArm.cs" />
     <Compile Include="Jobs\JobGiver_FindItemByRadius.cs" />
-    <Compile Include="Jobs\JobGiver_RPGI_OpportunisticHaul.cs" />
+    <Compile Include="Jobs\JobGiver_AwesomeInventory_OpportunisticHaul.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\VanillaServicesRegistration.cs" />
-    <None Include="App.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="HarmonyPatches\Game_FinalizeInit_RPGI_Patch.cs" />
-    <Compile Include="HarmonyPatches\JobDriver_Cleanup_RPGI_Patch.cs" />
-    <Compile Include="HarmonyPatches\Pawn_CarryTracker_CarriedThing_RPGI_Patch.cs" />
+    <Compile Include="HarmonyPatches\Pawn_CarryTracker_CarriedThing_AwesomeInventory_Patch.cs" />
     <Compile Include="Loadout\MassBulkUtility.cs" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -181,7 +174,7 @@
     <Error Condition="!Exists('..\..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>call $(SolutionDir)SolutionItems\Deploy.bat $(ProjectDir) $(OutDir)</PostBuildEvent>
+    <PostBuildEvent>call $(SolutionDir)SolutionItems\Deploy.bat $(ProjectDir) $(OutDir) $(Configuration)</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

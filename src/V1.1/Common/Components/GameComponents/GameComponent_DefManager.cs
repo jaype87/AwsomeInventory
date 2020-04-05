@@ -11,6 +11,9 @@ using Verse;
 
 namespace AwesomeInventory
 {
+    /// <summary>
+    /// Manages defs for the loadout window.
+    /// </summary>
     public class GameComponent_DefManager : GameComponent
     {
         private static HashSet<ThingDef> _allSuitableDefs;
@@ -21,17 +24,13 @@ namespace AwesomeInventory
         /// <param name="game"> Current game. </param>
         public GameComponent_DefManager(Game game)
         {
-            AIDebug.Init(new Logger());
         }
 
         /// <summary>
-        /// Return a copy of a cached AllSuitableDefs.
+        /// Gets all Suitable Defs for displaying in loadout.
         /// </summary>
         /// <returns> A set of defs available to be selected in loadout dialog. </returns>
-        public static HashSet<ThingDef> GetSuitableDefs()
-        {
-            return new HashSet<ThingDef>(_allSuitableDefs.AsEnumerable(), ThingDefComparer.Instance);
-        }
+        public static HashSet<ThingDef> SuitableDefs => _allSuitableDefs;
 
         /// <summary>
         /// Get called by the game just before the game is about to start.

@@ -339,6 +339,9 @@ namespace AwesomeInventory
         // Most part is from the source code
         public static void Wear(Pawn pawn, Apparel newApparel, bool dropReplacedApparel = true)
         {
+            ValidateArg.NotNull(newApparel, nameof(newApparel));
+            ValidateArg.NotNull(pawn, nameof(pawn));
+
             if (newApparel.Spawned)
             {
                 newApparel.DeSpawn();
@@ -373,8 +376,7 @@ namespace AwesomeInventory
                 }
                 else
                 {
-                    pawn.apparel.Remove(apparel);
-                    pawn.inventory.innerContainer.TryAdd(apparel);
+                    pawn.inventory.innerContainer.TryAddOrTransfer(apparel);
                 }
             }
 

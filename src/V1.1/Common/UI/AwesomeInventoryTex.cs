@@ -27,6 +27,8 @@ namespace AwesomeInventory.UI
         public static readonly Color Lavendar = GenColor.FromHex("dda0dd");
         public static readonly Color LightGrey = GenColor.FromHex("b0b3af");
         public static readonly Color Valvet = GenColor.FromHex("cc1a00");
+        public static readonly Color HighlightGreen = new Color(134 / 255f, 206 / 255f, 0, 1);
+        public static readonly Color HighlightBrown = new Color(212 / 255f, 141 / 255f, 0, 1);
         public static readonly Color RWPrimaryColor = GenColor.FromHex("6a512e");
 
         // For Lighter Colorful Traits
@@ -37,7 +39,6 @@ namespace AwesomeInventory.UI
         public static readonly Color LCT_PantoneRed = GenColor.FromHex("ED2939");
 
         // For Color Coded Mood Bar
-        private static float colorAlpha = 0.44f;
         public static readonly Color CCMB_HappyColor = new Color(0.1f, 0.75f, 0.2f, colorAlpha);
         public static readonly Color CCMB_Cyan = new Color(Color.cyan.r, Color.cyan.g, Color.cyan.b, colorAlpha);
         public static readonly Color CCMB_NeutralColor = new Color(0.87f, 0.96f, 0.79f, colorAlpha);
@@ -88,6 +89,8 @@ namespace AwesomeInventory.UI
         public static readonly Texture CCMB_Normal = SolidColorMaterials.NewSolidColorTexture(CCMB_Yellow);
         public static readonly Texture CCMB_Poor = SolidColorMaterials.NewSolidColorTexture(CCMB_Orange);
         public static readonly Texture CCMB_Awful = SolidColorMaterials.NewSolidColorTexture(CCMB_Red);
+
+        private static float colorAlpha = 0.44f;
 
 #pragma warning restore SA1600 // Elements should be documented
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

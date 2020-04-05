@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+#if DEBUG
+
 namespace AwesomeInventory
 {
     /// <summary>
@@ -38,10 +40,9 @@ namespace AwesomeInventory
         /// <param name="logger"> Logger used in <see cref="AIDebug"/> to record messages. </param>
         public static void Init(ILogger logger)
         {
-#if DEBUG
             Logger = logger;
             Timer = new Timer(logger);
-#endif
         }
     }
 }
+#endif

@@ -4,6 +4,8 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
+using AwesomeInventory.Jobs;
 using RimWorld;
 using Verse;
 
@@ -21,7 +23,12 @@ namespace AwesomeInventory.Loadout
         /// <returns> Returns true if <paramref name="pawn"/>'s inventory needs to restock. </returns>
         protected override bool Satisfied(Pawn pawn)
         {
-            bool needRestock = base.Satisfied(pawn) && (pawn.TryGetComp<CompAwesomeInventoryLoadout>()?.NeedRestock ?? false);
+            ValidateArg.NotNull(pawn, nameof(pawn));
+
+            bool needRestock = base.Satisfied(pawn)
+                            && ((pawn.TryGetComp<CompAwesomeInventoryLoadout>()?.NeedRestock ?? false)
+                                ||
+                                pawn.equipment.Primary == null);
 #if DEBUG
             Log.Message(
                 string.Format(
@@ -31,7 +38,7 @@ namespace AwesomeInventory.Loadout
                     nameof(ThinkNode_AwesomeInventory_Core),
                     needRestock));
 #endif
-            return base.Satisfied(pawn) && (pawn.TryGetComp<CompAwesomeInventoryLoadout>()?.NeedRestock ?? false);
+            return needRestock;
         }
     }
 }

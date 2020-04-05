@@ -21,3 +21,13 @@ SET _textures=Textures
 IF EXIST "%~dp1%_textures%" (
     xcopy /i /e /d /y "%~dp1%_textures%" "%~dp2..\%_textures%"
 )
+
+SET _assemblies=Assemblies
+IF NOT "%3"=="Debug" (
+    IF EXIST "%~dp2..\%_assemblies%\*.pdb" (
+        DEL /q "%~dp2..\%_assemblies%\*.pdb"
+    )
+    IF EXIST "%~dp2..\%_assemblies%\*.xml" (
+        DEL /q "%~dp2..\%_assemblies%\*.xml"
+    )
+)

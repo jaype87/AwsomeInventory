@@ -5,11 +5,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using AwesomeInventory.Loadout;
 using AwesomeInventory.Resources;
-using AwesomeInventory.Utilities;
 using RimWorld;
 using RPG_Inventory_Remake_Common;
 using UnityEngine;
@@ -24,7 +22,7 @@ namespace AwesomeInventory.UI
     {
         private const float _paneDivider = 5 / 9f;
         private const int _loadoutNameMaxLength = 50;
-        private static readonly HashSet<ThingDef> _allSuitableDefs = GameComponent_DefManager.GetSuitableDefs();
+        private static readonly HashSet<ThingDef> _allSuitableDefs = GameComponent_DefManager.SuitableDefs;
 
         /// <summary>
         /// Controls the window size and position.
@@ -223,7 +221,7 @@ namespace AwesomeInventory.UI
         public override void PreOpen()
         {
             base.PreOpen();
-            HashSet<ThingDef> visibleDefs = GameComponent_DefManager.GetSuitableDefs();
+            HashSet<ThingDef> visibleDefs = new HashSet<ThingDef>(_allSuitableDefs);
             visibleDefs.IntersectWith(
                 Find.CurrentMap.listerThings.ThingsInGroup(ThingRequestGroup.HaulableEverOrMinifiable).Select(t => t.def));
 
@@ -501,6 +499,23 @@ namespace AwesomeInventory.UI
             }
         }
 
+        /// <summary>
+        /// Check if <paramref name="loadout"/> is too heavy for <paramref name="pawn"/>.
+        /// </summary>
+        /// <param name="pawn"> The pawn used for baseline. </param>
+        /// <param name="loadout"> Loadout to check. </param>
+        /// <returns> Returns true if <paramref name="loadout"/> is too heavy for <paramref name="pawn"/>. </returns>
+        protected virtual bool IsOverEncumbered(Pawn pawn, AwesomeInventoryLoadout loadout)
+        {
+            ValidateArg.NotNull(loadout, nameof(loadout));
+
+            return loadout.Weight / MassUtility.Capacity(pawn) > 1f;
+        }
+
+        /// <summary>
+        /// Draw weight bar at the bottom of the loadout window.
+        /// </summary>
+        /// <param name="canvas"> Rect for drawing. </param>
         protected virtual void DrawWeightBar(Rect canvas)
         {
             float fillPercent = Mathf.Clamp01(_currentLoadout.Weight / MassUtility.Capacity(_pawn));
@@ -513,6 +528,15 @@ namespace AwesomeInventory.UI
                 string.Empty);
         }
 
+        private static void ReorderItems(int oldIndex, int newIndex, IList<ThingGroupSelector> groupSelectors)
+        {
+            if (oldIndex != newIndex)
+            {
+                groupSelectors.Insert(newIndex, groupSelectors[oldIndex]);
+                groupSelectors.RemoveAt((oldIndex >= newIndex) ? (oldIndex + 1) : oldIndex);
+            }
+        }
+
         private void DrawCountField(Rect canvas, ThingGroupSelector groupSelector)
         {
             int countInt = groupSelector.AllowedStackCount;
@@ -522,11 +546,8 @@ namespace AwesomeInventory.UI
 
             if (countInt != groupSelector.AllowedStackCount)
             {
-                int delta = countInt - groupSelector.AllowedStackCount;
-                _pawn.GetComp<CompAwesomeInventoryLoadout>().InventoryMargins[groupSelector] -= delta;
+                groupSelector.SetStackCount(countInt);
             }
-
-            groupSelector.SetStackCount(countInt);
         }
 
         private void DrawTextFilter(Rect canvas)
@@ -656,15 +677,6 @@ namespace AwesomeInventory.UI
             Widgets.EndScrollView();
         }
 
-        private static void ReorderItems(int oldIndex, int newIndex, IList<ThingGroupSelector> groupSelectors)
-        {
-            if (oldIndex != newIndex)
-            {
-                groupSelectors.Insert(newIndex, groupSelectors[oldIndex]);
-                groupSelectors.RemoveAt((oldIndex >= newIndex) ? (oldIndex + 1) : oldIndex);
-            }
-        }
-
         private void DrawCategoryIcon(CategorySelection sourceSelected, Texture2D texButton, ref WidgetRow row, string tip)
         {
             if (row.ButtonIcon(texButton, tip))
@@ -673,13 +685,6 @@ namespace AwesomeInventory.UI
                 _filter = string.Empty;
                 _sourceListScrollPosition = Vector2.zero;
             }
-        }
-
-        protected virtual bool IsOverEncumbered(Pawn pawn, AwesomeInventoryLoadout loadout)
-        {
-            ValidateArg.NotNull(loadout, nameof(loadout));
-
-            return loadout.Weight / MassUtility.Capacity(pawn) > 1f;
         }
 
         #endregion Methods

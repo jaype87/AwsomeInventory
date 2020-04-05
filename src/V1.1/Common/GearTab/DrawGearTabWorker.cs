@@ -317,8 +317,8 @@ namespace AwesomeInventory.UI
             {
                 Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Apparel.TranslateSimple());
                 foreach (Apparel apparel in from ap in selPawn.apparel.WornApparel
-                                             orderby ap.def.apparel.bodyPartGroups[0].listOrder descending
-                                             select ap)
+                                            orderby ap.def.apparel.bodyPartGroups[0].listOrder descending
+                                            select ap)
                 {
                     this.DrawThingRow(selPawn, ref rollingY, viewRect.width, apparel);
                 }
@@ -606,31 +606,30 @@ namespace AwesomeInventory.UI
                 AwesomeInventoryTabBase.InterfaceDrop.Invoke(_gearTab, new object[] { thing });
             }
 
-            if (thing is ThingWithComps thingWithComps)
+            Rect unloadButtonRect = new Rect(row.FinalX - GenUI.SmallIconSize, row.FinalY, GenUI.SmallIconSize, GenUI.ListSpacing);
+
+            // Draw unload now button
+            TooltipHandler.TipRegion(unloadButtonRect, UIText.UnloadNow.TranslateSimple());
+            if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
             {
-                Rect unloadButtonRect = new Rect(row.FinalX - GenUI.SmallIconSize, row.FinalY, GenUI.SmallIconSize, GenUI.ListSpacing);
-
-                // Draw unload now button
-                TooltipHandler.TipRegion(unloadButtonRect, UIText.UnloadNow.TranslateSimple());
-                if (thingWithComps.GetComp<CompRPGIUnload>()?.Unload ?? false)
+                if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, AwesomeInventoryTex.HighlightBrown, AwesomeInventoryTex.HighlightGreen))
                 {
-                    if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, DrawUtility.HighlightBrown, DrawUtility.HighlightGreen))
-                    {
-                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                        InterfaceUnloadNow(thingWithComps, selPawn);
-                    }
+                    SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                    InterfaceUnloadNow(thing, selPawn);
                 }
-                else
-                {
-                    if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, Color.white, DrawUtility.HighlightGreen))
-                    {
-                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                        InterfaceUnloadNow(thingWithComps, selPawn);
-                    }
-                }
-
-                row.GapButtonIcon();
             }
+            else
+            {
+                if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, Color.white, AwesomeInventoryTex.HighlightGreen))
+                {
+                    SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                    InterfaceUnloadNow(thing, selPawn);
+                }
+            }
+
+            GUI.color = Color.white;
+
+            row.GapButtonIcon();
 
             // Draw ingest button.
             if ((thing.def.IsNutritionGivingIngestible || thing.def.IsNonMedicalDrug) && thing.IngestibleNow && selPawn.WillEat(thing))
@@ -718,22 +717,23 @@ namespace AwesomeInventory.UI
             float ambientTemperature = pawn.AmbientTemperature;
 
             row.Icon(TexResource.ThermometerGen, UIText.CurrentTemperature.TranslateSimple());
-            row.Label(
+            row.LabelWithHighlight(
                 ambientTemperature < minTemperature
-                ? ambientTemperature.ToStringTemperature().Colorize(ColorLibrary.SkyBlue)
-                : ambientTemperature > maxTemperature
-                ? ambientTemperature.ToStringTemperature().Colorize(ColorLibrary.Red)
-                : ambientTemperature.ToStringTemperature());
+                    ? ambientTemperature.ToStringTemperature().Colorize(ColorLibrary.SkyBlue)
+                    : ambientTemperature > maxTemperature
+                    ? ambientTemperature.ToStringTemperature().Colorize(ColorLibrary.Red)
+                    : ambientTemperature.ToStringTemperature()
+                , UIText.CurrentTemperature.TranslateSimple());
             row.Gap(int.MaxValue);
 
             // Draw minimum comfy temperature
             row.Icon(TexResource.ThermometerCold, UIText.ComfyTemperatureRange.TranslateSimple());
-            row.Label(minTemperature.ToStringTemperature());
+            row.LabelWithHighlight(minTemperature.ToStringTemperature(), UIText.ComfyTemperatureRange.TranslateSimple());
             row.Gap(GenUI.Gap);
 
             // Draw maximum comfy temperature
             row.Icon(TexResource.ThermometerHot, UIText.ComfyTemperatureRange.TranslateSimple());
-            row.Label(maxTemperature.ToStringTemperature());
+            row.LabelWithHighlight(maxTemperature.ToStringTemperature(), UIText.ComfyTemperatureRange.TranslateSimple());
             row.Gap(int.MaxValue);
 
             // Draw armor stats
@@ -858,32 +858,40 @@ namespace AwesomeInventory.UI
             Rect rect1 = new Rect(rect.x + 4f, rect.y + 4f, rect.width - 8f, rect.height - 8f);
             Widgets.ThingIcon(rect1, thing);
 
+            Rect buttonRect = new Rect(rect.xMax - DrawUtility.TinyIconSize, rect.yMax - DrawUtility.TinyIconSize, DrawUtility.TinyIconSize, DrawUtility.TinyIconSize);
             if (Mouse.IsOver(rect))
             {
                 GUI.color = Color.grey;
                 GUI.DrawTexture(rect, TexUI.HighlightTex);
                 Widgets.InfoCardButton(rect.x, rect.y, thing);
 
-                Rect buttonRect;
-
                 // Draw Unload Now button
-                buttonRect = new Rect(rect.xMax - DrawUtility.TinyIconSize, rect.yMax - DrawUtility.TinyIconSize, DrawUtility.TinyIconSize, DrawUtility.TinyIconSize);
                 TooltipHandler.TipRegion(buttonRect, UIText.UnloadNow.Translate());
-                if (thing.GetComp<CompRPGIUnload>()?.Unload ?? false)
+                if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
                 {
-                    if (Widgets.ButtonImage(buttonRect, TexResource.DoubleDownArrow, DrawUtility.HighlightBrown, DrawUtility.HighlightGreen))
+                    if (Widgets.ButtonImage(buttonRect, TexResource.DoubleDownArrow, AwesomeInventoryTex.HighlightBrown, AwesomeInventoryTex.HighlightGreen))
                     {
                         SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                        AwesomeInventoryTabBase.InterfaceUnloadNow(thing, selPawn);
+                        InterfaceUnloadNow(thing, selPawn);
                     }
                 }
                 else
                 {
-                    if (Widgets.ButtonImage(buttonRect, TexResource.DoubleDownArrow, Color.white, DrawUtility.HighlightGreen))
+                    if (Widgets.ButtonImage(buttonRect, TexResource.DoubleDownArrow, Color.white, AwesomeInventoryTex.HighlightGreen))
                     {
                         SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                        AwesomeInventoryTabBase.InterfaceUnloadNow(thing, selPawn);
+                        InterfaceUnloadNow(thing, selPawn);
                     }
+                }
+
+                GUI.color = Color.white;
+            }
+            else if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
+            {
+                if (Widgets.ButtonImage(buttonRect, TexResource.DoubleDownArrow, AwesomeInventoryTex.HighlightBrown, AwesomeInventoryTex.HighlightGreen))
+                {
+                    SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                    InterfaceUnloadNow(thing, selPawn);
                 }
 
                 GUI.color = Color.white;
@@ -1299,50 +1307,20 @@ namespace AwesomeInventory.UI
         /// <summary>
         /// Unload items on pawn.
         /// </summary>
-        /// <param name="t"> Thing to unload. </param>
-        /// <param name="pawn"> Selected pawn. </param>
-        protected virtual void InterfaceUnloadNow(ThingWithComps t, Pawn pawn)
+        /// <param name="thing"> Thing to unload. </param>
+        /// <param name="pawn"> Pawn who carries <paramref name="thing"/>. </param>
+        protected virtual void InterfaceUnloadNow(Thing thing, Pawn pawn)
         {
-            ValidateArg.NotNull(t, nameof(t));
+            ValidateArg.NotNull(thing, nameof(thing));
             ValidateArg.NotNull(pawn, nameof(pawn));
 
-            // TODO examine HaulToContainer code path
-            // If there is no comps in def, AllComps will always return an empty list
-            // Can't add new comp if the parent class has no comp to begin with
-            // The .Any() is not a fool proof test if some mods use it as a dirty way to
-            // comps to things that should not have comps
-            // Check ThingWithComps for more information
-            if (t.AllComps.Any())
+            if (AwesomeInventoryUnloadNow.ThingInQueue(pawn, thing))
             {
-                CompRPGIUnload comp = t.GetComp<CompRPGIUnload>();
-                if (comp == null)
-                {
-                    t.AllComps.Add(new CompRPGIUnload(true));
-                    JobGiver_AwesomeInventory_Unload.QueueJob(pawn, JobGiver_AwesomeInventory_Unload.TryGiveJobStatic(pawn, t));
-                }
-                else if (comp.Unload == true)
-                {
-                    // Check JobGiver_AwesomeInventory_Unload for more information
-                    comp.Unload = false;
-                    if (pawn.CurJob?.targetA.Thing == t && pawn.CurJobDef == AwesomeInventory_JobDefOf.AwesomeInventory_Unload)
-                    {
-                        pawn.jobs.EndCurrentJob(JobCondition.Incompletable);
-                        return;
-                    }
-
-                    QueuedJob queuedJob = pawn.jobs.jobQueue.FirstOrDefault(
-                            j => j.job.def == AwesomeInventory_JobDefOf.AwesomeInventory_Fake &&
-                            j.job.targetA.Thing == t);
-                    if (queuedJob != null)
-                    {
-                        pawn.jobs.jobQueue.Extract(queuedJob.job);
-                    }
-                }
-                else if (comp.Unload == false)
-                {
-                    comp.Unload = true;
-                    JobGiver_AwesomeInventory_Unload.QueueJob(pawn, JobGiver_AwesomeInventory_Unload.TryGiveJobStatic(pawn, t));
-                }
+                AwesomeInventoryUnloadNow.StopJob(pawn, thing);
+            }
+            else
+            {
+                AwesomeInventoryUnloadNow.QueueJob(pawn, thing);
             }
         }
     }

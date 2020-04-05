@@ -35,7 +35,7 @@ namespace AwesomeInventory.Loadout
             this.ExcepDefs = exceptDefs;
             this.ThingCategoryDefs = thingCategoryDefs;
             this.Includes = (thingDef) => this.AvailableDefs.Contains(thingDef);
-            this.AvailableDefs = from thingDef in this.ThingCategoryDefs.SelectMany(t => t.DescendantThingDefs)
+            this.AvailableDefs = from thingDef in this.ThingCategoryDefs.SelectMany(t => t.DescendantThingDefs).Distinct()
                                  where !this.ExcepDefs.EnumerableNullOrEmpty() && !this.ExcepDefs.Contains(thingDef)
                                  select thingDef;
         }
@@ -57,7 +57,7 @@ namespace AwesomeInventory.Loadout
         /// <summary>
         /// Gets a predicate function which returns true if <see cref="ThingDef"/> belongs.
         /// </summary>
-        public Predicate<ThingDef> Includes { get; }
+        public virtual Predicate<ThingDef> Includes { get; }
 
         /// <summary>
         /// Gets a filter that rules out <see cref="ThingDef"/> that does not belong.

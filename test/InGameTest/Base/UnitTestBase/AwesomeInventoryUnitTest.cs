@@ -1,4 +1,4 @@
-﻿// <copyright file="RPGIUnitTest.cs" company="Zizhen Li">
+﻿// <copyright file="AwesomeInventoryUnitTest.cs" company="Zizhen Li">
 // Copyright (c) 2019 - 2020 Zizhen Li. All rights reserved.
 // Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -11,13 +11,13 @@ using Verse;
 
 namespace AwesomeInventory.UnitTest
 {
-    public abstract class RPGIUnitTest
+    public abstract class AwesomeInventoryUnitTest
     {
         string FullName;
-        public List<RPGIUnitTest> Tests = new List<RPGIUnitTest>();
+        public List<AwesomeInventoryUnitTest> Tests = new List<AwesomeInventoryUnitTest>();
         public Dictionary<string, bool> TestResults = new Dictionary<string, bool>();
 
-        public RPGIUnitTest()
+        public AwesomeInventoryUnitTest()
         {
             FullName = GetType().FullName;
         }
@@ -29,7 +29,7 @@ namespace AwesomeInventory.UnitTest
         {
             if (Tests.Any())
             {
-                foreach (RPGIUnitTest test in Tests)
+                foreach (AwesomeInventoryUnitTest test in Tests)
                 {
                     result = test.Start();
                     TestResults.Add(test.GetType().FullName, result);
@@ -62,7 +62,7 @@ namespace AwesomeInventory.UnitTest
             return false;
         }
 
-        public static int Report(RPGIUnitTest tests, ref StringBuilder sb, string indent = "")
+        public static int Report(AwesomeInventoryUnitTest tests, ref StringBuilder sb, string indent = "")
         {
             int num = 0;
             if (tests == null || sb == null)
@@ -77,7 +77,7 @@ namespace AwesomeInventory.UnitTest
 
             sb.Append(indent);
             sb.AppendLine(string.Format(StringResource.NumberOfChildrenTests, tests.FullName, tests.Tests.Count));
-            foreach (RPGIUnitTest test in tests.Tests)
+            foreach (AwesomeInventoryUnitTest test in tests.Tests)
             {
                 sb.Append(indent);
                 sb.Append(StringResource.Indent);

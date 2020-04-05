@@ -9,14 +9,6 @@
     </JobDef>
 
     <JobDef>
-        <defName>AwesomeInventory_Fake</defName>
-        <driverClass>AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Unload</driverClass>
-        <reportString>Unloading TargetA.</reportString>
-        <suspendable>false</suspendable>
-        <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
-    </JobDef>
-
-    <JobDef>
         <defName>AwesomeInventory_MapEquip</defName>
         <driverClass>AwesomeInventory.Jobs.JobDriver_AwesomeInventory_MapEquip</driverClass>
         <reportString>Equip TargetA.</reportString>

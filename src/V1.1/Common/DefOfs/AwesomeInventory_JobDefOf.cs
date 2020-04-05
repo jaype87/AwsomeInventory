@@ -30,11 +30,6 @@ namespace AwesomeInventory.Jobs
         public static JobDef AwesomeInventory_Unload;
 
         /// <summary>
-        /// Placeholder in job queue for <see cref="AwesomeInventory_Unload"/>.
-        /// </summary>
-        public static JobDef AwesomeInventory_Fake;
-
-        /// <summary>
         /// Wear apparel and put the previously equipped into inventory.
         /// </summary>
         public static JobDef AwesomeInventory_Dress;

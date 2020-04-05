@@ -8,9 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
-using AwesomeInventory.Resources;
 using RimWorld;
-using RPGIResource;
 using Verse;
 
 namespace AwesomeInventory.Loadout
@@ -22,13 +20,14 @@ namespace AwesomeInventory.Loadout
     {
         private static readonly List<AwesomeInventoryLoadout> _loadouts = new List<AwesomeInventoryLoadout>();
         private static readonly Regex _pattern = new Regex(@"^(.*?)(\d*)$");
+        private static int _thingGroupSelectorID = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LoadoutManager"/> class.
         /// </summary>
         /// <param name="game"> Current game. </param>
         /// <remarks> Constructor is called on new/first game. </remarks>
-        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
+        [SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Required by game code.")]
         public LoadoutManager(Game game)
         {
         }
@@ -41,36 +40,19 @@ namespace AwesomeInventory.Loadout
         }
 
         /// <summary>
+        /// Gets an ID for <see cref="ThingGroupSelector"/>.
+        /// </summary>
+        public static int ThingGroupSelectorID => _thingGroupSelectorID++;
+
+        /// <summary>
         /// Gets a cache of loadouts used in this game.
         /// </summary>
         public static List<AwesomeInventoryLoadout> Loadouts => _loadouts;
 
-        #region Override Methods
-
         /// <summary>
-        /// Called by RimWorld when the game is ready to be played.
+        /// Add loadout to manager and the game's outfit database.
         /// </summary>
-        public override void FinalizeInit()
-        {
-            _loadouts.Clear();
-            foreach (Outfit outfit in Current.Game.outfitDatabase.AllOutfits)
-            {
-                if (outfit is AwesomeInventoryLoadout loadout)
-                {
-                    _loadouts.Add(loadout);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Load/Save handler. Loadouts are saved by OutfitDatabase.
-        /// </summary>
-        public override void ExposeData()
-        {
-        }
-
-        #endregion Override Methods
-
+        /// <param name="loadout"> Loadout to add. </param>
         public static void AddLoadout(AwesomeInventoryLoadout loadout)
         {
             ValidateArg.NotNull(loadout, nameof(loadout));
@@ -105,20 +87,11 @@ namespace AwesomeInventory.Loadout
             }
         }
 
-        public static string GetIncrementalLabel(object obj)
-        {
-            if (obj is AwesomeInventoryLoadout loadout)
-            {
-                return GetIncrementalLabel(loadout.label);
-            }
-            else if (obj is string previousLabel)
-            {
-                return GetIncrementalLabel(previousLabel);
-            }
-
-            throw new ArgumentException(ErrorMessage.WrongArgumentType, nameof(obj));
-        }
-
+        /// <summary>
+        /// Increment the number in a label.
+        /// </summary>
+        /// <param name="previousLabel"> Label for reference.</param>
+        /// <returns> A label with a number suffic that is one larger than that of <paramref name="previousLabel"/>. </returns>
         public static string GetIncrementalLabel(string previousLabel)
         {
             if (previousLabel.NullOrEmpty())
@@ -156,5 +129,32 @@ namespace AwesomeInventory.Loadout
 
             return string.Concat(onlyName, num);
         }
+
+        #region Override Methods
+
+        /// <summary>
+        /// Called by RimWorld when the game is ready to be played.
+        /// </summary>
+        public override void FinalizeInit()
+        {
+            _loadouts.Clear();
+            foreach (Outfit outfit in Current.Game.outfitDatabase.AllOutfits)
+            {
+                if (outfit is AwesomeInventoryLoadout loadout)
+                {
+                    _loadouts.Add(loadout);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Load/Save handler. Loadouts are saved by OutfitDatabase.
+        /// </summary>
+        public override void ExposeData()
+        {
+            Scribe_Values.Look(ref _thingGroupSelectorID, nameof(_thingGroupSelectorID));
+        }
+
+        #endregion Override Methods
     }
 }

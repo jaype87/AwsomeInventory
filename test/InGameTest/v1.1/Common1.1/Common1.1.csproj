@@ -7,7 +7,7 @@
     <ProjectGuid>{F6C8A166-E195-4F3A-B7FA-135AA5BB4452}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AwesomeInventory.Test</RootNamespace>
+    <RootNamespace>AwesomeInventory.UnitTest</RootNamespace>
     <AssemblyName>Common1.1.Test</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.1\Common\Assemblies\</OutputPath>
+    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.1\test\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -31,20 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0MUnit, Version=1.0.0.5, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\0MUnit.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\..\References\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\..\References\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Microsoft.VisualStudio.TestPlatform.ObjectModel.14.0.0\lib\net20\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
-    </Reference>
-    <Reference Include="MUnitForVS.TestAdapter, Version=1.0.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\MUnitForVS.TestAdapter.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -58,12 +47,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="TestAwesomeInventoryLoadout\CallbackCoupling.cs" />
+    <Compile Include="TestAwesomeInventoryLoadout\TestAwesomeInventoryLoadout.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestServer.cs" />
+    <Compile Include="TestCompAwesomeInventoryLoadout\ItemDistribution.cs" />
+    <Compile Include="TestCompAwesomeInventoryLoadout\StackCountCallback.cs" />
+    <Compile Include="TestCompAwesomeInventoryLoadout\TestCompAwesomeInventoryLoadout.cs" />
+    <Compile Include="TestCompAwesomeInventoryLoadout\ThingGroupSynchronization.cs" />
+    <Compile Include="UnitTest_Root.cs" />
+    <Compile Include="UnitTest_Start.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\V1.1\Common\Common1.1.csproj">
+      <Project>{6629105c-6bed-491b-a49a-eb12b0710cf3}</Project>
+      <Name>Common1.1</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Base\UnitTestBase\UnitTestFramework.csproj">
+      <Project>{97365338-16d6-4866-952b-4d690c566ff9}</Project>
+      <Name>UnitTestFramework</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

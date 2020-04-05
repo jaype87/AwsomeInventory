@@ -37,8 +37,9 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.1\Common\Assemblies\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -91,7 +92,6 @@
     <Compile Include="UI\Dialog_Mod.cs" />
     <Compile Include="ModSettings\AwesomeInventorySetting.cs" />
     <Compile Include="Components\CompAwesomeInventoryLoadout.cs" />
-    <Compile Include="Components\CompRPGIUnload.cs" />
     <Compile Include="Components\GameComponents\GameComponent_DefManager.cs" />
     <Compile Include="Components\GameComponents\LoadoutManager.cs" />
     <Compile Include="DefOfs\AwesomeInventoryBodyPartGroupDefOf.cs" />
@@ -113,7 +113,7 @@
     <Compile Include="Interfaces\ILoadout.cs" />
     <Compile Include="Interfaces\ILoadoutManager.cs" />
     <Compile Include="Jobs\JobDriver_AwesomeInventory_MapEquip.cs" />
-    <Compile Include="Jobs\JobGiver_AwesomeInventory_Unload.cs" />
+    <Compile Include="Jobs\AwesomeInventoryUnloadNow.cs" />
     <Compile Include="Jobs\ThinkNode_AwesomeInventory_Core.cs" />
     <None Include="Loadout\AILoadout.cs" />
     <Compile Include="Loadout\LoadoutComparer.cs" />
@@ -199,6 +199,7 @@
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.0.0.9, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Lib.Harmony.2.0.0.9\lib\net472\0Harmony.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
@@ -277,10 +278,7 @@
     <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Languages\" />
-    <Folder Include="Patches\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\Common\AwesomeInventory.Base.csproj">
       <Project>{b08984e0-c241-4fee-b9a1-fff9adef5bb2}</Project>
@@ -290,7 +288,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>call $(SolutionDir)SolutionItems\Deploy.bat $(ProjectDir) $(OutDir)</PostBuildEvent>
+    <PostBuildEvent>call $(SolutionDir)SolutionItems\Deploy.bat $(ProjectDir) $(OutDir) $(Configuration)
+
+IF "$(ConfigurationName)"=="Release" (
+    RD /s /q $(Outdir)..\..\test
+)</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

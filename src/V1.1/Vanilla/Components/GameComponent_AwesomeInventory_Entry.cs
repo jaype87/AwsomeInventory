@@ -35,15 +35,10 @@ namespace AwesomeInventory
         /// </summary>
         public override void FinalizeInit()
         {
-            JobGiver_AwesomeInventory_Unload.JobInProgress = false;
-            JobGiver_FindItemByRadius.Reset();
-
             if (LoadedModManager.RunningModsListForReading.Any(m => m.Name == "Simple sidearms"))
             {
                 HasSimpleSidearm = true;
             }
-
-            Log.Warning("Process Id: " + Process.GetCurrentProcess().Id);
         }
     }
 }

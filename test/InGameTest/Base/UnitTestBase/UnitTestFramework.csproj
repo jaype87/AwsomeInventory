@@ -59,7 +59,7 @@
       <DependentUpon>StringResource.resx</DependentUpon>
     </Compile>
     <Compile Include="RPGIIntegrationTest.cs" />
-    <Compile Include="RPGIUnitTest.cs" />
+    <Compile Include="AwesomeInventoryUnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

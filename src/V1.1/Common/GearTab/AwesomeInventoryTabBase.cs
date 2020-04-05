@@ -87,57 +87,6 @@ namespace AwesomeInventory.UI
         }
 
         /// <summary>
-        /// Action to take when the unload button is pressed.
-        /// </summary>
-        /// <param name="thing"> thing to unload. </param>
-        /// <param name="pawn"> Pawn who carries <paramref name="thing"/>. </param>
-        public static void InterfaceUnloadNow(ThingWithComps thing, Pawn pawn)
-        {
-            ValidateArg.NotNull(thing, nameof(thing));
-            ValidateArg.NotNull(pawn, nameof(pawn));
-
-            // TODO examine HaulToContainer code path
-            // If there is no comps in def, AllComps will always return an empty list
-            // Can't add new comp if the parent class has no comp to begin with
-            // The .Any() is not a fool proof test if some mods use it as a dirty way to
-            // comps to things that should not have comps
-            // Check ThingWithComps for more information
-            if (thing.AllComps.Any())
-            {
-                CompRPGIUnload comp = thing.GetComp<CompRPGIUnload>();
-                if (comp == null)
-                {
-                    thing.AllComps.Add(new CompRPGIUnload(true));
-                    JobGiver_AwesomeInventory_Unload.QueueJob(pawn, JobGiver_AwesomeInventory_Unload.TryGiveJobStatic(pawn, thing));
-                }
-                else if (comp.Unload == true)
-                {
-                    // Check JobGiver_AwesomeInventory_Unload for more information
-                    comp.Unload = false;
-                    if (pawn.CurJob?.targetA.Thing == thing && pawn.CurJobDef == AwesomeInventory_JobDefOf.AwesomeInventory_Unload)
-                    {
-                        pawn.jobs.EndCurrentJob(JobCondition.Incompletable);
-                        return;
-                    }
-
-                    QueuedJob queuedJob = pawn.jobs.jobQueue.FirstOrDefault(
-                            j => j.job.def == AwesomeInventory_JobDefOf.AwesomeInventory_Fake &&
-                            j.job.targetA.Thing == thing);
-
-                    if (queuedJob != null)
-                    {
-                        pawn.jobs.jobQueue.Extract(queuedJob.job);
-                    }
-                }
-                else if (comp.Unload == false)
-                {
-                    comp.Unload = true;
-                    JobGiver_AwesomeInventory_Unload.QueueJob(pawn, JobGiver_AwesomeInventory_Unload.TryGiveJobStatic(pawn, thing));
-                }
-            }
-        }
-
-        /// <summary>
         /// Run only once when the tab is toggle to open.
         /// Details in <see cref="InspectPaneUtility"/>.ToggleTab .
         /// </summary>
@@ -179,7 +128,7 @@ namespace AwesomeInventory.UI
             GUI.color = Color.white;
 
             // Draw checkbox option for Jealous
-            string translatedText = UIText.JealousTab.Translate();
+            string translatedText = UIText.JealousTab.TranslateSimple();
             Rect headerRect = GetHeaderRect(GenUI.Gap, translatedText);
             if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isJealous))
             {
@@ -188,7 +137,7 @@ namespace AwesomeInventory.UI
             }
 
             // Draw checkbox option for Greedy
-            translatedText = UIText.GreedyTab.Translate();
+            translatedText = UIText.GreedyTab.TranslateSimple();
             headerRect = GetHeaderRect(headerRect.xMax + GenUI.GapWide, translatedText);
             if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isGreedy))
             {
@@ -197,7 +146,7 @@ namespace AwesomeInventory.UI
             }
 
             // Draw checkbox option for Ascetic
-            translatedText = UIText.AsceticTab.Translate();
+            translatedText = UIText.AsceticTab.TranslateSimple();
             headerRect = GetHeaderRect(headerRect.xMax + GenUI.GapWide, translatedText);
             if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isAscetic))
             {
@@ -214,15 +163,11 @@ namespace AwesomeInventory.UI
                     Rect outRect = canvas.AtZero();
                     if (_isJealous)
                     {
-                        AIDebug.Timer.Start();
                         _drawGearTab.DrawJealous(_selPawn, outRect, _apparelChanged);
-                        AIDebug.Timer.Stop(AIDebug.Header + Event.current.type.ToString());
                     }
                     else if (_isGreedy)
                     {
-                        AIDebug.Timer.Start();
                         _drawGearTab.DrawGreedy(_selPawn, outRect, _apparelChanged);
-                        AIDebug.Timer.Stop(AIDebug.Header + Event.current.type.ToString());
                     }
                     else if (_isAscetic)
                     {

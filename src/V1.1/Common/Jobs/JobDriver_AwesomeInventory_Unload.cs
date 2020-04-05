@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AwesomeInventory.Common;
+using AwesomeInventory.UI;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -21,123 +21,207 @@ namespace AwesomeInventory.Jobs
     /// </summary>
     public class JobDriver_AwesomeInventory_Unload : JobDriver
     {
-        private int duration;
+        private int _duration = 0;
+        private bool _cellStorage = false;
+        private bool _container = false;
 
+        /// <summary>
+        /// Get a report string for displaying.
+        /// </summary>
+        /// <returns> A report string. </returns>
         public override string GetReport()
         {
-            Thing thing = null;
-            if (job.def == AwesomeInventory_JobDefOf.AwesomeInventory_Fake)
+            if (this.TargetB == LocalTargetInfo.Invalid)
             {
-                return "ReportHauling".Translate(TargetThingA.Label, TargetThingA);
+                return UIText.ReportHauling.Translate(TargetThingA.Label, TargetThingA);
             }
-            IntVec3 cell = job.targetB.Cell;
-            if (pawn.CurJob == job && pawn.carryTracker.CarriedThing != null)
-            {
-                thing = pawn.carryTracker.CarriedThing;
-            }
+
+            Thing thing = pawn.carryTracker?.CarriedThing;
+
             if (thing == null)
             {
-                return "ReportHaulingUnknown".Translate();
+                return UIText.ReportHaulingUnknown.Translate();
             }
-            string text = null;
-            SlotGroup slotGroup = cell.GetSlotGroup(base.Map);
-            if (slotGroup != null)
+
+            if (_cellStorage)
             {
-                text = slotGroup.parent.SlotYielderLabel();
+                SlotGroup slotGroup = this.TargetB.Cell.GetSlotGroup(Map);
+                if (slotGroup != null)
+                {
+                    string text = slotGroup.parent?.SlotYielderLabel();
+                    if (text != null)
+                    {
+                        return UIText.ReportHaulingTo.Translate(thing.Label, text.Named("DESTINATION"), thing.Named("THING"));
+                    }
+                }
             }
-            if (text != null)
+            else if (_container)
             {
-                return "ReportHaulingTo".Translate(thing.Label, text.Named("DESTINATION"), thing.Named("THING"));
+                return ((job.GetTarget(TargetIndex.B).Thing is Building_Grave) ? UIText.ReportHaulingToGrave : UIText.ReportHaulingTo).Translate(thing.Label, job.targetB.Thing.LabelShort.Named("DESTINATION"), thing.Named("THING"));
             }
-            return "ReportHauling".Translate(thing.Label, thing);
+
+            return UIText.ReportHauling.Translate(thing.Label, thing);
         }
 
+        /// <summary>
+        /// Make reservation for job targets before doing the job.
+        /// </summary>
+        /// <param name="errorOnFailed"> If true, log result as error if failed to make a reservation. </param>
+        /// <returns> Returns true if a reservation is made. </returns>
         public override bool TryMakePreToilReservations(bool errorOnFailed)
         {
-
-            Pawn pawn = base.pawn;
-            LocalTargetInfo target = base.job.GetTarget(TargetIndex.B);
-            Job job = base.job;
-            bool errorOnFailed2 = errorOnFailed;
-            bool result = false;
-
-            if (!target.Cell.IsValidStorageFor(pawn.Map, pawn.carryTracker.CarriedThing))
+            StoragePriority currentPriority = StoreUtility.CurrentStoragePriorityOf(TargetThingA);
+            if (!StoreUtility.TryFindBestBetterStorageFor(TargetThingA, pawn, pawn.Map, currentPriority, pawn.Faction, out IntVec3 foundCell, out IHaulDestination haulDestination))
             {
-                StoragePriority currentPriority = StoreUtility.CurrentStoragePriorityOf(TargetThingA);
-                if (!StoreUtility.TryFindBestBetterStorageFor(TargetThingA, pawn, pawn.Map, currentPriority, pawn.Faction, out IntVec3 foundCell, out IHaulDestination haulDestination))
-                {
-                    return false;
-                }
-
+                JobFailReason.Is(UIText.NoEmptyPlaceLower);
+                Messages.Message(
+                    UIText.NoEmptyPlaceLower.TranslateSimple()
+                    , new TargetInfo(this.pawn.PositionHeld, this.pawn.MapHeld), MessageTypeDefOf.NeutralEvent);
+                return false;
             }
 
-            if (pawn.Reserve(target, job, 1, -1, null, errorOnFailed2))
+            this.Init(foundCell, haulDestination);
+
+            if (pawn.Reserve(TargetB, this.job, 1, -1, null, errorOnFailed))
             {
-                pawn = base.pawn;
-                target = base.job.GetTarget(TargetIndex.A);
-                job = base.job;
-                errorOnFailed2 = errorOnFailed;
-                result = pawn.Reserve(target, job, 1, -1, null, errorOnFailed2);
+                return pawn.Reserve(TargetA, this.job, 1, -1, null, errorOnFailed);
             }
-            Log.Message("Make Reservation result: " + result);
-            return result;
+
+            return false;
         }
 
+        /// <summary>
+        /// Notification that is given to this driver.
+        /// </summary>
         public override void Notify_Starting()
         {
             base.Notify_Starting();
-            AddFinishAction(() => Log.Message("Job finished"));
-            // NOTE remove log
-            Log.Message("Notify Starting");
-            if (TargetThingA is Apparel apparel && pawn.apparel.Contains(apparel))
+
+            if (this.TargetThingA is Apparel apparel && pawn.apparel.Contains(apparel))
             {
                 // time needed to unequip
-                duration = (int)(apparel.GetStatValue(StatDefOf.EquipDelay) * 60f);
+                _duration = (int)(apparel.GetStatValue(StatDefOf.EquipDelay) * 60f);
             }
-            else if (TargetThingA is ThingWithComps equipment)
+            else if (this.TargetThingA is ThingWithComps equipment)
             {
                 if (pawn.equipment.Contains(equipment))
                 {
                     // vanilla time to drop any equipment
-                    duration = 30;
+                    _duration = 30;
+                }
+            }
+
+            if (_container)
+            {
+                Thing container = job.targetB.Thing;
+                if (container is Building)
+                {
+                    _duration = Math.Max(container.def.building.haulToContainerDuration, _duration);
                 }
             }
         }
 
+        /// <summary>
+        /// Give instructions on how to do job.
+        /// </summary>
+        /// <returns> A list of instructions. </returns>
         protected override IEnumerable<Toil> MakeNewToils()
         {
             this.FailOnDestroyedOrNull(TargetIndex.A);
             this.FailOnBurningImmobile(TargetIndex.B);
 
-            Toil carryToCell, timeToUnequip, placeThing;
-            timeToUnequip = placeThing = null;
+            Toil carryToDestination, timeToWait, placeThing;
+            carryToDestination = timeToWait = placeThing = null;
 
-            // Use CarriedThing to validate state
-            // There is a Harmony patch to trick the validation to think
-            // the pawn has Carryied Thing on it.
-            // Check Pawn_CarryTracker_CarriedThing_RPGI_Patch.cs
-            carryToCell = Toils_Haul.CarryHauledThingToCell(TargetIndex.B);
+            if (_cellStorage)
+            {
+                // This toil uses CarriedThing to validate state
+                // There is a Harmony patch to trick the validation to think
+                // the pawn has Carryied Thing on it.
+                // Check Pawn_CarryTracker_CarriedThing_AwesomeInventory_Patch.cs
+                carryToDestination = Toils_Haul.CarryHauledThingToCell(TargetIndex.B);
+
+                // PlaceHaulThingInCell will recursively call itself until it runs out of cell on map.
+                placeThing = Toils_Haul.PlaceHauledThingInCell(TargetIndex.B, carryToDestination, true, true);
+            }
+
+            if (_container)
+            {
+                carryToDestination = Toils_Haul.CarryHauledThingToContainer();
+                placeThing = Toils_Haul.DepositHauledThingInContainer(TargetIndex.B, TargetIndex.C);
+            }
 
             // When set true, it allows toils to be execute consecutively in one tick
             // Check JobDirver.DriverTick() for more information
-            carryToCell.atomicWithPrevious = true;
+            carryToDestination.atomicWithPrevious = true;
 
-            timeToUnequip = Toils_General.Wait(duration).WithProgressBarToilDelay(TargetIndex.A);
-            timeToUnequip.JumpIf(() => duration == 0, placeThing);
-            timeToUnequip.atomicWithPrevious = true;
+            timeToWait = Toils_General.Wait(_duration).WithProgressBarToilDelay(TargetIndex.A);
+            timeToWait.JumpIf(() => _duration == 0, placeThing);
+            timeToWait.atomicWithPrevious = true;
 
-            placeThing = Toils_Haul.PlaceHauledThingInCell(TargetIndex.B, carryToCell, storageMode: true);
-            placeThing.AddPreInitAction(delegate ()
+            placeThing.AddPreInitAction(() =>
             {
                 // Move things to carry tracker
                 // Where things are actually transfered to CarryTracker
                 TargetThingA.holdingOwner.TryTransferToContainer(TargetThingA, pawn.carryTracker.innerContainer);
             });
+            placeThing.AddFinishAction(() =>
+            {
+                if (_container)
+                {
+                    if (TargetThingA.holdingOwner.Owner == pawn && TargetThingA.stackCount > 0)
+                    {
+                        StoragePriority currentPriority = StoreUtility.CurrentStoragePriorityOf(TargetThingA);
+                        if (StoreUtility.TryFindBestBetterStorageFor(TargetThingA, pawn, pawn.Map, currentPriority, pawn.Faction, out IntVec3 foundCell, out IHaulDestination haulDestination))
+                        {
+                            this.Init(foundCell, haulDestination);
+                            this.JumpToToil(carryToDestination);
+                        }
+                    }
+                }
+            });
+
             placeThing.atomicWithPrevious = true;
 
-            yield return carryToCell;
-            yield return timeToUnequip;
+            yield return carryToDestination;
+            yield return timeToWait;
             yield return placeThing;
+
+            Toil statusCheck = Toils_General.DoAtomic(
+                () =>
+                {
+                    if (TargetThingA.holdingOwner.Owner.ParentHolder == pawn && TargetThingA.stackCount > 0)
+                    {
+                        JobFailReason.Is(UIText.NoEmptyPlaceLower);
+                        Messages.Message(
+                            UIText.NoEmptyPlaceLower.TranslateSimple()
+                            , new TargetInfo(this.pawn.PositionHeld, this.pawn.MapHeld), MessageTypeDefOf.NeutralEvent);
+                    }
+                });
+
+            yield return statusCheck;
+        }
+
+        /// <summary>
+        /// Initialize states based on the returned result from <see cref="StoreUtility.TryFindBestBetterStorageFor"/>.
+        /// </summary>
+        /// <param name="foundCell"> Found cell for storage. </param>
+        /// <param name="haulDestination"> Destination object for hauling. </param>
+        protected virtual void Init(IntVec3 foundCell, IHaulDestination haulDestination)
+        {
+            if (haulDestination is ISlotGroupParent)
+            {
+                this.job.targetB = foundCell;
+                this.job.haulMode = HaulMode.ToCellStorage;
+                _cellStorage = true;
+            }
+
+            if (haulDestination is Thing thing && thing.TryGetInnerInteractableThingOwner() != null)
+            {
+                this.job.targetB = thing;
+                this.job.haulMode = HaulMode.ToContainer;
+                _container = true;
+            }
         }
     }
 }

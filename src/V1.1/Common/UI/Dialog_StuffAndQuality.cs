@@ -249,8 +249,6 @@ namespace AwesomeInventory.UI
         {
             float rollingY = 0;
 
-            AIDebug.Timer.Start();
-
             // Draw Title
             Rect titleRec = DrawTitle(
                 canvas.position,

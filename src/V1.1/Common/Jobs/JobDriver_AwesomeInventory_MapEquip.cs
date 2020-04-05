@@ -34,7 +34,6 @@ namespace AwesomeInventory.Jobs
         protected override IEnumerable<Toil> MakeNewToils()
         {
             this.FailOnDestroyedOrNull(TargetIndex.A);
-            this.FailOnBurningImmobile(TargetIndex.A);
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.ClosestTouch).FailOnDespawnedNullOrForbidden(TargetIndex.A);
             yield return new Toil()
             {
@@ -62,6 +61,7 @@ namespace AwesomeInventory.Jobs
                         }
                     }
 
+                    // There is a chance, albeit minor, even MakeRommFor can fail.
                     if (pawn.equipment.Primary == null)
                     {
                         // unregister new weapon in the inventory list and register it in equipment list.

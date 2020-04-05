@@ -31,7 +31,7 @@ namespace AwesomeInventory.UnitTest
         XV   = 0b_0100_0000_0000_0000,
         XVI  = 0b_1000_0000_0000_0000
     }
-    public abstract class RPGIIntegrationTest : RPGIUnitTest
+    public abstract class RPGIIntegrationTest : AwesomeInventoryUnitTest
     {
         private TestFlags _flags = TestFlags.Zero;
         private TestFlags _flagsSet = TestFlags.Zero;

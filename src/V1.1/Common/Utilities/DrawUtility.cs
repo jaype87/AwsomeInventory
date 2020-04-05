@@ -17,9 +17,6 @@ namespace AwesomeInventory.UI
     public static class DrawUtility
     {
         public const float TinyIconSize = 20f;
-
-        public static readonly Color HighlightGreen = new Color(134 / 255f, 206 / 255f, 0, 1);
-        public static readonly Color HighlightBrown = new Color(212 / 255f, 141 / 255f, 0, 1);
         public static readonly float TwentyCharsWidth = UIText.TenCharsString.Times(2f).GetWidthCached();
 
         public static Vector2 MouseDownPos;

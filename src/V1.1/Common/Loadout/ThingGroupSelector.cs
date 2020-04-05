@@ -21,8 +21,6 @@ namespace AwesomeInventory.Loadout
     /// </summary>
     public class ThingGroupSelector : ICollection<ThingSelector>, IExposable, ILoadReferenceable
     {
-        private static int _nextGroupID = 0;
-
         private List<ThingSelector> _selectors = new List<ThingSelector>();
 
         /// <summary>
@@ -54,7 +52,7 @@ namespace AwesomeInventory.Loadout
         /// <param name="allowedThing"> A <see cref="ThingDef"/> that is allowed by this selector. </param>
         public ThingGroupSelector(ThingDef allowedThing)
         {
-            this.GroupID = _nextGroupID++;
+            this.GroupID = LoadoutManager.ThingGroupSelectorID;
             this.AllowedThing = allowedThing;
         }
 
@@ -66,7 +64,7 @@ namespace AwesomeInventory.Loadout
         {
             ValidateArg.NotNull(other, nameof(other));
 
-            this.GroupID = _nextGroupID;
+            this.GroupID = LoadoutManager.ThingGroupSelectorID;
             AllowedStackCount = other.AllowedStackCount;
             AllowedThing = other.AllowedThing;
 
@@ -303,7 +301,6 @@ namespace AwesomeInventory.Loadout
             int groupID = this.GroupID;
 
             Scribe_Defs.Look(ref thingDef, nameof(this.AllowedThing));
-            Scribe_Values.Look(ref _nextGroupID, nameof(_nextGroupID));
             Scribe_Values.Look(ref allowedStackCount, nameof(this.AllowedStackCount));
             Scribe_Values.Look(ref groupID, nameof(this.GroupID));
             Scribe_Collections.Look(ref _selectors, nameof(_selectors), LookMode.Deep);

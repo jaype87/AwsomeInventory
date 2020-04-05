@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using AwesomeInventory.Resources;
@@ -16,49 +15,90 @@ using Verse.AI;
 
 namespace AwesomeInventory.Jobs
 {
-    public abstract class JobGiver_FindItemByRadius : ThinkNode_JobGiver
+    /// <summary>
+    /// Find item by preset radius.
+    /// </summary>
+    public class JobGiver_FindItemByRadius : ThinkNode_Priority
     {
+        /// <summary>
+        /// A list of radius that defines the range of search.
+        /// </summary>
+        protected List<int> _radius = new List<int>(3);
+
+        /// <summary>
+        /// A search factor that times the map size to get a tiny search range.
+        /// </summary>
+        protected float _tinyRadiusFactor = 0.08f;
+
+        /// <summary>
+        /// A search factor that times the map size to get a small search range.
+        /// </summary>
+        protected float _smallRadiusFactor = 0.2f;
+
+        /// <summary>
+        /// A search factor that times the map size to get a medium search range.
+        /// </summary>
+        protected float _mediumRadiusFactor = 0.4f;
+
+        /// <summary>
+        /// Last used radius index.
+        /// </summary>
+        protected int _lastUsedRadiusIndex = 1;
+
+        /// <summary>
+        /// Result of the last search.
+        /// </summary>
         protected bool _itemFound = false;
-        protected static List<int> _radius = new List<int>();
-        protected const float _tinyRadiusFactor = 0.08f;
-        protected const float _smallRadiusFactor = 0.2f;
-        protected const float _mediumRadiusFactor = 0.4f;
-        protected static int _defaultRadiusIndex;
-        protected static int _lastRadiusIndex;
 
-        public static List<int> Radius
+        /// <summary>
+        /// Universal validation.
+        /// </summary>
+        protected Func<Pawn, Thing, bool> _validatorBase = (Pawn p, Thing x) => p.CanReserve(x) && !x.IsForbidden(p);
+
+        /// <summary>
+        /// Gets the default starting index used for querying _radius.
+        /// </summary>
+        public static int DefaultRadiusIndex { get; private set; } = 1;
+
+        /// <summary>
+        /// Gets a copy of currently used radius.
+        /// </summary>
+        public List<int> Radius => new List<int>(_radius);
+
+        /// <summary>
+        /// Gets the last used radius index.
+        /// </summary>
+        public int LastUsedRadiusIndex => _lastUsedRadiusIndex;
+
+        /// <summary>
+        /// Gets a value indicating whether last search found an item.
+        /// </summary>
+        public bool Itemfound => _itemFound;
+
+        /// <summary>
+        /// Find the best fitted item in <paramref name="searchSet"/>.
+        /// </summary>
+        /// <param name="pawn"> Pawn who needs a job. </param>
+        /// <param name="searchSet"> A list of candidate items. </param>
+        /// <param name="validator"> Validate if item in <paramref name="searchSet"/> is suitable. </param>
+        /// <param name="priorityGetter"> Give a priority value for items in <paramref name="searchSet"/>. </param>
+        /// <param name="searchLevel"> Number of search radius to use. </param>
+        /// <returns> Returns the item that is found, null if none is found. </returns>
+        public virtual Thing FindItem(Pawn pawn, IEnumerable<Thing> searchSet, Func<Thing, bool> validator = null, Func<Thing, float> priorityGetter = null, int searchLevel = 2)
         {
-            get => new List<int>(_radius);
-        }
-
-        protected Func<Pawn, Thing, bool> ValidatorBase = (Pawn p, Thing x) => p.CanReserve(x) && !x.IsBurning();
-
-        // TODO coordinate between the use of ThingDef and ThingRequestGroup, e.g., use ThingRequestGroup to narrow down the search.
-        protected virtual Thing FindItem(Pawn pawn, ThingDef thingDef = null, IEnumerable<ThingRequestGroup> thingRequestGroups = null, Func<Thing, bool> validator = null, Func<Thing, float> priorityGetter = null, int searchLevel = 2)
-        {
-            if (thingDef == null && thingRequestGroups.EnumerableNullOrEmpty())
-            {
-                Log.Error(string.Format(ErrorMessage.BothArgumentsAreNull, nameof(thingDef), nameof(thingRequestGroups)));
-                return null;
-            }
-
-            //if (thingDef != null && thingRequestGroup != ThingRequestGroup.Undefined)
-            //{
-            //    Log.Error(string.Format(ErrorMessage.BothArgumentsAreNotNull, nameof(thingDef), nameof(thingRequestGroup)));
-            //    return null;
-            //}
-
             if (pawn == null)
             {
                 Log.Error(ErrorMessage.ArgumentIsNull + nameof(pawn));
                 return null;
             }
 
+            Reset(pawn);
+
             if (_itemFound)
             {
-                if (--_lastRadiusIndex < 0)
+                if (--_lastUsedRadiusIndex < 0)
                 {
-                    ++_lastRadiusIndex;
+                    ++_lastUsedRadiusIndex;
                 }
 
                 if (--searchLevel < 1)
@@ -67,29 +107,29 @@ namespace AwesomeInventory.Jobs
                 }
 #if DEBUG
                 Log.Message(string.Format(ErrorMessage.ExpectedString, nameof(_itemFound), true, _itemFound));
-                Log.Message(string.Format(ErrorMessage.ExpectedString, nameof(_lastRadiusIndex), "-", _lastRadiusIndex));
+                Log.Message(string.Format(ErrorMessage.ExpectedString, nameof(_lastUsedRadiusIndex), "-", _lastUsedRadiusIndex));
                 Log.Message(string.Format(ErrorMessage.ExpectedString, nameof(searchLevel), "-", searchLevel));
 #endif
             }
 
             Thing thing = null;
+            _itemFound = false;
             while (thing == null && searchLevel-- > 0)
             {
                 thing = GenClosest.ClosestThing_Global_Reachable(
                     pawn.Position
                     , pawn.Map
-                    , thingDef != null ? pawn.Map.listerThings.ThingsOfDef(thingDef) : thingRequestGroups.SelectMany(g => pawn.Map.listerThings.ThingsInGroup(g))
+                    , searchSet
                     , PathEndMode.OnCell
                     , TraverseParms.For(pawn)
-                    , _radius[_lastRadiusIndex]
-                    , (Thing x) => ValidatorBase(pawn, x) && validator == null ? true : validator(x)
+                    , _radius[_lastUsedRadiusIndex]
+                    , (Thing x) => _validatorBase(pawn, x) && (validator == null ? true : validator(x))
                     , priorityGetter);
                 if (thing == null)
                 {
-                    _itemFound = false;
-                    if (++_lastRadiusIndex == _radius.Count)
+                    if (++_lastUsedRadiusIndex == _radius.Count)
                     {
-                        _lastRadiusIndex = _defaultRadiusIndex;
+                        _lastUsedRadiusIndex = DefaultRadiusIndex;
                         break;
                     }
                 }
@@ -103,21 +143,24 @@ namespace AwesomeInventory.Jobs
                 }
 #if DEBUG
                 Log.Message(string.Format(ErrorMessage.ReportString, "While loop end", nameof(searchLevel), searchLevel));
-                Log.Message(string.Format(ErrorMessage.ReportString, "While loop end", nameof(_lastRadiusIndex), _lastRadiusIndex));
+                Log.Message(string.Format(ErrorMessage.ReportString, "While loop end", nameof(_lastUsedRadiusIndex), _lastUsedRadiusIndex));
 #endif
             }
 
             return thing;
         }
 
-        public static void Reset()
+        /// <summary>
+        /// Reset search radius based on the map <paramref name="pawn"/> is currently in.
+        /// </summary>
+        /// <param name="pawn"> Pawn that needs a job. </param>
+        private void Reset(Pawn pawn)
         {
-            int mapSize = Current.Game.AnyPlayerHomeMap.Size.x;
+            float mapSize = pawn.Map.Size.LengthHorizontal;
+            _radius.Clear();
             _radius.Add(Mathf.FloorToInt(mapSize * _tinyRadiusFactor));
             _radius.Add(Mathf.FloorToInt(mapSize * _smallRadiusFactor));
             _radius.Add(Mathf.FloorToInt(mapSize * _mediumRadiusFactor));
-            _defaultRadiusIndex = Mathf.FloorToInt(_radius.Count / 2);
-            _lastRadiusIndex = _defaultRadiusIndex;
 #if DEBUG
             foreach (int radius in _radius)
             {

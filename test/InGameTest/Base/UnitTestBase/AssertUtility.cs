@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Verse;
+using Verse.AI.Group;
 
 namespace AwesomeInventory.UnitTest
 {
@@ -59,6 +60,19 @@ namespace AwesomeInventory.UnitTest
                     string.Format(
                         StringResource.ObjectsAreNotEqual, nameA, A, nameB, B)
                     , true);
+                return false;
+            }
+        }
+
+        public static bool IsTrue(Func<bool> predicate, string message)
+        {
+            if (predicate() == true)
+            {
+                return true;
+            }
+            else
+            {
+                Log.Error(message, true);
                 return false;
             }
         }

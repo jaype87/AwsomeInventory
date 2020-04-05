@@ -130,15 +130,25 @@ namespace AwesomeInventory.Loadout
         public bool IsReadOnly => false;
 
         /// <summary>
-        /// Gets a read-only copy of the blacklist.
+        /// Gets a blacklist of items that thie loadout does not accept.
         /// </summary>
-        internal List<ThingGroupSelector> BlackList => _blacklistSelectors;
+        public List<ThingGroupSelector> BlackList => _blacklistSelectors;
 
         /// <inheritdoc/>
         public ThingGroupSelector this[int index]
         {
             get => _thingGroupSelectors[index];
             set => _thingGroupSelectors[index] = value;
+        }
+
+        /// <summary>
+        /// Check if <paramref name="thing"/> is included in the blacklist.
+        /// </summary>
+        /// <param name="thing"> Thing to check. </param>
+        /// <returns> Returns true if <paramref name="thing"/> is in the blacklist. </returns>
+        public bool IncludedInBlacklist(Thing thing)
+        {
+            return _blacklistSelectors.Any(s => s.Allows(thing, out _));
         }
 
         /// <summary>
@@ -231,11 +241,13 @@ namespace AwesomeInventory.Loadout
         public void Insert(int index, ThingGroupSelector item)
         {
             _thingGroupSelectors.Insert(index, item);
+            _addNewThingGroupSelectorCallbacks.ForEach(c => c.Invoke(item));
         }
 
         /// <inheritdoc/>
         public void RemoveAt(int index)
         {
+            _removeThingGroupSelectorCallbacks.ForEach(c => c.Invoke(_thingGroupSelectors[index]));
             _thingGroupSelectors.RemoveAt(index);
         }
 

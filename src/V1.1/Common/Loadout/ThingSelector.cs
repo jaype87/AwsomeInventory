@@ -41,7 +41,7 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         public ThingSelector()
         {
-            _thingFilter = new ThingFilter(this.QualityAndHitpointsChangedCallbackHandler);
+            _thingFilter = new ThingFilter(this.QualityAndHitpointsChangedCallback);
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace AwesomeInventory.Loadout
         public virtual void ExposeData()
         {
             Scribe_Values.Look(ref _allowedStackCount, nameof(_allowedStackCount));
-            Scribe_Deep.Look(ref _thingFilter, nameof(_thingFilter), new Action(this.QualityAndHitpointsChangedCallbackHandler));
+            Scribe_Deep.Look(ref _thingFilter, nameof(_thingFilter), new Action(this.QualityAndHitpointsChangedCallback));
         }
 
         /// <inheritdoc/>
@@ -156,7 +156,7 @@ namespace AwesomeInventory.Loadout
         /// <summary>
         /// Bubble up thing filter changed callback.
         /// </summary>
-        private void QualityAndHitpointsChangedCallbackHandler()
+        private void QualityAndHitpointsChangedCallback()
         {
             _qualityAndHitpointsChangedCallback?.Invoke(_thingFilter);
         }

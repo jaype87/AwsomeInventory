@@ -29,6 +29,7 @@ namespace AwesomeInventory.Loadout
     public class CompAwesomeInventoryLoadout : ThingComp
     {
         private Pawn _pawn;
+        private bool _initialized;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompAwesomeInventoryLoadout"/> class.
@@ -70,34 +71,6 @@ namespace AwesomeInventory.Loadout
                 }
 
                 Log.Warning(stringBuilder.ToString(), true);
-
-                List<Thing> curInventory = MakeListForPawnGearAndInventory(_pawn);
-                foreach (ThingGroupSelector groupSelector in Loadout)
-                {
-                    if (!InventoryMargins.ContainsKey(groupSelector))
-                    {
-                        string message
-                            = string.Concat(
-                                ErrorMessage.InvTrackerAndLoadoutOutOfSync
-                                , "\n"
-                                , string.Format(ErrorMessage.ExpectedString, groupSelector.LabelCapNoCount, groupSelector.AllowedStackCount, 0));
-                        Log.ErrorOnce(message, Rand.Int, true);
-                    }
-                    else
-                    {
-                        int countToFetch = groupSelector.AllowedStackCount;
-                        int expected = curInventory.Sum(t => groupSelector.Allows(t, out _) ? t.stackCount : 0) - countToFetch;
-                        if (InventoryMargins[groupSelector] != expected)
-                        {
-                            string message
-                            = string.Concat(
-                                ErrorMessage.InvTrackerAndLoadoutOutOfSync
-                                , "\n"
-                                , string.Format(ErrorMessage.ExpectedString, groupSelector.LabelCapNoCount, expected, InventoryMargins[groupSelector]));
-                            Log.ErrorOnce(message, Rand.Int, true);
-                        }
-                    }
-                }
 #endif
                 return InventoryMargins.Values.Any(m => m < 0);
             }
@@ -106,7 +79,7 @@ namespace AwesomeInventory.Loadout
         /// <summary>
         /// Gets a list of items that are needed to restock.
         /// </summary>
-        public IEnumerable<ThingGroupSelector> ItemsToRestock
+        public IEnumerable<KeyValuePair<ThingGroupSelector, int>> ItemsToRestock
         {
             get
             {
@@ -119,7 +92,7 @@ namespace AwesomeInventory.Loadout
                 {
                     if (item.Value < 0)
                     {
-                        yield return item.Key;
+                        yield return item;
                     }
                 }
 
@@ -147,10 +120,8 @@ namespace AwesomeInventory.Loadout
             {
                 if (pawn.outfits?.CurrentOutfit is AwesomeInventoryLoadout loadout)
                 {
-                    AIDebug.Timer.Start();
                     this.UpdateForNewLoadout(loadout);
                     this.Loadout = loadout;
-                    AIDebug.Timer.Stop(AIDebug.Header + "Update For New Loadout");
                 }
             }
         }
@@ -163,7 +134,9 @@ namespace AwesomeInventory.Loadout
         {
             ValidateArg.NotNull(thing, nameof(thing));
 
-            this.Restock(thing);
+            // To avoid a situation where random apparels are assigned to newly created pawns when comps are not initialized.
+            if (_initialized)
+                this.Restock(thing);
         }
 
         /// <summary>
@@ -173,7 +146,8 @@ namespace AwesomeInventory.Loadout
         /// <param name="mergedAmount"> Number of <paramref name="thing"/> that is added and merged. </param>
         public void NotifiedAddedAndMergedWith(Thing thing, int mergedAmount)
         {
-            this.Restock(thing, mergedAmount);
+            if (_initialized)
+                this.Restock(thing, mergedAmount);
         }
 
         /// <summary>
@@ -184,7 +158,8 @@ namespace AwesomeInventory.Loadout
         {
             ValidateArg.NotNull(thing, nameof(thing));
 
-            this.DeleteStock(thing);
+            if (_initialized)
+                this.DeleteStock(thing);
         }
 
         /// <summary>
@@ -194,7 +169,8 @@ namespace AwesomeInventory.Loadout
         /// <param name="count"> Number of splitted <paramref name="thing"/>. </param>
         public void NotifiedSplitOff(Thing thing, int count)
         {
-            this.DeleteStock(thing, count);
+            if (_initialized)
+                this.DeleteStock(thing, count);
         }
 
         /// <summary>
@@ -222,6 +198,7 @@ namespace AwesomeInventory.Loadout
             newLoadout.AddStackCountChangedCallback(this.StackCountChangedCallback);
 
             Loadout = newLoadout;
+            _initialized = true;
         }
 
         /// <summary>
@@ -230,11 +207,12 @@ namespace AwesomeInventory.Loadout
         /// <param name="groupSelector"> The newly added selector. </param>
         protected virtual void AddNewThingGroupSelectorCallback(ThingGroupSelector groupSelector)
         {
-            this.UpdateInventoryMargin(
-                this.InventoryMargins
+            List<ThingGroupSelector> selectors = this.InventoryMargins
                 .Where(pair => ThingDefComparer.Instance.Equals(pair.Key.AllowedThing, groupSelector.AllowedThing))
                 .Select(pair => pair.Key)
-                .Append(groupSelector));
+                .ToList();
+            selectors.Add(groupSelector);
+            this.UpdateInventoryMargin(selectors);
         }
 
         /// <summary>
@@ -340,7 +318,7 @@ namespace AwesomeInventory.Loadout
                 }
             }
 
-            if (restockCount != 0)
+            if (pool.OrderedSelectorTuples.Any() && restockCount != 0)
             {
                 this.InventoryMargins[pool.OrderedSelectorTuples.First().Item2] += restockCount;
             }
@@ -395,7 +373,6 @@ namespace AwesomeInventory.Loadout
         {
             ValidateArg.NotNull(groupSelectors, nameof(groupSelectors));
 
-            this.InventoryMargins.Clear();
             foreach (ThingGroupSelector groupSelector in groupSelectors)
             {
                 this.InventoryMargins[groupSelector] = groupSelector.AllowedStackCount * -1;

@@ -31,6 +31,8 @@ namespace AwesomeInventory
 
         public const string CompareThingGroupSelectorOfTwoSpecifiedThing = "It is not supported to compare two ThingGroupSelectors with different AllowedThing other than generic defs.";
 
+        public const string WrongTypeParentThinkNode = "Think node has a wrong type of parent node.";
+
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning restore SA1600 // Elements should be documented
     }

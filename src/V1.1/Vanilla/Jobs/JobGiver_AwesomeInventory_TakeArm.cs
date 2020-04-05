@@ -1,12 +1,13 @@
-// <copyright file="JobGiver_RPGI_FindWeapon.cs" company="Zizhen Li">
-// Copyright (c) Zizhen Li. All rights reserved.
-// Licensed under the GPL-3.0-only license. See LICENSE.md file in the project root for full license information.
+// <copyright file="JobGiver_AwesomeInventory_FindWeapon.cs" company="Zizhen Li">
+// Copyright (c) 2019 - 2020 Zizhen Li. All rights reserved.
+// Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using AwesomeInventory.Jobs;
+using AwesomeInventory.Resources;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -14,14 +15,14 @@ using Verse.Sound;
 
 namespace AwesomeInventory.Jobs
 {
-    // TODO test if non-hostile NPC, caravan and wild man, will take weapons
-
     /// <summary>
     ///     Find pawn a suitable weapon. This JobGiver is ignored for colonists when Simple Sidearm is present.
     /// It is inserted to ThinkNode_SubtreesByTag with tag, Humanlike_PostDuty. Check Humanlike.xml for more info.
     /// </summary>
-    public class JobGiver_RPGI_FindWeapon : ThinkNode_JobGiver
+    public class JobGiver_AwesomeInventory_TakeArm : ThinkNode_JobGiver
     {
+        private JobGiver_FindItemByRadius _parent;
+
         /// <summary>
         /// Try to give a job to <paramref name="pawn"/>.
         /// </summary>
@@ -31,7 +32,7 @@ namespace AwesomeInventory.Jobs
         {
             ValidateArg.NotNull(pawn, nameof(pawn));
 
-            if (!pawn.Faction.IsPlayer || GameComponent_AwesomeInventory_Entry.HasSimpleSidearm)
+            if (!pawn.Faction.IsPlayer)
             {
                 return null;
             }
@@ -51,7 +52,9 @@ namespace AwesomeInventory.Jobs
                 return null;
             }
 
-            if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
+            if (!pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation)
+                ||
+                pawn.WorkTagIsDisabled(WorkTags.Violent))
             {
                 return null;
             }
@@ -61,13 +64,25 @@ namespace AwesomeInventory.Jobs
                 return null;
             }
 
+            if (_parent == null)
+            {
+                if (parent is JobGiver_FindItemByRadius p)
+                {
+                    _parent = p;
+                }
+                else
+                {
+                    throw new InvalidOperationException(ErrorText.WrongTypeParentThinkNode);
+                }
+            }
+
             bool isBrawler = pawn.story?.traits?.HasTrait(TraitDefOf.Brawler) ?? false;
             bool preferRanged = !isBrawler && (pawn.skills.GetSkill(SkillDefOf.Shooting).Level >= pawn.skills.GetSkill(SkillDefOf.Melee).Level
                                              || pawn.skills.GetSkill(SkillDefOf.Shooting).Level >= 6);
             bool hasPrimary = pawn.equipment.Primary != null;
 
             // Switch to better suited weapon
-            if (pawn.inventory.innerContainer.Any())
+            if (!GameComponent_AwesomeInventory_Entry.HasSimpleSidearm && pawn.inventory.innerContainer.Any())
             {
                 IEnumerable<Thing> weapons = from thing in pawn.inventory.innerContainer.InnerListForReading
                                              where thing.def.IsWeapon
@@ -111,18 +126,11 @@ namespace AwesomeInventory.Jobs
             // Find and equip a suitable weapon
             if (!hasPrimary)
             {
-                Thing closestWeapon = GenClosest.RegionwiseBFSWorker(
-                    pawn.Position
-                    , pawn.Map
-                    , ThingRequest.ForGroup(ThingRequestGroup.Weapon)
-                    , PathEndMode.OnCell
-                    , TraverseParms.For(pawn)
-                    , (Thing x) => pawn.CanReserve(x) && !x.IsBurning()
-                    , (Thing x) => preferRanged ? (x.def.IsRangedWeapon ? 2f : 1f) : (x.def.IsMeleeWeapon ? 2f : 1f)
-                    , 0
-                    , 30
-                    , Current.Game.CurrentMap.Size.LengthHorizontal / 7
-                    , out int _);
+                Thing closestWeapon = _parent.FindItem(
+                    pawn
+                    , pawn.Map.listerThings.ThingsInGroup(ThingRequestGroup.Weapon)
+                    , null
+                    , (Thing x) => preferRanged ? (x.def.IsRangedWeapon ? 2f : 1f) : (x.def.IsMeleeWeapon ? 2f : 1f));
 
                 if (closestWeapon == null)
                 {
