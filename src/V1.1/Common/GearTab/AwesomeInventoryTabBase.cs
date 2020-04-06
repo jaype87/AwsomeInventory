@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using AwesomeInventory.Common.HarmonyPatches;
 using AwesomeInventory.HarmonyPatches;
@@ -60,8 +61,7 @@ namespace AwesomeInventory.UI
 
         private const BindingFlags _nonPublicInstance = BindingFlags.NonPublic | BindingFlags.Instance;
 
-        // TODO set a static constructor to queue up unload jobs after game restarts
-        private static bool _isJealous = true;
+        private static bool _isJealous = false;
         private static bool _isGreedy = false;
         private static bool _isAscetic = false;
 
@@ -122,32 +122,44 @@ namespace AwesomeInventory.UI
                 {
                     _apparelChanged = true;
                 }
+
+                if (_selPawn.IsColonist)
+                    this.SetJealous();
+                else
+                    this.SetGreedy();
             }
 
             Text.Font = GameFont.Small;
             GUI.color = Color.white;
 
-            // Draw checkbox option for Jealous
-            string translatedText = UIText.JealousTab.TranslateSimple();
-            Rect headerRect = GetHeaderRect(GenUI.Gap, translatedText);
-            if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isJealous))
+            float rollingX = GenUI.Gap;
+            string translatedText;
+            Rect headerRect;
+
+            if (_selPawn.IsColonist)
             {
-                _isGreedy = _isAscetic = false;
-                _isJealous = true;
+                // Draw checkbox option for Jealous
+                translatedText = UIText.JealousTab.TranslateSimple();
+                headerRect = GetHeaderRect(rollingX, translatedText);
+                rollingX += headerRect.xMax + GenUI.GapWide;
+                if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isJealous))
+                {
+                    this.SetJealous();
+                }
             }
 
             // Draw checkbox option for Greedy
             translatedText = UIText.GreedyTab.TranslateSimple();
-            headerRect = GetHeaderRect(headerRect.xMax + GenUI.GapWide, translatedText);
+            headerRect = GetHeaderRect(rollingX, translatedText);
+            rollingX += headerRect.xMax + GenUI.GapWide;
             if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isGreedy))
             {
-                _isJealous = _isAscetic = false;
-                _isGreedy = true;
+                this.SetGreedy();
             }
 
             // Draw checkbox option for Ascetic
             translatedText = UIText.AsceticTab.TranslateSimple();
-            headerRect = GetHeaderRect(headerRect.xMax + GenUI.GapWide, translatedText);
+            headerRect = GetHeaderRect(rollingX, translatedText);
             if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isAscetic))
             {
                 _isJealous = _isGreedy = false;
@@ -187,6 +199,18 @@ namespace AwesomeInventory.UI
         {
             float width = GenUI.GetWidthCached(translatedText) + Widgets.RadioButtonSize + GenUI.GapSmall;
             return new Rect(x, GenUI.GapSmall, width, GenUI.ListSpacing);
+        }
+
+        private void SetJealous()
+        {
+            _isJealous = true;
+            _isGreedy = _isAscetic = false;
+        }
+
+        private void SetGreedy()
+        {
+            _isGreedy = true;
+            _isJealous = _isAscetic = false;
         }
     }
 }

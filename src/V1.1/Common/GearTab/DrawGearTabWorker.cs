@@ -326,7 +326,11 @@ namespace AwesomeInventory.UI
 
             if ((bool)AwesomeInventoryTabBase.ShouldShowInventory.Invoke(_gearTab, new object[] { selPawn }))
             {
-                this.DrawLoadoutButtons(selPawn, viewRect.xMax, ref rollingY, viewRect.width);
+                if (AwesomeInvnetoryMod.Settings.UseLoadout && selPawn.IsColonist)
+                {
+                    this.DrawLoadoutButtons(selPawn, viewRect.xMax, ref rollingY, viewRect.width);
+                }
+
                 Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Inventory.TranslateSimple());
 
                 ThingOwner<Thing> things = selPawn.inventory.innerContainer;
@@ -605,30 +609,33 @@ namespace AwesomeInventory.UI
 
             WidgetRow row = new WidgetRow(xInfoButton, y, UIDirection.LeftThenDown, xInfoButton);
 
-            // Draw drop button.
-            if (row.ButtonIcon(TexResource.Drop, UIText.DropThing.TranslateSimple()))
+            if (selPawn.IsColonist)
             {
-                AwesomeInventoryTabBase.InterfaceDrop.Invoke(_gearTab, new object[] { thing });
-            }
-
-            Rect unloadButtonRect = new Rect(row.FinalX - GenUI.SmallIconSize, row.FinalY, GenUI.SmallIconSize, GenUI.ListSpacing);
-
-            // Draw unload now button
-            TooltipHandler.TipRegion(unloadButtonRect, UIText.UnloadNow.TranslateSimple());
-            if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
-            {
-                if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, AwesomeInventoryTex.HighlightBrown, AwesomeInventoryTex.HighlightGreen))
+                // Draw drop button.
+                if (row.ButtonIcon(TexResource.Drop, UIText.DropThing.TranslateSimple()))
                 {
-                    SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                    InterfaceUnloadNow(thing, selPawn);
+                    AwesomeInventoryTabBase.InterfaceDrop.Invoke(_gearTab, new object[] { thing });
                 }
-            }
-            else
-            {
-                if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, Color.white, AwesomeInventoryTex.HighlightGreen))
+
+                Rect unloadButtonRect = new Rect(row.FinalX - GenUI.SmallIconSize, row.FinalY, GenUI.SmallIconSize, GenUI.ListSpacing);
+
+                // Draw unload now button
+                TooltipHandler.TipRegion(unloadButtonRect, UIText.UnloadNow.TranslateSimple());
+                if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
                 {
-                    SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                    InterfaceUnloadNow(thing, selPawn);
+                    if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, AwesomeInventoryTex.HighlightBrown, AwesomeInventoryTex.HighlightGreen))
+                    {
+                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                        InterfaceUnloadNow(thing, selPawn);
+                    }
+                }
+                else
+                {
+                    if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, Color.white, AwesomeInventoryTex.HighlightGreen))
+                    {
+                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                        InterfaceUnloadNow(thing, selPawn);
+                    }
                 }
             }
 
@@ -637,7 +644,7 @@ namespace AwesomeInventory.UI
             row.GapButtonIcon();
 
             // Draw ingest button.
-            if ((thing.def.IsNutritionGivingIngestible || thing.def.IsNonMedicalDrug) && thing.IngestibleNow && selPawn.WillEat(thing))
+            if (selPawn.IsColonist && (thing.def.IsNutritionGivingIngestible || thing.def.IsNonMedicalDrug) && thing.IngestibleNow && selPawn.WillEat(thing))
             {
                 if (row.ButtonIcon(TexResource.Ingest, UIText.ConsumeThing.Translate(thing.LabelNoCount, thing)))
                 {
@@ -871,21 +878,24 @@ namespace AwesomeInventory.UI
                 Widgets.InfoCardButton(rect.x, rect.y, thing);
 
                 // Draw Unload Now button
-                TooltipHandler.TipRegion(buttonRect, UIText.UnloadNow.Translate());
-                if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
+                if (selPawn.IsColonist)
                 {
-                    if (Widgets.ButtonImage(buttonRect, TexResource.DoubleDownArrow, AwesomeInventoryTex.HighlightBrown, AwesomeInventoryTex.HighlightGreen))
+                    TooltipHandler.TipRegion(buttonRect, UIText.UnloadNow.Translate());
+                    if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
                     {
-                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                        InterfaceUnloadNow(thing, selPawn);
+                        if (Widgets.ButtonImage(buttonRect, TexResource.DoubleDownArrow, AwesomeInventoryTex.HighlightBrown, AwesomeInventoryTex.HighlightGreen))
+                        {
+                            SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                            InterfaceUnloadNow(thing, selPawn);
+                        }
                     }
-                }
-                else
-                {
-                    if (Widgets.ButtonImage(buttonRect, TexResource.DoubleDownArrow, Color.white, AwesomeInventoryTex.HighlightGreen))
+                    else
                     {
-                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                        InterfaceUnloadNow(thing, selPawn);
+                        if (Widgets.ButtonImage(buttonRect, TexResource.DoubleDownArrow, Color.white, AwesomeInventoryTex.HighlightGreen))
+                        {
+                            SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                            InterfaceUnloadNow(thing, selPawn);
+                        }
                     }
                 }
 
@@ -1198,6 +1208,14 @@ namespace AwesomeInventory.UI
                 (Apparel apparel) =>
                 {
                     return apparel.def.apparel.bodyPartGroups[0] == AIBPGDef.Torso
+                        && apparel.def.apparel.LastLayer == ApparelLayerDefOf.OnSkin;
+                },
+                UIText.TorsoOnSkinLayer);
+
+            smartRect.AddDefaultRect(
+                (Apparel apparel) =>
+                {
+                    return apparel.def.apparel.bodyPartGroups[0] == AIBPGDef.Torso
                         && apparel.def.apparel.LastLayer == ApparelLayerDefOf.Shell;
                 },
                 UIText.TorsoShellLayer);
@@ -1209,14 +1227,6 @@ namespace AwesomeInventory.UI
                         && apparel.def.apparel.LastLayer == ApparelLayerDefOf.Middle;
                 },
                 UIText.TorsoMiddleLayer);
-
-            smartRect.AddDefaultRect(
-                (Apparel apparel) =>
-                {
-                    return apparel.def.apparel.bodyPartGroups[0] == AIBPGDef.Torso
-                        && apparel.def.apparel.LastLayer == ApparelLayerDefOf.OnSkin;
-                },
-                UIText.TorsoOnSkinLayer);
 
             // Add a smart rect for waist level.
             smartRect = smartRect.List.GetWorkingSmartRect(

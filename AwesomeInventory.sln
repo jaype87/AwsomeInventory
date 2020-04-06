@@ -88,7 +88,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "About", "About", "{D0993452-68C3-4781-BC81-8BE196D992AE}"
 	ProjectSection(SolutionItems) = preProject
 		src\About\About.xml = src\About\About.xml
-		src\About\preview.jpg = src\About\preview.jpg
+		src\About\Preview.png = src\About\Preview.png
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InGameTest", "InGameTest", "{96A3BFEE-242B-4D2D-8760-129582BF7B17}"

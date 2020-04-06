@@ -8,12 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using HarmonyLib;
-using RimWorld;
+using AwesomeInventory.UI;
 using UnityEngine;
 using Verse;
 
-namespace AwesomeInventory.UI
+namespace AwesomeInventory
 {
     /// <summary>
     /// A dialog window for configuring mod settings.

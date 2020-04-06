@@ -29,8 +29,11 @@ namespace AwesomeInventory.Jobs
         {
             ValidateArg.NotNull(pawn, nameof(pawn));
 
+            if (pawn.jobs == null)
+                return false;
+
             return pawn.jobs.jobQueue.Any(j => j.job.targetA.Thing == thing && j.job.def == AwesomeInventory_JobDefOf.AwesomeInventory_Unload)
-                || (pawn.CurJob.targetA.Thing == thing && pawn.CurJob.def == AwesomeInventory_JobDefOf.AwesomeInventory_Unload);
+                || (pawn.CurJob?.targetA.Thing == thing && pawn.CurJob.def == AwesomeInventory_JobDefOf.AwesomeInventory_Unload);
         }
 
         /// <summary>
