@@ -6,8 +6,8 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Library</OutputType>
-    <RootNamespace>RPG_Inventory_Remake_CE</RootNamespace>
-    <AssemblyName>RPG_Inventory_Remake_CE</AssemblyName>
+    <RootNamespace>AwesomeInventory</RootNamespace>
+    <AssemblyName>AwesomeInventoryCE1.1</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <NoWin32Manifest>False</NoWin32Manifest>
@@ -58,7 +58,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <Optimize>false</Optimize>
     <Prefer32Bit>false</Prefer32Bit>
-    <OutputPath>..\..\v1.1\CombatExtended\Assemblies\</OutputPath>
+    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\CombatExtended\Assemblies\</OutputPath>
+    <DebugType>portable</DebugType>
+    <DocumentationFile>AwesomeInventoryCE1.1.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CE Build|AnyCPU'">
     <OutputPath>..\..\Assemblies\</OutputPath>
@@ -104,38 +106,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Common\Components\CompRPGIUnload.cs">
-      <Link>Components\CompRPGIUnload.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\DefOfs\CorgiBodyPartGroupsDefOf.cs">
-      <Link>DefOfs\CorgiBodyPartGroupsDefOf.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\DefOfs\RPGI_StuffDefOf.cs">
-      <Link>DefOfs\RPGI_StuffDefOf.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Gizmos\ToggleGearTab.cs">
-      <Link>Gizmos\ToggleGearTab.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Jobs\JobGiver_Unload.cs">
-      <Link>Jobs\JobGiver_Unload.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\RPG_Pawn.cs">
-      <Link>RPG_Pawn.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\SmartRect.cs">
-      <Link>SmartRect.cs</Link>
-    </Compile>
-    <None Include="Bootstrap\Setting.cs" />
-    <Compile Include="..\Common\TextButton.cs">
-      <Link>TextButton.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Utilities\Utility.cs">
-      <Link>Utilities\Utility.cs</Link>
-    </Compile>
-    <Compile Include="..\Common\Utilities\Utility_Draw.cs">
-      <Link>Utilities\Utility_Draw.cs</Link>
-    </Compile>
-    <Compile Include="Components\GameComponent_RPGI_Main.cs" />
     <Compile Include="DefOfs\CE_ApparelLayerDefOf.cs" />
     <Compile Include="FillTabOperationsCE.cs" />
     <Compile Include="HarmonyPatches\AddHumanlikeOrders_RPGI_Patch.cs" />
@@ -150,7 +120,6 @@
     <Compile Include="Jobs\JobDriver_RPGI_Unload.cs" />
     <Compile Include="Jobs\JobGiver_RPGI_ApparelOptions.cs" />
     <None Include="Freezer.cs" />
-    <None Include="Bootstrap\ModStarter.cs" />
     <Compile Include="RPG_GearTab_CE.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="packages.config" />
@@ -159,24 +128,14 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\About\About.xml">
-      <Link>ABout\About.xml</Link>
-    </Content>
-    <Content Include="..\..\About\Manifest.xml">
-      <Link>About\Manifest.xml</Link>
-    </Content>
-    <Content Include="..\..\About\preview.png">
-      <Link>ABout\preview.png</Link>
-    </Content>
-    <Content Include="..\..\Defs\JobDefs\Jobs_RPGInventory.xml">
-      <Link>Defs\Jobs_RPGInventory.xml</Link>
-    </Content>
     <Content Include="Documents\Dressing Code in Rimworld.txt" />
     <Content Include="Documents\Test Plan.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Defs\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>call $(SolutionDir)SolutionItems\Deploy.bat $(ProjectDir) $(OutDir) $(Configuration)</PostBuildEvent>
   </PropertyGroup>
 </Project>

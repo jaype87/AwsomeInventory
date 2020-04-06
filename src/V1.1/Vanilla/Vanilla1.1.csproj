@@ -13,7 +13,7 @@
     <ProjectGuid>{9C99FF79-7175-48EC-A407-9D72950F2BC4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>AwesomeInventory</RootNamespace>
-    <AssemblyName>Vanilla1.1</AssemblyName>
+    <AssemblyName>AwesomeInventoryVanilla1.1</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -32,7 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\Vanilla\Assemblies\Vanilla1.1.xml</DocumentationFile>
+    <DocumentationFile>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\Vanilla\Assemblies\AwesomeInventoryVanilla1.1.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
