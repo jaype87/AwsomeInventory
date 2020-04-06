@@ -38,7 +38,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.1\Vanilla\Assemblies\</OutputPath>
+    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\Vanilla\Assemblies\</OutputPath>
     <DefineConstants>
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
