@@ -40,5 +40,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-[assembly: InternalsVisibleTo("Common1.1")]
-[assembly: InternalsVisibleTo("Vanilla1.1")]
+[assembly: InternalsVisibleTo("AwesomeInventoryCommon1.1")]
+[assembly: InternalsVisibleTo("AwesomeInventoryVanilla1.1")]
+[assembly: InternalsVisibleTo("AwesomeInventoryCE1.1")]
