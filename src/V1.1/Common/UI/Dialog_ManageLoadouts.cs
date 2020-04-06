@@ -324,13 +324,18 @@ namespace AwesomeInventory.UI
             if (widgetRow.ButtonIcon(TexResource.TriangleLeft))
                 WhiteBlacklistView.IsWhitelist ^= true;
 
+#pragma warning disable SA1118 // Parameter should not span multiple lines
             Text.Anchor = TextAnchor.MiddleCenter;
             widgetRow.LabelWithHighlight(
                 WhiteBlacklistView.IsWhitelist
                     ? WhiteBlacklistView.WhitelistDisplayName
                     : WhiteBlacklistView.BlacklistDisplayName
+                , WhiteBlacklistView.IsWhitelist
+                    ? UIText.WhitelistTooltip.TranslateSimple()
+                    : UIText.BlacklistTooltip.TranslateSimple()
                 , DrawUtility.TwentyCharsWidth);
             Text.Anchor = TextAnchor.UpperLeft;
+#pragma warning restore SA1118 // Parameter should not span multiple lines
 
             if (widgetRow.ButtonIcon(TexResource.TriangleRight))
                 WhiteBlacklistView.IsWhitelist ^= true;

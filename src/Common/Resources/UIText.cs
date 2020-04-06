@@ -98,6 +98,8 @@ namespace AwesomeInventory.UI
 
         public const string Blacklist = "AwesomeInventory_Blacklist";
 
+        public const string BlacklistTooltip = "AwesomeInventory_BlacklistTooltip";
+
         public const string CantUnloadIncapableManipulation = "AwesomeInventory_CantUnloadIncapableManipulation";
 
         public const string ChooseMaterialAndQuality = "AwesomeInventory_ChooseMaterialAndQuality";
@@ -185,6 +187,8 @@ namespace AwesomeInventory.UI
         public const string Weight = "AwesomeInventory_Weight";
 
         public const string Whitelist = "AwesomeInventory_Whitelist";
+
+        public const string WhitelistTooltip = "AwesomeInventory_WhitelistTooltip";
 
         public const string OutfitAnything = "OutfitAnything";
 
