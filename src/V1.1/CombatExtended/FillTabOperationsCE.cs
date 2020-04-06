@@ -298,7 +298,7 @@ namespace RPG_Inventory_Remake_CE
                 // Draw shield
                 foreach (Apparel apparel in selPawn.Pawn.apparel.WornApparel)
                 {
-                    if (apparel.def.apparel.LastLayer == CE_ApparelLayerDefOf.Shield)
+                    if (apparel.def.apparel.LastLayer == CEApparelLayerDefOf.Shield)
                     {
                         rectForEquipment = rectForEquipment
                                             .GetWorkingRect(CorgiBodyPartGroupDefOf.Arse,
@@ -312,7 +312,7 @@ namespace RPG_Inventory_Remake_CE
             // List order: Head:200-181, Neck:180-101, Torso:100-51, Waist:50-11, Legs:10-0
             // Check \steamapps\common\RimWorld\Mods\Core\Defs\Bodies\BodyPartGroups.xml
             IEnumerable<Apparel> apparels = from ap in selPawn.Pawn.apparel.WornApparel
-                                            where ap.def.apparel.LastLayer != CE_ApparelLayerDefOf.Shield
+                                            where ap.def.apparel.LastLayer != CEApparelLayerDefOf.Shield
                                             orderby ap.def.apparel.bodyPartGroups[0].listOrder descending
                                             select ap;
 
