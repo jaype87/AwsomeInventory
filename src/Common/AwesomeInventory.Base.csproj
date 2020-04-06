@@ -25,11 +25,11 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\Common\Assemblies\</OutputPath>
+    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\Common\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\Common\Assemblies\AwesomeInventory.Base.xml</DocumentationFile>
+    <DocumentationFile>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\Common\Assemblies\AwesomeInventory.Base.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -61,6 +61,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\UIText.cs" />
     <Compile Include="Interfaces\ILogger.cs" />
+    <Compile Include="Services\Plugin.cs" />
     <Compile Include="Services\Timer.cs" />
     <Compile Include="Utilities\ValidateArg.cs" />
   </ItemGroup>

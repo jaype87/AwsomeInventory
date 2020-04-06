@@ -104,7 +104,7 @@ namespace AwesomeInventory.Loadout
                 }
                 else
                 {
-                    return UIText.Assorted.Translate(AllowedThing.LabelCap).ToString().Colorize(AwesomeInventoryTex.Lavendar);
+                    return UIText.Assorted.Translate(AllowedThing.LabelCap).ToString().Colorize(QualityColor.Instance.Generic);
                 }
             }
         }

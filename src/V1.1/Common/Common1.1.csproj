@@ -26,12 +26,12 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.1\Common\Assemblies\</OutputPath>
+    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\Common\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.1\Common\Assemblies\Common1.1.xml</DocumentationFile>
+    <DocumentationFile>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\Common\Assemblies\Common1.1.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -72,7 +72,7 @@
   <ItemGroup>
     <Compile Include="GearTab\IconRect.cs" />
     <Compile Include="GearTab\SmartRectList.cs" />
-    <Compile Include="HarmonyPatches\AddHumanlikeOrders_RPGI_Patch.cs" />
+    <Compile Include="HarmonyPatches\AddHumanlikeOrders_AwesomeInventory_Patch.cs" />
     <Compile Include="HarmonyPatches\Outfit_ExposeData.cs" />
     <Compile Include="HarmonyPatches\Pawn_ApparelTracker_ApparelChanged_Patch.cs" />
     <Compile Include="Helpers\IDrawHelper.cs" />
@@ -89,10 +89,10 @@
     <Compile Include="Loadout\ThingSelectorComparer.cs" />
     <Compile Include="Services\Logger.cs" />
     <Compile Include="Services\ServiceRegistration.cs" />
-    <Compile Include="UI\Dialog_Mod.cs" />
+    <Compile Include="UI\AwesomeInvnetoryMod.cs" />
     <Compile Include="ModSettings\AwesomeInventorySetting.cs" />
     <Compile Include="Components\CompAwesomeInventoryLoadout.cs" />
-    <Compile Include="Components\GameComponents\GameComponent_DefManager.cs" />
+    <Compile Include="Components\GameComponents\DefManager.cs" />
     <Compile Include="Components\GameComponents\LoadoutManager.cs" />
     <Compile Include="DefOfs\AwesomeInventoryBodyPartGroupDefOf.cs" />
     <Compile Include="DefOfs\RPGI_StuffDefOf.cs" />
@@ -156,6 +156,10 @@
     <Compile Include="UI\Dialog_ManageLoadouts.cs" />
     <Compile Include="UI\Dialog_StuffAndQuality.cs" />
     <Compile Include="UI\AwesomeInventoryTex.cs" />
+    <Compile Include="UI\QualityColor.cs" />
+    <Compile Include="UI\QualityColorDefault.cs" />
+    <Compile Include="UI\QualityColorPlugins\QualityColorCCMB.cs" />
+    <Compile Include="UI\QualityColorPlugins\QualityColorLCT.cs" />
     <Compile Include="UI\Theme.cs" />
     <Compile Include="UI\WindowOnMouseDrag.cs" />
     <Compile Include="UnitTest\Loadout\compRPGILoadout\TestcompRPGILoadout.cs" />

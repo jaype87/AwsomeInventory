@@ -55,7 +55,7 @@ namespace AwesomeInventory.Loadout
         }
 
         /// <inheritdoc/>
-        public override string LabelCapNoCount => _genericDef.label.Colorize(AwesomeInventoryTex.Lavendar);
+        public override string LabelCapNoCount => _genericDef.label.Colorize(QualityColor.Instance.Generic);
 
         /// <inheritdoc/>
         public override float Weight => _thingFilter.AllowedThingDefs.Average(def => def.statBases.GetStatValueFromList(StatDefOf.Mass, 0));

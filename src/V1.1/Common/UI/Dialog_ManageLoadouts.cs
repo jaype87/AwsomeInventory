@@ -22,7 +22,7 @@ namespace AwesomeInventory.UI
     {
         private const float _paneDivider = 5 / 9f;
         private const int _loadoutNameMaxLength = 50;
-        private static readonly HashSet<ThingDef> _allSuitableDefs = GameComponent_DefManager.SuitableDefs;
+        private static readonly HashSet<ThingDef> _allSuitableDefs = DefManager.SuitableDefs;
 
         /// <summary>
         /// Controls the window size and position.

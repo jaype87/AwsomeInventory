@@ -22,6 +22,7 @@ namespace AwesomeInventory.UI
         public static Vector2 MouseDownPos;
         public static bool isDrag;
         private static Vector2 _dragStartPos;
+        private static QualityColor _qualityColor;
 
         /// <summary>
         /// Gets padding between the border of window and its content.
@@ -187,19 +188,19 @@ namespace AwesomeInventory.UI
             switch (qualityCategory)
             {
                 case QualityCategory.Awful:
-                    return s.Colorize(GenColor.FromHex("cc1a00"));
+                    return s.Colorize(QualityColor.Instance.Aweful);
                 case QualityCategory.Poor:
-                    return s.Colorize(GenColor.FromHex("b0b3af"));
+                    return s.Colorize(QualityColor.Instance.Poor);
                 case QualityCategory.Normal:
-                    return s.Colorize(Color.white);
+                    return s.Colorize(QualityColor.Instance.Normal);
                 case QualityCategory.Good:
-                    return s.Colorize(ColorLibrary.LightGreen);
+                    return s.Colorize(QualityColor.Instance.Good);
                 case QualityCategory.Excellent:
-                    return s.Colorize(ColorLibrary.Cyan);
+                    return s.Colorize(QualityColor.Instance.Excellent);
                 case QualityCategory.Masterwork:
-                    return s.Colorize(ColorLibrary.Sand);
+                    return s.Colorize(QualityColor.Instance.Masterwork);
                 case QualityCategory.Legendary:
-                    return s.Colorize(ColorLibrary.Orange);
+                    return s.Colorize(QualityColor.Instance.Legendary);
             }
 
             return s;

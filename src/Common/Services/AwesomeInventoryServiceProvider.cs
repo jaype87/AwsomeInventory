@@ -19,6 +19,12 @@ namespace AwesomeInventory
     {
         private static Dictionary<Type, object> _services = new Dictionary<Type, object>();
         private static Dictionary<Type, Type> _typeDictionary = new Dictionary<Type, Type>();
+        private static Dictionary<int, object> _pluginService = new Dictionary<int, object>();
+
+        /// <summary>
+        /// Gets available plugins.
+        /// </summary>
+        internal static Dictionary<int, object> Plugins => _pluginService;
 
         /// <summary>
         /// Get service of <typeparamref name="T"/>.
@@ -106,6 +112,37 @@ namespace AwesomeInventory
         {
             Type concreteType = _typeDictionary[typeof(T)];
             return (T)Activator.CreateInstance(concreteType, ctorArgs);
+        }
+
+        public static void AddPlugIn(Plugin plugin)
+        {
+            ValidateArg.NotNull(plugin, nameof(plugin));
+
+            _pluginService[plugin.ID] = plugin;
+        }
+
+        public static T GetPlugin<T>(int id)
+        {
+            return (T)_pluginService[id];
+        }
+
+        public static int GetNextAvailablePluginID()
+        {
+            int counter = 0;
+            foreach (int id in _pluginService.OrderBy(pair => pair.Key).Select(pair => pair.Key))
+            {
+                if (counter == id)
+                {
+                    counter++;
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return counter;
         }
     }
 }

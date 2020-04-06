@@ -291,7 +291,7 @@ namespace AwesomeInventory.UI
             WidgetRow row = new WidgetRow(viewRect.x, viewRect.y, UIDirection.RightThenDown, viewRect.width);
 
             // draw mass info and temperature
-            //this.DrawMassInfoRow(row, selPawn, apparelChanged);
+            // this.DrawMassInfoRow(row, selPawn, apparelChanged);
             this.DrawComfyTemperatureRow(row, selPawn, apparelChanged);
             rollingY = row.FinalY;
 
@@ -355,17 +355,6 @@ namespace AwesomeInventory.UI
             Text.Anchor = TextAnchor.UpperLeft;
         }
 
-        protected virtual void DrawWeightBar(Rect rect, Pawn selPawn)
-        {
-            GenBar.BarWithOverlay(
-                rect,
-                MassUtility.EncumbrancePercent(selPawn),
-                MassUtility.IsOverEncumbered(selPawn) ? AwesomeInventoryTex.ValvetTex as Texture2D : AwesomeInventoryTex.RMPrimaryTex as Texture2D,
-                UIText.Weight.TranslateSimple(),
-                MassUtility.GearAndInventoryMass(selPawn).ToString("0.#") + "/" + MassUtility.Capacity(selPawn).ToStringMass(),
-                this.DrawHelper.WeightTextFor(selPawn));
-        }
-
         /// <summary>
         /// Draw frames, which indicates quality, around <paramref name="thing"/>.
         /// </summary>
@@ -379,31 +368,31 @@ namespace AwesomeInventory.UI
                 switch (c)
                 {
                     case QualityCategory.Legendary:
-                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Lengendary, 2);
+                        DrawUtility.DrawBoxWithColor(rect, QualityColor.Instance.LegendaryTex, 2);
                         break;
 
                     case QualityCategory.Masterwork:
-                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Masterwork, 2);
+                        DrawUtility.DrawBoxWithColor(rect, QualityColor.Instance.MasterworkTex, 2);
                         break;
 
                     case QualityCategory.Excellent:
-                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Excellent, 2);
+                        DrawUtility.DrawBoxWithColor(rect, QualityColor.Instance.ExcellentTex, 2);
                         break;
 
                     case QualityCategory.Good:
-                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Good, 2);
+                        DrawUtility.DrawBoxWithColor(rect, QualityColor.Instance.GoodTex, 2);
                         break;
 
                     case QualityCategory.Normal:
-                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Normal, 2);
+                        DrawUtility.DrawBoxWithColor(rect, QualityColor.Instance.NormalTex, 2);
                         break;
 
                     case QualityCategory.Poor:
-                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Poor, 2);
+                        DrawUtility.DrawBoxWithColor(rect, QualityColor.Instance.PoorTex, 2);
                         break;
 
                     case QualityCategory.Awful:
-                        DrawUtility.DrawBoxWithColor(rect, AwesomeInventoryTex.Awful, 2);
+                        DrawUtility.DrawBoxWithColor(rect, QualityColor.Instance.AwefulTex, 2);
                         break;
                 }
             }
@@ -430,6 +419,22 @@ namespace AwesomeInventory.UI
         }
 
         /// <summary>
+        /// Draw weight bar for current mass <paramref name="selPawn"/> carries.
+        /// </summary>
+        /// <param name="rect"> Rect for drawing. </param>
+        /// <param name="selPawn"> Selected pawn. </param>
+        protected virtual void DrawWeightBar(Rect rect, Pawn selPawn)
+        {
+            GenBar.BarWithOverlay(
+                rect,
+                MassUtility.EncumbrancePercent(selPawn),
+                MassUtility.IsOverEncumbered(selPawn) ? AwesomeInventoryTex.ValvetTex as Texture2D : AwesomeInventoryTex.RMPrimaryTex as Texture2D,
+                UIText.Weight.TranslateSimple(),
+                MassUtility.GearAndInventoryMass(selPawn).ToString("0.#") + "/" + MassUtility.Capacity(selPawn).ToStringMass(),
+                this.DrawHelper.WeightTextFor(selPawn));
+        }
+
+        /// <summary>
         /// Draw loadout buttons from the right on gear tab.
         /// </summary>
         /// <param name="selPawn"> Selected pawn. </param>
@@ -440,7 +445,7 @@ namespace AwesomeInventory.UI
         {
             ValidateArg.NotNull(selPawn, nameof(selPawn));
 
-            if (Dialog_Mod.Settings.UseLoadout)
+            if (AwesomeInvnetoryMod.Settings.UseLoadout)
             {
                 WidgetRow row = new WidgetRow(x, rollingY, UIDirection.LeftThenDown, width);
                 if (row.ButtonText(UIText.OpenLoadout.Translate()))

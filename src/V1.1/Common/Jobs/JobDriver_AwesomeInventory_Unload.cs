@@ -167,6 +167,8 @@ namespace AwesomeInventory.Jobs
             });
             placeThing.AddFinishAction(() =>
             {
+                TargetThingA.SetForbidden(true, false);
+
                 if (_container)
                 {
                     if (TargetThingA.holdingOwner.Owner == pawn && TargetThingA.stackCount > 0)

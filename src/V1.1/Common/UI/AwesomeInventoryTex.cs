@@ -39,12 +39,13 @@ namespace AwesomeInventory.UI
         public static readonly Color LCT_PantoneRed = GenColor.FromHex("ED2939");
 
         // For Color Coded Mood Bar
-        public static readonly Color CCMB_HappyColor = new Color(0.1f, 0.75f, 0.2f, colorAlpha);
-        public static readonly Color CCMB_Cyan = new Color(Color.cyan.r, Color.cyan.g, Color.cyan.b, colorAlpha);
-        public static readonly Color CCMB_NeutralColor = new Color(0.87f, 0.96f, 0.79f, colorAlpha);
-        public static readonly Color CCMB_Yellow = new Color(Color.yellow.r, Color.yellow.g, Color.yellow.b, colorAlpha);
-        public static readonly Color CCMB_Orange = new Color(1f, 0.5f, 0.31f, colorAlpha);
-        public static readonly Color CCMB_Red = new Color(Color.red.r, Color.red.g, Color.red.b, colorAlpha);
+        public static readonly float CCMB_Alpha = 0.44f;
+        public static readonly Color CCMB_HappyColor = new Color(0.1f, 0.75f, 0.2f, CCMB_Alpha);
+        public static readonly Color CCMB_Cyan = new Color(Color.cyan.r, Color.cyan.g, Color.cyan.b, CCMB_Alpha);
+        public static readonly Color CCMB_NeutralColor = new Color(0.87f, 0.96f, 0.79f, CCMB_Alpha);
+        public static readonly Color CCMB_Yellow = new Color(Color.yellow.r, Color.yellow.g, Color.yellow.b, CCMB_Alpha);
+        public static readonly Color CCMB_Orange = new Color(1f, 0.5f, 0.31f, CCMB_Alpha);
+        public static readonly Color CCMB_Red = new Color(Color.red.r, Color.red.g, Color.red.b, CCMB_Alpha);
 
         /************
          * Textures *
@@ -89,8 +90,6 @@ namespace AwesomeInventory.UI
         public static readonly Texture CCMB_Normal = SolidColorMaterials.NewSolidColorTexture(CCMB_Yellow);
         public static readonly Texture CCMB_Poor = SolidColorMaterials.NewSolidColorTexture(CCMB_Orange);
         public static readonly Texture CCMB_Awful = SolidColorMaterials.NewSolidColorTexture(CCMB_Red);
-
-        private static float colorAlpha = 0.44f;
 
 #pragma warning restore SA1600 // Elements should be documented
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

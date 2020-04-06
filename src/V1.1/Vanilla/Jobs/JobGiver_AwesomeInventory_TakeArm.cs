@@ -1,4 +1,4 @@
-// <copyright file="JobGiver_AwesomeInventory_FindWeapon.cs" company="Zizhen Li">
+// <copyright file="JobGiver_AwesomeInventory_TakeArm.cs" company="Zizhen Li">
 // Copyright (c) 2019 - 2020 Zizhen Li. All rights reserved.
 // Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -6,8 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AwesomeInventory.Jobs;
-using AwesomeInventory.Resources;
+using AwesomeInventory.UI;
 using RimWorld;
 using Verse;
 using Verse.AI;
@@ -30,6 +29,11 @@ namespace AwesomeInventory.Jobs
         /// <returns> A job assigned to <paramref name="pawn"/>. </returns>
         protected override Job TryGiveJob(Pawn pawn)
         {
+            if (!AwesomeInvnetoryMod.Settings.AutoEquipWeapon)
+            {
+                return null;
+            }
+
             ValidateArg.NotNull(pawn, nameof(pawn));
 
             if (!pawn.Faction.IsPlayer)

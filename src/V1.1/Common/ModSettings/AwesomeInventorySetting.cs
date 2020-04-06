@@ -13,19 +13,31 @@ namespace AwesomeInventory
     /// <summary>
     /// User setting for AwesomeInventory.
     /// </summary>
-    public class AwesomeInventorySetting : Verse.ModSettings
+    public class AwesomeInventorySetting : ModSettings
     {
         /// <summary>
         /// Use loadout if true.
         /// </summary>
-        public bool UseLoadout;
+        public bool UseLoadout = true;
+
+        /// <summary>
+        /// Allow AwesomeInventory to choose appropriate weapons for pawns.
+        /// </summary>
+        public bool AutoEquipWeapon = true;
+
+        /// <summary>
+        /// Plugin ID for the <see cref="AwesomeInventory.UI.QualityColor"/> class.
+        /// </summary>
+        public int QualityColorPluginID;
 
         /// <summary>
         /// Save state.
         /// </summary>
         public override void ExposeData()
         {
-            Scribe_Values.Look(ref UseLoadout, "UseLoadout");
+            Scribe_Values.Look(ref UseLoadout, nameof(UseLoadout));
+            Scribe_Values.Look(ref AutoEquipWeapon, nameof(AutoEquipWeapon));
+            Scribe_Values.Look(ref QualityColorPluginID, nameof(QualityColorPluginID));
         }
     }
 

@@ -76,13 +76,23 @@ namespace AwesomeInventory.UI
 
         /****************** AwesomeInventory texts ********************/
 
+        public const string AIDefault = "AwesomeInventory_Default";
+
         public const string AIEquip = "AwesomeInventory_Equip";
 
         public const string AIForceWear = "AwesomeInventory_ForceWear";
 
+        public const string AIMassCarried = "AwesomeInventory_MassCarried";
+
         public const string AIWear = "AwesomeInventory_Wear";
 
         public const string AsceticTab = "AwesomeInventory_Ascetic";
+
+        public const string AutoEquipWeapon = "AwesomeInventory_AutoEquipWeapon";
+
+        public const string AutoEquipWeaponTooltip = "AwesomeInventory_AutoEquipWeaponTooltip";
+
+        public const string AwesomeInventoryDisplayName = "AwesomeInventory_DisplayName";
 
         public const string Belt = "AwesomeInventory_Belt";
 
@@ -120,8 +130,6 @@ namespace AwesomeInventory.UI
 
         public const string JealousTab = "AwesomeInventory_JealousTab";
 
-        public const string AIMassCarried = "AwesomeInventory_MassCarried";
-
         public const string MouseOverNumbersForDetails = "AwesomeInventory_MouseOverNumbersForDetails";
 
         public const string NewLoadout = "AwesomeInventory_NewLoadout";
@@ -135,6 +143,8 @@ namespace AwesomeInventory.UI
         public const string OpenLoadout = "AwesomeInventory_OpenLoadout";
 
         public const string Pant = "AwesomeInventory_Pants";
+
+        public const string Pickup = "AwesomeInventory_Pickup";
 
         public const string PrimaryWeapon = "AwesomeInventory_PrimaryWeapon";
 
@@ -185,6 +195,10 @@ namespace AwesomeInventory.UI
         public const string Traits = "Traits";
 
         public const string UnloadNow = "AwesomeInventory_UnloadNow";
+
+        public const string UseLoadout = "AwesomeInventory_UseLoadout";
+
+        public const string UseLoadoutTooltip = "AwesomeInventory_UseLoadoutTooltip";
 
         public const string VanillaWear = "AwesomeInventory_VanillaWear";
 

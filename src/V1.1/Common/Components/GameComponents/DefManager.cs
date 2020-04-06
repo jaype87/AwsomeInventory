@@ -1,4 +1,4 @@
-﻿// <copyright file="GameComponent_DefManager.cs" company="Zizhen Li">
+﻿// <copyright file="DefManager.cs" company="Zizhen Li">
 // Copyright (c) 2019 - 2020 Zizhen Li. All rights reserved.
 // Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -14,15 +14,15 @@ namespace AwesomeInventory
     /// <summary>
     /// Manages defs for the loadout window.
     /// </summary>
-    public class GameComponent_DefManager : GameComponent
+    public class DefManager : GameComponent
     {
         private static HashSet<ThingDef> _allSuitableDefs;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameComponent_DefManager"/> class.
+        /// Initializes a new instance of the <see cref="DefManager"/> class.
         /// </summary>
         /// <param name="game"> Current game. </param>
-        public GameComponent_DefManager(Game game)
+        public DefManager(Game game)
         {
         }
 

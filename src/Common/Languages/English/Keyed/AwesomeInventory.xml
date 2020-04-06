@@ -7,7 +7,6 @@
     
 
     <Corgi_KeepOldApparel>and keep old apparel</Corgi_KeepOldApparel>
-    <Corgi_UseLoadout>Use Loadout</Corgi_UseLoadout>
     <Corgi_RPGStyleInventoryRemake>RPG Style Inventory Remake</Corgi_RPGStyleInventoryRemake>
     <Corgi_ToggleGearTab>Toggle Gear Tab</Corgi_ToggleGearTab>
 
@@ -27,6 +26,8 @@
 
     <!-- Loadout Window -->
     <AwesomeInventory_Assorted>Assorted {0}</AwesomeInventory_Assorted>
+    <AwesomeInventory_AutoEquipWeapon>Automatically equip weapon.</AwesomeInventory_AutoEquipWeapon>
+    <AwesomeInventory_DisplayName>Awesome Inventory</AwesomeInventory_DisplayName>
     <AwesomeInventory_Blacklist>Blacklist</AwesomeInventory_Blacklist>
     <AwesomeInventory_CantUnloadIncapableManipulation>Pawn can't perform unload action due to incapable of manipulation.</AwesomeInventory_CantUnloadIncapableManipulation>
     <AwesomeInventory_ChooseMaterialAndQuality>Choose Material and Quality</AwesomeInventory_ChooseMaterialAndQuality>
@@ -52,6 +53,7 @@
     <AwesomeInventory_Separate>Separate</AwesomeInventory_Separate>
     <AwesomeInventory_SelectorStuff>Selected Stuff</AwesomeInventory_SelectorStuff>
     <AwesomeInventory_StuffSource>Stuff Source</AwesomeInventory_StuffSource>
+    <AwesomeInventory_UseLoadout>Use Loadout</AwesomeInventory_UseLoadout>
     <AwesomeInventory_Weight>Weight</AwesomeInventory_Weight>
     <AwesomeInventory_Whitelist>Whitelist</AwesomeInventory_Whitelist>
 
@@ -82,17 +84,21 @@
     </AwesomeInventory_AIGenericMedicine_Description>
     
     <!-- Option texts on context menu -->
+    <AwesomeInventory_Default>Awesome Inventory Default</AwesomeInventory_Default>
     <AwesomeInventory_Equip>Equip {0} and keep the retired</AwesomeInventory_Equip>
     <AwesomeInventory_ForceWear>Force wear {0} and keep the repleced</AwesomeInventory_ForceWear>
+    <AwesomeInventory_Pickup>Pick up {0}</AwesomeInventory_Pickup>
     <AwesomeInventory_PutAway>Put Away {0}</AwesomeInventory_PutAway>
     <AwesomeInventory_Wear>Wear {0} and keep the replaced</AwesomeInventory_Wear>
     <AwesomeInventory_VanillaWear>Wear {0}</AwesomeInventory_VanillaWear>
 
     <!-- Tooltips -->
     <AwesomeInventory_Ascetic>Ascetic</AwesomeInventory_Ascetic>
+    <AwesomeInventory_AutoEquipWeaponTooltip>Allows Awesome Inventory choose and equip weapons for unarmed pawns.</AwesomeInventory_AutoEquipWeaponTooltip>
     <AwesomeInventory_CurrentTemperature>Current Temperature</AwesomeInventory_CurrentTemperature>
     <AwesomeInventory_PreviewQuality_Tooltip>Choose quality level for preview item. </AwesomeInventory_PreviewQuality_Tooltip>
     <AwesomeInventory_Separate_Tooltip>Set quality and hit points for each selected stuff separately.</AwesomeInventory_Separate_Tooltip>
+    <AwesomeInventory_UseLoadoutTooltip>Use the loadout system provided by Awesome Inventory.</AwesomeInventory_UseLoadoutTooltip>
 
     <!-- Messages -->
     <AwesomeInventory_FailToDrop>{0} failed to drop {1}</AwesomeInventory_FailToDrop>

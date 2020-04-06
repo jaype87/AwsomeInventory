@@ -1,4 +1,4 @@
-﻿// <copyright file="AddHumanlikeOrders_RPGI_Patch.cs" company="Zizhen Li">
+﻿// <copyright file="AddHumanlikeOrders_AwesomeInventory_Patch.cs" company="Zizhen Li">
 // Copyright (c) 2019 - 2020 Zizhen Li. All rights reserved.
 // Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -24,12 +24,13 @@ namespace AwesomeInventory.Common.HarmonyPatches
     /// Add options to context menu when right-click on items on map.
     /// </summary>
     [StaticConstructorOnStartup]
-    public static class AddHumanlikeOrders_RPGI_Patch
+    public static class AddHumanlikeOrders_AwesomeInventory_Patch
+
     {
-        static AddHumanlikeOrders_RPGI_Patch()
+        static AddHumanlikeOrders_AwesomeInventory_Patch()
         {
             MethodInfo original = AccessTools.Method(typeof(FloatMenuMakerMap), "AddHumanlikeOrders");
-            MethodInfo postfix = AccessTools.Method(typeof(AddHumanlikeOrders_RPGI_Patch), "Postfix");
+            MethodInfo postfix = AccessTools.Method(typeof(AddHumanlikeOrders_AwesomeInventory_Patch), "Postfix");
             Utility.Harmony.Patch(original, null, new HarmonyMethod(postfix));
         }
 
@@ -60,12 +61,12 @@ namespace AwesomeInventory.Common.HarmonyPatches
                     {
                         ThingWithComps equipment = (ThingWithComps)thing;
 
-                        if (!(equipment.def.IsWeapon && pawn.WorkTagIsDisabled(WorkTags.Violent))
-                           && pawn.CanReach(equipment, PathEndMode.ClosestTouch, Danger.Deadly)
-                           && pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation)
-                           && !equipment.IsBurning()
-                           && !(pawn.IsQuestLodger() && (!equipment.def.IsWeapon || pawn.equipment.Primary != null))
-                           && EquipmentUtility.CanEquip(equipment, pawn, out _))
+                        if (equipment.def.IsWeapon
+                            && !pawn.WorkTagIsDisabled(WorkTags.Violent)
+                            && pawn.CanReach(equipment, PathEndMode.ClosestTouch, Danger.Deadly)
+                            && pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation)
+                            && !(pawn.IsQuestLodger() && (!equipment.def.IsWeapon || pawn.equipment.Primary != null))
+                            && EquipmentUtility.CanEquip(equipment, pawn, out _))
                         {
                             string text3 = UIText.AIEquip.Translate(thing.LabelShort);
                             if (equipment.def.IsRangedWeapon && pawn.story != null && pawn.story.traits.HasTrait(TraitDefOf.Brawler))
@@ -172,6 +173,35 @@ namespace AwesomeInventory.Common.HarmonyPatches
                             apparel);
                         opts.Add(option);
                     }
+                }
+            }
+
+            List<Thing> items = position.GetThingList(pawn.Map);
+            foreach (Thing item in items)
+            {
+                if (item.def.category == ThingCategory.Item)
+                {
+                    int count = MassUtility.CountToPickUpUntilOverEncumbered(pawn, item);
+                    if (count == 0)
+                    {
+                        continue;
+                    }
+
+                    count = Math.Min(count, item.stackCount);
+
+                    string displayText = UIText.Pickup.Translate(item.LabelNoCount + " x" + count);
+                    var option = FloatMenuUtility.DecoratePrioritizedTask(
+                        new FloatMenuOption(
+                            displayText
+                            , () =>
+                            {
+                                Job job = JobMaker.MakeJob(JobDefOf.TakeInventory, item);
+                                job.count = count;
+                                pawn.jobs.TryTakeOrderedJob(job);
+                            })
+                        , pawn
+                        , item);
+                    opts.Add(option);
                 }
             }
         }
