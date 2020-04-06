@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- Check CorgiBodyPartGroupDefOf.cs for a complete list of list order-->
+<!-- Check AwesomeInventoryPartGroupDefOf.cs for a complete list of list order-->
 <!-- TODO Create PR to CE-->
 <Defs>
     <BodyPartGroupDef>

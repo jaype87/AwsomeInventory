@@ -358,9 +358,9 @@ namespace AwesomeInventory.UI
         /// <param name="dragID"> A unique drag ID that can be used for identifying this slider. </param>
         protected virtual void DrawHitPointsSlider(Rect hitpointRect, int dragID)
         {
-            FloatRange hitpointRange = _groupSelector.SingleThingSelectors.First().AllowedHitPointsPercent;
+            FloatRange hitpointRange = _groupSelector.First().AllowedHitPointsPercent;
             Widgets.FloatRange(hitpointRect, dragID, ref hitpointRange, 0f, 1f, UIText.HitPoints, ToStringStyle.PercentZero);
-            _groupSelector.SingleThingSelectors.ForEach(s => s.SetHitPoints(hitpointRange));
+            _groupSelector.ToList().ForEach(s => s.SetHitPoints(hitpointRange));
         }
 
         /// <summary>
@@ -905,7 +905,7 @@ namespace AwesomeInventory.UI
                 Widgets.BeginScrollView(outRect, ref _statScrollPosition, viewRect);
 
                 DrawStatTableHeader(startRect, from, to, pairListToDraw);
-                DrawStatRows(_generalItemStats, pairListToDraw, startRect, from, to, out _);
+                DrawStatRows(_generalItemStats, pairListToDraw, startRect.ReplaceY(startRect.yMax), from, to, out _);
 
                 Widgets.EndScrollView();
             }

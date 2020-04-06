@@ -163,6 +163,41 @@ namespace AwesomeInventory.Loadout
             return thing;
         }
 
+        public static Thing MakeThingWithoutID(this ThingStuffPair pair)
+        {
+            if (pair.thing.MadeFromStuff && pair.stuff == null)
+            {
+                pair.stuff = RPGI_StuffDefOf.RPGIGenericResource;
+            }
+
+            if (pair.stuff != null && !pair.stuff.IsStuff)
+            {
+                Log.Error("MakeThing error: Tried to make " + pair.thing + " from " + pair.stuff + " which is not a stuff. Assigning default.");
+                pair.stuff = GenStuff.DefaultStuffFor(pair.thing);
+            }
+
+            if (!pair.thing.MadeFromStuff && pair.stuff != null)
+            {
+                Log.Error("MakeThing error: " + pair.thing + " is not madeFromStuff but stuff=" + pair.stuff + ". Setting to null.");
+                pair.stuff = null;
+            }
+
+            Thing thing = (Thing)Activator.CreateInstance(pair.thing.thingClass);
+            thing.def = pair.thing;
+            thing.SetStuffDirect(pair.stuff);
+            if (thing.def.useHitPoints)
+            {
+                thing.HitPoints = thing.MaxHitPoints;
+            }
+
+            if (thing is ThingWithComps thingWithComps)
+            {
+                thingWithComps.InitializeComps();
+            }
+
+            return thing;
+        }
+
         public static ThingStuffPairWithQuality MakeThingStuffPairWithQuality(this Thing thing)
         {
             if (thing == null)

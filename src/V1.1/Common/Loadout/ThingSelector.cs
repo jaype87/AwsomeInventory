@@ -16,7 +16,8 @@ namespace AwesomeInventory.Loadout
     /// <summary>
     /// Defines basic funtionality for a thing selector.
     /// </summary>
-    public abstract class ThingSelector : IExposable, IEquatable<ThingSelector>
+    public abstract class ThingSelector
+        : IExposable, IEquatable<ThingSelector>
     {
         /// <summary>
         /// Only its <see cref="ThingFilter.AllowedThingDefs"/>, <see cref="ThingFilter.AllowedQualityLevels"/>
@@ -55,6 +56,11 @@ namespace AwesomeInventory.Loadout
         public abstract float Weight { get; }
 
         /// <summary>
+        /// Gets hit points percentage of items that is allowed by this selector.
+        /// </summary>
+        public FloatRange AllowedHitPointsPercent { get => _thingFilter.AllowedHitPointsPercents; }
+
+        /// <summary>
         /// Gets the ID for this selector.
         /// </summary>
         public int ID { get; } = nextID++;
@@ -89,6 +95,15 @@ namespace AwesomeInventory.Loadout
         public static bool operator !=(ThingSelector A, ThingSelector B)
         {
             return !(A == B);
+        }
+
+        /// <summary>
+        /// Set hit points.
+        /// </summary>
+        /// <param name="floatRange"> Hit points range to set. </param>
+        public void SetHitPoints(FloatRange floatRange)
+        {
+            _thingFilter.AllowedHitPointsPercents = floatRange;
         }
 
         /// <summary>

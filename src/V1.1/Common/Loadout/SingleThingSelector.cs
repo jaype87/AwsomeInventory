@@ -104,8 +104,9 @@ namespace AwesomeInventory.Loadout
         public Thing ThingSample
         {
             get =>
-                LoadoutUtility.MakeThingWithoutID(
-                    new ThingStuffPairWithQuality(this.AllowedThing, this.AllowedStuff, _thingFilter.AllowedQualityLevels.min));
+                this.AllowedThing.HasComp(typeof(CompQuality))
+                ? new ThingStuffPairWithQuality(this.AllowedThing, this.AllowedStuff, _thingFilter.AllowedQualityLevels.min).MakeThingWithoutID()
+                : new ThingStuffPair(this.AllowedThing, this.AllowedStuff).MakeThingWithoutID();
         }
 
         /// <summary>
@@ -115,11 +116,6 @@ namespace AwesomeInventory.Loadout
 
         /// <inheritdoc/>
         public override string LabelCapNoCount { get => this.ThingSample.LabelCapNoCount.ColorizeByQuality(this.ThingSample); }
-
-        /// <summary>
-        /// Gets hit points percentage of items that is allowed by this selector.
-        /// </summary>
-        public FloatRange AllowedHitPointsPercent { get => _thingFilter.AllowedHitPointsPercents; }
 
         /// <summary>
         /// Gets quality level of items that is allowed by this selector.
@@ -173,15 +169,6 @@ namespace AwesomeInventory.Loadout
         public void SetQualityRange(QualityRange qualityRange)
         {
             _thingFilter.AllowedQualityLevels = qualityRange;
-        }
-
-        /// <summary>
-        /// Set hit points.
-        /// </summary>
-        /// <param name="floatRange"> Hit points range to set. </param>
-        public void SetHitPoints(FloatRange floatRange)
-        {
-            _thingFilter.AllowedHitPointsPercents = floatRange;
         }
 
         /// <inheritdoc/>

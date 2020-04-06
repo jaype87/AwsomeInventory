@@ -26,7 +26,7 @@
 
     <!-- Loadout Window -->
     <AwesomeInventory_Assorted>Assorted {0}</AwesomeInventory_Assorted>
-    <AwesomeInventory_AutoEquipWeapon>Automatically equip weapon.</AwesomeInventory_AutoEquipWeapon>
+    <AwesomeInventory_AutoEquipWeapon>Automatically equip weapon</AwesomeInventory_AutoEquipWeapon>
     <AwesomeInventory_DisplayName>Awesome Inventory</AwesomeInventory_DisplayName>
     <AwesomeInventory_Blacklist>Blacklist</AwesomeInventory_Blacklist>
     <AwesomeInventory_CantUnloadIncapableManipulation>Pawn can't perform unload action due to incapable of manipulation.</AwesomeInventory_CantUnloadIncapableManipulation>
