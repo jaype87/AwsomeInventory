@@ -38,6 +38,7 @@ namespace AwesomeInventory.Loadout
             this.AvailableDefs = from thingDef in this.ThingCategoryDefs.SelectMany(t => t.DescendantThingDefs).Distinct()
                                  where !this.ExcepDefs.EnumerableNullOrEmpty() && !this.ExcepDefs.Contains(thingDef)
                                  select thingDef;
+            this.tradeability = Tradeability.None;
         }
 
         private AIGenericDef()
