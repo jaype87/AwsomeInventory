@@ -17,7 +17,7 @@ namespace AwesomeInventory.UI
     {
         private static QualityColor _instance;
 
-        private Texture2D _awefulTex;
+        private Texture2D _awfulTex;
         private Texture2D _poorTex;
         private Texture2D _normalTex;
         private Texture2D _goodTex;
@@ -45,7 +45,7 @@ namespace AwesomeInventory.UI
         /// <summary>
         /// Gets a color that decorates item of awful quality.
         /// </summary>
-        public abstract Color Aweful { get; }
+        public abstract Color Awful { get; }
 
         /// <summary>
         /// Gets a color that decorates item of poor quality.
@@ -85,12 +85,12 @@ namespace AwesomeInventory.UI
         /// <summary>
         /// Gets <see cref="Texture2D"/> for aweful quality.
         /// </summary>
-        public virtual Texture2D AwefulTex { get => _awefulTex ?? (_awefulTex = SolidColorMaterials.NewSolidColorTexture(this.Aweful)); }
+        public virtual Texture2D AwfulTex { get => _awfulTex ?? (_awfulTex = SolidColorMaterials.NewSolidColorTexture(this.Awful)); }
 
         /// <summary>
         /// Gets <see cref="Texture2D"/> for poor quality.
         /// </summary>
-        public virtual Texture2D PoorTex { get => _poorTex ?? (_awefulTex = SolidColorMaterials.NewSolidColorTexture(this.Poor)); }
+        public virtual Texture2D PoorTex { get => _poorTex ?? (_awfulTex = SolidColorMaterials.NewSolidColorTexture(this.Poor)); }
 
         /// <summary>
         /// Gets <see cref="Texture2D"/> for normal quality.

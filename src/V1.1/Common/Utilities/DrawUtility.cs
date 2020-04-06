@@ -188,7 +188,7 @@ namespace AwesomeInventory.UI
             switch (qualityCategory)
             {
                 case QualityCategory.Awful:
-                    return s.Colorize(QualityColor.Instance.Aweful);
+                    return s.Colorize(QualityColor.Instance.Awful);
                 case QualityCategory.Poor:
                     return s.Colorize(QualityColor.Instance.Poor);
                 case QualityCategory.Normal:

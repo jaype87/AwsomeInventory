@@ -392,7 +392,7 @@ namespace AwesomeInventory.UI
                         break;
 
                     case QualityCategory.Awful:
-                        DrawUtility.DrawBoxWithColor(rect, QualityColor.Instance.AwefulTex, 2);
+                        DrawUtility.DrawBoxWithColor(rect, QualityColor.Instance.AwfulTex, 2);
                         break;
                 }
             }

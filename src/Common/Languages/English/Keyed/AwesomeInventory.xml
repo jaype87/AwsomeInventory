@@ -86,7 +86,7 @@
     <!-- Option texts on context menu -->
     <AwesomeInventory_Default>Awesome Inventory Default</AwesomeInventory_Default>
     <AwesomeInventory_Equip>Equip {0} and keep the retired</AwesomeInventory_Equip>
-    <AwesomeInventory_ForceWear>Force wear {0} and keep the repleced</AwesomeInventory_ForceWear>
+    <AwesomeInventory_ForceWear>Force wear {0} and keep the replaced</AwesomeInventory_ForceWear>
     <AwesomeInventory_Pickup>Pick up {0}</AwesomeInventory_Pickup>
     <AwesomeInventory_PutAway>Put Away {0}</AwesomeInventory_PutAway>
     <AwesomeInventory_Wear>Wear {0} and keep the replaced</AwesomeInventory_Wear>

@@ -25,7 +25,7 @@ namespace AwesomeInventory.UI
         }
 
         /// <inheritdoc/>
-        public override Color Aweful => AwesomeInventoryTex.CCMB_Red;
+        public override Color Awful => AwesomeInventoryTex.CCMB_Red;
 
         /// <inheritdoc/>
         public override Color Poor => AwesomeInventoryTex.CCMB_Orange;

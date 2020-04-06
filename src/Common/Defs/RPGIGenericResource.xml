@@ -21,5 +21,6 @@
             <statFactors>
             </statFactors>
         </stuffProps>
+        <tradeability>None</tradeability>
     </ThingDef>
 </Defs>

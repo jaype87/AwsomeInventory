@@ -24,7 +24,7 @@ namespace AwesomeInventory.UI
         }
 
         /// <inheritdoc/>
-        public override Color Aweful => AwesomeInventoryTex.Valvet;
+        public override Color Awful => AwesomeInventoryTex.Valvet;
 
         /// <inheritdoc/>
         public override Color Poor => AwesomeInventoryTex.LightGrey;

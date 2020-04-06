@@ -120,7 +120,7 @@ namespace AwesomeInventory.UI
             stringBuilder.AppendLine("Good".Colorize(qualityColor.Good));
             stringBuilder.AppendLine("Normal".Colorize(qualityColor.Normal));
             stringBuilder.AppendLine("Poor".Colorize(qualityColor.Poor));
-            stringBuilder.AppendLine("Aweful".Colorize(qualityColor.Aweful));
+            stringBuilder.AppendLine("Awful".Colorize(qualityColor.Awful));
             stringBuilder.AppendLine("Generic".Colorize(qualityColor.Generic));
 
             return stringBuilder.ToString();

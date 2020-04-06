@@ -23,7 +23,7 @@ namespace AwesomeInventory.UI
         }
 
         /// <inheritdoc/>
-        public override Color Aweful => AwesomeInventoryTex.LCT_PantoneRed;
+        public override Color Awful => AwesomeInventoryTex.LCT_PantoneRed;
 
         /// <inheritdoc/>
         public override Color Poor => AwesomeInventoryTex.LCT_AtomicTangerine;
