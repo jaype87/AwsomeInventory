@@ -126,6 +126,11 @@ namespace AwesomeInventory
             return (T)_pluginService[id];
         }
 
+        public static IEnumerable<T> GetPluginsOfType<T>()
+        {
+            return _pluginService.Values.OfType<T>();
+        }
+
         public static int GetNextAvailablePluginID()
         {
             int counter = 0;

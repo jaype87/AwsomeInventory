@@ -90,7 +90,7 @@ namespace AwesomeInventory.UI
         /// <summary>
         /// Gets <see cref="Texture2D"/> for poor quality.
         /// </summary>
-        public virtual Texture2D PoorTex { get => _poorTex ?? (_awfulTex = SolidColorMaterials.NewSolidColorTexture(this.Poor)); }
+        public virtual Texture2D PoorTex { get => _poorTex ?? (_poorTex = SolidColorMaterials.NewSolidColorTexture(this.Poor)); }
 
         /// <summary>
         /// Gets <see cref="Texture2D"/> for normal quality.

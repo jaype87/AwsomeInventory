@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using AwesomeInventory.HarmonyPatches;
 using RimWorld;
@@ -20,33 +21,6 @@ namespace AwesomeInventory.UI
     /// </summary>
     public abstract class AwesomeInventoryTabBase : ITab_Pawn_Gear
     {
-        public static MethodInfo InterfaceDrop { get; } =
-            typeof(ITab_Pawn_Gear).GetMethod("InterfaceDrop", _nonPublicInstance);
-
-        public static MethodInfo InterfaceIngest { get; } =
-            typeof(ITab_Pawn_Gear).GetMethod("InterfaceIngest", _nonPublicInstance);
-
-        public static MethodInfo ShouldShowInventory { get; } =
-            typeof(ITab_Pawn_Gear).GetMethod("ShouldShowInventory", _nonPublicInstance);
-
-        public static MethodInfo ShouldShowApparel { get; } =
-            typeof(ITab_Pawn_Gear).GetMethod("ShouldShowApparel", _nonPublicInstance);
-
-        public static MethodInfo ShouldShowEquipment { get; } =
-            typeof(ITab_Pawn_Gear).GetMethod("ShouldShowEquipment", _nonPublicInstance);
-
-        public static PropertyInfo CanControlColonist { get; } =
-            typeof(ITab_Pawn_Gear).GetProperty("CanControlColonist", _nonPublicInstance);
-
-        public static PropertyInfo CanControl { get; } =
-            typeof(ITab_Pawn_Gear).GetProperty("CanControl", _nonPublicInstance);
-
-        /// <summary>
-        /// Retrieve private property SelPawnForGear from <see cref="ITab_Pawn_Gear"/>.
-        /// </summary>
-        protected static readonly PropertyInfo _getPawn =
-            typeof(ITab_Pawn_Gear).GetProperty("SelPawnForGear", _nonPublicInstance);
-
         /// <summary>
         /// Gets or sets a value indicating whether apparel has chagned.
         /// </summary>
@@ -62,6 +36,8 @@ namespace AwesomeInventory.UI
         private static bool _isJealous = false;
         private static bool _isGreedy = false;
         private static bool _isAscetic = false;
+        private static IEnumerable<CustomRace> _customRaces
+            = AwesomeInventoryServiceProvider.GetPluginsOfType<CustomRace>();
 
         private Pawn _selPawn;
         private object _apparelChangedLock = new object();
@@ -85,6 +61,54 @@ namespace AwesomeInventory.UI
         }
 
         /// <summary>
+        /// Gets InterfaceDrop method from base class.
+        /// </summary>
+        public static MethodInfo InterfaceDrop { get; } =
+            typeof(ITab_Pawn_Gear).GetMethod("InterfaceDrop", _nonPublicInstance);
+
+        /// <summary>
+        /// Gets InterfaceIngest method from base class.
+        /// </summary>
+        public static MethodInfo InterfaceIngest { get; } =
+            typeof(ITab_Pawn_Gear).GetMethod("InterfaceIngest", _nonPublicInstance);
+
+        /// <summary>
+        /// Gets ShouldShowInventory method from base class.
+        /// </summary>
+        public static MethodInfo ShouldShowInventory { get; } =
+            typeof(ITab_Pawn_Gear).GetMethod("ShouldShowInventory", _nonPublicInstance);
+
+        /// <summary>
+        /// Gets ShouldShowApparel method from base class.
+        /// </summary>
+        public static MethodInfo ShouldShowApparel { get; } =
+            typeof(ITab_Pawn_Gear).GetMethod("ShouldShowApparel", _nonPublicInstance);
+
+        /// <summary>
+        /// Gets ShouldShowEquipment method from base class.
+        /// </summary>
+        public static MethodInfo ShouldShowEquipment { get; } =
+            typeof(ITab_Pawn_Gear).GetMethod("ShouldShowEquipment", _nonPublicInstance);
+
+        /// <summary>
+        /// Gets CanControlColonist property from base class.
+        /// </summary>
+        public static PropertyInfo CanControlColonist { get; } =
+            typeof(ITab_Pawn_Gear).GetProperty("CanControlColonist", _nonPublicInstance);
+
+        /// <summary>
+        /// Gets CanCaontrol property from base class.
+        /// </summary>
+        public static PropertyInfo CanControl { get; } =
+            typeof(ITab_Pawn_Gear).GetProperty("CanControl", _nonPublicInstance);
+
+        /// <summary>
+        /// Gets private property SelPawnForGear from <see cref="ITab_Pawn_Gear"/>.
+        /// </summary>
+        protected static PropertyInfo GetPawn { get; } =
+            typeof(ITab_Pawn_Gear).GetProperty("SelPawnForGear", _nonPublicInstance);
+
+        /// <summary>
         /// Run only once when the tab is toggle to open.
         /// Details in <see cref="InspectPaneUtility"/>.ToggleTab .
         /// </summary>
@@ -95,6 +119,24 @@ namespace AwesomeInventory.UI
         {
             base.OnOpen();
             _drawGearTab.Reset();
+        }
+
+        /// <summary>
+        /// Check if selected pawn is a colonist.
+        /// </summary>
+        /// <returns> Returns true if selected pawn is a colonist. </returns>
+        public bool IsColonist()
+        {
+            return _selPawn.IsColonist || (_customRaces.Any() && _customRaces.All(r => r.IsColonist(_selPawn)));
+        }
+
+        /// <summary>
+        /// Check if selected pawn is a colonist and player controlled.
+        /// </summary>
+        /// <returns> Returns true if selected pawn is a colonist and can be controlled by players. </returns>
+        public bool IsColonistPlayerControlled()
+        {
+            return _selPawn.IsColonistPlayerControlled || (_customRaces.Any() && _customRaces.All(r => r.IsColonistPlayerControlled(_selPawn)));
         }
 
         /// <summary>
@@ -109,7 +151,7 @@ namespace AwesomeInventory.UI
         /// </summary>
         protected override void FillTab()
         {
-            Pawn selPawn = _getPawn.GetValue((ITab_Pawn_Gear)this) as Pawn;
+            Pawn selPawn = GetPawn.GetValue((ITab_Pawn_Gear)this) as Pawn;
 
             // Reset scroll position if a new pawn is selected.
             if (_selPawn != selPawn)
@@ -130,16 +172,14 @@ namespace AwesomeInventory.UI
             Text.Font = GameFont.Small;
             GUI.color = Color.white;
 
-            float rollingX = GenUI.Gap;
             string translatedText;
-            Rect headerRect;
+            Rect headerRect = Rect.zero;
 
-            if (_selPawn.IsColonist)
+            if (this.IsColonist())
             {
                 // Draw checkbox option for Jealous
                 translatedText = UIText.JealousTab.TranslateSimple();
-                headerRect = GetHeaderRect(rollingX, translatedText);
-                rollingX += headerRect.xMax + GenUI.GapWide;
+                headerRect = GetHeaderRect(GenUI.Gap, translatedText);
                 if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isJealous))
                 {
                     this.SetJealous();
@@ -148,21 +188,22 @@ namespace AwesomeInventory.UI
 
             // Draw checkbox option for Greedy
             translatedText = UIText.GreedyTab.TranslateSimple();
-            headerRect = GetHeaderRect(rollingX, translatedText);
-            rollingX += headerRect.xMax + GenUI.GapWide;
+            headerRect = GetHeaderRect(headerRect.xMax + GenUI.Gap, translatedText);
             if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isGreedy))
             {
                 this.SetGreedy();
             }
 
-            // Draw checkbox option for Ascetic
-            translatedText = UIText.AsceticTab.TranslateSimple();
-            headerRect = GetHeaderRect(rollingX, translatedText);
-            if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isAscetic))
-            {
-                _isJealous = _isGreedy = false;
-                _isAscetic = true;
-            }
+            /*
+                // Draw checkbox option for Ascetic
+                translatedText = UIText.AsceticTab.TranslateSimple();
+                headerRect = GetHeaderRect(headerRect.xMax + GenUI.Gap, translatedText);
+                if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isAscetic))
+                {
+                    _isJealous = _isGreedy = false;
+                    _isAscetic = true;
+                }
+            */
 
             if (Event.current.type != EventType.Layout)
             {
