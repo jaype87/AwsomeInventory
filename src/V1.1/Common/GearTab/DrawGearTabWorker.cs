@@ -609,42 +609,54 @@ namespace AwesomeInventory.UI
 
             WidgetRow row = new WidgetRow(xInfoButton, y, UIDirection.LeftThenDown, xInfoButton);
 
-            if (selPawn.IsColonist)
+            // Draw drop button.
+            if (this.ShowDropButton(selPawn, thing, out bool canDrop, out string tooltip))
             {
-                // Draw drop button.
-                if (row.ButtonIcon(TexResource.Drop, UIText.DropThing.TranslateSimple()))
+                if (canDrop)
                 {
-                    AwesomeInventoryTabBase.InterfaceDrop.Invoke(_gearTab, new object[] { thing });
-                }
-
-                Rect unloadButtonRect = new Rect(row.FinalX - GenUI.SmallIconSize, row.FinalY, GenUI.SmallIconSize, GenUI.ListSpacing);
-
-                // Draw unload now button
-                TooltipHandler.TipRegion(unloadButtonRect, UIText.UnloadNow.TranslateSimple());
-                if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
-                {
-                    if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, AwesomeInventoryTex.HighlightBrown, AwesomeInventoryTex.HighlightGreen))
+                    if (row.ButtonIcon(TexResource.Drop, tooltip))
                     {
-                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                        InterfaceUnloadNow(thing, selPawn);
+                        AwesomeInventoryTabBase.InterfaceDrop.Invoke(_gearTab, new object[] { thing });
+                    }
+
+                    Rect unloadButtonRect = new Rect(row.FinalX - GenUI.SmallIconSize, row.FinalY, GenUI.SmallIconSize, GenUI.ListSpacing);
+
+                    if (selPawn.IsColonistPlayerControlled)
+                    {
+                        // Draw unload now button
+                        TooltipHandler.TipRegion(unloadButtonRect, UIText.UnloadNow.TranslateSimple());
+                        if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
+                        {
+                            if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, AwesomeInventoryTex.HighlightBrown, AwesomeInventoryTex.HighlightGreen))
+                            {
+                                SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                                InterfaceUnloadNow(thing, selPawn);
+                            }
+                        }
+                        else
+                        {
+                            if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, Color.white, AwesomeInventoryTex.HighlightGreen))
+                            {
+                                SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                                InterfaceUnloadNow(thing, selPawn);
+                            }
+                        }
                     }
                 }
                 else
                 {
-                    if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, Color.white, AwesomeInventoryTex.HighlightGreen))
-                    {
-                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                        InterfaceUnloadNow(thing, selPawn);
-                    }
+                    Rect iconRect = new Rect(row.FinalX - GenUI.SmallIconSize, row.FinalY, GenUI.SmallIconSize, GenUI.SmallIconSize);
+                    Widgets.ButtonImage(iconRect, TexResource.Drop, Color.grey, Color.grey, false);
+                    TooltipHandler.TipRegion(iconRect, tooltip);
                 }
+
+                row.GapButtonIcon();
             }
 
             GUI.color = Color.white;
 
-            row.GapButtonIcon();
-
             // Draw ingest button.
-            if (selPawn.IsColonist && (thing.def.IsNutritionGivingIngestible || thing.def.IsNonMedicalDrug) && thing.IngestibleNow && selPawn.WillEat(thing))
+            if ((bool)AwesomeInventoryTabBase.CanControlColonist.GetValue(_gearTab) && (thing.def.IsNutritionGivingIngestible || thing.def.IsNonMedicalDrug) && thing.IngestibleNow && selPawn.WillEat(thing))
             {
                 if (row.ButtonIcon(TexResource.Ingest, UIText.ConsumeThing.Translate(thing.LabelNoCount, thing)))
                 {
@@ -878,7 +890,7 @@ namespace AwesomeInventory.UI
                 Widgets.InfoCardButton(rect.x, rect.y, thing);
 
                 // Draw Unload Now button
-                if (selPawn.IsColonist)
+                if (this.ShowDropButton(selPawn, thing, out bool canDrop, out _) && canDrop && selPawn.IsColonistPlayerControlled)
                 {
                     TooltipHandler.TipRegion(buttonRect, UIText.UnloadNow.Translate());
                     if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
@@ -1337,6 +1349,73 @@ namespace AwesomeInventory.UI
             {
                 AwesomeInventoryUnloadNow.QueueJob(pawn, thing);
             }
+        }
+
+        protected virtual bool ShowDropButton(Pawn pawn, Thing thing, out bool canDrop, out string tooltip)
+        {
+            ValidateArg.NotNull(pawn, nameof(pawn));
+            ValidateArg.NotNull(thing, nameof(thing));
+
+            bool inventory = !(thing.def.IsWeapon || thing.def.IsApparel);
+            bool showDropButton = false;
+            canDrop = false;
+            tooltip = string.Empty;
+            if ((bool)AwesomeInventoryTabBase.CanControl.GetValue(_gearTab)
+                && (inventory
+                    || (bool)AwesomeInventoryTabBase.CanControlColonist.GetValue((ITab_Pawn_Gear)_gearTab)
+                    || (pawn.Spawned && !pawn.Map.IsPlayerHome)))
+            {
+                showDropButton = true;
+
+                // Check for bio-coded weapon and inventory
+                bool flag2;
+                if (pawn.IsQuestLodger())
+                {
+                    if (inventory)
+                    {
+                        flag2 = true;
+                    }
+                    else
+                    {
+                        CompBiocodableWeapon compBiocodableWeapon = thing.TryGetComp<CompBiocodableWeapon>();
+                        if (compBiocodableWeapon != null && compBiocodableWeapon.Biocoded)
+                        {
+                            flag2 = true;
+                        }
+                        else
+                        {
+                            CompBladelinkWeapon compBladelinkWeapon = thing.TryGetComp<CompBladelinkWeapon>();
+                            flag2 = compBladelinkWeapon != null && compBladelinkWeapon.bondedPawn == pawn;
+                        }
+                    }
+                }
+                else
+                {
+                    flag2 = false;
+                }
+
+                Apparel apparel;
+                bool flag3 = (apparel = thing as Apparel) != null && pawn.apparel != null && pawn.apparel.IsLocked(apparel);
+
+                canDrop = !(flag2 || flag3);
+
+                if (flag3)
+                {
+                    tooltip = "DropThingLocked".TranslateSimple();
+                }
+                else if (flag2)
+                {
+                    tooltip = "DropThingLodger".TranslateSimple();
+                }
+                else
+                {
+                    tooltip = UIText.DropThing.TranslateSimple();
+                }
+
+                return showDropButton;
+            }
+
+            return showDropButton;
         }
     }
 }

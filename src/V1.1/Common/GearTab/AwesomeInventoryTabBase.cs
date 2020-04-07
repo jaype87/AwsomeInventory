@@ -7,16 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Remoting.Messaging;
 using System.Threading;
-using AwesomeInventory.Common.HarmonyPatches;
 using AwesomeInventory.HarmonyPatches;
-using AwesomeInventory.Jobs;
-using AwesomeInventory.Loadout;
 using RimWorld;
 using UnityEngine;
 using Verse;
-using Verse.AI;
 
 namespace AwesomeInventory.UI
 {
@@ -42,6 +37,9 @@ namespace AwesomeInventory.UI
 
         public static PropertyInfo CanControlColonist { get; } =
             typeof(ITab_Pawn_Gear).GetProperty("CanControlColonist", _nonPublicInstance);
+
+        public static PropertyInfo CanControl { get; } =
+            typeof(ITab_Pawn_Gear).GetProperty("CanControl", _nonPublicInstance);
 
         /// <summary>
         /// Retrieve private property SelPawnForGear from <see cref="ITab_Pawn_Gear"/>.
