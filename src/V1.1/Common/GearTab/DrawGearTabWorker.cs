@@ -246,7 +246,7 @@ namespace AwesomeInventory.UI
                 ThingOwner<Thing> things = selPawn.inventory.innerContainer;
                 for (int i = 0; i < things.Count; i++)
                 {
-                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, things[i].GetInnerIfMinified(), true);
+                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, things[i], true);
                 }
             }
             #endregion Draw Inventory
@@ -336,7 +336,7 @@ namespace AwesomeInventory.UI
                 ThingOwner<Thing> things = selPawn.inventory.innerContainer;
                 for (int i = 0; i < things.Count; i++)
                 {
-                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, things[i].GetInnerIfMinified(), true);
+                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, things[i], true);
                 }
             }
 
