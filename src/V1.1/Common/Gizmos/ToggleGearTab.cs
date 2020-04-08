@@ -36,7 +36,7 @@ namespace AwesomeInventory.UI
         /// </summary>
         public override string Desc => string.Concat("Corgi_ToggleGearTab".Translate()
                                                     + "\n"
-                                                    + "Hotkey binded to Misc 12");
+                                                    + "Hotkey binded to Misc 12, recommand assign it to key X");
 
         private void ToggleTab()
         {
@@ -50,7 +50,7 @@ namespace AwesomeInventory.UI
             else
             {
                 InspectTabBase inspectTabBase = mainTabWindow_Inspect.CurTabs.Where((InspectTabBase t) => _tabType.IsAssignableFrom(t.GetType())).FirstOrDefault();
-                inspectTabBase.OnOpen();
+                inspectTabBase?.OnOpen();
                 mainTabWindow_Inspect.OpenTabType = _tabType;
                 SoundDefOf.TabOpen.PlayOneShotOnCamera();
             }

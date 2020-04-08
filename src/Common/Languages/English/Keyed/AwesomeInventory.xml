@@ -84,7 +84,7 @@
     
     <!-- Mod settings -->
     <AwesomeInventory_AutoEquipWeapon>Automatically equip weapon</AwesomeInventory_AutoEquipWeapon>
-    
+    <AwesomeInventory_UseGearTabToggle>Use gear tab gizmo/toggle</AwesomeInventory_UseGearTabToggle>
     <AwesomeInventory_UseLoadout>Use Loadout</AwesomeInventory_UseLoadout>
 
     <!-- Option texts on context menu -->
@@ -103,6 +103,7 @@
     <AwesomeInventory_CurrentTemperature>Current Temperature</AwesomeInventory_CurrentTemperature>
     <AwesomeInventory_PreviewQuality_Tooltip>Choose quality level for preview item. </AwesomeInventory_PreviewQuality_Tooltip>
     <AwesomeInventory_Separate_Tooltip>Set quality and hit points for each selected stuff separately.</AwesomeInventory_Separate_Tooltip>
+    <AwesomeInventory_UseGearTabToggleTooltip>Gear tab toggle allows users to bind hotkey to open the gear tab.</AwesomeInventory_UseGearTabToggleTooltip>
     <AwesomeInventory_UseLoadoutTooltip>Use the loadout system provided by Awesome Inventory.</AwesomeInventory_UseLoadoutTooltip>
     <AwesomeInventory_WishlistTooltip>Pawn will actively looking for items in the Wishlist.</AwesomeInventory_WishlistTooltip>
 

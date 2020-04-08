@@ -33,20 +33,23 @@ namespace AwesomeInventory.HarmonyPatches
         /// <returns> A collection of <see cref="Gizmo"/> that will display on screen. </returns>
         public static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> gizmos, Pawn __instance)
         {
-            if (gizmos == null)
-                gizmos = new List<Gizmo>();
-
-            foreach (Gizmo gizmo in gizmos)
+            if (AwesomeInvnetoryMod.Settings.UseToggleGizmo)
             {
-                yield return gizmo;
-            }
+                if (gizmos == null)
+                    gizmos = new List<Gizmo>();
 
-            if (Find.Selector.SingleSelectedThing is Pawn pawn && pawn.IsColonist)
-            {
-                if (AwesomeInventoryServiceProvider.TryGetImplementation<AwesomeInventoryTabBase>(out AwesomeInventoryTabBase tab))
+                foreach (Gizmo gizmo in gizmos)
                 {
-                    ToggleGearTab toggleGearTab = new ToggleGearTab(tab.GetType());
-                    yield return toggleGearTab;
+                    yield return gizmo;
+                }
+
+                if (Find.Selector.SingleSelectedThing is Pawn pawn && pawn.IsColonist)
+                {
+                    if (AwesomeInventoryServiceProvider.TryGetImplementation<AwesomeInventoryTabBase>(out AwesomeInventoryTabBase tab))
+                    {
+                        ToggleGearTab toggleGearTab = new ToggleGearTab(tab.GetType());
+                        yield return toggleGearTab;
+                    }
                 }
             }
         }

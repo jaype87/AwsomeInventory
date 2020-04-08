@@ -95,7 +95,7 @@
     <Compile Include="Components\GameComponents\DefManager.cs" />
     <Compile Include="Components\GameComponents\LoadoutManager.cs" />
     <Compile Include="DefOfs\AwesomeInventoryBodyPartGroupDefOf.cs" />
-    <Compile Include="DefOfs\RPGI_StuffDefOf.cs" />
+    <Compile Include="DefOfs\AwesomeInventoryStuffDefOf.cs" />
     <Compile Include="DynamicDefs\AIGenericDef.cs" />
     <Compile Include="DynamicDefs\AIGenericDrugs.cs" />
     <Compile Include="DynamicDefs\AIGenericMeal.cs" />

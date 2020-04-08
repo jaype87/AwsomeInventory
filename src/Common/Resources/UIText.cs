@@ -200,6 +200,10 @@ namespace AwesomeInventory.UI
 
         public const string UnloadNow = "AwesomeInventory_UnloadNow";
 
+        public const string UseGearTabToggle = "AwesomeInventory_UseGearTabToggle";
+
+        public const string UseGearTabToggleTooltip = "AwesomeInventory_UseGearTabToggleTooltip";
+
         public const string UseLoadout = "AwesomeInventory_UseLoadout";
 
         public const string UseLoadoutTooltip = "AwesomeInventory_UseLoadoutTooltip";

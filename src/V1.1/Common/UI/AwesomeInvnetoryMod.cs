@@ -55,6 +55,7 @@ namespace AwesomeInventory
 
             listingStandard.CheckboxLabeled(UIText.UseLoadout.TranslateSimple(), ref _settings.UseLoadout, UIText.UseLoadoutTooltip.TranslateSimple());
             listingStandard.CheckboxLabeled(UIText.AutoEquipWeapon.TranslateSimple(), ref _settings.AutoEquipWeapon, UIText.AutoEquipWeaponTooltip.TranslateSimple());
+            listingStandard.CheckboxLabeled(UIText.UseGearTabToggle.TranslateSimple(), ref _settings.UseToggleGizmo, UIText.UseGearTabToggleTooltip.TranslateSimple());
 
             listingStandard.NewColumn();
             this.DrawQualityColorScrollableList(listingStandard);

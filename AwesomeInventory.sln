@@ -56,8 +56,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patches", "Patches", "{D0A0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Defs", "Defs", "{57DAB5D0-B3F2-4840-90D3-5840D6C9FC3F}"
 	ProjectSection(SolutionItems) = preProject
+		src\Common\Defs\AwesomeInventoryGenericResource.xml = src\Common\Defs\AwesomeInventoryGenericResource.xml
 		src\Common\Defs\BodyPartGroups.xml = src\Common\Defs\BodyPartGroups.xml
-		src\Common\Defs\RPGIGenericResource.xml = src\Common\Defs\RPGIGenericResource.xml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThinkTreeDefs", "ThinkTreeDefs", "{4F217FDB-1EFC-4279-9E62-63EC3C3C3C7D}"

@@ -88,7 +88,7 @@ namespace AwesomeInventory.Loadout
         {
             if (pair.thing.MadeFromStuff && pair.stuff == null)
             {
-                pair.stuff = RPGI_StuffDefOf.RPGIGenericResource;
+                pair.stuff = AwesomeInventoryStuffDefOf.AwesomeInventoryGenericResource;
             }
 
             Thing thing = pair.MakeThing();
@@ -131,7 +131,7 @@ namespace AwesomeInventory.Loadout
         {
             if (pair.thing.MadeFromStuff && pair.stuff == null)
             {
-                pair.stuff = RPGI_StuffDefOf.RPGIGenericResource;
+                pair.stuff = AwesomeInventoryStuffDefOf.AwesomeInventoryGenericResource;
             }
 
             if (pair.stuff != null && !pair.stuff.IsStuff)
@@ -167,7 +167,7 @@ namespace AwesomeInventory.Loadout
         {
             if (pair.thing.MadeFromStuff && pair.stuff == null)
             {
-                pair.stuff = RPGI_StuffDefOf.RPGIGenericResource;
+                pair.stuff = AwesomeInventoryStuffDefOf.AwesomeInventoryGenericResource;
             }
 
             if (pair.stuff != null && !pair.stuff.IsStuff)
