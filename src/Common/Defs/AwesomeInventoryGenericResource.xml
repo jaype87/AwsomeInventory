@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<Defs>
+    <ThingDef ParentName="ResourceBase">
+        <defName>AwesomeInventoryGenericResource</defName>
+        <label>generic</label>
+        <description>Panacea, one solution to all problems</description>
+        <useHitPoints>false</useHitPoints>
+        <statBases>
+            <MarketValue>0</MarketValue>
+            <Mass>0</Mass>
+        </statBases>
+        <stuffProps>
+            <categories>
+            </categories>
+            <commonality>0</commonality>
+            <color>(160,178,181)</color>
+            <statFactors>
+            </statFactors>
+        </stuffProps>
+        <tradeability>None</tradeability>
+        <alwaysHaulable>false</alwaysHaulable>
+        <designateHaulable>false</designateHaulable>
+    </ThingDef>
+</Defs>
