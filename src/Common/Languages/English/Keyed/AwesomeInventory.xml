@@ -55,18 +55,10 @@
     <AwesomeInventory_AIGenericMedicine_Label>Generic Medicine</AwesomeInventory_AIGenericMedicine_Label>
 
     <!-- Descriptions -->
-    <AwesomeInventory_AIGenericMeal_Description>
-        Placeholder for any perishable meals. Intended for compatibility with pawns automatically picking up a meal for themself. It has the same mass as a fine meal.
-    </AwesomeInventory_AIGenericMeal_Description>
-    <AwesomeInventory_AIGenericRawFood_Description>
-        Placeholder for any raw food.  Intended for compatibility with pawns automatically picking up raw food to train animals.
-    </AwesomeInventory_AIGenericRawFood_Description>
-    <AwesomeInventory_AIGenericDrugs_Description>
-        Placeholder for any drugs. It includes medical drugs and has the same mass as Flake.
-    </AwesomeInventory_AIGenericDrugs_Description>
-    <AwesomeInventory_AIGenericMedicine_Description>
-        Placeholder for any medicine. Most commonly used by doctors.
-    </AwesomeInventory_AIGenericMedicine_Description>
+    <AwesomeInventory_AIGenericMeal_Description>Placeholder for any perishable meals. Intended for compatibility with pawns automatically picking up a meal for themself. It has the same mass as a fine meal.</AwesomeInventory_AIGenericMeal_Description>
+    <AwesomeInventory_AIGenericRawFood_Description>Placeholder for any raw food.  Intended for compatibility with pawns automatically picking up raw food to train animals.</AwesomeInventory_AIGenericRawFood_Description>
+    <AwesomeInventory_AIGenericDrugs_Description>Placeholder for any drugs. It includes medical drugs and has the same mass as Flake.</AwesomeInventory_AIGenericDrugs_Description>
+    <AwesomeInventory_AIGenericMedicine_Description>Placeholder for any medicine. Most commonly used by doctors.</AwesomeInventory_AIGenericMedicine_Description>
     
     <!-- Mod settings -->
     <AwesomeInventory_AutoEquipWeapon>Automatically equip weapon</AwesomeInventory_AutoEquipWeapon>

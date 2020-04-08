@@ -42,8 +42,8 @@ namespace AwesomeInventory.Loadout
 
         public static string GetWeightAndBulkTip(this ThingDef def, int count = 1)
         {
-            return def.LabelCap +
-                (count != 1 ? " x" + count : "") +
+            return def.description +
+                (count != 1 ? " x" + count : string.Empty) +
                 "\n" + def.GetWeightTip(count) + "\n";
         }
 
