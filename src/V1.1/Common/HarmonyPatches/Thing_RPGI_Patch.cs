@@ -33,7 +33,7 @@ namespace AwesomeInventory.Common.HarmonyPatches
         [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Harmony Patch")]
         public static void SplitOff_Postfix(Thing __instance, int count)
         {
-            if (__instance.ParentHolder is Pawn pawn)
+            if (__instance.ParentHolder?.ParentHolder is Pawn pawn)
             {
                 if (pawn.TryGetComp<CompAwesomeInventoryLoadout>() is CompAwesomeInventoryLoadout compRPGI)
                 {
