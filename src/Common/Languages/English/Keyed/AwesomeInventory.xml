@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-
-    <SandyMassValue> {0} / {1} kg</SandyMassValue>
-    <Sandy_ViewList>Show list</Sandy_ViewList>
-    
-    
-
-    <Corgi_KeepOldApparel>and keep old apparel</Corgi_KeepOldApparel>
-    <Corgi_RPGStyleInventoryRemake>RPG Style Inventory Remake</Corgi_RPGStyleInventoryRemake>
-    <Corgi_ToggleGearTab>Toggle Gear Tab</Corgi_ToggleGearTab>
-
     <!-- Inventory Window -->
     <AwesomeInventory_Belt>Belt</AwesomeInventory_Belt>
     <AwesomeInventory_ExtraApparels>Extra Equipped Apparels</AwesomeInventory_ExtraApparels>
@@ -35,6 +25,7 @@
     <AwesomeInventory_Customize>Customize</AwesomeInventory_Customize>
     <AwesomeInventory_DeleteLoadout>Delete Loadout</AwesomeInventory_DeleteLoadout>
     <AwesomeInventory_DragToReorder>Drag to reorder</AwesomeInventory_DragToReorder>
+    <AwesomeInventory_LoadoutName>{0}'s Loadout</AwesomeInventory_LoadoutName>
     <AwesomeInventory_MouseOverNumbersForDetails>Mouse over number for details</AwesomeInventory_MouseOverNumbersForDetails>
     <AwesomeInventory_NewLoadout>New Loadout</AwesomeInventory_NewLoadout>
     <AwesomeInventory_NoLoadout>No Loadout</AwesomeInventory_NoLoadout>
@@ -53,14 +44,9 @@
     <AwesomeInventory_Separate>Separate</AwesomeInventory_Separate>
     <AwesomeInventory_SelectorStuff>Selected Stuff</AwesomeInventory_SelectorStuff>
     <AwesomeInventory_StuffSource>Stuff Source</AwesomeInventory_StuffSource>
+    <AwesomeInventory_TryToDeleteLastLoadout>Cannot delete the last loadout</AwesomeInventory_TryToDeleteLastLoadout>
     <AwesomeInventory_Weight>Weight</AwesomeInventory_Weight>
     <AwesomeInventory_Wishlist>Wishlist</AwesomeInventory_Wishlist>
-
-    <AwesomeInventory_LoadoutName>{0}'s Loadout</AwesomeInventory_LoadoutName>
-    <Corgi_EmptyLoadoutName>Nothing</Corgi_EmptyLoadoutName>
-    <Corgi_ManageLoadouts>Manage Loadouts</Corgi_ManageLoadouts>
-    <Corgi_ForcedHold>Forced holding</Corgi_ForcedHold>
-    <Corgi_TryToDeleteLastLoadout>Cannot delete the last loadout</Corgi_TryToDeleteLastLoadout>
   
     <!-- Labels -->
     <AwesomeInventory_GenericMeal_Label>Generic Meals</AwesomeInventory_GenericMeal_Label>
@@ -86,6 +72,7 @@
     <AwesomeInventory_AutoEquipWeapon>Automatically equip weapon</AwesomeInventory_AutoEquipWeapon>
     <AwesomeInventory_UseGearTabToggle>Use gear tab gizmo/toggle</AwesomeInventory_UseGearTabToggle>
     <AwesomeInventory_UseLoadout>Use Loadout</AwesomeInventory_UseLoadout>
+    <AwesomeInventory_ToggleGearTab>Toggle Gear Tab</AwesomeInventory_ToggleGearTab>
 
     <!-- Option texts on context menu -->
     <AwesomeInventory_Default>Awesome Inventory Default</AwesomeInventory_Default>

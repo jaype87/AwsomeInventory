@@ -368,11 +368,11 @@ namespace AwesomeInventory.UI
                             }
                             else
                             {
-                                Rect msgRect = new Rect(Vector2.zero, Text.CalcSize(ErrorMessage.TryToDeleteLastLoadout.Translate()))
+                                Rect msgRect = new Rect(Vector2.zero, Text.CalcSize(UIText.TryToDeleteLastLoadout.TranslateSimple()))
                                                 .ExpandedBy(50);
                                 Find.WindowStack.Add(
                                     new Dialog_InstantMessage(
-                                        ErrorMessage.TryToDeleteLastLoadout.Translate(), msgRect.size, UIText.OK.Translate())
+                                        UIText.TryToDeleteLastLoadout.TranslateSimple(), msgRect.size, UIText.OK.TranslateSimple())
                                     {
                                         windowRect = msgRect,
                                     });

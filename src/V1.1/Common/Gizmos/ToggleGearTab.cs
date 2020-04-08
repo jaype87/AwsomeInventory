@@ -34,7 +34,7 @@ namespace AwesomeInventory.UI
         /// <summary>
         /// Gets tooltip when hover on the Gizmo.
         /// </summary>
-        public override string Desc => string.Concat("Corgi_ToggleGearTab".Translate()
+        public override string Desc => string.Concat(UIText.ToggleGearTab.TranslateSimple()
                                                     + "\n"
                                                     + "Hotkey binded to Misc 12, recommand assign it to key X");
 

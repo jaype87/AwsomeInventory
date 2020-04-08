@@ -178,11 +178,15 @@ namespace AwesomeInventory.UI
 
         public const string StuffSource = "AwesomeInventory_StuffSource";
 
+        public const string ToggleGearTab = "AwesomeInventory_ToggleGearTab";
+
         public const string TorsoMiddleLayer = "AwesomeInventory_TorsoMiddle";
 
         public const string TorsoOnSkinLayer = "AwesomeInventory_TorsoOnSkin";
 
         public const string TorsoShellLayer = "AwesomeInventory_TorsoShell";
+
+        public const string TryToDeleteLastLoadout = "AwesomeInventory_TryToDeleteLastLoadout";
 
         public const string Weight = "AwesomeInventory_Weight";
 

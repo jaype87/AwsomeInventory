@@ -142,15 +142,6 @@ namespace AwesomeInventory.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Corgi_TryToDeleteLastLoadout.
-        /// </summary>
-        public static string TryToDeleteLastLoadout {
-            get {
-                return ResourceManager.GetString("TryToDeleteLastLoadout", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {0} does not match {1}.
         /// </summary>
         public static string ValueNotMatch {
