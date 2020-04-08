@@ -181,8 +181,9 @@ namespace AwesomeInventory.Loadout
         {
             ValidateArg.NotNull(thing, nameof(thing));
 
-            return _thingFilter.Allows(thing)
-                && (_allowedStuff == null ? true : _allowedStuff.shortHash == thing.Stuff.shortHash);
+            Thing innerThing = thing.GetInnerIfMinified();
+            return _thingFilter.Allows(innerThing)
+                && (_allowedStuff == null ? true : _allowedStuff.shortHash == innerThing.Stuff.shortHash);
         }
 
         /// <inheritdoc />

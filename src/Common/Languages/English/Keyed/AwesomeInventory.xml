@@ -26,7 +26,6 @@
 
     <!-- Loadout Window -->
     <AwesomeInventory_Assorted>Assorted {0}</AwesomeInventory_Assorted>
-    <AwesomeInventory_AutoEquipWeapon>Automatically equip weapon</AwesomeInventory_AutoEquipWeapon>
     <AwesomeInventory_DisplayName>Awesome Inventory</AwesomeInventory_DisplayName>
     <AwesomeInventory_Blacklist>Blacklist</AwesomeInventory_Blacklist>
     <AwesomeInventory_CantUnloadIncapableManipulation>Pawn can't perform unload action due to incapable of manipulation.</AwesomeInventory_CantUnloadIncapableManipulation>
@@ -53,7 +52,6 @@
     <AwesomeInventory_Separate>Separate</AwesomeInventory_Separate>
     <AwesomeInventory_SelectorStuff>Selected Stuff</AwesomeInventory_SelectorStuff>
     <AwesomeInventory_StuffSource>Stuff Source</AwesomeInventory_StuffSource>
-    <AwesomeInventory_UseLoadout>Use Loadout</AwesomeInventory_UseLoadout>
     <AwesomeInventory_Weight>Weight</AwesomeInventory_Weight>
     <AwesomeInventory_Whitelist>Whitelist</AwesomeInventory_Whitelist>
 
@@ -83,6 +81,11 @@
         Placeholder for any medicine. Most commonly used by doctors.
     </AwesomeInventory_AIGenericMedicine_Description>
     
+    <!-- Mod settings -->
+    <AwesomeInventory_AutoEquipWeapon>Automatically equip weapon</AwesomeInventory_AutoEquipWeapon>
+    
+    <AwesomeInventory_UseLoadout>Use Loadout</AwesomeInventory_UseLoadout>
+
     <!-- Option texts on context menu -->
     <AwesomeInventory_Default>Awesome Inventory Default</AwesomeInventory_Default>
     <AwesomeInventory_Equip>Equip {0} and keep the retired</AwesomeInventory_Equip>

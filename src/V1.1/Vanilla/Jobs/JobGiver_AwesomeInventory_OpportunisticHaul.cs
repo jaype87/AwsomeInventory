@@ -26,6 +26,9 @@ namespace AwesomeInventory.Jobs
         /// <returns> A potential job for <paramref name="pawn"/>. </returns>
         protected override Job TryGiveJob(Pawn pawn)
         {
+#if DEBUG
+            Log.Message(pawn.Name + "Looking for things to haul");
+#endif
             if (_parent == null)
             {
                 if (parent is JobGiver_FindItemByRadius p)

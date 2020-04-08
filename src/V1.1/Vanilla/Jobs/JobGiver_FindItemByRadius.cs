@@ -123,7 +123,11 @@ namespace AwesomeInventory.Jobs
                     , PathEndMode.OnCell
                     , TraverseParms.For(pawn)
                     , _radius[_lastUsedRadiusIndex]
-                    , (Thing x) => _validatorBase(pawn, x) && (validator == null ? true : validator(x))
+                    , (Thing x) =>
+                    {
+                        Thing innerThing = x.GetInnerIfMinified();
+                        return _validatorBase(pawn, x) && (validator == null ? true : validator(innerThing));
+                    }
                     , priorityGetter);
                 if (thing == null)
                 {

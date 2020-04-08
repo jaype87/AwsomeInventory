@@ -21,6 +21,11 @@ namespace AwesomeInventory
         public bool UseLoadout = true;
 
         /// <summary>
+        /// Use toggle gizmo.
+        /// </summary>
+        public bool UseToggleGizmo = true;
+
+        /// <summary>
         /// Allow AwesomeInventory to choose appropriate weapons for pawns.
         /// </summary>
         public bool AutoEquipWeapon = true;
@@ -38,6 +43,7 @@ namespace AwesomeInventory
             Scribe_Values.Look(ref UseLoadout, nameof(UseLoadout));
             Scribe_Values.Look(ref AutoEquipWeapon, nameof(AutoEquipWeapon));
             Scribe_Values.Look(ref QualityColorPluginID, nameof(QualityColorPluginID));
+            Scribe_Values.Look(ref UseToggleGizmo, nameof(UseToggleGizmo));
         }
     }
 
