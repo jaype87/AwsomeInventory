@@ -16,7 +16,7 @@ using Verse.AI;
 namespace AwesomeInventory.Jobs
 {
     /// <summary>
-    /// Find weapon that fits the whitelist of loadout.
+    /// Find weapon that fits the wishlist of loadout.
     /// </summary>
     public class JobGiver_AwesomeInventory_FindWeapon : ThinkNode_JobGiver
     {

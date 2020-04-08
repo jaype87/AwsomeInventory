@@ -44,6 +44,7 @@
     <AwesomeInventory_PreviewQuality>Preview Quality: </AwesomeInventory_PreviewQuality>
     <AwesomeInventory_SelectLoadout>Select Loadout</AwesomeInventory_SelectLoadout>
     <AwesomeInventory_SourceAllTip>All items</AwesomeInventory_SourceAllTip>
+    <AwesomeInventory_SourceApparelTip>Apparels</AwesomeInventory_SourceApparelTip>
     <AwesomeInventory_SourceFilterTip>Filter</AwesomeInventory_SourceFilterTip>
     <AwesomeInventory_SourceGenericTip>Generic items</AwesomeInventory_SourceGenericTip>
     <AwesomeInventory_SourceMeleeTip>Melee weapons</AwesomeInventory_SourceMeleeTip>
@@ -53,7 +54,7 @@
     <AwesomeInventory_SelectorStuff>Selected Stuff</AwesomeInventory_SelectorStuff>
     <AwesomeInventory_StuffSource>Stuff Source</AwesomeInventory_StuffSource>
     <AwesomeInventory_Weight>Weight</AwesomeInventory_Weight>
-    <AwesomeInventory_Whitelist>Whitelist</AwesomeInventory_Whitelist>
+    <AwesomeInventory_Wishlist>Wishlist</AwesomeInventory_Wishlist>
 
     <AwesomeInventory_LoadoutName>{0}'s Loadout</AwesomeInventory_LoadoutName>
     <Corgi_EmptyLoadoutName>Nothing</Corgi_EmptyLoadoutName>
@@ -98,12 +99,12 @@
     <!-- Tooltips -->
     <AwesomeInventory_Ascetic>Ascetic</AwesomeInventory_Ascetic>
     <AwesomeInventory_AutoEquipWeaponTooltip>Allows Awesome Inventory choose and equip weapons for unarmed pawns.</AwesomeInventory_AutoEquipWeaponTooltip>
-    <AwesomeInventory_BlacklistTooltip>Items that fit in blacklist will not be considered for the Whitelist. Blacklist will not come into effect if items in it do not fit the Whitelist.</AwesomeInventory_BlacklistTooltip>
+    <AwesomeInventory_BlacklistTooltip>Items that fit in blacklist will not be considered for the Wishlist. Blacklist will not come into effect if items in it do not fit the Wishlist.</AwesomeInventory_BlacklistTooltip>
     <AwesomeInventory_CurrentTemperature>Current Temperature</AwesomeInventory_CurrentTemperature>
     <AwesomeInventory_PreviewQuality_Tooltip>Choose quality level for preview item. </AwesomeInventory_PreviewQuality_Tooltip>
     <AwesomeInventory_Separate_Tooltip>Set quality and hit points for each selected stuff separately.</AwesomeInventory_Separate_Tooltip>
     <AwesomeInventory_UseLoadoutTooltip>Use the loadout system provided by Awesome Inventory.</AwesomeInventory_UseLoadoutTooltip>
-    <AwesomeInventory_WhitelistTooltip>Pawn will actively looking for items in the Whitelist.</AwesomeInventory_WhitelistTooltip>
+    <AwesomeInventory_WishlistTooltip>Pawn will actively looking for items in the Wishlist.</AwesomeInventory_WishlistTooltip>
 
     <!-- Messages -->
     <AwesomeInventory_FailToDrop>{0} failed to drop {1}</AwesomeInventory_FailToDrop>

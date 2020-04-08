@@ -186,13 +186,13 @@ namespace AwesomeInventory.UI
 
         public const string Weight = "AwesomeInventory_Weight";
 
-        public const string Whitelist = "AwesomeInventory_Whitelist";
+        public const string Wishlist = "AwesomeInventory_Wishlist";
 
-        public const string WhitelistTooltip = "AwesomeInventory_WhitelistTooltip";
+        public const string WishlistTooltip = "AwesomeInventory_WishlistTooltip";
 
         public const string OutfitAnything = "OutfitAnything";
 
-        public const string SourceApparelTip = "SourceApparelTip";
+        public const string SourceApparelTip = "AwesomeInventory_SourceApparelTip";
 
         public const string TenCharsString = "AAAAAAAAAA";
 
