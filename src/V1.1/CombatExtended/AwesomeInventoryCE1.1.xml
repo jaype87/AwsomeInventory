@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AwesomeInventoryCE1.1</name>
+    </assembly>
+    <members>
+        <member name="T:RPG_Inventory_Remake_CE.CEApparelLayerDefOf">
+            <summary>
+            Contains custom apparel layer in CE.
+            </summary>
+        </member>
+        <member name="F:RPG_Inventory_Remake_CE.CEApparelLayerDefOf.Shield">
+            <summary>
+            Custom apparel layer added by CE.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.UI.CEGearTabWorker">
+            <summary>
+            Draws window content for CE gear tab.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.CEGearTabWorker.#ctor(AwesomeInventory.UI.AwesomeInventoryTab)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.UI.CEGearTabWorker"/> class.
+            </summary>
+            <param name="awesomeInventoryTab"> Gear tab to draw. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.CEGearTabWorker.SetOutRectForJealousTab(UnityEngine.Rect)">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>

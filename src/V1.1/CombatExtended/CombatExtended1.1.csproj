@@ -58,8 +58,9 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>..\..\Assemblies\</OutputPath>
+    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\CombatExtended\Assemblies\</OutputPath>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>AwesomeInventoryCE1.1.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
@@ -93,6 +94,10 @@
       <HintPath>..\..\..\References\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="CombatExtended">
+      <HintPath>..\..\..\References\CombatExtended\CombatExtended.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -116,15 +121,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefOfs\CEApparelLayerDefOf.cs" />
-    <Compile Include="FillTabOperationsCE.cs" />
-    <Compile Include="PawnModal.cs" />
-    <Compile Include="Utilities\Utility_DrawCE.cs" />
-    <Compile Include="Jobs\JobDriver_Map_Equip.cs" />
-    <Compile Include="Jobs\JobDriver_RPGI_ApparelOptions.cs" />
-    <Compile Include="Jobs\JobDriver_RPGI_Unload.cs" />
-    <Compile Include="Jobs\JobGiver_RPGI_ApparelOptions.cs" />
+    <None Include="FillTabOperationsCE.cs" />
+    <Compile Include="GeatTab\AwesomeInventoryTab.cs" />
+    <Compile Include="GeatTab\CEGearTabWorker.cs" />
+    <None Include="PawnModal.cs" />
+    <None Include="Utilities\Utility_DrawCE.cs" />
+    <None Include="Jobs\JobDriver_Map_Equip.cs" />
+    <None Include="Jobs\JobDriver_RPGI_ApparelOptions.cs" />
+    <None Include="Jobs\JobDriver_RPGI_Unload.cs" />
+    <None Include="Jobs\JobGiver_RPGI_ApparelOptions.cs" />
     <None Include="Freezer.cs" />
-    <Compile Include="RPG_GearTab_CE.cs" />
+    <None Include="RPG_GearTab_CE.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -151,6 +158,18 @@
     <Analyzer Include="..\..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
     <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\AwesomeInventory.Base.csproj">
+      <Project>{b08984e0-c241-4fee-b9a1-fff9adef5bb2}</Project>
+      <Name>AwesomeInventory.Base</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common1.1.csproj">
+      <Project>{6629105c-6bed-491b-a49a-eb12b0710cf3}</Project>
+      <Name>Common1.1</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

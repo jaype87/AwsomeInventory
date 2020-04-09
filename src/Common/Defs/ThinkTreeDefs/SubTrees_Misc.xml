@@ -10,7 +10,7 @@
                     <subNodes>
                         <li Class="AwesomeInventory.Jobs.JobGiver_AwesomeInventory_TakeArm"></li>
                         <li Class="AwesomeInventory.Jobs.JobGiver_AwesomeInventory_FindWeapon"></li>
-                        <li Class="AwesomeInventory.Loadout.JobGiver_AwesomeInventory_FindApparels"></li>
+                        <li Class="AwesomeInventory.Jobs.JobGiver_AwesomeInventory_FindApparels"></li>
                         <li Class="AwesomeInventory.Jobs.JobGiver_AwesomeInventory_FindItems"></li>
                         <li Class="AwesomeInventory.Jobs.JobGiver_AwesomeInventory_OpportunisticHaul"></li>
                     </subNodes>

@@ -43,6 +43,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>AwesomeInventoryCommon1.1.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CE Build|AnyCPU'">
     <OutputPath>bin\CE Build\</OutputPath>
@@ -70,6 +71,7 @@
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Components\GameComponents\GameComponent_AwesomeInventory_Entry.cs" />
     <Compile Include="GearTab\IconRect.cs" />
     <Compile Include="GearTab\SmartRectList.cs" />
     <Compile Include="HarmonyPatches\AddHumanlikeOrders_AwesomeInventory_Patch.cs" />
@@ -81,6 +83,12 @@
     <Compile Include="Jobs\JobDriver_AwesomeInventory_Dress.cs" />
     <Compile Include="Jobs\JobDriver_AwesomeInventory_Undress.cs" />
     <Compile Include="Jobs\JobDriver_AwesomeInventory_Unload.cs" />
+    <Compile Include="Jobs\JobGiver_AwesomeInventory_FindApparels.cs" />
+    <Compile Include="Jobs\JobGiver_AwesomeInventory_FindItems.cs" />
+    <Compile Include="Jobs\JobGiver_AwesomeInventory_FindWeapon.cs" />
+    <Compile Include="Jobs\JobGiver_AwesomeInventory_OpportunisticHaul.cs" />
+    <Compile Include="Jobs\JobGiver_AwesomeInventory_TakeArm.cs" />
+    <Compile Include="Jobs\JobGiver_FindItemByRadius.cs" />
     <Compile Include="Loadout\AwesomeInventoryLoadout.cs" />
     <Compile Include="Loadout\GenericThingSelector.cs" />
     <Compile Include="Loadout\SingleThingSelector.cs" />

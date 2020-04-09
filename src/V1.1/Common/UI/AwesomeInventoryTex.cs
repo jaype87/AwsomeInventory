@@ -62,7 +62,7 @@ namespace AwesomeInventory.UI
         public static readonly Texture RoyalBlueTex = SolidColorMaterials.NewSolidColorTexture(ColorLibrary.RoyalBlue);
         public static readonly Texture ValvetTex = SolidColorMaterials.NewSolidColorTexture(Valvet);
         public static readonly Texture LightGreyTex = SolidColorMaterials.NewSolidColorTexture(LightGrey);
-        public static readonly Texture RMPrimaryTex = SolidColorMaterials.NewSolidColorTexture(RWPrimaryColor);
+        public static readonly Texture RWPrimaryTex = SolidColorMaterials.NewSolidColorTexture(RWPrimaryColor);
         public static readonly Texture LeatherTex = SolidColorMaterials.NewSolidColorTexture(ColorLibrary.Leather);
 
         public static readonly Texture Lengendary = OrangeTex;

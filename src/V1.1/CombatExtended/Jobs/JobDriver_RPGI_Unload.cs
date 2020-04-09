@@ -5,7 +5,6 @@ using System.Text;
 using Verse;
 using Verse.AI;
 using RimWorld;
-using HarmonyLib;
 using RPG_Inventory_Remake_Common;
 
 namespace RPG_Inventory_Remake_CE

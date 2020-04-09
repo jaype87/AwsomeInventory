@@ -94,7 +94,7 @@ namespace AwesomeInventory.UI
         {
             ValidateArg.NotNull(selPawn, nameof(selPawn));
 
-            Rect outRect = new Rect(canvas.x, canvas.y, canvas.width, canvas.height - GenUI.ListSpacing);
+            Rect outRect = this.SetOutRectForJealousTab(canvas);
             Rect viewRect = outRect;
             viewRect.height = _scrollViewHeight;
             viewRect.width -= GenUI.ScrollBarWidth;
@@ -246,7 +246,7 @@ namespace AwesomeInventory.UI
                 ThingOwner<Thing> things = selPawn.inventory.innerContainer;
                 for (int i = 0; i < things.Count; i++)
                 {
-                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, things[i].GetInnerIfMinified());
+                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, things[i]);
                 }
             }
             #endregion Draw Inventory
@@ -336,7 +336,7 @@ namespace AwesomeInventory.UI
                 ThingOwner<Thing> things = selPawn.inventory.innerContainer;
                 for (int i = 0; i < things.Count; i++)
                 {
-                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, things[i].GetInnerIfMinified());
+                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, things[i]);
                 }
             }
 
@@ -432,7 +432,7 @@ namespace AwesomeInventory.UI
             GenBar.BarWithOverlay(
                 rect,
                 MassUtility.EncumbrancePercent(selPawn),
-                MassUtility.IsOverEncumbered(selPawn) ? AwesomeInventoryTex.ValvetTex as Texture2D : AwesomeInventoryTex.RMPrimaryTex as Texture2D,
+                MassUtility.IsOverEncumbered(selPawn) ? AwesomeInventoryTex.ValvetTex as Texture2D : AwesomeInventoryTex.RWPrimaryTex as Texture2D,
                 UIText.Weight.TranslateSimple(),
                 MassUtility.GearAndInventoryMass(selPawn).ToString("0.#") + "/" + MassUtility.Capacity(selPawn).ToStringMass(),
                 this.DrawHelper.WeightTextFor(selPawn));
@@ -1337,6 +1337,17 @@ namespace AwesomeInventory.UI
             {
                 AwesomeInventoryUnloadNow.QueueJob(pawn, thing);
             }
+        }
+
+        /// <summary>
+        /// Set out rect size excluding bottom stat bars for the jealous tab.
+        /// </summary>
+        /// <param name="canvas"> Rect for the gear tab. </param>
+        /// <returns> A rect for drawing the jealous tab. </returns>
+        protected virtual Rect SetOutRectForJealousTab(Rect canvas)
+        {
+            // Substract the height of one line for a weight bar and a bulk bar.
+            return canvas.ReplaceHeight(canvas.height - GenUI.ListSpacing);
         }
     }
 }
