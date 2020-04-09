@@ -164,7 +164,7 @@ namespace AwesomeInventory.UI
             Rect nameFieldRect = new Rect(
                 0,
                 0,
-                useableSize.x - buttonRow.FinalX - GenUI.GapWide,
+                buttonRow.FinalX - WidgetRow.DefaultGap,
                 GenUI.SmallIconSize);
 
             Rect whiteBlackListRect = new Rect(
