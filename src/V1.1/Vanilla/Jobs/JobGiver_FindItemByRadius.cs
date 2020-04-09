@@ -53,7 +53,7 @@ namespace AwesomeInventory.Jobs
         /// <summary>
         /// Universal validation.
         /// </summary>
-        protected Func<Pawn, Thing, bool> _validatorBase = (Pawn p, Thing x) => p.CanReserve(x) && !x.IsForbidden(p);
+        protected Func<Pawn, Thing, bool> _validatorBase = (Pawn p, Thing x) => p.CanReserve(x) && !x.IsForbidden(p) && x.IsSociallyProper(p);
 
         /// <summary>
         /// Gets the default starting index used for querying _radius.
