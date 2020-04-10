@@ -30,12 +30,12 @@ namespace AwesomeInventory
         }
 
         /// <summary>
-        /// Register <see cref="IDrawHelper"/>.
+        /// Register <see cref="DrawHelper"/>.
         /// </summary>
         /// <param name="drawHelper"> Instance of <paramref name="drawHelper"/> to register. </param>
-        protected static void RegisterIDrawHelper(IDrawHelper drawHelper)
+        protected static void RegisterIDrawHelper(DrawHelper drawHelper)
         {
-            AwesomeInventoryServiceProvider.AddService(typeof(IDrawHelper), drawHelper);
+            AwesomeInventoryServiceProvider.AddService(typeof(DrawHelper), drawHelper);
         }
 
         /// <summary>

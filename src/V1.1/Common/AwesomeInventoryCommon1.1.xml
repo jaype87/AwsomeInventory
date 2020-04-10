@@ -96,26 +96,26 @@
             <param name="thing"> Thing to draw. </param>
             <returns> An empty <see cref="T:UnityEngine.Rect"/>. </returns>
         </member>
-        <member name="T:AwesomeInventory.UI.IDrawHelper">
+        <member name="T:AwesomeInventory.UI.DrawHelper">
             <summary>
             A helper class for drawing in game.
             It only consists of member methods while <see cref="T:AwesomeInventory.UI.DrawUtility"/> only has static methods.
             </summary>
         </member>
-        <member name="M:AwesomeInventory.UI.IDrawHelper.TooltipTextFor(Verse.Thing,System.Boolean)">
+        <member name="M:AwesomeInventory.UI.DrawHelper.TooltipTextFor(Verse.Thing,System.Boolean)">
             <summary>
-            Compile a tooltip string for <paramref name="thing"/>.
+            Build tooltip text for <paramref name="thing"/>.
             </summary>
-            <param name="thing"> <paramref name="thing"/> that needs a tooltip text. </param>
-            <param name="isForced"> Indicates if <paramref name="thing"/> is forced on pawn. </param>
-            <returns> A tooltip string. </returns>
+            <param name="thing"> Thing that the tooltip text is for. </param>
+            <param name="isForced"> True, if <paramref name="thing"/> is apparel and the wearer is forced to wear. </param>
+            <returns> Tooltip text for <paramref name="thing"/>. </returns>
         </member>
-        <member name="M:AwesomeInventory.UI.IDrawHelper.WeightTextFor(Verse.Pawn)">
+        <member name="M:AwesomeInventory.UI.DrawHelper.WeightTextFor(Verse.Pawn)">
             <summary>
-            Get tooltip text for weight bar of <paramref name="pawn"/>.
+            Build tooltip text on weight <paramref name="pawn"/> that carries.
             </summary>
-            <param name="pawn"> Selected pawn. </param>
-            <returns> Tooltip text. </returns>
+            <param name="pawn"> Pawn who carries weight. </param>
+            <returns> A tooltip text on weight <paramref name="pawn"/> carries. </returns>
         </member>
         <member name="T:AwesomeInventory.UI.DrawGearTabWorker">
             <summary>
@@ -2701,9 +2701,9 @@
             </summary>
             <param name="inventoryHelper"> Instance of <paramref name="inventoryHelper"/> to register. </param>
         </member>
-        <member name="M:AwesomeInventory.ServiceRegistration.RegisterIDrawHelper(AwesomeInventory.UI.IDrawHelper)">
+        <member name="M:AwesomeInventory.ServiceRegistration.RegisterIDrawHelper(AwesomeInventory.UI.DrawHelper)">
             <summary>
-            Register <see cref="T:AwesomeInventory.UI.IDrawHelper"/>.
+            Register <see cref="T:AwesomeInventory.UI.DrawHelper"/>.
             </summary>
             <param name="drawHelper"> Instance of <paramref name="drawHelper"/> to register. </param>
         </member>

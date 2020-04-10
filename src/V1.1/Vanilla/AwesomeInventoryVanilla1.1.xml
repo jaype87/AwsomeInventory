@@ -12,18 +12,6 @@
             Initializes a new instance of the <see cref="T:AwesomeInventory.UI.AwesomeInventoryTab"/> class.
             </summary>
         </member>
-        <member name="T:AwesomeInventory.UI.DrawHelper">
-            <summary>
-            A helper class for drawing in game.
-            It only consists of member methods while <see cref="T:AwesomeInventory.UI.DrawUtility"/> only has static methods.
-            </summary>
-        </member>
-        <member name="M:AwesomeInventory.UI.DrawHelper.TooltipTextFor(Verse.Thing,System.Boolean)">
-            <inheritdoc/>
-        </member>
-        <member name="M:AwesomeInventory.UI.DrawHelper.WeightTextFor(Verse.Pawn)">
-            <inheritdoc/>
-        </member>
         <member name="T:AwesomeInventory.Utilities.InventoryHelper">
             <summary>
             Helper class for inventory management.

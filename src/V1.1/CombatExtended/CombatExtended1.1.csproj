@@ -124,7 +124,7 @@
     <Compile Include="DefOfs\CEApparelLayerDefOf.cs" />
     <Compile Include="GeatTab\AwesomeInventoryTab.cs" />
     <Compile Include="GeatTab\CEGearTabWorker.cs" />
-    <None Include="Utilities\Utility_DrawCE.cs" />
+    <Compile Include="Utilities\DrawHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="packages.config" />
   </ItemGroup>
