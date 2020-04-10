@@ -5,12 +5,12 @@
 
 using System;
 using System.Linq;
-using AwesomeInventory.Jobs;
+using AwesomeInventory.Loadout;
 using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace AwesomeInventory.Loadout
+namespace AwesomeInventory.Jobs
 {
     /// <summary>
     /// Gives out a job if a proper apparel is found on the map.

@@ -81,6 +81,12 @@
     <Compile Include="Jobs\JobDriver_AwesomeInventory_Dress.cs" />
     <Compile Include="Jobs\JobDriver_AwesomeInventory_Undress.cs" />
     <Compile Include="Jobs\JobDriver_AwesomeInventory_Unload.cs" />
+    <Compile Include="Jobs\JobGiver_AwesomeInventory_FindApparels.cs" />
+    <Compile Include="Jobs\JobGiver_AwesomeInventory_FindItems.cs" />
+    <Compile Include="Jobs\JobGiver_AwesomeInventory_FindWeapon.cs" />
+    <Compile Include="Jobs\JobGiver_AwesomeInventory_OpportunisticHaul.cs" />
+    <Compile Include="Jobs\JobGiver_AwesomeInventory_TakeArm.cs" />
+    <Compile Include="Jobs\JobGiver_FindItemByRadius.cs" />
     <Compile Include="Loadout\AwesomeInventoryLoadout.cs" />
     <Compile Include="Loadout\GenericThingSelector.cs" />
     <Compile Include="Loadout\SingleThingSelector.cs" />

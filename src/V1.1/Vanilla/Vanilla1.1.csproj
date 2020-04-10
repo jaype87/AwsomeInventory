@@ -83,12 +83,6 @@
     <Compile Include="HarmonyPatches\ThingOwner_RPGI_Patch.cs" />
     <Compile Include="Helpers\DrawHelper.cs" />
     <Compile Include="Helpers\InventoryHelper.cs" />
-    <Compile Include="Jobs\JobGiver_AwesomeInventory_FindApparels.cs" />
-    <Compile Include="Jobs\JobGiver_AwesomeInventory_FindItems.cs" />
-    <Compile Include="Jobs\JobGiver_AwesomeInventory_FindWeapon.cs" />
-    <Compile Include="Jobs\JobGiver_AwesomeInventory_TakeArm.cs" />
-    <Compile Include="Jobs\JobGiver_FindItemByRadius.cs" />
-    <Compile Include="Jobs\JobGiver_AwesomeInventory_OpportunisticHaul.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\VanillaServicesRegistration.cs" />
     <None Include="ClassDiagram1.cd" />
