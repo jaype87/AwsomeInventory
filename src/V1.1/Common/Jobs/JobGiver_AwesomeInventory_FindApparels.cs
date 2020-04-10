@@ -27,6 +27,9 @@ namespace AwesomeInventory.Jobs
         protected override Job TryGiveJob(Pawn pawn)
         {
             ValidateArg.NotNull(pawn, nameof(pawn));
+#if DEBUG
+            Log.Message(pawn.Name + "Looking for apparels");
+#endif
 
             CompAwesomeInventoryLoadout ailoadout = ((ThingWithComps)pawn).TryGetComp<CompAwesomeInventoryLoadout>();
 
@@ -49,18 +52,26 @@ namespace AwesomeInventory.Jobs
             {
                 if (groupSelector.AllowedThing.IsApparel)
                 {
-                    Apparel targetA =
+                    Thing targetA =
                         _parent.FindItem(
                             pawn
                             , pawn.Map.listerThings.ThingsInGroup(ThingRequestGroup.Apparel)
                             , (thing) => groupSelector.Allows(thing, out _)
-                              &&
-                              !ailoadout.Loadout.IncludedInBlacklist(thing))
-                        as Apparel;
+                                         &&
+                                         !ailoadout.Loadout.IncludedInBlacklist(thing));
 
                     if (targetA != null)
                     {
-                        return new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, targetA, false);
+                        Job job = new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, targetA, false);
+                        if (pawn.Reserve(targetA, job, errorOnFailed: false))
+                        {
+                            return job;
+                        }
+                        else
+                        {
+                            JobMaker.ReturnToPool(job);
+                            return null;
+                        }
                     }
                 }
             }

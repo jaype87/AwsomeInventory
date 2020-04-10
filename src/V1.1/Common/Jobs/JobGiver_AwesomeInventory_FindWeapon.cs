@@ -16,7 +16,7 @@ using Verse.AI;
 namespace AwesomeInventory.Jobs
 {
     /// <summary>
-    /// Find weapon that fits the whitelist of loadout.
+    /// Find weapon that fits the wishlist of loadout.
     /// </summary>
     public class JobGiver_AwesomeInventory_FindWeapon : ThinkNode_JobGiver
     {
@@ -29,6 +29,9 @@ namespace AwesomeInventory.Jobs
         /// <returns> A job assigned to <paramref name="pawn"/>. </returns>
         protected override Job TryGiveJob(Pawn pawn)
         {
+#if DEBUG
+            Log.Message(pawn.Name + "Looking for weapons");
+#endif
             ValidateArg.NotNull(pawn, nameof(pawn));
 
             if (!pawn.Faction.IsPlayer)
@@ -83,17 +86,27 @@ namespace AwesomeInventory.Jobs
                     {
                         if (pair.Key.AllowedThing.IsWeapon)
                         {
-                            ThingWithComps targetThingA =
+                            Thing targetThingA =
                                 _parent.FindItem(
                                     pawn
                                     , pawn.Map.listerThings.ThingsInGroup(ThingRequestGroup.Weapon)
                                     , (thing) => pair.Key.Allows(thing, out _)
-                                      &&
-                                      !compLoadout.Loadout.IncludedInBlacklist(thing))
-                                as ThingWithComps;
+                                                 &&
+                                                 !compLoadout.Loadout.IncludedInBlacklist(thing));
 
                             if (targetThingA != null)
-                                return JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_MapEquip, targetThingA);
+                            {
+                                Job job = JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_MapEquip, targetThingA);
+                                if (pawn.Reserve(targetThingA, job, errorOnFailed: false))
+                                {
+                                    return job;
+                                }
+                                else
+                                {
+                                    JobMaker.ReturnToPool(job);
+                                    return null;
+                                }
+                            }
                         }
                     }
                 }

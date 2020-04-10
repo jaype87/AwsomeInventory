@@ -2,7 +2,7 @@
 
 <Defs>
     <ThingDef ParentName="ResourceBase">
-        <defName>RPGIGenericResource</defName>
+        <defName>AwesomeInventoryGenericResource</defName>
         <label>generic</label>
         <description>Panacea, one solution to all problems</description>
         <useHitPoints>false</useHitPoints>
@@ -10,17 +10,16 @@
             <MarketValue>0</MarketValue>
             <Mass>0</Mass>
         </statBases>
-        <thingCategories>
-            <li>ResourcesRaw</li>
-        </thingCategories>
         <stuffProps>
             <categories>
             </categories>
-            <commonality>1</commonality>
+            <commonality>0</commonality>
             <color>(160,178,181)</color>
             <statFactors>
             </statFactors>
         </stuffProps>
         <tradeability>None</tradeability>
+        <alwaysHaulable>false</alwaysHaulable>
+        <designateHaulable>false</designateHaulable>
     </ThingDef>
 </Defs>

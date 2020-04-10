@@ -65,7 +65,7 @@ namespace AwesomeInventory.Loadout
         {
             ValidateArg.NotNull(thing, nameof(thing));
 
-            return _thingFilter.Allows(thing);
+            return _thingFilter.Allows(thing.GetInnerIfMinified());
         }
 
         /// <summary>

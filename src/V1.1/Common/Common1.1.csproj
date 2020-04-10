@@ -103,7 +103,7 @@
     <Compile Include="Components\GameComponents\DefManager.cs" />
     <Compile Include="Components\GameComponents\LoadoutManager.cs" />
     <Compile Include="DefOfs\AwesomeInventoryBodyPartGroupDefOf.cs" />
-    <Compile Include="DefOfs\RPGI_StuffDefOf.cs" />
+    <Compile Include="DefOfs\AwesomeInventoryStuffDefOf.cs" />
     <Compile Include="DynamicDefs\AIGenericDef.cs" />
     <Compile Include="DynamicDefs\AIGenericDrugs.cs" />
     <Compile Include="DynamicDefs\AIGenericMeal.cs" />
@@ -203,6 +203,7 @@
     <Compile Include="UnitTest\UI\UnitTestButton.cs" />
     <Compile Include="Utilities\DefUtility.cs" />
     <Compile Include="Utilities\GenBar.cs" />
+    <Compile Include="Plugins\CustomRace.cs" />
     <Compile Include="Utilities\RectUtility.cs" />
     <Compile Include="Utilities\WidgetRowUtility.cs" />
     <Compile Include="Utilities\Utility.cs" />

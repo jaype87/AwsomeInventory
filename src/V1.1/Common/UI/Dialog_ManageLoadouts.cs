@@ -164,7 +164,7 @@ namespace AwesomeInventory.UI
             Rect nameFieldRect = new Rect(
                 0,
                 0,
-                useableSize.x - buttonRow.FinalX - GenUI.GapWide,
+                buttonRow.FinalX - WidgetRow.DefaultGap,
                 GenUI.SmallIconSize);
 
             Rect whiteBlackListRect = new Rect(
@@ -200,7 +200,7 @@ namespace AwesomeInventory.UI
             this.DrawWhiteBlackListOptions(whiteBlackListRect);
             this.DrawLoadoutNameField(nameFieldRect);
 
-            if (WhiteBlacklistView.IsWhitelist)
+            if (WhiteBlacklistView.IsWishlist)
                 this.DrawItemsInLoadout(loadoutItemsRect, _currentLoadout);
             else
                 this.DrawItemsInLoadout(loadoutItemsRect, _currentLoadout.BlackList);
@@ -312,7 +312,7 @@ namespace AwesomeInventory.UI
         }
 
         /// <summary>
-        /// Draw whitelist/blacklist choice on screen.
+        /// Draw wishlist/blacklist choice on screen.
         /// </summary>
         /// <param name="canvas"> Rect for drawing. </param>
         protected virtual void DrawWhiteBlackListOptions(Rect canvas)
@@ -322,23 +322,23 @@ namespace AwesomeInventory.UI
             WidgetRow widgetRow = new WidgetRow(centeredRect.x, centeredRect.y, UIDirection.RightThenDown);
 
             if (widgetRow.ButtonIcon(TexResource.TriangleLeft))
-                WhiteBlacklistView.IsWhitelist ^= true;
+                WhiteBlacklistView.IsWishlist ^= true;
 
 #pragma warning disable SA1118 // Parameter should not span multiple lines
             Text.Anchor = TextAnchor.MiddleCenter;
             widgetRow.LabelWithHighlight(
-                WhiteBlacklistView.IsWhitelist
-                    ? WhiteBlacklistView.WhitelistDisplayName
+                WhiteBlacklistView.IsWishlist
+                    ? WhiteBlacklistView.WishlistDisplayName
                     : WhiteBlacklistView.BlacklistDisplayName
-                , WhiteBlacklistView.IsWhitelist
-                    ? UIText.WhitelistTooltip.TranslateSimple()
+                , WhiteBlacklistView.IsWishlist
+                    ? UIText.WishlistTooltip.TranslateSimple()
                     : UIText.BlacklistTooltip.TranslateSimple()
                 , DrawUtility.TwentyCharsWidth);
             Text.Anchor = TextAnchor.UpperLeft;
 #pragma warning restore SA1118 // Parameter should not span multiple lines
 
             if (widgetRow.ButtonIcon(TexResource.TriangleRight))
-                WhiteBlacklistView.IsWhitelist ^= true;
+                WhiteBlacklistView.IsWishlist ^= true;
         }
 
         /// <summary>
@@ -368,11 +368,11 @@ namespace AwesomeInventory.UI
                             }
                             else
                             {
-                                Rect msgRect = new Rect(Vector2.zero, Text.CalcSize(ErrorMessage.TryToDeleteLastLoadout.Translate()))
+                                Rect msgRect = new Rect(Vector2.zero, Text.CalcSize(UIText.TryToDeleteLastLoadout.TranslateSimple()))
                                                 .ExpandedBy(50);
                                 Find.WindowStack.Add(
                                     new Dialog_InstantMessage(
-                                        ErrorMessage.TryToDeleteLastLoadout.Translate(), msgRect.size, UIText.OK.Translate())
+                                        UIText.TryToDeleteLastLoadout.TranslateSimple(), msgRect.size, UIText.OK.TranslateSimple())
                                     {
                                         windowRect = msgRect,
                                     });
@@ -455,7 +455,7 @@ namespace AwesomeInventory.UI
             Text.Anchor = TextAnchor.MiddleLeft;
 
             // Draw count field.
-            if (WhiteBlacklistView.IsWhitelist)
+            if (WhiteBlacklistView.IsWishlist)
             {
                 this.DrawCountField(
                 new Rect(widgetRow.FinalX - WidgetRow.IconSize * 2 - WidgetRow.DefaultGap, widgetRow.FinalY, WidgetRow.IconSize * 2, GenUI.ListSpacing),
@@ -670,7 +670,7 @@ namespace AwesomeInventory.UI
                         groupSelector.SetStackCount(1);
                         groupSelector.Add(thingSelector);
 
-                        if (WhiteBlacklistView.IsWhitelist)
+                        if (WhiteBlacklistView.IsWishlist)
                             _currentLoadout.Add(groupSelector);
                         else
                             _currentLoadout.AddToBlacklist(groupSelector);
@@ -696,15 +696,15 @@ namespace AwesomeInventory.UI
 
         private class WhiteBlacklistView : IReset
         {
-            public static readonly string WhitelistDisplayName = UIText.Whitelist.TranslateSimple();
+            public static readonly string WishlistDisplayName = UIText.Wishlist.TranslateSimple();
 
             public static readonly string BlacklistDisplayName = UIText.Blacklist.TranslateSimple();
 
-            public static bool IsWhitelist { get; set; } = true;
+            public static bool IsWishlist { get; set; } = true;
 
             public void Reset()
             {
-                IsWhitelist = true;
+                IsWishlist = true;
             }
         }
 

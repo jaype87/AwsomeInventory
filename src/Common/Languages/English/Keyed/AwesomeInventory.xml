@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-
-    <SandyMassValue> {0} / {1} kg</SandyMassValue>
-    <Sandy_ViewList>Show list</Sandy_ViewList>
-    
-    
-
-    <Corgi_KeepOldApparel>and keep old apparel</Corgi_KeepOldApparel>
-    <Corgi_RPGStyleInventoryRemake>RPG Style Inventory Remake</Corgi_RPGStyleInventoryRemake>
-    <Corgi_ToggleGearTab>Toggle Gear Tab</Corgi_ToggleGearTab>
-
     <!-- Inventory Window -->
     <AwesomeInventory_Belt>Belt</AwesomeInventory_Belt>
     <AwesomeInventory_ExtraApparels>Extra Equipped Apparels</AwesomeInventory_ExtraApparels>
@@ -26,7 +16,6 @@
 
     <!-- Loadout Window -->
     <AwesomeInventory_Assorted>Assorted {0}</AwesomeInventory_Assorted>
-    <AwesomeInventory_AutoEquipWeapon>Automatically equip weapon</AwesomeInventory_AutoEquipWeapon>
     <AwesomeInventory_DisplayName>Awesome Inventory</AwesomeInventory_DisplayName>
     <AwesomeInventory_Blacklist>Blacklist</AwesomeInventory_Blacklist>
     <AwesomeInventory_CantUnloadIncapableManipulation>Pawn can't perform unload action due to incapable of manipulation.</AwesomeInventory_CantUnloadIncapableManipulation>
@@ -36,6 +25,7 @@
     <AwesomeInventory_Customize>Customize</AwesomeInventory_Customize>
     <AwesomeInventory_DeleteLoadout>Delete Loadout</AwesomeInventory_DeleteLoadout>
     <AwesomeInventory_DragToReorder>Drag to reorder</AwesomeInventory_DragToReorder>
+    <AwesomeInventory_LoadoutName>{0}'s Loadout</AwesomeInventory_LoadoutName>
     <AwesomeInventory_MouseOverNumbersForDetails>Mouse over number for details</AwesomeInventory_MouseOverNumbersForDetails>
     <AwesomeInventory_NewLoadout>New Loadout</AwesomeInventory_NewLoadout>
     <AwesomeInventory_NoLoadout>No Loadout</AwesomeInventory_NoLoadout>
@@ -45,6 +35,7 @@
     <AwesomeInventory_PreviewQuality>Preview Quality: </AwesomeInventory_PreviewQuality>
     <AwesomeInventory_SelectLoadout>Select Loadout</AwesomeInventory_SelectLoadout>
     <AwesomeInventory_SourceAllTip>All items</AwesomeInventory_SourceAllTip>
+    <AwesomeInventory_SourceApparelTip>Apparels</AwesomeInventory_SourceApparelTip>
     <AwesomeInventory_SourceFilterTip>Filter</AwesomeInventory_SourceFilterTip>
     <AwesomeInventory_SourceGenericTip>Generic items</AwesomeInventory_SourceGenericTip>
     <AwesomeInventory_SourceMeleeTip>Melee weapons</AwesomeInventory_SourceMeleeTip>
@@ -53,15 +44,9 @@
     <AwesomeInventory_Separate>Separate</AwesomeInventory_Separate>
     <AwesomeInventory_SelectorStuff>Selected Stuff</AwesomeInventory_SelectorStuff>
     <AwesomeInventory_StuffSource>Stuff Source</AwesomeInventory_StuffSource>
-    <AwesomeInventory_UseLoadout>Use Loadout</AwesomeInventory_UseLoadout>
+    <AwesomeInventory_TryToDeleteLastLoadout>Cannot delete the last loadout</AwesomeInventory_TryToDeleteLastLoadout>
     <AwesomeInventory_Weight>Weight</AwesomeInventory_Weight>
-    <AwesomeInventory_Whitelist>Whitelist</AwesomeInventory_Whitelist>
-
-    <AwesomeInventory_LoadoutName>{0}'s Loadout</AwesomeInventory_LoadoutName>
-    <Corgi_EmptyLoadoutName>Nothing</Corgi_EmptyLoadoutName>
-    <Corgi_ManageLoadouts>Manage Loadouts</Corgi_ManageLoadouts>
-    <Corgi_ForcedHold>Forced holding</Corgi_ForcedHold>
-    <Corgi_TryToDeleteLastLoadout>Cannot delete the last loadout</Corgi_TryToDeleteLastLoadout>
+    <AwesomeInventory_Wishlist>Wishlist</AwesomeInventory_Wishlist>
   
     <!-- Labels -->
     <AwesomeInventory_GenericMeal_Label>Generic Meals</AwesomeInventory_GenericMeal_Label>
@@ -70,19 +55,17 @@
     <AwesomeInventory_AIGenericMedicine_Label>Generic Medicine</AwesomeInventory_AIGenericMedicine_Label>
 
     <!-- Descriptions -->
-    <AwesomeInventory_AIGenericMeal_Description>
-        Placeholder for any perishable meals. Intended for compatibility with pawns automatically picking up a meal for themself. It has the same mass as a fine meal.
-    </AwesomeInventory_AIGenericMeal_Description>
-    <AwesomeInventory_AIGenericRawFood_Description>
-        Placeholder for any raw food.  Intended for compatibility with pawns automatically picking up raw food to train animals.
-    </AwesomeInventory_AIGenericRawFood_Description>
-    <AwesomeInventory_AIGenericDrugs_Description>
-        Placeholder for any drugs. It includes medical drugs and has the same mass as Flake.
-    </AwesomeInventory_AIGenericDrugs_Description>
-    <AwesomeInventory_AIGenericMedicine_Description>
-        Placeholder for any medicine. Most commonly used by doctors.
-    </AwesomeInventory_AIGenericMedicine_Description>
+    <AwesomeInventory_AIGenericMeal_Description>Placeholder for any perishable meals. Intended for compatibility with pawns automatically picking up a meal for themself. It has the same mass as a fine meal.</AwesomeInventory_AIGenericMeal_Description>
+    <AwesomeInventory_AIGenericRawFood_Description>Placeholder for any raw food.  Intended for compatibility with pawns automatically picking up raw food to train animals.</AwesomeInventory_AIGenericRawFood_Description>
+    <AwesomeInventory_AIGenericDrugs_Description>Placeholder for any drugs. It includes medical drugs and has the same mass as Flake.</AwesomeInventory_AIGenericDrugs_Description>
+    <AwesomeInventory_AIGenericMedicine_Description>Placeholder for any medicine. Most commonly used by doctors.</AwesomeInventory_AIGenericMedicine_Description>
     
+    <!-- Mod settings -->
+    <AwesomeInventory_AutoEquipWeapon>Automatically equip weapon</AwesomeInventory_AutoEquipWeapon>
+    <AwesomeInventory_UseGearTabToggle>Use gear tab gizmo/toggle</AwesomeInventory_UseGearTabToggle>
+    <AwesomeInventory_UseLoadout>Use Loadout</AwesomeInventory_UseLoadout>
+    <AwesomeInventory_ToggleGearTab>Toggle Gear Tab</AwesomeInventory_ToggleGearTab>
+
     <!-- Option texts on context menu -->
     <AwesomeInventory_Default>Awesome Inventory Default</AwesomeInventory_Default>
     <AwesomeInventory_Equip>Equip {0} and keep the retired</AwesomeInventory_Equip>
@@ -95,12 +78,13 @@
     <!-- Tooltips -->
     <AwesomeInventory_Ascetic>Ascetic</AwesomeInventory_Ascetic>
     <AwesomeInventory_AutoEquipWeaponTooltip>Allows Awesome Inventory choose and equip weapons for unarmed pawns.</AwesomeInventory_AutoEquipWeaponTooltip>
-    <AwesomeInventory_BlacklistTooltip>Items that fit in blacklist will not be considered for the Whitelist. Blacklist will not come into effect if items in it do not fit the Whitelist.</AwesomeInventory_BlacklistTooltip>
+    <AwesomeInventory_BlacklistTooltip>Items that fit in blacklist will not be considered for the Wishlist. Blacklist will not come into effect if items in it do not fit the Wishlist.</AwesomeInventory_BlacklistTooltip>
     <AwesomeInventory_CurrentTemperature>Current Temperature</AwesomeInventory_CurrentTemperature>
     <AwesomeInventory_PreviewQuality_Tooltip>Choose quality level for preview item. </AwesomeInventory_PreviewQuality_Tooltip>
     <AwesomeInventory_Separate_Tooltip>Set quality and hit points for each selected stuff separately.</AwesomeInventory_Separate_Tooltip>
+    <AwesomeInventory_UseGearTabToggleTooltip>Gear tab toggle allows users to bind hotkey to open the gear tab.</AwesomeInventory_UseGearTabToggleTooltip>
     <AwesomeInventory_UseLoadoutTooltip>Use the loadout system provided by Awesome Inventory.</AwesomeInventory_UseLoadoutTooltip>
-    <AwesomeInventory_WhitelistTooltip>Pawn will actively looking for items in the Whitelist.</AwesomeInventory_WhitelistTooltip>
+    <AwesomeInventory_WishlistTooltip>Pawn will actively looking for items in the Wishlist.</AwesomeInventory_WishlistTooltip>
 
     <!-- Messages -->
     <AwesomeInventory_FailToDrop>{0} failed to drop {1}</AwesomeInventory_FailToDrop>

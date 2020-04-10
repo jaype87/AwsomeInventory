@@ -21,6 +21,7 @@ namespace AwesomeInventory.Loadout
     public class SingleThingSelector : ThingSelector, IEquatable<SingleThingSelector>
     {
         private ThingDef _allowedStuff;
+        private Thing _thingSample;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SingleThingSelector"/> class.
@@ -103,10 +104,13 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         public Thing ThingSample
         {
-            get =>
-                this.AllowedThing.HasComp(typeof(CompQuality))
-                ? new ThingStuffPairWithQuality(this.AllowedThing, this.AllowedStuff, _thingFilter.AllowedQualityLevels.min).MakeThingWithoutID()
-                : new ThingStuffPair(this.AllowedThing, this.AllowedStuff).MakeThingWithoutID();
+            get
+            {
+                if (_dirty)
+                    this.UpdateReadout();
+
+                return _thingSample;
+            }
         }
 
         /// <summary>
@@ -160,6 +164,7 @@ namespace AwesomeInventory.Loadout
         public void SetStuff(ThingDef stuffDef)
         {
             _allowedStuff = stuffDef;
+            _dirty = true;
         }
 
         /// <summary>
@@ -176,8 +181,9 @@ namespace AwesomeInventory.Loadout
         {
             ValidateArg.NotNull(thing, nameof(thing));
 
-            return _thingFilter.Allows(thing)
-                && (_allowedStuff == null ? true : _allowedStuff.shortHash == thing.Stuff.shortHash);
+            Thing innerThing = thing.GetInnerIfMinified();
+            return _thingFilter.Allows(innerThing)
+                && (_allowedStuff == null ? true : _allowedStuff.shortHash == innerThing.Stuff.shortHash);
         }
 
         /// <inheritdoc />
@@ -211,6 +217,18 @@ namespace AwesomeInventory.Loadout
         {
             base.ExposeData();
             Scribe_Defs.Look(ref _allowedStuff, nameof(_allowedStuff));
+        }
+
+        /// <summary>
+        /// Update readout for this selector when quality level, hit point percentage or stuff source is changed.
+        /// </summary>
+        protected virtual void UpdateReadout()
+        {
+            _thingSample = this.AllowedThing.HasComp(typeof(CompQuality))
+                ? new ThingStuffPairWithQuality(this.AllowedThing, this.AllowedStuff, _thingFilter.AllowedQualityLevels.min).MakeThingWithoutID()
+                : new ThingStuffPair(this.AllowedThing, this.AllowedStuff).MakeThingWithoutID();
+
+            _dirty = false;
         }
 
         /// <summary>

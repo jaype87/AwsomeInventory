@@ -41,12 +41,15 @@ namespace AwesomeInventory.HarmonyPatches
                 yield return gizmo;
             }
 
-            if (Find.Selector.SingleSelectedThing is Pawn pawn && pawn.IsColonist)
+            if (AwesomeInvnetoryMod.Settings.UseToggleGizmo)
             {
-                if (AwesomeInventoryServiceProvider.TryGetImplementation<AwesomeInventoryTabBase>(out AwesomeInventoryTabBase tab))
+                if (Find.Selector.SingleSelectedThing is Pawn pawn && pawn.IsColonist)
                 {
-                    ToggleGearTab toggleGearTab = new ToggleGearTab(tab.GetType());
-                    yield return toggleGearTab;
+                    if (AwesomeInventoryServiceProvider.TryGetImplementation<AwesomeInventoryTabBase>(out AwesomeInventoryTabBase tab))
+                    {
+                        ToggleGearTab toggleGearTab = new ToggleGearTab(tab.GetType());
+                        yield return toggleGearTab;
+                    }
                 }
             }
         }

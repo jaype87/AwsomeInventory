@@ -73,9 +73,13 @@ namespace AwesomeInventory.Jobs
                                 _parent.FindItem(
                                     pawn
                                     , thingList
-                                    , (thing) => groupSelector.Allows(thing, out _)
-                                       &&
-                                       !aiLoadout.Loadout.IncludedInBlacklist(thing));
+                                    , (thing) =>
+                                    {
+                                        Thing innerThing = thing.GetInnerIfMinified();
+                                        return groupSelector.Allows(innerThing, out _)
+                                               &&
+                                               !aiLoadout.Loadout.IncludedInBlacklist(innerThing);
+                                    });
 
                             if (foundThing != null)
                                 break;
@@ -85,13 +89,39 @@ namespace AwesomeInventory.Jobs
                     }
                     else
                     {
-                        targetA =
+                        if (groupSelector.AllowedThing.Minifiable)
+                        {
+                            // There is a bug if add minifiedThings to searchSet by searchSet.AddRange() or searchSet.Add()
+                            IEnumerable<Thing> minifiedThings = pawn.Map.listerThings.ThingsInGroup(ThingRequestGroup.MinifiedThing)
+                                .Where(t => (t as MinifiedThing).InnerThing.def == groupSelector.AllowedThing);
+
+                            targetA =
+                            _parent.FindItem(
+                                pawn
+                                , minifiedThings
+                                , (thing) =>
+                                {
+                                    Thing innerThing = thing.GetInnerIfMinified();
+                                    return groupSelector.Allows(innerThing, out _)
+                                           &&
+                                           !aiLoadout.Loadout.IncludedInBlacklist(innerThing);
+                                });
+                        }
+
+                        if (targetA == null)
+                        {
+                            targetA =
                             _parent.FindItem(
                                 pawn
                                 , pawn.Map.listerThings.ThingsOfDef(groupSelector.AllowedThing)
-                                , (thing) => groupSelector.Allows(thing, out _)
-                                  &&
-                                  !aiLoadout.Loadout.IncludedInBlacklist(thing));
+                                , (thing) =>
+                                {
+                                    Thing innerThing = thing.GetInnerIfMinified();
+                                    return groupSelector.Allows(innerThing, out _)
+                                           &&
+                                           !aiLoadout.Loadout.IncludedInBlacklist(innerThing);
+                                });
+                        }
                     }
 
                     if (targetA != null)

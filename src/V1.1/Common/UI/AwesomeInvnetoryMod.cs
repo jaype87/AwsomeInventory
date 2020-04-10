@@ -55,6 +55,7 @@ namespace AwesomeInventory
 
             listingStandard.CheckboxLabeled(UIText.UseLoadout.TranslateSimple(), ref _settings.UseLoadout, UIText.UseLoadoutTooltip.TranslateSimple());
             listingStandard.CheckboxLabeled(UIText.AutoEquipWeapon.TranslateSimple(), ref _settings.AutoEquipWeapon, UIText.AutoEquipWeaponTooltip.TranslateSimple());
+            listingStandard.CheckboxLabeled(UIText.UseGearTabToggle.TranslateSimple(), ref _settings.UseToggleGizmo, UIText.UseGearTabToggleTooltip.TranslateSimple());
 
             listingStandard.NewColumn();
             this.DrawQualityColorScrollableList(listingStandard);
@@ -70,6 +71,21 @@ namespace AwesomeInventory
         public override string SettingsCategory()
         {
             return UIText.AwesomeInventoryDisplayName.TranslateSimple();
+        }
+
+        private static string TooltipForQualityColor(QualityColor qualityColor)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("Legendary".Colorize(qualityColor.Legendary));
+            stringBuilder.AppendLine("Masterwork".Colorize(qualityColor.Masterwork));
+            stringBuilder.AppendLine("Excellent".Colorize(qualityColor.Excellent));
+            stringBuilder.AppendLine("Good".Colorize(qualityColor.Good));
+            stringBuilder.AppendLine("Normal".Colorize(qualityColor.Normal));
+            stringBuilder.AppendLine("Poor".Colorize(qualityColor.Poor));
+            stringBuilder.AppendLine("Awful".Colorize(qualityColor.Awful));
+            stringBuilder.AppendLine("Generic".Colorize(qualityColor.Generic));
+
+            return stringBuilder.ToString();
         }
 
         private void DrawQualityColorScrollableList(Listing_Standard listingStandard)
@@ -101,28 +117,13 @@ namespace AwesomeInventory
                 }
 
                 Widgets.DrawHighlightIfMouseover(optionRect);
-                TooltipHandler.TipRegion(optionRect, this.TooltipForQualityColor(qualityColor));
+                TooltipHandler.TipRegion(optionRect, TooltipForQualityColor(qualityColor));
 
                 rollingY += GenUI.ListSpacing;
             }
 
             Text.Anchor = TextAnchor.UpperLeft;
             Widgets.EndScrollView();
-        }
-
-        private string TooltipForQualityColor(QualityColor qualityColor)
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("Legendary".Colorize(qualityColor.Legendary));
-            stringBuilder.AppendLine("Masterwork".Colorize(qualityColor.Masterwork));
-            stringBuilder.AppendLine("Excellent".Colorize(qualityColor.Excellent));
-            stringBuilder.AppendLine("Good".Colorize(qualityColor.Good));
-            stringBuilder.AppendLine("Normal".Colorize(qualityColor.Normal));
-            stringBuilder.AppendLine("Poor".Colorize(qualityColor.Poor));
-            stringBuilder.AppendLine("Awful".Colorize(qualityColor.Awful));
-            stringBuilder.AppendLine("Generic".Colorize(qualityColor.Generic));
-
-            return stringBuilder.ToString();
         }
     }
 }

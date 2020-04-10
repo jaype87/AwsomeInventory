@@ -28,6 +28,9 @@ namespace AwesomeInventory.Jobs
         /// <returns> A job assigned to <paramref name="pawn"/>. </returns>
         protected override Job TryGiveJob(Pawn pawn)
         {
+#if DEBUG
+            Log.Message(pawn.Name + "Take arm");
+#endif
             if (!AwesomeInvnetoryMod.Settings.AutoEquipWeapon)
             {
                 return null;

@@ -20,6 +20,11 @@ namespace AwesomeInventory.Loadout
         : IExposable, IEquatable<ThingSelector>
     {
         /// <summary>
+        /// True if stuff source, quality level or hit point percentage has changed since last read.
+        /// </summary>
+        protected bool _dirty = true;
+
+        /// <summary>
         /// Only its <see cref="ThingFilter.AllowedThingDefs"/>, <see cref="ThingFilter.AllowedQualityLevels"/>
         /// and <see cref="ThingFilter.AllowedHitPointsPercents"/> are used for filter purpose.
         /// </summary>
@@ -173,6 +178,7 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         private void QualityAndHitpointsChangedCallback()
         {
+            _dirty = true;
             _qualityAndHitpointsChangedCallback?.Invoke(_thingFilter);
         }
     }

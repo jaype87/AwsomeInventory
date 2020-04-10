@@ -178,27 +178,35 @@ namespace AwesomeInventory.UI
 
         public const string StuffSource = "AwesomeInventory_StuffSource";
 
+        public const string ToggleGearTab = "AwesomeInventory_ToggleGearTab";
+
         public const string TorsoMiddleLayer = "AwesomeInventory_TorsoMiddle";
 
         public const string TorsoOnSkinLayer = "AwesomeInventory_TorsoOnSkin";
 
         public const string TorsoShellLayer = "AwesomeInventory_TorsoShell";
 
+        public const string TryToDeleteLastLoadout = "AwesomeInventory_TryToDeleteLastLoadout";
+
         public const string Weight = "AwesomeInventory_Weight";
 
-        public const string Whitelist = "AwesomeInventory_Whitelist";
+        public const string Wishlist = "AwesomeInventory_Wishlist";
 
-        public const string WhitelistTooltip = "AwesomeInventory_WhitelistTooltip";
+        public const string WishlistTooltip = "AwesomeInventory_WishlistTooltip";
 
         public const string OutfitAnything = "OutfitAnything";
 
-        public const string SourceApparelTip = "SourceApparelTip";
+        public const string SourceApparelTip = "AwesomeInventory_SourceApparelTip";
 
         public const string TenCharsString = "AAAAAAAAAA";
 
         public const string Traits = "Traits";
 
         public const string UnloadNow = "AwesomeInventory_UnloadNow";
+
+        public const string UseGearTabToggle = "AwesomeInventory_UseGearTabToggle";
+
+        public const string UseGearTabToggleTooltip = "AwesomeInventory_UseGearTabToggleTooltip";
 
         public const string UseLoadout = "AwesomeInventory_UseLoadout";
 

@@ -364,9 +364,10 @@ namespace AwesomeInventory.Loadout
 
             foreach (Thing thing in things)
             {
-                ThingGroupSelector groupSelector = new ThingGroupSelector(thing.def);
-                groupSelector.SetStackCount(thing.stackCount);
-                groupSelector.Add(new SingleThingSelector(thing));
+                Thing innerThing = thing.GetInnerIfMinified();
+                ThingGroupSelector groupSelector = new ThingGroupSelector(innerThing.def);
+                groupSelector.SetStackCount(innerThing.stackCount);
+                groupSelector.Add(new SingleThingSelector(innerThing));
                 this.Add(groupSelector);
             }
         }

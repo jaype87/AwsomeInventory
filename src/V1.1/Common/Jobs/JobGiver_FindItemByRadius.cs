@@ -53,7 +53,7 @@ namespace AwesomeInventory.Jobs
         /// <summary>
         /// Universal validation.
         /// </summary>
-        protected Func<Pawn, Thing, bool> _validatorBase = (Pawn p, Thing x) => p.CanReserve(x) && !x.IsForbidden(p);
+        protected Func<Pawn, Thing, bool> _validatorBase = (Pawn p, Thing x) => p.CanReserve(x) && !x.IsForbidden(p) && x.IsSociallyProper(p);
 
         /// <summary>
         /// Gets the default starting index used for querying _radius.
@@ -123,7 +123,11 @@ namespace AwesomeInventory.Jobs
                     , PathEndMode.OnCell
                     , TraverseParms.For(pawn)
                     , _radius[_lastUsedRadiusIndex]
-                    , (Thing x) => _validatorBase(pawn, x) && (validator == null ? true : validator(x))
+                    , (Thing x) =>
+                    {
+                        Thing innerThing = x.GetInnerIfMinified();
+                        return _validatorBase(pawn, x) && (validator == null ? true : validator(innerThing));
+                    }
                     , priorityGetter);
                 if (thing == null)
                 {
