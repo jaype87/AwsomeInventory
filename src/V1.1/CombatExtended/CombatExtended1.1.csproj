@@ -121,17 +121,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefOfs\CEApparelLayerDefOf.cs" />
-    <None Include="FillTabOperationsCE.cs" />
     <Compile Include="GeatTab\AwesomeInventoryTab.cs" />
     <Compile Include="GeatTab\CEGearTabWorker.cs" />
-    <None Include="PawnModal.cs" />
     <None Include="Utilities\Utility_DrawCE.cs" />
-    <None Include="Jobs\JobDriver_Map_Equip.cs" />
-    <None Include="Jobs\JobDriver_RPGI_ApparelOptions.cs" />
-    <None Include="Jobs\JobDriver_RPGI_Unload.cs" />
-    <None Include="Jobs\JobGiver_RPGI_ApparelOptions.cs" />
-    <None Include="Freezer.cs" />
-    <None Include="RPG_GearTab_CE.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="packages.config" />
   </ItemGroup>
