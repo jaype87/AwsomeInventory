@@ -103,6 +103,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Base", "Base", "{75DB2C69-4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common1.1", "test\InGameTest\v1.1\Common1.1\Common1.1.csproj", "{F6C8A166-E195-4F3A-B7FA-135AA5BB4452}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChineseSimplified", "ChineseSimplified", "{2BE75905-230F-433B-B761-F965FB0349C7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{A5510120-6D54-4E98-B2CB-FCEA98F3120E}"
+	ProjectSection(SolutionItems) = preProject
+		src\Common\Languages\ChineseSimplified\Keyed\AwesomeInventory.xml = src\Common\Languages\ChineseSimplified\Keyed\AwesomeInventory.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ChineseTraditinal", "ChineseTraditinal", "{81E93C88-73B8-4DA8-8EF1-4D32EFDB56B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{AFC06769-C4C0-42AD-863C-E037F784EF25}"
+	ProjectSection(SolutionItems) = preProject
+		src\Common\Languages\ChineseTraditional\Keyed\AwesomeInventory.xml = src\Common\Languages\ChineseTraditional\Keyed\AwesomeInventory.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CE Build|Any CPU = CE Build|Any CPU
@@ -413,6 +427,10 @@ Global
 		{97365338-16D6-4866-952B-4D690C566FF9} = {67B30CA3-F17F-4EF8-97CD-AD1A505EDE16}
 		{75DB2C69-4DEA-4ABF-98DD-63F6F478A0D0} = {941AA2A5-00BA-49DB-9E65-59E4D9855E16}
 		{F6C8A166-E195-4F3A-B7FA-135AA5BB4452} = {75DB2C69-4DEA-4ABF-98DD-63F6F478A0D0}
+		{2BE75905-230F-433B-B761-F965FB0349C7} = {4D6226DB-4959-4742-B90B-2B55BBE2BC01}
+		{A5510120-6D54-4E98-B2CB-FCEA98F3120E} = {2BE75905-230F-433B-B761-F965FB0349C7}
+		{81E93C88-73B8-4DA8-8EF1-4D32EFDB56B0} = {4D6226DB-4959-4742-B90B-2B55BBE2BC01}
+		{AFC06769-C4C0-42AD-863C-E037F784EF25} = {81E93C88-73B8-4DA8-8EF1-4D32EFDB56B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DF3E1E8A-DA28-4614-BE77-C5C3D6CE2974}
