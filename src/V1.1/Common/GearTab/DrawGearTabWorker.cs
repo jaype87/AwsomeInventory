@@ -94,7 +94,7 @@ namespace AwesomeInventory.UI
         {
             ValidateArg.NotNull(selPawn, nameof(selPawn));
 
-            Rect outRect = new Rect(canvas.x, canvas.y, canvas.width, canvas.height - GenUI.ListSpacing);
+            Rect outRect = this.SetOutRectForJealousTab(canvas);
             Rect viewRect = outRect;
             viewRect.height = _scrollViewHeight;
             viewRect.width -= GenUI.ScrollBarWidth;
@@ -246,7 +246,7 @@ namespace AwesomeInventory.UI
                 ThingOwner<Thing> things = selPawn.inventory.innerContainer;
                 for (int i = 0; i < things.Count; i++)
                 {
-                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, things[i], true);
+                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, things[i]);
                 }
             }
             #endregion Draw Inventory
@@ -309,7 +309,7 @@ namespace AwesomeInventory.UI
                 Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Equipment.TranslateSimple());
                 foreach (ThingWithComps equipment in selPawn.equipment.AllEquipmentListForReading)
                 {
-                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, equipment, false);
+                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, equipment);
                 }
             }
 
@@ -320,7 +320,7 @@ namespace AwesomeInventory.UI
                                             orderby ap.def.apparel.bodyPartGroups[0].listOrder descending
                                             select ap)
                 {
-                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, apparel, false);
+                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, apparel);
                 }
             }
 
@@ -336,7 +336,7 @@ namespace AwesomeInventory.UI
                 ThingOwner<Thing> things = selPawn.inventory.innerContainer;
                 for (int i = 0; i < things.Count; i++)
                 {
-                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, things[i], true);
+                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, things[i]);
                 }
             }
 
@@ -432,7 +432,7 @@ namespace AwesomeInventory.UI
             GenBar.BarWithOverlay(
                 rect,
                 MassUtility.EncumbrancePercent(selPawn),
-                MassUtility.IsOverEncumbered(selPawn) ? AwesomeInventoryTex.ValvetTex as Texture2D : AwesomeInventoryTex.RMPrimaryTex as Texture2D,
+                MassUtility.IsOverEncumbered(selPawn) ? AwesomeInventoryTex.ValvetTex as Texture2D : AwesomeInventoryTex.RWPrimaryTex as Texture2D,
                 UIText.Weight.TranslateSimple(),
                 MassUtility.GearAndInventoryMass(selPawn).ToString("0.#") + "/" + MassUtility.Capacity(selPawn).ToStringMass(),
                 this.DrawHelper.WeightTextFor(selPawn));
@@ -599,8 +599,7 @@ namespace AwesomeInventory.UI
         /// <param name="y"> The yMax coordinate after the row is drawn. </param>
         /// <param name="width"> Width of this row. </param>
         /// <param name="thing"> Thing to draw. </param>
-        /// <param name="inventory"> Whether <paramref name="thing"/> is in inventory section. </param>
-        protected virtual void DrawThingRow(Pawn selPawn, ref float y, float width, Thing thing, bool inventory)
+        protected virtual void DrawThingRow(Pawn selPawn, ref float y, float width, Thing thing)
         {
             ValidateArg.NotNull(selPawn, nameof(selPawn));
             ValidateArg.NotNull(thing, nameof(thing));
@@ -610,54 +609,42 @@ namespace AwesomeInventory.UI
 
             WidgetRow row = new WidgetRow(xInfoButton, y, UIDirection.LeftThenDown, xInfoButton);
 
-            // Draw drop button.
-            if (this.ShowDropButton(selPawn, thing, inventory, out bool canDrop, out string tooltip))
+            if (selPawn.IsColonist)
             {
-                if (canDrop)
+                // Draw drop button.
+                if (row.ButtonIcon(TexResource.Drop, UIText.DropThing.TranslateSimple()))
                 {
-                    if (row.ButtonIcon(TexResource.Drop, tooltip))
-                    {
-                        AwesomeInventoryTabBase.InterfaceDrop.Invoke(_gearTab, new object[] { thing });
-                    }
+                    AwesomeInventoryTabBase.InterfaceDrop.Invoke(_gearTab, new object[] { thing });
+                }
 
-                    Rect unloadButtonRect = new Rect(row.FinalX - GenUI.SmallIconSize, row.FinalY, GenUI.SmallIconSize, GenUI.ListSpacing);
+                Rect unloadButtonRect = new Rect(row.FinalX - GenUI.SmallIconSize, row.FinalY, GenUI.SmallIconSize, GenUI.ListSpacing);
 
-                    if (_gearTab.IsColonistPlayerControlled())
+                // Draw unload now button
+                TooltipHandler.TipRegion(unloadButtonRect, UIText.UnloadNow.TranslateSimple());
+                if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
+                {
+                    if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, AwesomeInventoryTex.HighlightBrown, AwesomeInventoryTex.HighlightGreen))
                     {
-                        // Draw unload now button
-                        TooltipHandler.TipRegion(unloadButtonRect, UIText.UnloadNow.TranslateSimple());
-                        if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
-                        {
-                            if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, AwesomeInventoryTex.HighlightBrown, AwesomeInventoryTex.HighlightGreen))
-                            {
-                                SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                                InterfaceUnloadNow(thing, selPawn);
-                            }
-                        }
-                        else
-                        {
-                            if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, Color.white, AwesomeInventoryTex.HighlightGreen))
-                            {
-                                SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                                InterfaceUnloadNow(thing, selPawn);
-                            }
-                        }
+                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                        InterfaceUnloadNow(thing, selPawn);
                     }
                 }
                 else
                 {
-                    Rect iconRect = new Rect(row.FinalX - GenUI.SmallIconSize, row.FinalY, GenUI.SmallIconSize, GenUI.SmallIconSize);
-                    Widgets.ButtonImage(iconRect, TexResource.Drop, Color.grey, Color.grey, false);
-                    TooltipHandler.TipRegion(iconRect, tooltip);
+                    if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, Color.white, AwesomeInventoryTex.HighlightGreen))
+                    {
+                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                        InterfaceUnloadNow(thing, selPawn);
+                    }
                 }
-
-                row.GapButtonIcon();
             }
 
             GUI.color = Color.white;
 
+            row.GapButtonIcon();
+
             // Draw ingest button.
-            if ((bool)AwesomeInventoryTabBase.CanControlColonist.GetValue(_gearTab) && (thing.def.IsNutritionGivingIngestible || thing.def.IsNonMedicalDrug) && thing.IngestibleNow && selPawn.WillEat(thing))
+            if (selPawn.IsColonist && (thing.def.IsNutritionGivingIngestible || thing.def.IsNonMedicalDrug) && thing.IngestibleNow && selPawn.WillEat(thing))
             {
                 if (row.ButtonIcon(TexResource.Ingest, UIText.ConsumeThing.Translate(thing.LabelNoCount, thing)))
                 {
@@ -891,7 +878,7 @@ namespace AwesomeInventory.UI
                 Widgets.InfoCardButton(rect.x, rect.y, thing);
 
                 // Draw Unload Now button
-                if (this.ShowDropButton(selPawn, thing, false, out bool canDrop, out _) && canDrop && _gearTab.IsColonistPlayerControlled())
+                if (selPawn.IsColonist)
                 {
                     TooltipHandler.TipRegion(buttonRect, UIText.UnloadNow.Translate());
                     if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
@@ -1353,78 +1340,14 @@ namespace AwesomeInventory.UI
         }
 
         /// <summary>
-        /// Check if AI should show drop button for <paramref name="thing"/>.
+        /// Set out rect size excluding bottom stat bars for the jealous tab.
         /// </summary>
-        /// <param name="pawn"> Pawn who carries <paramref name="thing"/>. </param>
-        /// <param name="thing"> Thing to check. </param>
-        /// <param name="inventory"> If <paramref name="thing"/> is in the inventory section. </param>
-        /// <param name="canDrop"> Whether the thing can be dropped. </param>
-        /// <param name="tooltip"> Tooltip for the drop button. </param>
-        /// <returns> Returns true if AI should show the drop button. </returns>
-        protected virtual bool ShowDropButton(Pawn pawn, Thing thing, bool inventory, out bool canDrop, out string tooltip)
+        /// <param name="canvas"> Rect for the gear tab. </param>
+        /// <returns> A rect for drawing the jealous tab. </returns>
+        protected virtual Rect SetOutRectForJealousTab(Rect canvas)
         {
-            ValidateArg.NotNull(pawn, nameof(pawn));
-            ValidateArg.NotNull(thing, nameof(thing));
-
-            bool showDropButton = false;
-            canDrop = false;
-            tooltip = string.Empty;
-            if ((bool)AwesomeInventoryTabBase.CanControl.GetValue(_gearTab)
-                && (inventory
-                    || (bool)AwesomeInventoryTabBase.CanControlColonist.GetValue((ITab_Pawn_Gear)_gearTab)
-                    || (pawn.Spawned && !pawn.Map.IsPlayerHome)))
-            {
-                showDropButton = true;
-
-                // Check for bio-coded weapon and inventory
-                bool flag2;
-                if (pawn.IsQuestLodger())
-                {
-                    if (inventory)
-                    {
-                        flag2 = true;
-                    }
-                    else
-                    {
-                        CompBiocodableWeapon compBiocodableWeapon = thing.TryGetComp<CompBiocodableWeapon>();
-                        if (compBiocodableWeapon != null && compBiocodableWeapon.Biocoded)
-                        {
-                            flag2 = true;
-                        }
-                        else
-                        {
-                            CompBladelinkWeapon compBladelinkWeapon = thing.TryGetComp<CompBladelinkWeapon>();
-                            flag2 = compBladelinkWeapon != null && compBladelinkWeapon.bondedPawn == pawn;
-                        }
-                    }
-                }
-                else
-                {
-                    flag2 = false;
-                }
-
-                Apparel apparel;
-                bool flag3 = (apparel = thing as Apparel) != null && pawn.apparel != null && pawn.apparel.IsLocked(apparel);
-
-                canDrop = !(flag2 || flag3);
-
-                if (flag3)
-                {
-                    tooltip = "DropThingLocked".TranslateSimple();
-                }
-                else if (flag2)
-                {
-                    tooltip = "DropThingLodger".TranslateSimple();
-                }
-                else
-                {
-                    tooltip = UIText.DropThing.TranslateSimple();
-                }
-
-                return showDropButton;
-            }
-
-            return showDropButton;
+            // Substract the height of one line for a weight bar and a bulk bar.
+            return canvas.ReplaceHeight(canvas.height - GenUI.ListSpacing);
         }
     }
 }

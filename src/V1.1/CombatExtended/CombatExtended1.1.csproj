@@ -1,106 +1,112 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <!-- Custom rules for StyleCop -->
   <Import Project="$(SolutionDir)SolutionItems\CustomStyleCopRules.props" Condition="Exists('$(SolutionDir)SolutionItems\CustomStyleCopRules.props')" />
   <Import Project="..\..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
-  <Import Project="..\..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('..\..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props')" />
   <Import Project="..\..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props')" />
   <Import Project="..\..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props')" />
+  <Import Project="..\..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('..\..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props')" />
   <Import Project="..\..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('..\..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <ProjectGuid>{7ED523E4-9562-42CD-8099-1546A3FD5E7A}</ProjectGuid>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9C99FF79-7175-48EC-A407-9D72950F2BC4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>AwesomeInventory</RootNamespace>
-    <AssemblyName>AwesomeInventoryVanilla1.1</AssemblyName>
+    <AssemblyName>AwesomeInventoryCE1.1</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <NoWin32Manifest>False</NoWin32Manifest>
+    <SignAssembly>False</SignAssembly>
+    <DelaySign>False</DelaySign>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <NoStdLib>False</NoStdLib>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>False</RunCodeAnalysis>
+    <SourceAnalysisOverrideSettingsFile>C:\Users\hp\AppData\Roaming\ICSharpCode\SharpDevelop5\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+    <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>portable</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\Vanilla\Assemblies\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\Vanilla\Assemblies\AwesomeInventoryVanilla1.1.xml</DocumentationFile>
+    <BaseAddress>4194304</BaseAddress>
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\Vanilla\Assemblies\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>..\..\Assemblies\</OutputPath>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
+    <StartAction>Project</StartAction>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CE Build|AnyCPU'">
-    <OutputPath>bin\CE Build\</OutputPath>
-    <Prefer32Bit>false</Prefer32Bit>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Vanilla Build|AnyCPU'">
-    <OutputPath>..\..\..\Vanilla\Assemblies\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;RPG_Inventory_Remake UnitTest</DefineConstants>
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\CombatExtended\Assemblies\</OutputPath>
     <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
-    <OutputPath>bin\Test\</OutputPath>
-    <DefineConstants>TEST</DefineConstants>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityTest|AnyCPU'">
-    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.1\Vanilla\Assemblies\</OutputPath>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <DebugType>portable</DebugType>
-    <DebugSymbols>true</DebugSymbols>
+    <DocumentationFile>AwesomeInventoryCE1.1.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <Optimize>false</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
+    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\CombatExtended\Assemblies\</OutputPath>
+    <DebugType>portable</DebugType>
+    <DocumentationFile>AwesomeInventoryCE1.1.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CE Build|AnyCPU'">
+    <OutputPath>..\..\Assemblies\</OutputPath>
+    <DefineConstants>RPG_Inventory_Remake_CE</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Vanilla Build|AnyCPU'">
+    <OutputPath>bin\Vanilla Build\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <OutputPath>bin\Test\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityTest|AnyCPU'">
+    <OutputPath>bin\UnityTest\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
-    <Compile Include="GearTab\AwesomeInventoryTab.cs" />
-    <Compile Include="GearTab\VanillaGearTabWorker.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="HarmonyPatches\ThingOwner_RPGI_Patch.cs" />
-    <Compile Include="Helpers\DrawHelper.cs" />
-    <Compile Include="Helpers\InventoryHelper.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\VanillaServicesRegistration.cs" />
-    <None Include="ClassDiagram1.cd" />
-    <None Include="HarmonyPatches\Game_FinalizeInit_RPGI_Patch.cs" />
-    <Compile Include="HarmonyPatches\Pawn_CarryTracker_CarriedThing_AwesomeInventory_Patch.cs" />
-    <Compile Include="Loadout\MassBulkUtility.cs" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="0Harmony, Version=2.0.0.9, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Lib.Harmony.2.0.0.9\lib\net472\0Harmony.dll</HintPath>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\..\References\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+    <Reference Include="CombatExtended">
+      <HintPath>..\..\..\References\CombatExtended\CombatExtended.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
@@ -109,18 +115,28 @@
       <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UI.dll</HintPath>
-      <Private>False</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DefOfs\CEApparelLayerDefOf.cs" />
+    <Compile Include="GeatTab\AwesomeInventoryTab.cs" />
+    <Compile Include="GeatTab\CEGearTabWorker.cs" />
+    <None Include="Utilities\Utility_DrawCE.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Documents\Dressing Code in Rimworld.txt" />
+    <Content Include="Documents\Test Plan.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Defs\" />
+    <Folder Include="HarmonyPatches\" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />
@@ -136,16 +152,6 @@
     <Analyzer Include="..\..\..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Components\" />
-    <Folder Include="Gizmos\" />
-    <Folder Include="Interface\" />
-    <Folder Include="Languages\" />
-    <Folder Include="Patches\" />
-    <Folder Include="Resources\" />
-    <Folder Include="UI\" />
-    <Folder Include="Utilities\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\Common\AwesomeInventory.Base.csproj">
       <Project>{b08984e0-c241-4fee-b9a1-fff9adef5bb2}</Project>
       <Name>AwesomeInventory.Base</Name>
@@ -158,46 +164,18 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>call $(SolutionDir)SolutionItems\Deploy.bat $(ProjectDir) $(OutDir) $(Configuration)</PostBuildEvent>
+  </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.8\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
+    <Error Condition="!Exists('..\..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props'))" />
     <Error Condition="!Exists('..\..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.NetCore.Analyzers.2.9.8\build\Microsoft.NetCore.Analyzers.props'))" />
     <Error Condition="!Exists('..\..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.NetFramework.Analyzers.2.9.8\build\Microsoft.NetFramework.Analyzers.props'))" />
-    <Error Condition="!Exists('..\..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.CodeQuality.Analyzers.2.9.8\build\Microsoft.CodeQuality.Analyzers.props'))" />
     <Error Condition="!Exists('..\..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.8\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
-  </Target>
-  <PropertyGroup>
-    <PostBuildEvent>call $(SolutionDir)SolutionItems\Deploy.bat $(ProjectDir) $(OutDir) $(Configuration)</PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <CreateManifestResourceNamesDependsOn>
-            RunCustomToolOnResources
-            $(CreateManifestResourceNamesDependsOn)
-        </CreateManifestResourceNamesDependsOn>
-  </PropertyGroup>
-  <PropertyGroup>
-    <RootNamespaceOfRPGICommon>RPG_Inventory_Remake_Common</RootNamespaceOfRPGICommon>
-  </PropertyGroup>
-  <Target Name="RunCustomToolOnResources">
-    <ItemGroup>
-      <_Temporary Remove="@(_Temporary)" />
-    </ItemGroup>
-    <!-- Create custom ManifestResourceName -->
-    <CreateCSharpManifestResourceName ResourceFiles="@(EmbeddedResource)" RootNamespace="$(RootNamespaceOfRPGICommon)" UseDependentUponConvention="$(EmbeddedResourceUseDependentUponConvention)" Condition="'%(EmbeddedResource.ManifestResourceName)' == '' and ('%(EmbeddedResource.WithCulture)' == 'false' or '%(EmbeddedResource.Type)' == 'Resx')">
-      <Output TaskParameter="ResourceFilesWithManifestResourceNames" ItemName="_Temporary" />
-    </CreateCSharpManifestResourceName>
-    <Message Text="Manifest Name:   %(_Temporary.ManifestResourceName)" />
-    <ItemGroup>
-      <EmbeddedResource Remove="@(EmbeddedResource)" Condition="'%(EmbeddedResource.ManifestResourceName)' == ''" />
-      <EmbeddedResource Include="@(_Temporary)" />
-      <_Temporary Remove="@(_Temporary)" />
-    </ItemGroup>
   </Target>
   <!-- Import AwesomeInventory configs for IDE -->
   <Import Project="$(SolutionDir)SolutionItems\GlobalEditorFiles.props" Condition="Exists('$(SolutionDir)SolutionItems\GlobalEditorFiles.props')" />

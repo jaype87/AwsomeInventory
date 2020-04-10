@@ -70,6 +70,7 @@
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Components\GameComponents\GameComponent_AwesomeInventory_Entry.cs" />
     <Compile Include="GearTab\IconRect.cs" />
     <Compile Include="GearTab\SmartRectList.cs" />
     <Compile Include="HarmonyPatches\AddHumanlikeOrders_AwesomeInventory_Patch.cs" />
