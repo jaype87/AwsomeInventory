@@ -11,8 +11,12 @@ using System.Threading.Tasks;
 
 namespace AwesomeInventory.UI
 {
+    /// <inheritdoc/>
     public class AwesomeInventoryTab : AwesomeInventoryTabBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AwesomeInventoryTab"/> class.
+        /// </summary>
         public AwesomeInventoryTab()
         {
             _drawGearTab = new CEGearTabWorker(this);
