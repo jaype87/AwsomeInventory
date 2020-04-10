@@ -7,8 +7,8 @@
     <v1.1>
         <li>Common</li>
         <li>v1.1/Common</li>
-        <li IfModActive="Combat Extended">v1.1/CombatExtended</li>
-        <li IfModNotActive="Combat Extended">v1.1/Vanilla</li>
+        <li IfModActive="CETeam.CombatExtended">v1.1/CombatExtended</li>
+        <li IfModNotActive="CETeam.CombatExtended">v1.1/Vanilla</li>
         <li>v1.1/test</li>
     </v1.1>
 </loadFolders>
