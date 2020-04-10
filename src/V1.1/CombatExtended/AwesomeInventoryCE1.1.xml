@@ -28,5 +28,18 @@
         <member name="M:AwesomeInventory.UI.CEGearTabWorker.SetOutRectForJealousTab(UnityEngine.Rect)">
             <inheritdoc/>
         </member>
+        <member name="T:AwesomeInventory.UI.DrawHelper">
+            <summary>
+            A helper class for drawing in game.
+            It only consists of member methods while <see cref="T:AwesomeInventory.UI.DrawUtility"/> only has static methods.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawHelper.BulkBreakdownTooltip(Verse.Pawn)">
+            <summary>
+            Build a tooltip string for gears worn by <paramref name="pawn"/>.
+            </summary>
+            <param name="pawn"> Pawn that the tooltip is for. </param>
+            <returns> A tooltip on bulk for gears worn by <paramref name="pawn"/>. </returns>
+        </member>
     </members>
 </doc>

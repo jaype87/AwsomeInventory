@@ -16,10 +16,15 @@ namespace AwesomeInventory.UI
     /// A helper class for drawing in game.
     /// It only consists of member methods while <see cref="DrawUtility"/> only has static methods.
     /// </summary>
-    public class DrawHelper : IDrawHelper
+    public class DrawHelper
     {
-        /// <inheritdoc/>
-        public string TooltipTextFor(Thing thing, bool isForced)
+        /// <summary>
+        /// Build tooltip text for <paramref name="thing"/>.
+        /// </summary>
+        /// <param name="thing"> Thing that the tooltip text is for. </param>
+        /// <param name="isForced"> True, if <paramref name="thing"/> is apparel and the wearer is forced to wear. </param>
+        /// <returns> Tooltip text for <paramref name="thing"/>. </returns>
+        public virtual string TooltipTextFor(Thing thing, bool isForced)
         {
             ValidateArg.NotNull(thing, nameof(thing));
 
@@ -73,8 +78,12 @@ namespace AwesomeInventory.UI
             return text.ToString();
         }
 
-        /// <inheritdoc/>
-        public string WeightTextFor(Pawn pawn)
+        /// <summary>
+        /// Build tooltip text on weight <paramref name="pawn"/> that carries.
+        /// </summary>
+        /// <param name="pawn"> Pawn who carries weight. </param>
+        /// <returns> A tooltip text on weight <paramref name="pawn"/> carries. </returns>
+        public virtual string WeightTextFor(Pawn pawn)
         {
             ValidateArg.NotNull(pawn, nameof(pawn));
 

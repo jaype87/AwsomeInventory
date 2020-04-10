@@ -1,0 +1,3227 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AwesomeInventoryCommon1.1</name>
+    </assembly>
+    <members>
+        <member name="T:AwesomeInventory.GameComponent_AwesomeInventory_Entry">
+            <summary>
+            Initialize AwesomeInventory before a game start.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.GameComponent_AwesomeInventory_Entry.#ctor(Verse.Game)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.GameComponent_AwesomeInventory_Entry"/> class.
+            </summary>
+            <param name="game"> Game about to start. </param>
+        </member>
+        <member name="P:AwesomeInventory.GameComponent_AwesomeInventory_Entry.HasSimpleSidearm">
+            <summary>
+            Gets a value indicating whether the game has loaded the SimpleSidearm mod.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.GameComponent_AwesomeInventory_Entry.FinalizeInit">
+            <summary>
+            This method is called just before the game is ready to play.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.UI.IconRect`1">
+            <summary>
+            Rect for drawing thing icons on the gear tab.
+            </summary>
+            <typeparam name="T"> Type of thing this icon rect represents. </typeparam>
+        </member>
+        <member name="M:AwesomeInventory.UI.IconRect`1.#ctor(UnityEngine.Rect,System.Func{`0,System.Boolean},System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.UI.IconRect`1"/> class.
+            </summary>
+            <param name="rect"> A <see cref="T:UnityEngine.Rect"/> to draw on. </param>
+            <param name="filter"> Used to determine if a thing fits in <paramref name="filter"/>. </param>
+            <param name="tooltip"> Tooltip for <paramref name="rect"/>. </param>
+        </member>
+        <member name="P:AwesomeInventory.UI.IconRect`1.Filter">
+            <summary>
+            Gets or sets a filter which is used to determine if a thing fits in <see cref="!:IconRect.Rect"/>.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.IconRect`1.Rect">
+            <summary>
+            Gets or sets a <see cref="T:UnityEngine.Rect"/> to draw on.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.IconRect`1.Tooltip">
+            <summary>
+            Gets or sets tooltip for this rect.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.UI.SmartRectList`1">
+            <summary>
+            A list of <see cref="T:AwesomeInventory.UI.SmartRect`1"/> that handles requests for creating <see cref="T:AwesomeInventory.UI.SmartRect`1"/>
+            and requests for rects to draw <typeparamref name="T"/> on.
+            </summary>
+            <typeparam name="T"> Type defrived from <see cref="T:Verse.Thing"/>. </typeparam>
+        </member>
+        <member name="P:AwesomeInventory.UI.SmartRectList`1.SmartRects">
+            <summary>
+            Gets a colleciton of <see cref="T:AwesomeInventory.UI.SmartRect`1"/> that it holds.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.SmartRectList`1.Init(AwesomeInventory.UI.SmartRect{`0})">
+            <summary>
+            Set a seed for this list. Subsequent <see cref="T:AwesomeInventory.UI.SmartRect`1"/> created with <see cref="M:AwesomeInventory.UI.SmartRectList`1.GetWorkingSmartRect(System.Func{`0,System.Boolean},System.Single,System.Single)"/>
+            will use <paramref name="seed"/> as a template.
+            </summary>
+            <param name="seed"> Template for subsequent <see cref="T:AwesomeInventory.UI.SmartRect`1"/>. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.SmartRectList`1.GetWorkingSmartRect(System.Func{`0,System.Boolean},System.Single,System.Single)">
+            <summary>
+            Return a new <see cref="T:AwesomeInventory.UI.SmartRect`1"/> that shares the same template with the <see cref="T:AwesomeInventory.UI.SmartRect`1"/> that seeds this list.
+            </summary>
+            <param name="selector"> Defines on which level this smart rect is on. </param>
+            <param name="xLeftCurPosition"> The left most coordinate of allocated rects. </param>
+            <param name="xRightCurPosition"> The right most coordinate of allocated rects. </param>
+            <returns> A <see cref="T:AwesomeInventory.UI.SmartRect`1"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.SmartRectList`1.GetRectFor(`0)">
+            <summary>
+            Return an available <see cref="T:UnityEngine.Rect"/> to draw for <paramref name="thing"/>.
+            </summary>
+            <param name="thing"> Thing to draw. </param>
+            <returns> An empty <see cref="T:UnityEngine.Rect"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.SmartRectList`1.GetNextBestRectFor(`0)">
+            <summary>
+            Return a next best available <see cref="T:UnityEngine.Rect"/> to draw for <paramref name="thing"/>.
+            </summary>
+            <param name="thing"> Thing to draw. </param>
+            <returns> An empty <see cref="T:UnityEngine.Rect"/>. </returns>
+        </member>
+        <member name="T:AwesomeInventory.UI.DrawHelper">
+            <summary>
+            A helper class for drawing in game.
+            It only consists of member methods while <see cref="T:AwesomeInventory.UI.DrawUtility"/> only has static methods.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawHelper.TooltipTextFor(Verse.Thing,System.Boolean)">
+            <summary>
+            Build tooltip text for <paramref name="thing"/>.
+            </summary>
+            <param name="thing"> Thing that the tooltip text is for. </param>
+            <param name="isForced"> True, if <paramref name="thing"/> is apparel and the wearer is forced to wear. </param>
+            <returns> Tooltip text for <paramref name="thing"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawHelper.WeightTextFor(Verse.Pawn)">
+            <summary>
+            Build tooltip text on weight <paramref name="pawn"/> that carries.
+            </summary>
+            <param name="pawn"> Pawn who carries weight. </param>
+            <returns> A tooltip text on weight <paramref name="pawn"/> carries. </returns>
+        </member>
+        <member name="T:AwesomeInventory.UI.DrawGearTabWorker">
+            <summary>
+            Draw contents for <see cref="T:RimWorld.ITab_Pawn_Gear"/>.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.DrawGearTabWorker._scrollPosition">
+            <summary>
+            Scroll position of the gear tab. Should get reset whenever changing the selected pawn.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.DrawGearTabWorker._divider">
+            <summary>
+            Divides gear tab into left, for displaying apparels, and right, for stats and paper doll.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.#ctor(AwesomeInventory.UI.AwesomeInventoryTabBase)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.UI.DrawGearTabWorker"/> class.
+            </summary>
+            <param name="gearTab"> The gear tab it draws on. </param>
+        </member>
+        <member name="P:AwesomeInventory.UI.DrawGearTabWorker.DrawHelper">
+            <summary>
+            Gets draw helper provided either by vanilla or CE implementation of this mod.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.Reset">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawAscetic">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawJealous(Verse.Pawn,UnityEngine.Rect,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawGreedy(Verse.Pawn,UnityEngine.Rect,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawQualityFrame(Verse.ThingWithComps,UnityEngine.Rect)">
+            <summary>
+            Draw frames, which indicates quality, around <paramref name="thing"/>.
+            </summary>
+            <param name="thing"> Target item. </param>
+            <param name="rect"> Position on screen. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawHitpointBackground(Verse.Thing,UnityEngine.Rect)">
+            <summary>
+            Draw hitpoint background for <paramref name="thing"/>.
+            </summary>
+            <param name="thing"> Target item. </param>
+            <param name="rect"> Position of screen. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawWeightBar(UnityEngine.Rect,Verse.Pawn)">
+            <summary>
+            Draw weight bar for current mass <paramref name="selPawn"/> carries.
+            </summary>
+            <param name="rect"> Rect for drawing. </param>
+            <param name="selPawn"> Selected pawn. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawLoadoutButtons(Verse.Pawn,System.Single,System.Single@,System.Single)">
+            <summary>
+            Draw loadout buttons from the right on gear tab.
+            </summary>
+            <param name="selPawn"> Selected pawn. </param>
+            <param name="x"> Start position for drawing buttons. </param>
+            <param name="rollingY"> Y position. </param>
+            <param name="width"> Width of available space for drawing. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.GetArmorStat(Verse.Pawn,RimWorld.StatDef,System.Boolean)">
+            <summary>
+            Get armor stats for <paramref name="pawn"/>.
+            </summary>
+            <param name="pawn"> Selected pawn. </param>
+            <param name="stat"> Stat for armor rating. </param>
+            <param name="apparelChanged"> Indicates if apparels have changed since last call. </param>
+            <returns> A tuple contains value and tooltip for <paramref name="stat"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawArmorStatsRow(Verse.WidgetRow,Verse.Pawn,RimWorld.StatDef,System.String,System.Boolean)">
+            <summary>
+            Draw armor stats row for greedy tab.
+            </summary>
+            <param name="row"> A <see cref="T:Verse.WidgetRow"/> initialized to a certain size of canvas. </param>
+            <param name="pawn"> Selected pawn. </param>
+            <param name="stat"> Stat to draw. </param>
+            <param name="label"> Label for <paramref name="stat"/>. </param>
+            <param name="apparelChanged"> Indicates if apparels have changed since last call. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawMassInfoRow(Verse.WidgetRow,Verse.Pawn,System.Boolean)">
+            <summary>
+            Draw mass info row for greedy tab.
+            </summary>
+            <param name="row"> A <see cref="T:Verse.WidgetRow"/> initialized to a certain size of canvas. </param>
+            <param name="pawn"> Selected pawn. </param>
+            <param name="apparelChanged"> Indicates if apparels have changed since last call. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawComfyTemperatureRow(Verse.WidgetRow,Verse.Pawn,System.Boolean)">
+            <summary>
+            Draw comfy temperature for greedy tab.
+            </summary>
+            <param name="row"> A <see cref="T:Verse.WidgetRow"/> initialized to a certain size of canvas. </param>
+            <param name="pawn"> Selected pawn. </param>
+            <param name="apparelChanged"> Indicates if apparels have changed since last call. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawThingRow(Verse.Pawn,System.Single@,System.Single,Verse.Thing)">
+            <summary>
+            Draw thing icon, description and function buttons in a row.
+            </summary>
+            <param name="selPawn"> Selected Pawn.</param>
+            <param name="y"> The yMax coordinate after the row is drawn. </param>
+            <param name="width"> Width of this row. </param>
+            <param name="thing"> Thing to draw. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawStatPanel(UnityEngine.Rect,Verse.Pawn,System.Single@,System.Boolean)">
+            <summary>
+            Draw carried weight, comfortable temperature and stats of armor.
+            </summary>
+            <param name="rect"> Rect for drawing. </param>
+            <param name="pawn"> Selected pawn. </param>
+            <param name="rollingY"> The yMax coordinate when stat panel is drawn. </param>
+            <param name="apparelChanged"> Indicates whether apparels on pawn have changed. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawMassInfo(Verse.Pawn,Verse.WidgetRow)">
+            <summary>
+            Draw mass info in Jealous tab.
+            </summary>
+            <param name="pawn"> Selected pawn. </param>
+            <param name="row"> Helper to draw contents in a row. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.GetTemperatureStats(Verse.Pawn,RimWorld.StatDef,System.Boolean)">
+            <summary>
+            Get comfortable temperature stats for <paramref name="pawn"/>.
+            </summary>
+            <param name="pawn"> Selected pawn. </param>
+            <param name="stat"> Temperature stat. </param>
+            <param name="apparelChanged"> Indicates if apparels have changed since last call. </param>
+            <returns> Value for comfortable temperature. </returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawArmorStats(Verse.WidgetRow,Verse.Pawn,RimWorld.StatDef,UnityEngine.Texture2D,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Draw sharp, blunt, heat stats for armor in jealous tab.
+            </summary>
+            <param name="row"> A drawing helper for drawing in a row. </param>
+            <param name="pawn"> Selected pawn. </param>
+            <param name="stat"> Stat to draw. </param>
+            <param name="icon"> Icon for <paramref name="stat"/>. </param>
+            <param name="altIconText"> Description for <paramref name="icon"/>. </param>
+            <param name="apparelChanged"> Indicates whether apparels on pawn have changed. </param>
+            <param name="changeLine"> If true, move <paramref name="row"/> to next line. </param>
+            <remarks> It costs 1ms to calculate one stat for a pawn with 16 apparels, therefore the cache. </remarks>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawTraits(Verse.WidgetRow,System.Collections.Generic.IEnumerator{RimWorld.Trait},Verse.Pawn)">
+            <summary>
+            Draw traits on gear tab.
+            </summary>
+            <param name="row"> A drawing helper for drawing in a row. </param>
+            <param name="traits"> Traits to draw. </param>
+            <param name="pawn"> Selected pawn. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawThingIcon(Verse.Pawn,UnityEngine.Rect,Verse.ThingWithComps)">
+            <summary>
+            Draw thing icon on <paramref name="rect"/>.
+            </summary>
+            <param name="selPawn"> Selected pawn. </param>
+            <param name="rect"> Automatically find next available rect to draw on. </param>
+            <param name="thing"> Thing to draw. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.AddEquipmentOption(Verse.Pawn,Verse.ThingWithComps,System.Collections.Generic.List{Verse.FloatMenuOption})">
+            <summary>
+            Add equipment option to <paramref name="menuOptions"/>.
+            </summary>
+            <param name="selPawn"> Selected pawn. </param>
+            <param name="equipment"> Equipment to act on. </param>
+            <param name="menuOptions"> List to add option to. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.AddApparelOption(Verse.Pawn,RimWorld.Apparel,System.Collections.Generic.List{Verse.FloatMenuOption})">
+            <summary>
+            Add equipment option to <paramref name="floatOptionList"/>.
+            </summary>
+            <param name="selPawn"> Selected pawn. </param>
+            <param name="apparel"> Equipment to act on. </param>
+            <param name="floatOptionList"> List to add option to. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.MouseContextMenu(Verse.Pawn,Verse.Thing,UnityEngine.Rect)">
+            <summary>
+            Context menu when right click on items.
+            </summary>
+            <param name="selPawn"> Pawn who holds <paramref name="thing"/>. </param>
+            <param name="thing"> Thing that is being right-clicked on. </param>
+            <param name="rect"> Positino on screen where <paramref name="thing"/> is drawn. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawDefaultThingIconRects(System.Collections.Generic.IEnumerable{RimWorld.Apparel},UnityEngine.Rect,System.Boolean)">
+            <summary>
+            Draw default rects for apparels.
+            </summary>
+            <param name="apparels"> An IEnumerable of <see cref="T:RimWorld.Apparel"/>. </param>
+            <param name="canvas"> Space available for drawing. </param>
+            <param name="apparelChanged"> Indicates if apparels have changed since last call. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawDefaultThingIconRectsWorker(AwesomeInventory.UI.SmartRectList{RimWorld.Apparel})">
+            <summary>
+            Where it actually starts drawing default rects.
+            </summary>
+            <param name="rectList"> Contains smartrects ready for drawing. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.DrawApparels(Verse.Pawn,System.Collections.Generic.IEnumerable{RimWorld.Apparel},AwesomeInventory.UI.SmartRectList{RimWorld.Apparel})">
+            <summary>
+            Draw thing icons for apparels.
+            </summary>
+            <param name="selPawn"> Selcted pawn. </param>
+            <param name="apparels"> Apparels to draw. </param>
+            <param name="rectList"> A list that holds all <see cref="T:AwesomeInventory.UI.SmartRect`1"/> needed for drawing. </param>
+            <returns> Apparels that cannot fit in the panel. </returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.InterfaceUnloadNow(Verse.Thing,Verse.Pawn)">
+            <summary>
+            Unload items on pawn.
+            </summary>
+            <param name="thing"> Thing to unload. </param>
+            <param name="pawn"> Pawn who carries <paramref name="thing"/>. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawGearTabWorker.SetOutRectForJealousTab(UnityEngine.Rect)">
+            <summary>
+            Set out rect size excluding bottom stat bars for the jealous tab.
+            </summary>
+            <param name="canvas"> Rect for the gear tab. </param>
+            <returns> A rect for drawing the jealous tab. </returns>
+        </member>
+        <member name="T:AwesomeInventory.UI.AwesomeInventoryTabBase">
+            <summary>
+            Replace RimWorld's default gear tab.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.AwesomeInventoryTabBase._apparelChanged">
+            <summary>
+            Gets or sets a value indicating whether apparel has chagned.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.AwesomeInventoryTabBase._drawGearTab">
+            <summary>
+            Draw contents in gear tab.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.AwesomeInventoryTabBase.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.UI.AwesomeInventoryTabBase"/> class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.AwesomeInventoryTabBase.InterfaceDrop">
+            <summary>
+            Gets InterfaceDrop method from base class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.AwesomeInventoryTabBase.InterfaceIngest">
+            <summary>
+            Gets InterfaceIngest method from base class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.AwesomeInventoryTabBase.ShouldShowInventory">
+            <summary>
+            Gets ShouldShowInventory method from base class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.AwesomeInventoryTabBase.ShouldShowApparel">
+            <summary>
+            Gets ShouldShowApparel method from base class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.AwesomeInventoryTabBase.ShouldShowEquipment">
+            <summary>
+            Gets ShouldShowEquipment method from base class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.AwesomeInventoryTabBase.CanControlColonist">
+            <summary>
+            Gets CanControlColonist property from base class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.AwesomeInventoryTabBase.CanControl">
+            <summary>
+            Gets CanCaontrol property from base class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.AwesomeInventoryTabBase.GetPawn">
+            <summary>
+            Gets private property SelPawnForGear from <see cref="T:RimWorld.ITab_Pawn_Gear"/>.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.AwesomeInventoryTabBase.OnOpen">
+            <summary>
+            Run only once when the tab is toggle to open.
+            Details in <see cref="T:RimWorld.InspectPaneUtility"/>.ToggleTab .
+            </summary>
+            <remarks>
+                The same instance is used when switch pawns with tab open.
+            </remarks>
+        </member>
+        <member name="M:AwesomeInventory.UI.AwesomeInventoryTabBase.IsColonist">
+            <summary>
+            Check if selected pawn is a colonist.
+            </summary>
+            <returns> Returns true if selected pawn is a colonist. </returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.AwesomeInventoryTabBase.IsColonistPlayerControlled">
+            <summary>
+            Check if selected pawn is a colonist and player controlled.
+            </summary>
+            <returns> Returns true if selected pawn is a colonist and can be controlled by players. </returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.AwesomeInventoryTabBase.UpdateSize">
+            <summary>
+            It is called right before the tab is drawn.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.AwesomeInventoryTabBase.FillTab">
+            <summary>
+            Draw the tab.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.UI.ToggleGearTab">
+            <summary>
+            Toggle Gear Tab.
+            </summary>
+            <remarks> Gear_Helmet.png Designed By nickfz from https://pngtree.com/Pngtree.com .</remarks>
+        </member>
+        <member name="M:AwesomeInventory.UI.ToggleGearTab.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.UI.ToggleGearTab"/> class.
+            </summary>
+            <param name="tabType"> Tab to open when toggle. </param>
+        </member>
+        <member name="P:AwesomeInventory.UI.ToggleGearTab.Desc">
+            <summary>
+            Gets tooltip when hover on the Gizmo.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.UI.IDrawGearTab">
+            <summary>
+            Draw contents for <see cref="T:RimWorld.ITab_Pawn_Gear"/>.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.IDrawGearTab.DrawJealous(Verse.Pawn,UnityEngine.Rect,System.Boolean)">
+            <summary>
+            Draw jealous tab.
+            </summary>
+            <param name="pawn"> Pawn that owns the tab. </param>
+            <param name="canvas"> Position on screen to draw on. </param>
+            <param name="apparelChanged"> Indicates whether apparels on pawn have changed. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.IDrawGearTab.DrawGreedy(Verse.Pawn,UnityEngine.Rect,System.Boolean)">
+            <summary>
+            Draw greedy tab.
+            </summary>
+            <param name="pawn"> Pawn that owns the tab. </param>
+            <param name="canvas"> Position on screen to draw on. </param>
+            <param name="apparelChanged"> Indicates whether apparels on pawn have changed. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.IDrawGearTab.DrawAscetic">
+            <summary>
+            Draw ascetic tab.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.IDrawGearTab.Reset">
+            <summary>
+            Reset the scroll position of gear tab and clear cache.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.UI.PawnModal">
+            <summary>
+            A pawn modal used for drawing gear tab.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.PawnModal.#ctor(Verse.Pawn,Verse.Thing)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.UI.PawnModal"/> class.
+            </summary>
+            <param name="selPawn"> Selected pawn. </param>
+            <param name="selThing"> Selected corpse. </param>
+        </member>
+        <member name="P:AwesomeInventory.UI.PawnModal.CanControl">
+            <summary>
+            Gets a value indicating whether a pawn can be contronlled.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.PawnModal.CanControlColonist">
+            <summary>
+            Gets a value indicating whether a colonist can be controlled.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.PawnModal.Pawn">
+            <summary>
+            Gets the pawn used in this modal.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.PawnModal.Bpgroups">
+            <summary>
+            Gets a collection of <see cref="T:Verse.BodyPartGroupDef"/>.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.UI.SmartRect`1">
+            <summary>
+            Keep track of space usage in the Gear Tab and return the next available rect for drawing
+            </summary>
+            <typeparam name="T"> Type of thing this smart rect holds. </typeparam>
+        </member>
+        <member name="P:AwesomeInventory.UI.SmartRect`1.XLeftEdge">
+            <summary>
+            Gets or sets left edge of the operating range of smart rect.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.SmartRect`1.XRightEdge">
+            <summary>
+            Gets or sets right edge of the operating range of smart rect.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.SmartRect`1.XLeftCurrentPosition">
+            <summary>
+            Gets or sets the left most coordinate of allocated rects.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.SmartRect`1.XRightCurrentPosition">
+            <summary>
+            Gets or sets the right most coordinate of allocated rects.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.SmartRect`1.Selector">
+            <summary>
+            Gets or sets defines on which level this smart rect is on.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.SmartRect`1.#ctor(UnityEngine.Rect,System.Func{`0,System.Boolean},System.Single,System.Single,AwesomeInventory.UI.SmartRectList{`0},System.Single,System.Single,System.Single,System.Single,AwesomeInventory.UI.SmartRect{`0}.Direction)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.UI.SmartRect`1"/> class.
+            </summary>
+            <param name="template"></param>
+            <param name="selector"></param>
+            <param name="xLeftCurPosition"></param>
+            <param name="xRightCurPosition"></param>
+            <param name="list"></param>
+            <param name="xLeftEdge"></param>
+            <param name="xRightEdge"></param>
+            <param name="widthGap"></param>
+            <param name="heightGap"></param>
+            <param name="lastDirection"></param>
+        </member>
+        <member name="M:AwesomeInventory.UI.SmartRect`1.NextAvailableRect">
+            <summary>
+            Returns next available <see cref="T:UnityEngine.Rect"/> for current level.
+            Returns null, if no <see cref="T:UnityEngine.Rect"/> is available.
+            </summary>
+            <returns> An empty <see cref="T:UnityEngine.Rect"/> for drawing. </returns>
+        </member>
+        <member name="T:AwesomeInventory.UI.TexResource">
+            <summary>
+            Texture resources.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.UI.Dialog_ManageLoadouts">
+            <summary>
+            A dialog window for managing loadouts.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.Dialog_ManageLoadouts._initialSize">
+            <summary>
+            Controls the window size and position.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_ManageLoadouts.#ctor(AwesomeInventory.Loadout.AwesomeInventoryLoadout,Verse.Pawn)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.UI.Dialog_ManageLoadouts"/> class.
+            </summary>
+            <param name="loadout"> Selected loadout. </param>
+            <param name="pawn"> Selected pawn. </param>
+        </member>
+        <member name="T:AwesomeInventory.UI.Dialog_ManageLoadouts.CategorySelection">
+            <summary>
+            Source categories for loadout dialog.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.Dialog_ManageLoadouts.CategorySelection.Ranged">
+            <summary>
+            Ranged weapons.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.Dialog_ManageLoadouts.CategorySelection.Melee">
+            <summary>
+            Melee weapons.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.Dialog_ManageLoadouts.CategorySelection.Apparel">
+            <summary>
+            Apparels.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.Dialog_ManageLoadouts.CategorySelection.Minified">
+            <summary>
+            Things that are minified.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.Dialog_ManageLoadouts.CategorySelection.Generic">
+            <summary>
+            Generic thing def.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.Dialog_ManageLoadouts.CategorySelection.All">
+            <summary>
+            All things, won't include generics, can include minified/able now.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.Dialog_ManageLoadouts.InitialSize">
+            <summary>
+            Gets initial window size for this dialog.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_ManageLoadouts.DoWindowContents(UnityEngine.Rect)">
+            <summary>
+            Draw contents in window.
+            </summary>
+            <param name="canvas"> Canvas to draw. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_ManageLoadouts.PreOpen">
+            <summary>
+            Called by game root code before the window is opened.
+            </summary>
+            <remarks> It is only called once for the entire time period when this dialog is open including a change in selected pawn. </remarks>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_ManageLoadouts.DrawCategoryIcon(UnityEngine.Rect)">
+            <summary>
+            Draw icon for source category.
+            </summary>
+            <param name="canvas"> <see cref="T:UnityEngine.Rect"/> for drawing. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_ManageLoadouts.SetCategory(AwesomeInventory.UI.Dialog_ManageLoadouts.CategorySelection)">
+            <summary>
+            Set category for drawing available items in selection.
+            </summary>
+            <param name="category"> Category for selection. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_ManageLoadouts.Reset">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_ManageLoadouts.DrawWhiteBlackListOptions(UnityEngine.Rect)">
+            <summary>
+            Draw wishlist/blacklist choice on screen.
+            </summary>
+            <param name="canvas"> Rect for drawing. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_ManageLoadouts.DrawTopButtons(Verse.WidgetRow)">
+            <summary>
+            Draw top buttons in <see cref="T:AwesomeInventory.UI.Dialog_ManageLoadouts"/>.
+            </summary>
+            <param name="row"> Helper for drawing. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_ManageLoadouts.DrawItemRow(UnityEngine.Rect,System.Int32,System.Collections.Generic.IList{AwesomeInventory.Loadout.ThingGroupSelector},System.Int32,System.Boolean)">
+            <summary>
+            Draw item information in a row.
+            </summary>
+            <param name="row"> Rect used for drawing. </param>
+            <param name="index"> Position of a <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> in <paramref name="groupSelectors"/>. </param>
+            <param name="groupSelectors"> Thing to draw. </param>
+            <param name="reorderableGroup"> The group this <paramref name="row"/> belongs to. </param>
+            <param name="drawShadow"> If true, it draws a shadow copy of the row. It is used for drawing a row when it is dragged. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_ManageLoadouts.IsOverEncumbered(Verse.Pawn,AwesomeInventory.Loadout.AwesomeInventoryLoadout)">
+            <summary>
+            Check if <paramref name="loadout"/> is too heavy for <paramref name="pawn"/>.
+            </summary>
+            <param name="pawn"> The pawn used for baseline. </param>
+            <param name="loadout"> Loadout to check. </param>
+            <returns> Returns true if <paramref name="loadout"/> is too heavy for <paramref name="pawn"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_ManageLoadouts.DrawWeightBar(UnityEngine.Rect)">
+            <summary>
+            Draw weight bar at the bottom of the loadout window.
+            </summary>
+            <param name="canvas"> Rect for drawing. </param>
+        </member>
+        <member name="T:AwesomeInventory.UI.Dialog_StuffAndQuality">
+            <summary>
+            Dialog window for setting stuff, quality and hit points of things in loadout.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.Dialog_StuffAndQuality._armorStats">
+            <summary>
+            Armor stats that are displayed in window.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.Dialog_StuffAndQuality._baseWeaponStats">
+            <summary>
+            Basic weapon stats that are displayed in window.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.Dialog_StuffAndQuality._meleeWeaponStats">
+            <summary>
+            Melee weapon stats that are displayed in window.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.Dialog_StuffAndQuality._rangedWeaponStats">
+            <summary>
+            Ranged weapon stats that are displayed in window.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.Dialog_StuffAndQuality._generalItemStats">
+            <summary>
+            General item stats that are displayed in window.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_StuffAndQuality.#cctor">
+            <summary>
+            Initializes static members of the <see cref="T:AwesomeInventory.UI.Dialog_StuffAndQuality"/> class.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_StuffAndQuality.#ctor(AwesomeInventory.Loadout.ThingGroupSelector)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.UI.Dialog_StuffAndQuality"/> class.
+            </summary>
+            <param name="groupSelector"> Draw dialog from this selector. </param>
+        </member>
+        <member name="P:AwesomeInventory.UI.Dialog_StuffAndQuality.InitialSize">
+            <summary>
+            Gets size for the dialog window. In fact, it is more like setting size for the window.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_StuffAndQuality.DoWindowContents(UnityEngine.Rect)">
+            <summary>
+            Draw window content in <paramref name="canvas"/>.
+            </summary>
+            <param name="canvas"> Rect for drawing. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_StuffAndQuality.DoWindowContentsForNoStuffItem(UnityEngine.Rect)">
+            <summary>
+            Draw contents for items that are not made from stuff.
+            </summary>
+            <param name="canvas"> Rect for drawing. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_StuffAndQuality.DoWindowContentsGeneral(UnityEngine.Rect)">
+            <summary>
+            Draw items that are made of stuff.
+            </summary>
+            <param name="canvas"> Rect for drawing. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_StuffAndQuality.DrawTitle(UnityEngine.Vector2,System.String,System.Single@)">
+            <summary>
+            Draw title at "position" and return next available Y as rollingY.
+            </summary>
+            <param name="position"> The x and y position for drawing. </param>
+            <param name="title"> Text of the title. </param>
+            <param name="rollingY"> The y coordinate that can be used for drawing next element without overlapping. </param>
+            <returns> The rect in which the title is drawn. </returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_StuffAndQuality.DrawSliders(UnityEngine.Rect)">
+            <summary>
+            Draw quality and hit points sliders.
+            </summary>
+            <param name="rect"> Rect for drawing. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_StuffAndQuality.DrawQualitySlider(UnityEngine.Rect,System.Int32)">
+            <summary>
+            Draw quality slider.
+            </summary>
+            <param name="qualityRect"> Rect for drawing. </param>
+            <param name="dragID"> A unique drag ID that can be used for identifying this slider. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_StuffAndQuality.DrawHitPointsSlider(UnityEngine.Rect,System.Int32)">
+            <summary>
+            Draw hit point slider.
+            </summary>
+            <param name="hitpointRect"> Rect for drawing. </param>
+            <param name="dragID"> A unique drag ID that can be used for identifying this slider. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_StuffAndQuality.DrawSeparateRadioButton(UnityEngine.Rect)">
+            <summary>
+            Draw separate radio button for managing loadout.
+            </summary>
+            <param name="rect"> Rect for drawing the radio button. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_StuffAndQuality.DrawPreviewQuality(Verse.WidgetRow)">
+            <summary>
+            Draw choices for preview quality.
+            </summary>
+            <param name="widgetRow"> Helper for drawing. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_StuffAndQuality.DrawStuffScrollableList(UnityEngine.Rect)">
+            <summary>
+            Draw stuff source and selected stuff scrollable lists.
+            </summary>
+            <param name="canvas"> Rect for drawing two lists. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_StuffAndQuality.DrawStuffSourceScrollableList(UnityEngine.Rect,System.Collections.Generic.IList{Verse.ThingDef},UnityEngine.Vector2@,System.Single@)">
+            <summary>
+            Draw list of stuffs that can be used to make thing.
+            </summary>
+            <param name="outRect"> Rect for drawing. </param>
+            <param name="stuffList"> A list of stuff to draw. </param>
+            <param name="scrollPosition"> Position of the scroll bar in the list. </param>
+            <param name="scrollViewHeight"> The height of the scrollable list. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_StuffAndQuality.DrawSelectedStuffScrollableList(UnityEngine.Rect,UnityEngine.Vector2@,System.Single@)">
+            <summary>
+            Draw a list of stuff that is selected by a player for their loadout.
+            </summary>
+            <param name="outRect"> A rect for drawing. </param>
+            <param name="scrollPosition"> Position of the scroll bar. </param>
+            <param name="scrollViewHeight"> The height of this list. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_StuffAndQuality.DrawStatTableHeader(UnityEngine.Rect,System.Int32,System.Int32,System.Collections.Generic.List{RimWorld.ThingStuffPairWithQuality})">
+            <summary>
+            Draw stuff names and info icon buttons as headers for stat table.
+            </summary>
+            <param name="startRect"> Rect for drawing stats. </param>
+            <param name="start"> Start index from which <paramref name="pairListToDraw"/> should begin to read. </param>
+            <param name="end"> End index which is one greater than the index at which <paramref name="pairListToDraw"/> should stop reading. </param>
+            <param name="pairListToDraw"> A working set of <see cref="T:RimWorld.ThingStuffPairWithQuality"/>. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_StuffAndQuality.StatDrawInfo.op_Explicit(RimWorld.StatDrawEntry)~AwesomeInventory.UI.Dialog_StuffAndQuality.StatDrawInfo">
+            <summary>
+            Adapter for transforming type StatDrawEntry to StatDrawInfo.
+            </summary>
+            <param name="entry"> The <see cref="T:RimWorld.StatDrawEntry"/> for conversion. </param>
+        </member>
+        <member name="T:AwesomeInventory.UI.AwesomeInventoryTex">
+            <summary>
+            Texture resources for Awesome Inventory.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.UI.QualityColor">
+            <summary>
+            Decides display color for each quality level.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColor.Instance">
+            <summary>
+            Gets an implementation of <see cref="T:AwesomeInventory.UI.QualityColor"/>.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColor.Awful">
+            <summary>
+            Gets a color that decorates item of awful quality.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColor.Poor">
+            <summary>
+            Gets a color that decorates item of poor quality.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColor.Normal">
+            <summary>
+            Gets a color that decorates item of normal quality.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColor.Good">
+            <summary>
+            Gets a color that decorates item of good quality.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColor.Excellent">
+            <summary>
+            Gets a color that decorates item of excellent quality.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColor.Masterwork">
+            <summary>
+            Gets a color that decorates item of masterwork quality.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColor.Legendary">
+            <summary>
+            Gets a color that decorates item of legendary quality.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColor.Generic">
+            <summary>
+            Gets a color that decorates generic items or items with multiple stuff source selectted.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColor.AwfulTex">
+            <summary>
+            Gets <see cref="T:UnityEngine.Texture2D"/> for aweful quality.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColor.PoorTex">
+            <summary>
+            Gets <see cref="T:UnityEngine.Texture2D"/> for poor quality.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColor.NormalTex">
+            <summary>
+            Gets <see cref="T:UnityEngine.Texture2D"/> for normal quality.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColor.GoodTex">
+            <summary>
+            Gets <see cref="T:UnityEngine.Texture2D"/> for good quality.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColor.ExcellentTex">
+            <summary>
+            Gets <see cref="T:UnityEngine.Texture2D"/> for excellent quality.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColor.MasterworkTex">
+            <summary>
+            Gets <see cref="T:UnityEngine.Texture2D"/> for masterwork quality.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColor.LegendaryTex">
+            <summary>
+            Gets <see cref="T:UnityEngine.Texture2D"/> for legendary quality.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColor.GenericTex">
+            <summary>
+            Gets <see cref="T:UnityEngine.Texture2D"/> for legendary quality.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.QualityColor.ChangeTheme(System.Int32)">
+            <summary>
+            Change color theme to plugin of <paramref name="id"/>.
+            </summary>
+            <param name="id"> ID of the plugin. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.QualityColor.Register(AwesomeInventory.UI.QualityColor)">
+            <summary>
+            Register <paramref name="qualityColor"/> to <see cref="T:AwesomeInventory.AwesomeInventoryServiceProvider"/>.
+            </summary>
+            <param name="qualityColor"> Service to register. </param>
+        </member>
+        <member name="T:AwesomeInventory.UI.QualityColorDefault">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorDefault.Awful">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorDefault.Poor">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorDefault.Normal">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorDefault.Good">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorDefault.Excellent">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorDefault.Masterwork">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorDefault.Legendary">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorDefault.Generic">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorDefault.ID">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorDefault.DisplayName">
+            <inheritdoc/>
+        </member>
+        <member name="T:AwesomeInventory.UI.QualityColorCCMB">
+            <summary>
+            Color Coded Mood Bar theme for quality color.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorCCMB.Awful">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorCCMB.Poor">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorCCMB.Normal">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorCCMB.Good">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorCCMB.Excellent">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorCCMB.Masterwork">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorCCMB.Legendary">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorCCMB.Generic">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorCCMB.ID">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorCCMB.DisplayName">
+            <inheritdoc/>
+        </member>
+        <member name="T:AwesomeInventory.UI.QualityColorLCT">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorLCT.Awful">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorLCT.Poor">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorLCT.Normal">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorLCT.Good">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorLCT.Excellent">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorLCT.Masterwork">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorLCT.Legendary">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorLCT.Generic">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorLCT.ID">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.UI.QualityColorLCT.DisplayName">
+            <inheritdoc/>
+        </member>
+        <member name="T:AwesomeInventory.UI.GenBar">
+            <summary>
+            Provides generic bar utilities.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.GenBar.BarWithOverlay(UnityEngine.Rect,System.Single,UnityEngine.Texture2D,System.String,System.String,System.String)">
+            <summary>
+            Draw bar with label and overlay text.
+            </summary>
+            <param name="rect"> Position to draw. </param>
+            <param name="fillPercent"> How much the bar is filled. </param>
+            <param name="fillTex"> Texture for filler. </param>
+            <param name="label"> Label to prepand to the bar. </param>
+            <param name="overlayText"> Text to draw over the bar. </param>
+            <param name="tooltip"> A breakdown of weight carried by pawn. </param>
+        </member>
+        <member name="T:AwesomeInventory.UI.RectUtility">
+            <summary>
+            Helper functions for rect.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.RectUtility.ReplaceX(UnityEngine.Rect,System.Single)">
+            <summary>
+            Return a copy of the calling rect but with a new <paramref name="x"/> value.
+            </summary>
+            <param name="rect"> The rect to modify. </param>
+            <param name="x"> New x value for <paramref name="rect"/>. </param>
+            <returns> A <see cref="T:UnityEngine.Rect"/> with the new <paramref name="x"/> value.</returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.RectUtility.ReplaceY(UnityEngine.Rect,System.Single)">
+            <summary>
+            Return a copy of the calling rect but with a new <paramref name="y"/> value.
+            </summary>
+            <param name="rect"> The rect to modify. </param>
+            <param name="y"> New y value for <paramref name="rect"/>. </param>
+            <returns> A <see cref="T:UnityEngine.Rect"/> with the new <paramref name="y"/> value.</returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.RectUtility.ReplaceWidth(UnityEngine.Rect,System.Single)">
+            <summary>
+            Replace the y coordinate in <paramref name="rect"/> with <paramref name="width"/>.
+            </summary>
+            <param name="rect"> The rect to modify. </param>
+            <param name="width"> New width value for <paramref name="rect"/>. </param>
+            <returns> A <see cref="T:UnityEngine.Rect"/> with the new <paramref name="width"/> value.</returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.RectUtility.ReplaceHeight(UnityEngine.Rect,System.Single)">
+            <summary>
+            Replace the y coordinate in <paramref name="rect"/> with <paramref name="height"/>.
+            </summary>
+            <param name="rect"> The rect to modify. </param>
+            <param name="height"> New height value for <paramref name="rect"/>. </param>
+            <returns> A <see cref="T:UnityEngine.Rect"/> with the new <paramref name="height"/> value.</returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.RectUtility.ReplacexMin(UnityEngine.Rect,System.Single)">
+            <summary>
+            Replace the xMin in <paramref name="rect"/> with <paramref name="xMin"/>.
+            </summary>
+            <param name="rect"> The rect to modify. </param>
+            <param name="xMin"> New xMin value for <paramref name="rect"/>. </param>
+            <returns> A <see cref="T:UnityEngine.Rect"/> with the new <paramref name="xMin"/> value.</returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.RectUtility.ReplaceyMin(UnityEngine.Rect,System.Single)">
+            <summary>
+            Replace the yMin in <paramref name="rect"/> with <paramref name="yMin"/>.
+            </summary>
+            <param name="rect"> The rect to modify. </param>
+            <param name="yMin"> New yMin value for <paramref name="rect"/>. </param>
+            <returns> A <see cref="T:UnityEngine.Rect"/> with the new <paramref name="yMin"/> value.</returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.RectUtility.ReplacexMax(UnityEngine.Rect,System.Single)">
+            <summary>
+            Replace the xMax in <paramref name="rect"/> with <paramref name="xMax"/>.
+            </summary>
+            <param name="rect"> The rect to modify. </param>
+            <param name="xMax"> New xMax value for <paramref name="rect"/>. </param>
+            <returns> A <see cref="T:UnityEngine.Rect"/> with the new <paramref name="xMax"/> value.</returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.RectUtility.ReplaceyMax(UnityEngine.Rect,System.Single)">
+            <summary>
+            Replace the yMax in <paramref name="rect"/> with <paramref name="yMax"/>.
+            </summary>
+            <param name="rect"> The rect to modify. </param>
+            <param name="yMax"> New yMax value for <paramref name="rect"/>. </param>
+            <returns> A <see cref="T:UnityEngine.Rect"/> with the new <paramref name="yMax"/> value.</returns>
+        </member>
+        <member name="T:AwesomeInventory.UI.WidgetRowUtility">
+            <summary>
+            Utilities for <see cref="T:Verse.WidgetRow"/>.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.WidgetRowUtility.MaxWidthField">
+            <summary>
+            Gets maxWidth field in <see cref="T:Verse.WidgetRow"/>.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.UI.WidgetRowUtility.StartXField">
+            <summary>
+            Gets startX field in <see cref="T:Verse.WidgetRow"/>.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.WidgetRowUtility.AvailableWidth(Verse.WidgetRow)">
+            <summary>
+            Available width left in <see cref="T:Verse.WidgetRow"/>.
+            </summary>
+            <param name="row"> Instance of <see cref="T:Verse.WidgetRow"/>. </param>
+            <returns> Available width left in <paramref name="row"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.WidgetRowUtility.LabelWithHighlight(Verse.WidgetRow,System.String,System.Single)">
+            <summary>
+            Draw label which will be highlighted when mouse is over.
+            </summary>
+            <param name="widgetRow"> Helper for drawing. </param>
+            <param name="text"> Text for label. </param>
+            <param name="width"> Width of the label. </param>
+            <returns> Rect in which the label is drawn. </returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.WidgetRowUtility.LabelWithHighlight(Verse.WidgetRow,System.String,System.String,System.Single)">
+            <summary>
+            Draw label which will be highlighted when mouse is over.
+            </summary>
+            <param name="widgetRow"> Helper for drawing. </param>
+            <param name="text"> Text for label. </param>
+            <param name="tooltip"> Tooltip for this label when mouse is over. </param>
+            <param name="width"> Width of the label. </param>
+            <returns> Rect in which the label is drawn. </returns>
+        </member>
+        <member name="P:AwesomeInventory.UI.DrawUtility.CurrentPadding">
+            <summary>
+            Gets padding between the border of window and its content.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawUtility.DrawLabelButton(UnityEngine.Rect,System.String,System.Action)">
+            <summary>
+            Draw a lable which doubles as a button.
+            </summary>
+            <param name="rect"> Rect for drawing. </param>
+            <param name="label"> Label to draw in <paramref name="rect"/>. </param>
+            <param name="action"> Action to take when it is clicked. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawUtility.DrawLabelButton(UnityEngine.Rect,System.String,System.Action,System.Boolean)">
+            <summary>
+            Draw a lable which doubles as a button.
+            </summary>
+            <param name="rect"> Rect for drawing. </param>
+            <param name="label"> Label to draw in <paramref name="rect"/>. </param>
+            <param name="action"> Action to take when it is clicked. </param>
+            <param name="toggleable"> Indicates if button can be toggled and uses a selected texture if true. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawUtility.GetButtonSize(UnityEngine.Rect,System.Single,System.Single,System.Boolean)">
+            <summary>
+            Return button size based on the provided rect
+            </summary>
+            <param name="rect"></param>
+            <param name="scale"> size of the button relative to rect </param>
+            <param name="ratio"> ratio of the button's length to width. Default is golden ratio. </param>
+            <param name="vertical">direction for the length of the button </param>
+            <returns></returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawUtility.ColorizeByQuality(System.String,Verse.Thing)">
+            <summary>
+            Color <paramref name="s"/> based on <paramref name="thing"/> quality.
+            </summary>
+            <param name="s"> String to color. </param>
+            <param name="thing"> Thing with quality. </param>
+            <returns> Colored string. </returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawUtility.ColorizeByQuality(System.String,RimWorld.QualityCategory)">
+            <summary>
+            Color <paramref name="s"/> based on <paramref name="qualityCategory"/>.
+            </summary>
+            <param name="s"> String to color. </param>
+            <param name="qualityCategory"> Quality value. </param>
+            <returns> Colored string. </returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawUtility.GetIndexRangeFromScrollPosition(System.Single,System.Single,System.Int32@,System.Int32@,System.Single)">
+            <summary>
+            Get the index range for a list whose content will be rendered on screen.
+            </summary>
+            <param name="totalLength"> The length of a scrollable list. </param>
+            <param name="scrollPosition"> Scroll position for the list view. </param>
+            <param name="from"> Start index of a list where drawing begins. </param>
+            <param name="to"> <paramref name="to"/> is positioned at one element behind the index where drawing should stop. </param>
+            <param name="unitLength"> The length of a unit elemnt in the list. </param>
+        </member>
+        <member name="T:AwesomeInventory.Common.HarmonyPatches.AddHumanlikeOrders_AwesomeInventory_Patch">
+            <summary>
+            Add options to context menu when right-click on items on map.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Common.HarmonyPatches.AddHumanlikeOrders_AwesomeInventory_Patch.Postfix(UnityEngine.Vector3,Verse.Pawn,System.Collections.Generic.List{Verse.FloatMenuOption})">
+            <summary>
+            Add options to context menu when right-click on items on map.
+            </summary>
+            <param name="clickPos"> Position of the mouse when right-click. </param>
+            <param name="pawn"> Currently focused pawn. </param>
+            <param name="opts"> Options displayed in context menu. </param>
+        </member>
+        <member name="T:AwesomeInventory.Common.HarmonyPatches.OutfitDatabase_TryDelete">
+            <summary>
+            Patch into <see cref="M:RimWorld.OutfitDatabase.TryDelete(RimWorld.Outfit)"/>, so to synchronize with <see cref="T:AwesomeInventory.Loadout.LoadoutManager"/>.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Common.HarmonyPatches.OutfitDatabase_TryDelete.Postfix(RimWorld.Outfit,Verse.AcceptanceReport)">
+            <summary>
+            Patch into <see cref="M:RimWorld.OutfitDatabase.TryDelete(RimWorld.Outfit)"/>, so to synchronize with <see cref="T:AwesomeInventory.Loadout.LoadoutManager"/>.
+            </summary>
+            <param name="outfit"> Outfit to remove. </param>
+            <param name="__result"> Result from <see cref="M:RimWorld.OutfitDatabase.TryDelete(RimWorld.Outfit)"/>. </param>
+        </member>
+        <member name="T:AwesomeInventory.Common.HarmonyPatches.Pawn_OutfitTracker_CurrentOutfit">
+            <summary>
+            Patch into the setter of <see cref="P:RimWorld.Pawn_OutfitTracker.CurrentOutfit"/>, so to synchronize with AILoadout.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Common.HarmonyPatches.Pawn_OutfitTracker_CurrentOutfit.Postfix(RimWorld.Outfit,RimWorld.Pawn_OutfitTracker)">
+            <summary>
+            Patch into the setter of <see cref="P:RimWorld.Pawn_OutfitTracker.CurrentOutfit"/>, so to synchronize with AILoadout.
+            </summary>
+            <param name="value"> New loadout. </param>
+            <param name="__instance"> Instance of <see cref="T:RimWorld.Pawn_OutfitTracker"/>. </param>
+        </member>
+        <member name="T:AwesomeInventory.Common.HarmonyPatches.Thing_RPGI_Patch">
+            <summary>
+            Patch <see cref="M:Verse.Thing.SplitOff(System.Int32)"/>, so to synchronize with <see cref="!:AILoadout"/>.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Common.HarmonyPatches.Thing_RPGI_Patch.SplitOff_Postfix(Verse.Thing,System.Int32)">
+            <summary>
+            Patch <see cref="M:Verse.Thing.SplitOff(System.Int32)"/>, so to synchronize with <see cref="!:AILoadout"/>.
+            </summary>
+            <param name="__instance"> Thing that is being splitted. </param>
+            <param name="count"> Number of thing that is splitted. </param>
+        </member>
+        <member name="T:AwesomeInventory.HarmonyPatches.Outfit_ExposeData">
+            <summary>
+            Patch <see cref="M:RimWorld.Outfit.ExposeData"/>, so that <see cref="T:AwesomeInventory.Loadout.AwesomeInventoryLoadout"/> is also saved.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.HarmonyPatches.Outfit_ExposeData.Postfix(RimWorld.Outfit)">
+            <summary>
+            Patch <see cref="M:RimWorld.Outfit.ExposeData"/>, so that <see cref="T:AwesomeInventory.Loadout.AwesomeInventoryLoadout"/> is also saved.
+            </summary>
+            <param name="__instance"> instance of <see cref="T:AwesomeInventory.Loadout.AwesomeInventoryLoadout"/>. </param>
+        </member>
+        <member name="T:AwesomeInventory.HarmonyPatches.Pawn_ApparelTracker_ApparelChanged_Patch">
+            <summary>
+            Notify gear tab when apparel is changed.
+            </summary>
+        </member>
+        <member name="E:AwesomeInventory.HarmonyPatches.Pawn_ApparelTracker_ApparelChanged_Patch.ApparelChangedEvent">
+            <summary>
+            Notify subscriber that apparel has changed.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.HarmonyPatches.Pawn_ApparelTracker_ApparelChanged_Patch.Postfix">
+            <summary>
+            Notify <see cref="T:AwesomeInventory.UI.AwesomeInventoryTabBase"/> that apparel has changed.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.HarmonyPatches.Pawn_GetGizmos_AwesomeInventory_Patch">
+            <summary>
+            Patch into pawn's gizmos, so to provide a Gear gizmo to open gear tab.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.HarmonyPatches.Pawn_GetGizmos_AwesomeInventory_Patch.Postfix(System.Collections.Generic.IEnumerable{Verse.Gizmo},Verse.Pawn)">
+            <summary>
+            Patch into pawn's gizmos, so to provide a Gear gizmo to open gear tab.
+            </summary>
+            <param name="gizmos"> Gizmos to add to. </param>
+            <param name="__instance"> Pawn who owns the gizmos. </param>
+            <returns> A collection of <see cref="T:Verse.Gizmo"/> that will display on screen. </returns>
+        </member>
+        <member name="T:AwesomeInventory.Utilities.IInventoryHelper">
+            <summary>
+            Helper class for inventory management.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Utilities.IInventoryHelper.WillBeOverEncumberedAfterPickingUp(Verse.Pawn,Verse.Thing,System.Int32)">
+            <summary>
+            Check if <paramref name="pawn"/> will be over encumbered after picking up <paramref name="count"/> of <paramref name="thing"/>.
+            </summary>
+            <param name="pawn"> Pawn to check. </param>
+            <param name="thing"> Thing to pick up. </param>
+            <param name="count"> Number of <paramref name="thing"/> to pick up. </param>
+            <returns> Returns true if <paramref name="pawn"/> will be over encumbered. </returns>
+        </member>
+        <member name="T:AwesomeInventory.Jobs.DressJob">
+            <summary>
+            A job describes wearing apparels.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.DressJob.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Jobs.DressJob"/> class.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.DressJob.#ctor(Verse.JobDef,Verse.LocalTargetInfo,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Jobs.DressJob"/> class.
+            </summary>
+            <param name="jobDef"> Definitino of the job. </param>
+            <param name="localTargetInfo"> Information on the job target. </param>
+            <param name="force"> If true, set apparel forced to wear. </param>
+        </member>
+        <member name="P:AwesomeInventory.Jobs.DressJob.ForceWear">
+            <summary>
+            Gets or sets a value indicating whether set apparel forced to wear.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Dress">
+            <summary>
+            Equip apparel and put the replaced into inventory instead of dropping it on the map.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Dress.TryMakePreToilReservations(System.Boolean)">
+            <summary>
+            Make reservation on apparel to undress.
+            </summary>
+            <param name="errorOnFailed"> If true, logs error when fails. </param>
+            <returns> Returns true, if all reservations are made. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Dress.GetReport">
+            <summary>
+            Returns a report string for displaying on pawn's HUD.
+            </summary>
+            <returns> A report string. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Dress.Notify_Starting">
+            <summary>
+            When notified job is about to start, calculate unequip delay for underlying apparel.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Dress.MakeNewToils">
+            <summary>
+            Make instruction on what to do.
+            </summary>
+            <returns> A list of instruction. </returns>
+        </member>
+        <member name="T:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Undress">
+            <summary>
+            When apparel is being removed, instead of dropping it on the map, it is transfered to pawn's inventory.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Undress.TryMakePreToilReservations(System.Boolean)">
+            <summary>
+            Make reservation on apparel to undress.
+            </summary>
+            <param name="errorOnFailed"> If true, logs error when fails. </param>
+            <returns> Returns true, if all reservations are made. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Undress.Notify_Starting">
+            <summary>
+            When notified job is about to start, calculate unequip delay for underlying apparel.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Undress.MakeNewToils">
+            <summary>
+            Make instruction on what to do.
+            </summary>
+            <returns> A list of instruction. </returns>
+        </member>
+        <member name="T:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Unload">
+            <summary>
+            Difference between this driver and the vanilla JobDriver_HaulToCell is
+            pawn will first move to the reserved cell then unload while vanilla in reversed order.
+            Check JobDriver_HaulToCell for more information.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Unload.GetReport">
+            <summary>
+            Get a report string for displaying.
+            </summary>
+            <returns> A report string. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Unload.TryMakePreToilReservations(System.Boolean)">
+            <summary>
+            Make reservation for job targets before doing the job.
+            </summary>
+            <param name="errorOnFailed"> If true, log result as error if failed to make a reservation. </param>
+            <returns> Returns true if a reservation is made. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Unload.Notify_Starting">
+            <summary>
+            Notification that is given to this driver.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Unload.MakeNewToils">
+            <summary>
+            Give instructions on how to do job.
+            </summary>
+            <returns> A list of instructions. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Unload.Init(Verse.IntVec3,RimWorld.IHaulDestination)">
+            <summary>
+            Initialize states based on the returned result from <see cref="M:RimWorld.StoreUtility.TryFindBestBetterStorageFor(Verse.Thing,Verse.Pawn,Verse.Map,RimWorld.StoragePriority,RimWorld.Faction,Verse.IntVec3@,RimWorld.IHaulDestination@,System.Boolean)"/>.
+            </summary>
+            <param name="foundCell"> Found cell for storage. </param>
+            <param name="haulDestination"> Destination object for hauling. </param>
+        </member>
+        <member name="T:AwesomeInventory.Jobs.JobGiver_AwesomeInventory_FindApparels">
+            <summary>
+            Gives out a job if a proper apparel is found on the map.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobGiver_AwesomeInventory_FindApparels.TryGiveJob(Verse.Pawn)">
+            <summary>
+            Gives out a job if a proper apparel is found on the map.
+            </summary>
+            <param name="pawn"> The pawn in question. </param>
+            <returns> A 9 to 5 job. </returns>
+        </member>
+        <member name="T:AwesomeInventory.Jobs.JobGiver_AwesomeInventory_FindItems">
+            <summary>
+            Find items that fits in <see cref="T:AwesomeInventory.Loadout.AwesomeInventoryLoadout"/>.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobGiver_AwesomeInventory_FindItems.TryGiveJob(Verse.Pawn)">
+            <summary>
+            Try to give a job to <paramref name="pawn"/> for items that needs to restock.
+            </summary>
+            <param name="pawn"> Pawn for the job. </param>
+            <returns> A job to stock up items in <see cref="T:AwesomeInventory.Loadout.AwesomeInventoryLoadout"/>. </returns>
+        </member>
+        <member name="T:AwesomeInventory.Jobs.JobGiver_AwesomeInventory_FindWeapon">
+            <summary>
+            Find weapon that fits the wishlist of loadout.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobGiver_AwesomeInventory_FindWeapon.TryGiveJob(Verse.Pawn)">
+            <summary>
+            Try to give a job to <paramref name="pawn"/>.
+            </summary>
+            <param name="pawn"> Pawn that will be assigned a job to. </param>
+            <returns> A job assigned to <paramref name="pawn"/>. </returns>
+        </member>
+        <member name="T:AwesomeInventory.Jobs.JobGiver_AwesomeInventory_OpportunisticHaul">
+            <summary>
+            Use the smallest search radius to search items that can be hauled.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobGiver_AwesomeInventory_OpportunisticHaul.TryGiveJob(Verse.Pawn)">
+            <summary>
+            Give a haul job to <paramref name="pawn"/>.
+            </summary>
+            <param name="pawn"> Pawm that looks for a job. </param>
+            <returns> A potential job for <paramref name="pawn"/>. </returns>
+        </member>
+        <member name="T:AwesomeInventory.Jobs.JobGiver_AwesomeInventory_TakeArm">
+            <summary>
+                Find pawn a suitable weapon. This JobGiver is ignored for colonists when Simple Sidearm is present.
+            It is inserted to ThinkNode_SubtreesByTag with tag, Humanlike_PostDuty. Check Humanlike.xml for more info.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobGiver_AwesomeInventory_TakeArm.TryGiveJob(Verse.Pawn)">
+            <summary>
+            Try to give a job to <paramref name="pawn"/>.
+            </summary>
+            <param name="pawn"> Pawn that will be assigned a job to. </param>
+            <returns> A job assigned to <paramref name="pawn"/>. </returns>
+        </member>
+        <member name="T:AwesomeInventory.Jobs.JobGiver_FindItemByRadius">
+            <summary>
+            Find item by preset radius.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Jobs.JobGiver_FindItemByRadius._radius">
+            <summary>
+            A list of radius that defines the range of search.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Jobs.JobGiver_FindItemByRadius._tinyRadiusFactor">
+            <summary>
+            A search factor that times the map size to get a tiny search range.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Jobs.JobGiver_FindItemByRadius._smallRadiusFactor">
+            <summary>
+            A search factor that times the map size to get a small search range.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Jobs.JobGiver_FindItemByRadius._mediumRadiusFactor">
+            <summary>
+            A search factor that times the map size to get a medium search range.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Jobs.JobGiver_FindItemByRadius._lastUsedRadiusIndex">
+            <summary>
+            Last used radius index.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Jobs.JobGiver_FindItemByRadius._itemFound">
+            <summary>
+            Result of the last search.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Jobs.JobGiver_FindItemByRadius._validatorBase">
+            <summary>
+            Universal validation.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Jobs.JobGiver_FindItemByRadius.DefaultRadiusIndex">
+            <summary>
+            Gets the default starting index used for querying _radius.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Jobs.JobGiver_FindItemByRadius.Radius">
+            <summary>
+            Gets a copy of currently used radius.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Jobs.JobGiver_FindItemByRadius.LastUsedRadiusIndex">
+            <summary>
+            Gets the last used radius index.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Jobs.JobGiver_FindItemByRadius.Itemfound">
+            <summary>
+            Gets a value indicating whether last search found an item.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobGiver_FindItemByRadius.FindItem(Verse.Pawn,System.Collections.Generic.IEnumerable{Verse.Thing},System.Func{Verse.Thing,System.Boolean},System.Func{Verse.Thing,System.Single},System.Int32)">
+            <summary>
+            Find the best fitted item in <paramref name="searchSet"/>.
+            </summary>
+            <param name="pawn"> Pawn who needs a job. </param>
+            <param name="searchSet"> A list of candidate items. </param>
+            <param name="validator"> Validate if item in <paramref name="searchSet"/> is suitable. </param>
+            <param name="priorityGetter"> Give a priority value for items in <paramref name="searchSet"/>. </param>
+            <param name="searchLevel"> Number of search radius to use. </param>
+            <returns> Returns the item that is found, null if none is found. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobGiver_FindItemByRadius.Reset(Verse.Pawn)">
+            <summary>
+            Reset search radius based on the map <paramref name="pawn"/> is currently in.
+            </summary>
+            <param name="pawn"> Pawn that needs a job. </param>
+        </member>
+        <member name="T:AwesomeInventory.Jobs.AwesomeInventory_JobDefOf">
+            <summary>
+            Job def provided by AwesomeInventory.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Jobs.AwesomeInventory_JobDefOf.AwesomeInventory_Unload">
+            <summary>
+            Unload inventory.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Jobs.AwesomeInventory_JobDefOf.AwesomeInventory_Dress">
+            <summary>
+            Wear apparel and put the previously equipped into inventory.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Jobs.AwesomeInventory_JobDefOf.AwesomeInventory_Undress">
+            <summary>
+            Put worn apparel to inventory.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Jobs.AwesomeInventory_JobDefOf.AwesomeInventory_MapEquip">
+            <summary>
+            Equip items from map.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_MapEquip">
+            <summary>
+            Equip weapon on the map and put the previously equipped into inventory.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_MapEquip.TryMakePreToilReservations(System.Boolean)">
+            <summary>
+            Make reservation before action.
+            </summary>
+            <param name="errorOnFailed"> If true, throw errors on failed. </param>
+            <returns> Returns true if a reservation is made. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.JobDriver_AwesomeInventory_MapEquip.MakeNewToils">
+            <summary>
+            Make detailed instruction on how to do the job.
+            </summary>
+            <returns> Instructions on what to do. </returns>
+        </member>
+        <member name="T:AwesomeInventory.Jobs.AwesomeInventoryUnloadNow">
+            <summary>
+            Handles the Unload Now functionality.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.AwesomeInventoryUnloadNow.ThingInQueue(Verse.Pawn,Verse.Thing)">
+            <summary>
+            Check if <paramref name="thing"/> is already on an unload job assigned to <paramref name="pawn"/>.
+            </summary>
+            <param name="pawn"> Pawn that has unload jobs. </param>
+            <param name="thing"> Thing to check. </param>
+            <returns> Returns true if <paramref name="thing"/> is assigend to an unload job. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.AwesomeInventoryUnloadNow.StopJob(Verse.Pawn,Verse.Thing)">
+            <summary>
+            Stop an unload job.
+            </summary>
+            <param name="pawn"> Looks for unload jobs on this pawn. </param>
+            <param name="thing"> Thing that is assigned to an unload job. </param>
+            <remarks> Safe to call if thing is null or thing is not assigned an unload job. </remarks>
+        </member>
+        <member name="M:AwesomeInventory.Jobs.AwesomeInventoryUnloadNow.QueueJob(Verse.Pawn,Verse.Thing)">
+            <summary>
+            Queue an unload job on <paramref name="pawn"/> for <paramref name="thing"/>.
+            </summary>
+            <param name="pawn"> Pawn the unload job assigns to. </param>
+            <param name="thing"> Thing to be queued for an unload job. </param>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.AwesomeInventoryLoadout">
+            <summary>
+            It inherits from the "Outfit" class, is added to outfitDatabase and holds information about loadout.
+            </summary>
+            <remarks>
+            <para>
+                The reason for these callback calling design is to prevent code outside the callback loop to
+             invoke the callbacks. TAS pattern can be used to make the code cleaner but exposed to the risk of
+             race condition in multi-player mod and future iteration in the vanilla game code. In such cases,
+             locking is desired. As for now, a good old callback loop will suffice.
+            </para>
+            </remarks>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.AwesomeInventoryLoadout._thingGroupSelectors">
+            <summary>
+            A collection of <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/>s that dictates what items to look for.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.AwesomeInventoryLoadout._blacklistSelectors">
+            <summary>
+            Items fit in this selectors will be excluded from things the pawn are actively searching for.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.AwesomeInventoryLoadout._addNewThingGroupSelectorCallbacks">
+            <summary>
+            Gets callbacks that are raised whenever a <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> is added to this loadout.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.AwesomeInventoryLoadout._removeThingGroupSelectorCallbacks">
+            <summary>
+            Gets callbacks that are raised whenever a <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> is removed from this loadout.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.AwesomeInventoryLoadout._thingGroupSelectorStackCountChangedCallbacks">
+            <summary>
+            Gets callbacks that are raised whenever stack count in a <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> is changed..
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.AwesomeInventoryLoadout._isDirty">
+            <summary>
+            If true, this loadout has changed since last read.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.AwesomeInventoryLoadout"/> class.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.#ctor(AwesomeInventory.Loadout.AwesomeInventoryLoadout)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.AwesomeInventoryLoadout"/> class.
+            </summary>
+            <param name="other"> Copy <paramref name="other"/> to this loadout. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.#ctor(Verse.Pawn)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.AwesomeInventoryLoadout"/> class.
+            </summary>
+            <param name="pawn"> Initialize <see cref="T:AwesomeInventory.Loadout.AwesomeInventoryLoadout"/> with items on this <paramref name="pawn"/>. </param>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.AwesomeInventoryLoadout.Weight">
+            <summary>
+            Gets weight for this loadout.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.AwesomeInventoryLoadout.Count">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.AwesomeInventoryLoadout.IsReadOnly">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.AwesomeInventoryLoadout.BlackList">
+            <summary>
+            Gets a blacklist of items that thie loadout does not accept.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.AwesomeInventoryLoadout.Item(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.IncludedInBlacklist(Verse.Thing)">
+            <summary>
+            Check if <paramref name="thing"/> is included in the blacklist.
+            </summary>
+            <param name="thing"> Thing to check. </param>
+            <returns> Returns true if <paramref name="thing"/> is in the blacklist. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.Add(AwesomeInventory.Loadout.ThingGroupSelector)">
+            <summary>
+            Add new item to loadout.
+            </summary>
+            <param name="item"> Item to add. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.Clear">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.Contains(AwesomeInventory.Loadout.ThingGroupSelector)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.CopyTo(AwesomeInventory.Loadout.ThingGroupSelector[],System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.Remove(AwesomeInventory.Loadout.ThingGroupSelector)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.AddToBlacklist(AwesomeInventory.Loadout.ThingGroupSelector)">
+            <summary>
+            Add <paramref name="groupSelector"/> to blacklist.
+            </summary>
+            <param name="groupSelector"> <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> to add.</param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.RemoveFromBlacklist(AwesomeInventory.Loadout.ThingGroupSelector)">
+            <summary>
+            Remove <paramref name="groupSelector"/> from blacklist.
+            </summary>
+            <param name="groupSelector"> <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> to remove. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.IndexOf(AwesomeInventory.Loadout.ThingGroupSelector)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.Insert(System.Int32,AwesomeInventory.Loadout.ThingGroupSelector)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.RemoveAt(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.AddStackCountChangedCallback(System.Action{AwesomeInventory.Loadout.ThingGroupSelector,System.Int32})">
+            <summary>
+            Add callback to stack-count-changed event.
+            </summary>
+            <param name="callback"> Callback to add. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.AddAddNewThingGroupSelectorCallback(System.Action{AwesomeInventory.Loadout.ThingGroupSelector})">
+            <summary>
+            Add callback to event in which a new <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> is added to this loadout.
+            </summary>
+            <param name="callback"> Callback to add. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.AddRemoveThingGroupSelectorCallback(System.Action{AwesomeInventory.Loadout.ThingGroupSelector})">
+            <summary>
+            Add callback to event in which a <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> is removed from this loadout.
+            </summary>
+            <param name="callback"> Callback to add. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.RemoveStackCountChangedCallback(System.Action{AwesomeInventory.Loadout.ThingGroupSelector,System.Int32})">
+            <summary>
+            Remove a callback from an event in which stack count of a <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> is changed.
+            </summary>
+            <param name="callback"> Callback to add. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.RemoveAddNewThingGroupSelectorCallback(System.Action{AwesomeInventory.Loadout.ThingGroupSelector})">
+            <summary>
+            Remove a callback from an event in which a new <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> is added to this loadout.
+            </summary>
+            <param name="callback"> Callback to add. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.RemoveRemoveThingGroupSelectorCallback(System.Action{AwesomeInventory.Loadout.ThingGroupSelector})">
+            <summary>
+            Remove a callback from an event in which a <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> is removed from this loadout.
+            </summary>
+            <param name="callback"> Callback to add. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.AddStackCountChangedCallbackTo(AwesomeInventory.Loadout.ThingGroupSelector)">
+            <summary>
+            Add callback to <paramref name="groupSelector"/>.
+            </summary>
+            <param name="groupSelector"> The object that will invoke the callback. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.AddAddNewThingSelectorCallbackTo(AwesomeInventory.Loadout.ThingGroupSelector)">
+            <summary>
+            Add callback to <paramref name="groupSelector"/>.
+            </summary>
+            <param name="groupSelector"> The object that will invoke the callback. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.AddRemoveThingSelectorCallbackTo(AwesomeInventory.Loadout.ThingGroupSelector)">
+            <summary>
+            Add callback to <paramref name="groupSelector"/>.
+            </summary>
+            <param name="groupSelector"> The object that will invoke the callback. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.ExposeData">
+            <summary>
+            Save state.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.UpdateReadout">
+            <summary>
+            Update readout if the loadout has changed.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AwesomeInventoryLoadout.AddItems(System.Collections.Generic.IEnumerable{Verse.Thing})">
+            <summary>
+            Create <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> for each items in <paramref name="things"/> and add it to this loadout.
+            </summary>
+            <param name="things"> Things to add to loadout. </param>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.GenericThingSelector">
+            <summary>
+            Selector for generic things, e.g., generic meals and generic medicines.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.GenericThingSelector.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.GenericThingSelector"/> class.
+            Reserved for xml serialization, should not be called anywhere else.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.GenericThingSelector.#ctor(AwesomeInventory.Loadout.AIGenericDef)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.GenericThingSelector"/> class.
+            </summary>
+            <param name="genericDef"> The generic def used for this selector. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.GenericThingSelector.#ctor(AwesomeInventory.Loadout.GenericThingSelector)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.GenericThingSelector"/> class.
+            </summary>
+            <param name="other"> Copy <paramref name="other"/> to this selector. </param>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.GenericThingSelector.LabelCapNoCount">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.GenericThingSelector.Weight">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.GenericThingSelector.Allows(Verse.Thing)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.GenericThingSelector.ExposeData">
+            <summary>
+            Save state.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.SingleThingSelector">
+            <summary>
+            Select suitable thing for <see cref="T:AwesomeInventory.Loadout.AwesomeInventoryLoadout"/>.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.SingleThingSelector.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.SingleThingSelector"/> class.
+            Used by xml serialization, should not be called anywhere else.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.SingleThingSelector.#ctor(Verse.ThingDef,Verse.ThingDef)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.SingleThingSelector"/> class.
+            </summary>
+            <param name="thingDef"> <see cref="T:Verse.ThingDef"/> this selector is for. </param>
+            <param name="stuff"> Stuff to make <paramref name="thingDef"/>. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.SingleThingSelector.#ctor(Verse.Thing)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.SingleThingSelector"/> class.
+            </summary>
+            <param name="thing"> A template for initializing the selector. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.SingleThingSelector.#ctor(AwesomeInventory.Loadout.SingleThingSelector)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.SingleThingSelector"/> class.
+            </summary>
+            <param name="other"> Copy <paramref name="other"/> to this selector. </param>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.SingleThingSelector.AllowedThing">
+            <summary>
+            Gets the <see cref="T:Verse.ThingDef"/> this selector is for.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.SingleThingSelector.ThingSample">
+            <summary>
+            Gets a sample of thing that could be chosen by this selector.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.SingleThingSelector.AllowedStuff">
+            <summary>
+            Gets the stuff that is allowed.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.SingleThingSelector.LabelCapNoCount">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.SingleThingSelector.AllowedQualityLevel">
+            <summary>
+            Gets quality level of items that is allowed by this selector.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.SingleThingSelector.Weight">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.SingleThingSelector.op_Equality(AwesomeInventory.Loadout.SingleThingSelector,AwesomeInventory.Loadout.SingleThingSelector)">
+            <summary>
+            Compare equality between <paramref name="A"/> and <paramref name="B"/>.
+            </summary>
+            <param name="A"> <see cref="T:AwesomeInventory.Loadout.SingleThingSelector"/> A to check equality. </param>
+            <param name="B"> <see cref="T:AwesomeInventory.Loadout.SingleThingSelector"/> B to check equality. </param>
+            <returns> Returns true if <paramref name="A"/> equals to <paramref name="B"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.SingleThingSelector.op_Inequality(AwesomeInventory.Loadout.SingleThingSelector,AwesomeInventory.Loadout.SingleThingSelector)">
+            <summary>
+            Compare inequality between <paramref name="A"/> and <paramref name="B"/>.
+            </summary>
+            <param name="A"> <see cref="T:AwesomeInventory.Loadout.SingleThingSelector"/> A to check equality. </param>
+            <param name="B"> <see cref="T:AwesomeInventory.Loadout.SingleThingSelector"/> B to check equality. </param>
+            <returns> Returns true if <paramref name="A"/> is not equals to <paramref name="B"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.SingleThingSelector.SetStuff(Verse.ThingDef)">
+            <summary>
+            Add stuff to the allowed list.
+            </summary>
+            <param name="stuffDef"> Stuff to add. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.SingleThingSelector.SetQualityRange(RimWorld.QualityRange)">
+            <summary>
+            Set quality range.
+            </summary>
+            <param name="qualityRange"> Range to set. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.SingleThingSelector.Allows(Verse.Thing)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.SingleThingSelector.Equals(AwesomeInventory.Loadout.SingleThingSelector)">
+            <inheritdoc />
+        </member>
+        <member name="M:AwesomeInventory.Loadout.SingleThingSelector.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:AwesomeInventory.Loadout.SingleThingSelector.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:AwesomeInventory.Loadout.SingleThingSelector.ExposeData">
+            <summary>
+            Save state.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.SingleThingSelector.UpdateReadout">
+            <summary>
+            Update readout for this selector when quality level, hit point percentage or stuff source is changed.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.SingleThingSelector.Comparer">
+            <summary>
+            Implements <see cref="T:System.Collections.Generic.IComparer`1"/> for <see cref="T:AwesomeInventory.Loadout.SingleThingSelector"/>.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.SingleThingSelector.Comparer.Instance">
+            <summary>
+            Gets a comparer instance for <see cref="T:AwesomeInventory.Loadout.SingleThingSelector"/>.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.SingleThingSelector.Comparer.Compare(AwesomeInventory.Loadout.SingleThingSelector,AwesomeInventory.Loadout.SingleThingSelector)">
+            <inheritdoc />
+            <remarks> Selector with more stringent criteria precedes the lesser one. </remarks>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.ThingGroupSelector">
+            <summary>
+            A gorup of <see cref="T:AwesomeInventory.Loadout.ThingSelector"/> that shares a common <see cref="T:Verse.ThingDef"/>.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.ThingGroupSelector._stackCountChangedCallback">
+            <summary>
+            A callback for stack count changed event.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.ThingGroupSelector._addNewThingSelectorCallback">
+            <summary>
+            A callback that would be invoked when a <see cref="T:AwesomeInventory.Loadout.ThingSelector"/> is added to this group.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.ThingGroupSelector._removeThingSelectorCallback">
+            <summary>
+            A callback that would be invoked when a <see cref="T:AwesomeInventory.Loadout.ThingSelector"/> is removed from this group.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> class.
+            </summary>
+            It is reserved for xml serialization and should not be called elsewhere.
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.#ctor(Verse.ThingDef)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> class.
+            </summary>
+            <param name="allowedThing"> A <see cref="T:Verse.ThingDef"/> that is allowed by this selector. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.#ctor(AwesomeInventory.Loadout.ThingGroupSelector)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> class.
+            </summary>
+            <param name="other"> Copy <paramref name="other"/> to this selector. </param>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.ThingGroupSelector.SingleThingSelectors">
+            <summary>
+            Gets a list of <see cref="T:AwesomeInventory.Loadout.SingleThingSelector"/> in this group selector.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.ThingGroupSelector.AllowedThing">
+            <summary>
+            Gets a <see cref="T:Verse.ThingDef"/> that is allowed by this selector.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.ThingGroupSelector.AllowedStackCount">
+            <summary>
+            Gets the stack count that is allowed.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.ThingGroupSelector.LabelCapNoCount">
+            <summary>
+            Gets a colorized label without count that describes this selector.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.ThingGroupSelector.Weight">
+            <summary>
+            Gets weight for this thing group.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.ThingGroupSelector.GroupID">
+            <summary>
+            Gets ID for this group of selectors.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.ThingGroupSelector.Count">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.ThingGroupSelector.IsReadOnly">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.AddStackCountChangedCallback(System.Action{AwesomeInventory.Loadout.ThingGroupSelector,System.Int32})">
+            <summary>
+            Add callback to stack-count-changed event.
+            </summary>
+            <param name="callback"> It would be invoked when stack count in this <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> is changed. </param>
+            <returns> Returns true if <paramref name="callback"/> is added, otherwise, false when there is already a callback in place. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.AddAddNewThingSelectorCallback(System.Action{AwesomeInventory.Loadout.ThingSelector})">
+            <summary>
+            Add callback to add-new-thingselector event.
+            </summary>
+            <param name="callback"> It would be invoked when a new <see cref="T:AwesomeInventory.Loadout.ThingSelector"/> is added to this <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/>. </param>
+            <returns> Returns true if <paramref name="callback"/> is added, otherwise, false when there is already a callback in place. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.AddRemoveThingSelectorCallback(System.Action{AwesomeInventory.Loadout.ThingSelector})">
+            <summary>
+            Add callback to add-remove-thingselector event.
+            </summary>
+            <param name="callback"> It would be invoked when a <see cref="T:AwesomeInventory.Loadout.ThingSelector"/> is removed from this <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/>. </param>
+            <returns> Returns true if <paramref name="callback"/> is added, otherwise, false when there is already a callback in place. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.AddQualityAndHitpointsChangedCallbackTo(AwesomeInventory.Loadout.ThingSelector)">
+            <summary>
+            Add <see cref="M:AwesomeInventory.Loadout.ThingGroupSelector.QualityAndHitpointsChangedCallbackHandler(Verse.ThingFilter)"/> to <see cref="T:AwesomeInventory.Loadout.ThingSelector"/>.
+            </summary>
+            <param name="thingSelector"> Add Handler to <paramref name="thingSelector"/>. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.SetStackCount(System.Int32)">
+            <summary>
+            Update stack count.
+            </summary>
+            <param name="stackCount"> Number to replace the old count. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.Allows(Verse.Thing,AwesomeInventory.Loadout.ThingSelector@)">
+            <summary>
+            Check if <paramref name="thing"/> is allowed to add to inventory.
+            </summary>
+            <param name="thing"> <see cref="T:Verse.Thing"/> to add. </param>
+            <param name="thingSelector"> <see cref="T:AwesomeInventory.Loadout.ThingSelector"/> that <paramref name="thing"/> fits. </param>
+            <returns> Returns true, if <paramref name="thing"/> is allowed to add. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.Add(AwesomeInventory.Loadout.ThingSelector)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.Clear">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.Contains(AwesomeInventory.Loadout.ThingSelector)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.CopyTo(AwesomeInventory.Loadout.ThingSelector[],System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.Remove(AwesomeInventory.Loadout.ThingSelector)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.GetUniqueLoadID">
+            <summary>
+            Returns a unique ID for references when save/load the game.
+            </summary>
+            <returns> A unique string ID for references when save/load the game. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.ExposeData">
+            <summary>
+            Save state.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingGroupSelector.QualityAndHitpointsChangedCallbackHandler(Verse.ThingFilter)">
+            <summary>
+            A function that handles quality and hit points changed callback invoked by underlying <see cref="T:Verse.ThingFilter"/>.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.ThingSelector">
+            <summary>
+            Defines basic funtionality for a thing selector.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.ThingSelector._dirty">
+            <summary>
+            True if stuff source, quality level or hit point percentage has changed since last read.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.ThingSelector._thingFilter">
+            <summary>
+            Only its <see cref="P:Verse.ThingFilter.AllowedThingDefs"/>, <see cref="P:Verse.ThingFilter.AllowedQualityLevels"/>
+            and <see cref="P:Verse.ThingFilter.AllowedHitPointsPercents"/> are used for filter purpose.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.ThingSelector._allowedStackCount">
+            <summary>
+            The stack count allowed by this selector.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.ThingSelector._qualityAndHitpointsChangedCallback">
+            <summary>
+            A callback which will be invoked whenever there is a change in the <see cref="F:AwesomeInventory.Loadout.ThingSelector._thingFilter"/>.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingSelector.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.ThingSelector"/> class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.ThingSelector.LabelCapNoCount">
+            <summary>
+            Gets a colored label without count that describes this selector.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.ThingSelector.Weight">
+            <summary>
+            Gets weight of the selected thing.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.ThingSelector.AllowedHitPointsPercent">
+            <summary>
+            Gets hit points percentage of items that is allowed by this selector.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.ThingSelector.ID">
+            <summary>
+            Gets the ID for this selector.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.ThingSelector.AllowedStackCount">
+            <summary>
+            Gets the stack count that is allowed.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingSelector.op_Equality(AwesomeInventory.Loadout.ThingSelector,AwesomeInventory.Loadout.ThingSelector)">
+            <summary>
+            Compare equality between <paramref name="A"/> and <paramref name="B"/>.
+            </summary>
+            <param name="A"> Compare this <see cref="T:AwesomeInventory.Loadout.ThingSelector"/> to <paramref name="B"/>. </param>
+            <param name="B"> Compare this <see cref="T:AwesomeInventory.Loadout.ThingSelector"/> to <paramref name="A"/>. </param>
+            <returns> Returns true if <paramref name="A"/> is equal to <paramref name="B"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingSelector.op_Inequality(AwesomeInventory.Loadout.ThingSelector,AwesomeInventory.Loadout.ThingSelector)">
+            <summary>
+            Compare equality between <paramref name="A"/> and <paramref name="B"/>.
+            </summary>
+            <param name="A"> Compare this <see cref="T:AwesomeInventory.Loadout.ThingSelector"/> to <paramref name="B"/>. </param>
+            <param name="B"> Compare this <see cref="T:AwesomeInventory.Loadout.ThingSelector"/> to <paramref name="A"/>. </param>
+            <returns> Returns true if <paramref name="A"/> is not equal to <paramref name="B"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingSelector.SetHitPoints(Verse.FloatRange)">
+            <summary>
+            Set hit points.
+            </summary>
+            <param name="floatRange"> Hit points range to set. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingSelector.SetStackCount(System.Int32)">
+            <summary>
+            Update stack count.
+            </summary>
+            <param name="stackCount"> Number to replace the old count. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingSelector.Allows(Verse.Thing)">
+            <summary>
+            Check if <paramref name="thing"/> is allowed to add to inventory.
+            </summary>
+            <param name="thing"> <see cref="T:Verse.Thing"/> to add. </param>
+            <returns> Returns true, if <paramref name="thing"/> is allowed to add. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingSelector.AddQualityAndHitpointsChangedCallback(System.Action{Verse.ThingFilter})">
+            <summary>
+            Add callback to the quality-hitpoints-changed event.
+            </summary>
+            <param name="callback"> Callback to add. </param>
+            <returns> Returns true if <paramref name="callback"/> is added, otherwise, false when there is already a callback in place. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingSelector.ExposeData">
+            <summary>
+            Save state.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingSelector.Equals(AwesomeInventory.Loadout.ThingSelector)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingSelector.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingSelector.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingSelector.QualityAndHitpointsChangedCallback">
+            <summary>
+            Bubble up thing filter changed callback.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.ThingSelectorComparer">
+            <summary>
+            Compare <see cref="T:AwesomeInventory.Loadout.ThingSelector"/> to choose the most stringent selector for newly added things to inventory.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.ThingSelectorComparer.Instance">
+            <summary>
+            Gets a comparer instance for <see cref="T:AwesomeInventory.Loadout.ThingSelectorComparer"/>.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThingSelectorComparer.Compare(AwesomeInventory.Loadout.ThingSelector,AwesomeInventory.Loadout.ThingSelector)">
+            <inheritdoc/>
+            <remarks> More stringent selector takes precedence, e.g. Compare will return -1 if x is more stringent. </remarks>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout">
+            <summary>
+            Save loudout information and its current state.
+            </summary>
+            <remarks>
+                Another way to monitor things added or removed is to add a thingComp to every qualified thingDef
+            and take advantage of the PreAbsorbStack(), PostSplitoff() function, etc..
+                The correct initiate state for this clas is both Loadout and InventoryTracker are null. After moving
+            to other states, none of them can be null.
+            </remarks>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout"/> class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.InventoryMargins">
+            <summary>
+            Gets a dictionary acts as a inventory margin tracker. If the amount set in loadout is met, the margin is 0.
+            Excessive amount has a positive margin, and vice versa.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.Loadout">
+            <summary>
+            Gets a <see cref="T:AwesomeInventory.Loadout.AwesomeInventoryLoadout"/> this comp holds.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.NeedRestock">
+            <summary>
+            Gets a value indicating whether loadout on this <see cref="T:Verse.Pawn"/> needs to restock.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.ItemsToRestock">
+            <summary>
+            Gets a list of items that are needed to restock.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.Initialize(Verse.CompProperties)">
+            <summary>
+            Called by game code when the game starts.
+            </summary>
+            <param name="props"> Properties used for initializing this comp. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.PostSpawnSetup(System.Boolean)">
+            <summary>
+            Called by the game root code post spawn setup.
+            </summary>
+            <param name="respawningAfterLoad"> True if the <see cref="F:Verse.ThingComp.parent"/> is respawned after load. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.NotifiedAdded(Verse.Thing)">
+            <summary>
+            Update internal tracking info when notified <paramref name="thing"/> are added.
+            </summary>
+            <param name="thing"> <see cref="T:Verse.Thing"/> that is added. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.NotifiedAddedAndMergedWith(Verse.Thing,System.Int32)">
+            <summary>
+            Update internal tracking info when notified <paramref name="thing"/> is added and merged.
+            </summary>
+            <param name="thing"> <see cref="T:Verse.Thing"/> that has been added and merged. </param>
+            <param name="mergedAmount"> Number of <paramref name="thing"/> that is added and merged. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.NotifiedRemoved(Verse.Thing)">
+            <summary>
+            Update internal tracking info when notified <paramref name="thing"/> has been removed.
+            </summary>
+            <param name="thing"> <see cref="T:Verse.Thing"/> that has been removed. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.NotifiedSplitOff(Verse.Thing,System.Int32)">
+            <summary>
+            Update internal tracking info when notified <paramref name="thing"/> has splitted off.
+            </summary>
+            <param name="thing"> <see cref="T:Verse.Thing"/> that has splitted off. </param>
+            <param name="count"> Number of splitted <paramref name="thing"/>. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.UpdateForNewLoadout(AwesomeInventory.Loadout.AwesomeInventoryLoadout)">
+            <summary>
+            Update <see cref="P:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.InventoryMargins"/> whenever a new loadout is assigned to pawn.
+            </summary>
+            <param name="newLoadout"> The new loadout assigned to pawn. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.AddNewThingGroupSelectorCallback(AwesomeInventory.Loadout.ThingGroupSelector)">
+            <summary>
+            A callback to handle event where a new <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> is added to loadout.
+            </summary>
+            <param name="groupSelector"> The newly added selector. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.StackCountChangedCallback(AwesomeInventory.Loadout.ThingGroupSelector,System.Int32)">
+            <summary>
+            A callback to handle event where stack count is changed in <paramref name="groupSelector"/>.
+            </summary>
+            <param name="groupSelector"> Whose stack count has changed. </param>
+            <param name="oldStackCount"> The stack count value before current stack count. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.RemoveThingGroupSelectorCallback(AwesomeInventory.Loadout.ThingGroupSelector)">
+            <summary>
+            A callback to handle event where a <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> is removed from loadout.
+            </summary>
+            <param name="groupSelector"> The selector that has been removed. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.FindPotentialThingGroupSelectors(Verse.Thing,System.Collections.Generic.IEnumerable{AwesomeInventory.Loadout.ThingGroupSelector})">
+            <summary>
+            Find <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> that allows <paramref name="thing"/>.
+            </summary>
+            <param name="thing"> Thing to check if there is any selector fits. </param>
+            <param name="groupSelectors"> A list of fiiting selectors. </param>
+            <returns> A data packet that contains all information needed to find the best suited selector for <paramref name="thing"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.FindPotentialThingGroupSelectors(Verse.Thing,System.Int32,System.Collections.Generic.IEnumerable{AwesomeInventory.Loadout.ThingGroupSelector})">
+            <summary>
+            Find <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/> that allows <paramref name="thing"/>.
+            </summary>
+            <param name="thing"> Thing to check if there is any selector fits. </param>
+            <param name="stackCount"> Stack count of <paramref name="thing"/>. </param>
+            <param name="groupSelectors"> A list of fiiting selectors. </param>
+            <returns> A data packet that contains all information needed to find the best suited selector for <paramref name="thing"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.Restock(Verse.Thing)">
+            <summary>
+            Keep <see cref="P:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.InventoryMargins" /> in sync with pawn's inventory.
+            </summary>
+            <param name="thing"> Thing that are being restocked. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.Restock(Verse.Thing,System.Int32)">
+            <summary>
+            Keep <see cref="P:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.InventoryMargins" /> in sync with pawn's inventory.
+            </summary>
+            <param name="thing"> Thing that are being restocked. </param>
+            <param name="reStockCount"> Stack count to restock. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.Restock(AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.ThingGroupSelectorPool)">
+            <summary>
+            Keep <see cref="P:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.InventoryMargins" /> in sync with pawn's inventory.
+            </summary>
+            <param name="pool"> A data packet contains all necessary information. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.DeleteStock(Verse.Thing)">
+            <summary>
+            Remove thing from <see cref="P:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.InventoryMargins"/>.
+            </summary>
+            <param name="thing"> Thing to remove. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.DeleteStock(Verse.Thing,System.Int32)">
+            <summary>
+            Remove thing from <see cref="P:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.InventoryMargins"/>.
+            </summary>
+            <param name="thing"> Thing to remove. </param>
+            <param name="stackCountToDelete"> Stack count to remove. </param>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.ThingGroupSelectorPool">
+            <summary>
+            A datat structure thtat contains necessary information for <see cref="P:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.InventoryMargins"/> to update.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.ThingGroupSelectorPool.Thing">
+            <summary>
+            The thing for inventory operation.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.ThingGroupSelectorPool.StackCount">
+            <summary>
+            Count of Thing.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.CompAwesomeInventoryLoadout.ThingGroupSelectorPool.OrderedSelectorTuples">
+            <summary>
+            A list sorted by <see cref="T:AwesomeInventory.Loadout.ThingSelector"/>'s criteria strictness in desending order.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.LoadoutManager">
+            <summary>
+            It handles loadouts CRUD operations in the game.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.LoadoutManager.#ctor(Verse.Game)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.LoadoutManager"/> class.
+            </summary>
+            <param name="game"> Current game. </param>
+            <remarks> Constructor is called on new/first game. </remarks>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.LoadoutManager.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.LoadoutManager"/> class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.LoadoutManager.ThingGroupSelectorID">
+            <summary>
+            Gets an ID for <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/>.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.LoadoutManager.Loadouts">
+            <summary>
+            Gets a cache of loadouts used in this game.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.LoadoutManager.AddLoadout(AwesomeInventory.Loadout.AwesomeInventoryLoadout)">
+            <summary>
+            Add loadout to manager and the game's outfit database.
+            </summary>
+            <param name="loadout"> Loadout to add. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.LoadoutManager.TryRemoveLoadout(AwesomeInventory.Loadout.AwesomeInventoryLoadout,System.Boolean)">
+            <summary>
+            Remove outfit from <see cref="T:AwesomeInventory.Loadout.LoadoutManager"/>.
+            </summary>
+            <param name="loadout"> Loadout to remove. </param>
+            <param name="fromOutfit"> If ture, this method is called from <see cref="M:RimWorld.OutfitDatabase.TryDelete(RimWorld.Outfit)"/>. </param>
+            <returns> Returns true if loadout is rmeoved successfully. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.LoadoutManager.GetIncrementalLabel(System.String)">
+            <summary>
+            Increment the number in a label.
+            </summary>
+            <param name="previousLabel"> Label for reference.</param>
+            <returns> A label with a number suffic that is one larger than that of <paramref name="previousLabel"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.LoadoutManager.FinalizeInit">
+            <summary>
+            Called by RimWorld when the game is ready to be played.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.LoadoutManager.ExposeData">
+            <summary>
+            Load/Save handler. Loadouts are saved by OutfitDatabase.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.AwesomeInventoryStuffDefOf">
+            <summary>
+            Stuff defined by Awesome Inventory.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.Loadout.AwesomeInventoryStuffDefOf.AwesomeInventoryGenericResource">
+            <summary>
+            Generic resource is assigned to items in loadout window that have no other stuff source assign to.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.AIGenericDef">
+            <summary>
+            Generic def used for loadout purpose.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AIGenericDef.#ctor(System.String,System.String,System.String,System.Type,System.Collections.Generic.IEnumerable{Verse.ThingCategoryDef},System.Collections.Generic.IEnumerable{Verse.ThingDef})">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.AIGenericDef"/> class.
+            </summary>
+            <param name="defName"> Def Name. </param>
+            <param name="description"> Description for this def. </param>
+            <param name="label"> Label to display. </param>
+            <param name="thingClass"> Type of Thing that this def defines. </param>
+            <param name="thingCategoryDefs"> Group the this def belongs. </param>
+            <param name="exceptDefs"> Defs should not be in this category. </param>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.AIGenericDef.AvailableDefs">
+            <summary>
+            Gets available <see cref="T:Verse.ThingDef"/> in this generic category.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.AIGenericDef.ThingCategoryDefs">
+            <summary>
+            Gets a group used for requesting things from <see cref="T:Verse.ListerThings"/>.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.AIGenericDef.Includes">
+            <summary>
+            Gets a predicate function which returns true if <see cref="T:Verse.ThingDef"/> belongs.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.AIGenericDef.ExcepDefs">
+            <summary>
+            Gets a filter that rules out <see cref="T:Verse.ThingDef"/> that does not belong.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AIGenericDef.op_Equality(AwesomeInventory.Loadout.AIGenericDef,AwesomeInventory.Loadout.AIGenericDef)">
+            <summary>
+            Compare equality between <paramref name="a"/> and <paramref name="b"/>.
+            </summary>
+            <param name="a"> Def to compare to <paramref name="b"/>. </param>
+            <param name="b"> Def to compare to <paramref name="a"/>. </param>
+            <returns> Returns true if <paramref name="a"/> equals <paramref name="b"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AIGenericDef.op_Inequality(AwesomeInventory.Loadout.AIGenericDef,AwesomeInventory.Loadout.AIGenericDef)">
+            <summary>
+            Compare inequality between <paramref name="a"/> and <paramref name="b"/>.
+            </summary>
+            <param name="a"> Def to compare to <paramref name="b"/>. </param>
+            <param name="b"> Def to compare to <paramref name="a"/>. </param>
+            <returns> Returns true if <paramref name="a"/> is not equal to <paramref name="b"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AIGenericDef.Equals(AwesomeInventory.Loadout.AIGenericDef)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AIGenericDef.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AIGenericDef.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.AIGenericDrugs">
+            <summary>
+            Generic drugs for loadout purpose. Includes medical drugs.
+            Its mass is the same as Flake.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.AIGenericDrugs.Instance">
+            <summary>
+            Gets a singleton instance of <see cref="T:AwesomeInventory.Loadout.AIGenericDrugs"/>.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.AIGenericMeal">
+            <summary>
+            Generic meal def used for loadout purpose.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.AIGenericMeal.Instance">
+            <summary>
+            Gets a singleton instance of <see cref="T:AwesomeInventory.Loadout.AIGenericMeal"/>.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.AIGenericMedicine">
+            <summary>
+            Generic medicine def used for loadout purpose.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.AIGenericMedicine.Instance">
+            <summary>
+            Gets a singleton instance of <see cref="T:AwesomeInventory.Loadout.AIGenericMedicine"/>.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.AIGenericRawFood">
+            <summary>
+            Generic raw food def for loadout purpose.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Loadout.AIGenericRawFood.Instance">
+            <summary>
+            Gets a singleton instance of <see cref="T:AwesomeInventory.Loadout.AIGenericRawFood"/>.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.ThinkNode_AwesomeInventory_Core">
+            <summary>
+            Check if inventory needs to restock.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.ThinkNode_AwesomeInventory_Core.Satisfied(Verse.Pawn)">
+            <summary>
+            Check if conditions are met to take actions.
+            </summary>
+            <param name="pawn"> Pawn to check. </param>
+            <returns> Returns true if <paramref name="pawn"/>'s inventory needs to restock. </returns>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.LoadoutComparer`1">
+            <summary>
+            Compare equality of two things of T.
+            </summary>
+            <typeparam name="T"> Type that is subclass of <see cref="T:Verse.Thing"/>. </typeparam>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.LoadoutComparer`1.Equals(`0,`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.LoadoutComparer`1.GetHashCode(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.AIGenericDefManager">
+            <summary>
+            LoadoutGenericDef handles Generic LoadoutSlots.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.AIGenericDefManager.#cctor">
+            <remark>
+            This constructor gets run on startup of RimWorld and generates the various LoadoutGenericDef instance objects akin to having been loaded from xml.
+            </remark>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.LoadoutUtility.SetLoadout(Verse.Pawn,AwesomeInventory.Loadout.AwesomeInventoryLoadout)">
+            <summary>
+            Set Pawn's loadout. Called by a harmony patch, Pawn_OutfitTracker_CurrentOutfit.
+            </summary>
+            <param name="pawn"> Set loadout on this <paramref name="pawn"/>. </param>
+            <param name="loadout"> Loadout to assign to <paramref name="pawn"/>. </param>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.LoadoutUtility.DeepCopy(Verse.Thing,System.Boolean)">
+            <summary>
+            Creata a carbon copy of <paramref name="thing"/> except <see cref="F:Verse.Thing.stackCount"/>.
+            </summary>
+            <param name="thing"> Thing to copy. </param>
+            <param name="withID"> If true, assign ID to the newly created thing. </param>
+            <returns> A copy of <paramref name="thing"/>. </returns>
+        </member>
+        <member name="T:AwesomeInventory.Logger">
+            <summary>
+            Implementation of <see cref="T:AwesomeInventory.ILogger"/>.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Logger.Message(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:AwesomeInventory.ServiceRegistration">
+            <summary>
+            Register services provided either by the vanilla or the CE assembly.
+            It provides a template of services for vanilla and CE implementation.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.ServiceRegistration.RegisterIInventoryHelper(AwesomeInventory.Utilities.IInventoryHelper)">
+            <summary>
+            Register <see cref="T:AwesomeInventory.Utilities.IInventoryHelper"/>.
+            </summary>
+            <param name="inventoryHelper"> Instance of <paramref name="inventoryHelper"/> to register. </param>
+        </member>
+        <member name="M:AwesomeInventory.ServiceRegistration.RegisterIDrawHelper(AwesomeInventory.UI.DrawHelper)">
+            <summary>
+            Register <see cref="T:AwesomeInventory.UI.DrawHelper"/>.
+            </summary>
+            <param name="drawHelper"> Instance of <paramref name="drawHelper"/> to register. </param>
+        </member>
+        <member name="M:AwesomeInventory.ServiceRegistration.RegisterAwesomeInventoryTabBase(AwesomeInventory.UI.AwesomeInventoryTabBase)">
+            <summary>
+            Register <see cref="T:AwesomeInventory.UI.AwesomeInventoryTabBase"/>.
+            </summary>
+            <param name="awesomeInventoryTabBase"> Implementation of <paramref name="awesomeInventoryTabBase"/>. </param>
+        </member>
+        <member name="M:AwesomeInventory.ServiceRegistration.RegisterSingleThingSelector``1">
+            <summary>
+            Register derived type of <see cref="T:AwesomeInventory.Loadout.SingleThingSelector"/>.
+            </summary>
+            <typeparam name="T"> Derived Type of <see cref="T:AwesomeInventory.Loadout.SingleThingSelector"/>. </typeparam>
+        </member>
+        <member name="M:AwesomeInventory.ServiceRegistration.RegisterGenericThingSelector``1">
+            <summary>
+            Register derived type of <see cref="T:AwesomeInventory.Loadout.GenericThingSelector"/>.
+            </summary>
+            <typeparam name="T"> Derived Type of <see cref="T:AwesomeInventory.Loadout.GenericThingSelector"/>. </typeparam>
+        </member>
+        <member name="M:AwesomeInventory.ServiceRegistration.RegisterThingGroupSelector``1">
+            <summary>
+            Register derived type of <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/>.
+            </summary>
+            <typeparam name="T"> Derived Type of <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/>. </typeparam>
+        </member>
+        <member name="M:AwesomeInventory.ServiceRegistration.RegisterAllServies">
+            <summary>
+            Register all services needed for Awesome Inventory.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.AwesomeInvnetoryMod">
+            <summary>
+            A dialog window for configuring mod settings.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.AwesomeInvnetoryMod.#ctor(Verse.ModContentPack)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.AwesomeInvnetoryMod"/> class.
+            </summary>
+            <param name="content"> Includes metadata of a mod. </param>
+        </member>
+        <member name="P:AwesomeInventory.AwesomeInvnetoryMod.Settings">
+            <summary>
+            Gets setting for Awesome inventory.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.AwesomeInvnetoryMod.DoSettingsWindowContents(UnityEngine.Rect)">
+            <summary>
+            Draw content in window.
+            </summary>
+            <param name="inRect"> Rect for drawing. </param>
+        </member>
+        <member name="M:AwesomeInventory.AwesomeInvnetoryMod.SettingsCategory">
+            <summary>
+            Return the name for display in the game's mod setting section.
+            </summary>
+            <returns> Display name for Awesome Inventory. </returns>
+        </member>
+        <member name="T:AwesomeInventory.AwesomeInventorySetting">
+            <summary>
+            User setting for AwesomeInventory.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.AwesomeInventorySetting.UseLoadout">
+            <summary>
+            Use loadout if true.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.AwesomeInventorySetting.UseToggleGizmo">
+            <summary>
+            Use toggle gizmo.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.AwesomeInventorySetting.AutoEquipWeapon">
+            <summary>
+            Allow AwesomeInventory to choose appropriate weapons for pawns.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.AwesomeInventorySetting.QualityColorPluginID">
+            <summary>
+            Plugin ID for the <see cref="T:AwesomeInventory.UI.QualityColor"/> class.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.AwesomeInventorySetting.ExposeData">
+            <summary>
+            Save state.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.DefManager">
+            <summary>
+            Manages defs for the loadout window.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.DefManager.#ctor(Verse.Game)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.DefManager"/> class.
+            </summary>
+            <param name="game"> Current game. </param>
+        </member>
+        <member name="P:AwesomeInventory.DefManager.SuitableDefs">
+            <summary>
+            Gets all Suitable Defs for displaying in loadout.
+            </summary>
+            <returns> A set of defs available to be selected in loadout dialog. </returns>
+        </member>
+        <member name="M:AwesomeInventory.DefManager.FinalizeInit">
+            <summary>
+            Get called by the game just before the game is about to start.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.AwesomeInventoryBodyPartGroupDefOf">
+            <summary>
+            Body part group needed to draw the RPG style inventory tab.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.Resources.DefNames">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.DefNames.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.DefNames.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.DefNames.AIGenericDrugs">
+            <summary>
+              Looks up a localized string similar to AIGenericDrugs.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.DefNames.AIGenericMeal">
+            <summary>
+              Looks up a localized string similar to AIGenericMeal.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.DefNames.AIGenericMedicine">
+            <summary>
+              Looks up a localized string similar to AIGenericMedicine.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.DefNames.AIGenericRawFood">
+            <summary>
+              Looks up a localized string similar to AIGenericRawFood.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.Resources.Descriptions">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.Descriptions.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.Descriptions.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.Descriptions.AIGenericDrugs">
+            <summary>
+              Looks up a localized string similar to AwesomeInventory_AIGenericDrugs_Description.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.Descriptions.AIGenericMeal">
+            <summary>
+              Looks up a localized string similar to AwesomeInventory_AIGenericMeal_Description.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.Descriptions.AIGenericMedicine">
+            <summary>
+              Looks up a localized string similar to AwesomeInventory_AIGenericMedicine_Description.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.Descriptions.AIGenericRawFood">
+            <summary>
+              Looks up a localized string similar to AwesomeInventory_AIGenericRawFood_Description.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.Resources.ErrorMessage">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.ErrorMessage.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.ErrorMessage.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.ErrorMessage.ArgumentIsNull">
+            <summary>
+              Looks up a localized string similar to Argument is null: {0}.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.ErrorMessage.BothArgumentsAreNotNull">
+            <summary>
+              Looks up a localized string similar to Both arguments are not null: {0} and {1}.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.ErrorMessage.BothArgumentsAreNull">
+            <summary>
+              Looks up a localized string similar to Both arguments are null: {0} and {1}.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.ErrorMessage.ExpectedString">
+            <summary>
+              Looks up a localized string similar to {0}, Expected : {1}, Actual: {2}.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.ErrorMessage.InvTrackerAndLoadoutOutOfSync">
+            <summary>
+              Looks up a localized string similar to Inventory tracker and Loadout is out of sync.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.ErrorMessage.MarginNotMatchInCompAwesomeInventoryLoadout">
+            <summary>
+              Looks up a localized string similar to Margin is not match in CompAwesomeInventoryLoadout.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.ErrorMessage.NoDisplayOptionChosen">
+            <summary>
+              Looks up a localized string similar to No Display Option is chosen..
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.ErrorMessage.NotImplemented">
+            <summary>
+              Looks up a localized string similar to {0} is not implemented..
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.ErrorMessage.ReportString">
+            <summary>
+              Looks up a localized string similar to At {0}, Variable: {1}, Value: {2}.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.ErrorMessage.ValueNotMatch">
+            <summary>
+              Looks up a localized string similar to {0} does not match {1}.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.ErrorMessage.WrongArgumentType">
+            <summary>
+              Looks up a localized string similar to Wrong argument type: .
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.Resources.Labels">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.Labels.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.Labels.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.Labels.AIGenericDrugs">
+            <summary>
+              Looks up a localized string similar to AwesomeInventory_AIGenericDrugs_Label.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.Labels.AIGenericMeal">
+            <summary>
+              Looks up a localized string similar to AwesomeInventory_GenericMeal_Label.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.Labels.AIGenericMedicine">
+            <summary>
+              Looks up a localized string similar to AwesomeInventory_AIGenericMedicine_Label.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.Resources.Labels.AIGenericRawFood">
+            <summary>
+              Looks up a localized string similar to AwesomeInventory_AIGenericRawFood_Label.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.DefUtility">
+            <summary>
+            Utilities for <see cref="T:Verse.Def"/>.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.DefUtility.GiveShortHash">
+            <summary>
+            Gets a GiveShortHash from <see cref="T:Verse.ShortHashGiver"/>.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.CustomRace">
+            <summary>
+            A wrapper allows modders to define logic to identify colonist for their races.
+            </summary>
+        </member>
+        <member name="P:AwesomeInventory.CustomRace.ID">
+            <inheritdoc/>
+        </member>
+        <member name="P:AwesomeInventory.CustomRace.DisplayName">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.CustomRace.IsColonist(Verse.Pawn)">
+            <summary>
+            Check if <paramref name="pawn"/> is a colonist.
+            </summary>
+            <param name="pawn"> Pawn to check. </param>
+            <returns> Returns true if <paramref name="pawn"/> is a colonist. </returns>
+            <remarks> It controls if the RPG-Style gear tab is visible to players. </remarks>
+        </member>
+        <member name="M:AwesomeInventory.CustomRace.IsColonistPlayerControlled(Verse.Pawn)">
+            <summary>
+            Check if <paramref name="pawn"/> is a colonist and can be controlled by player.
+            </summary>
+            <param name="pawn"> Pawn to check. </param>
+            <returns> Returns true if <paramref name="pawn"/> is a colonist and can be controlled by player. </returns>
+            <remarks> It controls if the Unload Now feature is available to pawns. </remarks>
+        </member>
+        <member name="M:AwesomeInventory.CustomRace.Register(AwesomeInventory.CustomRace)">
+            <summary>
+            Register <paramref name="customRace"/> to Awesome Inventory's service provider.
+            </summary>
+            <param name="customRace"> Plugin to register. </param>
+        </member>
+        <member name="P:AwesomeInventory.Utility.Harmony">
+            <summary>
+            Gets a harmony instance.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Utility.TryDrawOverallArmor(Verse.Pawn,System.Single@,System.Single,RimWorld.StatDef,System.String,System.String)">
+            <summary>
+                Draw overall armor in a format as "Sharp   100 Rha", wihout the double quotes
+            </summary>
+            <param name="selPawn"></param>
+            <param name="curY">current Y position</param>
+            <param name="width"></param>
+            <param name="stat"></param>
+            <param name="label"></param>
+            <param name="unit"></param>
+        </member>
+        <member name="M:AwesomeInventory.Utility.TryDrawOverallArmorCE(Verse.Pawn,UnityEngine.Rect,RimWorld.StatDef,System.String,UnityEngine.Texture,System.String)">
+            <summary>
+                Draw overall armor for the jealous tab
+            </summary>
+            <param name="selPawn"></param>
+            <param name="rect"></param>
+            <param name="stat"></param>
+            <param name="label"></param>
+            <param name="image"></param>
+            <param name="unit"></param>
+        </member>
+        <member name="M:AwesomeInventory.Utility.CalculateArmorByParts(Verse.Pawn,RimWorld.StatDef,System.String@)">
+            <summary>
+            Not a very effective way to get armor number, but one with most compatibility, only if modders add
+            the "ListOrder" tag and correct value to their new "BodyPartGroup" element in xml.
+            </summary>
+            <param name="pawn"></param>
+            <param name="stat">Sharp, blunt or heat, maybe electrical?. </param>
+            <param name="text">Text for tooltip. </param>
+            <returns></returns>
+        </member>
+        <member name="T:RPG_Inventory_Remake_Common.UnitTest.StringResource">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:RPG_Inventory_Remake_Common.UnitTest.StringResource.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:RPG_Inventory_Remake_Common.UnitTest.StringResource.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:RPG_Inventory_Remake_Common.UnitTest.StringResource.Count">
+            <summary>
+              Looks up a localized string similar to Count.
+            </summary>
+        </member>
+        <member name="P:RPG_Inventory_Remake_Common.UnitTest.StringResource.ExpectedString">
+            <summary>
+              Looks up a localized string similar to {0}, Expected : {1}, Actual: {2}.
+            </summary>
+        </member>
+        <member name="P:RPG_Inventory_Remake_Common.UnitTest.StringResource.HarmonyInstance">
+            <summary>
+              Looks up a localized string similar to NotooShabby.Rimworld.UnitTest.
+            </summary>
+        </member>
+        <member name="P:RPG_Inventory_Remake_Common.UnitTest.StringResource.Indent">
+            <summary>
+              Looks up a localized string similar to       .
+            </summary>
+        </member>
+        <member name="P:RPG_Inventory_Remake_Common.UnitTest.StringResource.KeyValuePair">
+            <summary>
+              Looks up a localized string similar to {0}: {1}.
+            </summary>
+        </member>
+        <member name="P:RPG_Inventory_Remake_Common.UnitTest.StringResource.MoreThanOneFlag">
+            <summary>
+              Looks up a localized string similar to Argument has more one flag.
+            </summary>
+        </member>
+        <member name="P:RPG_Inventory_Remake_Common.UnitTest.StringResource.NumberOfChildrenTests">
+            <summary>
+              Looks up a localized string similar to Number of children tests of {0} is {1}.
+            </summary>
+        </member>
+        <member name="P:RPG_Inventory_Remake_Common.UnitTest.StringResource.ObjectCount">
+            <summary>
+              Looks up a localized string similar to {0}.Count.
+            </summary>
+        </member>
+        <member name="P:RPG_Inventory_Remake_Common.UnitTest.StringResource.ObjectsAreNotEqual">
+            <summary>
+              Looks up a localized string similar to {0}: {1} and {2}: {3} are not equal.
+            </summary>
+        </member>
+        <member name="P:RPG_Inventory_Remake_Common.UnitTest.StringResource.SettingFlagZero">
+            <summary>
+              Looks up a localized string similar to Setting TestFlag.Zero has no effect.
+            </summary>
+        </member>
+        <member name="P:RPG_Inventory_Remake_Common.UnitTest.StringResource.ThingHas">
+            <summary>
+              Looks up a localized string similar to {0} has {1}.
+            </summary>
+        </member>
+        <member name="P:RPG_Inventory_Remake_Common.UnitTest.StringResource.TotalTests">
+            <summary>
+              Looks up a localized string similar to Number of total tests is {0}.
+            </summary>
+        </member>
+        <member name="T:RPGIResource.RPGIIcons">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:RPGIResource.RPGIIcons.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:RPGIResource.RPGIIcons.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:RPGIResource.RPGIIcons.ArmorBlunt">
+            <summary>
+              Looks up a localized string similar to UI/Icons/Sandy_ArmorBlunt_Icon.
+            </summary>
+        </member>
+        <member name="P:RPGIResource.RPGIIcons.ArmorHeat">
+            <summary>
+              Looks up a localized string similar to UI/Icons/Sandy_ArmorHeat_Icon.
+            </summary>
+        </member>
+        <member name="P:RPGIResource.RPGIIcons.ArmorSharp">
+            <summary>
+              Looks up a localized string similar to UI/Icons/Sandy_ArmorSharp_Icon.
+            </summary>
+        </member>
+        <member name="P:RPGIResource.RPGIIcons.Mass">
+            <summary>
+              Looks up a localized string similar to UI/Icons/Sandy_MassCarried_Icon.
+            </summary>
+        </member>
+        <member name="P:RPGIResource.RPGIIcons.MaxTemperature">
+            <summary>
+              Looks up a localized string similar to UI/Icons/max_temperature.
+            </summary>
+        </member>
+        <member name="P:RPGIResource.RPGIIcons.MinTemperature">
+            <summary>
+              Looks up a localized string similar to UI/Icons/min_temperature.
+            </summary>
+        </member>
+        <member name="T:RPGIResource.StringConstant">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:RPGIResource.StringConstant.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:RPGIResource.StringConstant.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:RPGIResource.StringConstant.GenericResource">
+            <summary>
+              Looks up a localized string similar to GenericResource.
+            </summary>
+        </member>
+    </members>
+</doc>

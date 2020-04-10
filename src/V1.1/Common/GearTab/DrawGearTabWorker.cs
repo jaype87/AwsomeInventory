@@ -46,7 +46,7 @@ namespace AwesomeInventory.UI
         private Dictionary<Thing, Tuple<string, string>> _thingTooltipCache = new Dictionary<Thing, Tuple<string, string>>();
         private Dictionary<Pawn, List<Tuple<Trait, string>>> _traitCache = new Dictionary<Pawn, List<Tuple<Trait, string>>>();
         private AwesomeInventoryTabBase _gearTab;
-        private IDrawHelper _drawHelper;
+        private DrawHelper _drawHelper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DrawGearTabWorker"/> class.
@@ -60,13 +60,13 @@ namespace AwesomeInventory.UI
         /// <summary>
         /// Gets draw helper provided either by vanilla or CE implementation of this mod.
         /// </summary>
-        protected IDrawHelper DrawHelper
+        protected DrawHelper DrawHelper
         {
             get
             {
                 if (_drawHelper == null)
                 {
-                    if (AwesomeInventoryServiceProvider.TryGetImplementation(out IDrawHelper drawHelper))
+                    if (AwesomeInventoryServiceProvider.TryGetImplementation(out DrawHelper drawHelper))
                         _drawHelper = drawHelper;
                     else
                         Log.Error(ErrorText.DrawHelperIsMissing);

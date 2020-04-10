@@ -77,7 +77,7 @@
     <Compile Include="HarmonyPatches\AddHumanlikeOrders_AwesomeInventory_Patch.cs" />
     <Compile Include="HarmonyPatches\Outfit_ExposeData.cs" />
     <Compile Include="HarmonyPatches\Pawn_ApparelTracker_ApparelChanged_Patch.cs" />
-    <Compile Include="Helpers\IDrawHelper.cs" />
+    <Compile Include="Helpers\DrawHelper.cs" />
     <Compile Include="Interfaces\IInventoryHelper.cs" />
     <Compile Include="Jobs\DressJob.cs" />
     <Compile Include="Jobs\JobDriver_AwesomeInventory_Dress.cs" />
