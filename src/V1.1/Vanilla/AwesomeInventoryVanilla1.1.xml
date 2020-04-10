@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AwesomeInventoryVanilla1.1</name>
+    </assembly>
+    <members>
+        <member name="T:AwesomeInventory.UI.AwesomeInventoryTab">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.UI.AwesomeInventoryTab.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.UI.AwesomeInventoryTab"/> class.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.UI.DrawHelper">
+            <summary>
+            A helper class for drawing in game.
+            It only consists of member methods while <see cref="T:AwesomeInventory.UI.DrawUtility"/> only has static methods.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawHelper.TooltipTextFor(Verse.Thing,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawHelper.WeightTextFor(Verse.Pawn)">
+            <inheritdoc/>
+        </member>
+        <member name="T:AwesomeInventory.Utilities.InventoryHelper">
+            <summary>
+            Helper class for inventory management.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Utilities.InventoryHelper.WillBeOverEncumberedAfterPickingUp(Verse.Pawn,Verse.Thing,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="T:AwesomeInventory.VanillaServicesRegistration">
+            <summary>
+            Register services for the vanilla mod.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.VanillaServicesRegistration.RegisterAllServies">
+            <inheritdoc/>
+        </member>
+        <member name="T:AwesomeInventory.Common.HarmonyPatches.Pawn_CarryTracker_CarriedThing_AwesomeInventory_Patch">
+            <summary>
+            Trick <see cref="T:Verse.Pawn_CarryTracker"/> to think it has a carried thing when pawn is on an unload job.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Common.HarmonyPatches.Pawn_CarryTracker_CarriedThing_AwesomeInventory_Patch.Postfix(Verse.Pawn_CarryTracker,Verse.Thing@)">
+            <summary>
+            Trick <see cref="T:Verse.Pawn_CarryTracker"/> to think it has a carried thing when pawn is on an unload job.
+            </summary>
+            <param name="__instance"> An instance of <see cref="T:Verse.Pawn_CarryTracker"/>. </param>
+            <param name="__result"> Masquerade the target of an unload job as a carried thing. </param>
+        </member>
+    </members>
+</doc>
