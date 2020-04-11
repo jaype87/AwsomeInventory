@@ -159,6 +159,8 @@ namespace AwesomeInventory.Loadout
         {
             ValidateArg.NotNull(item, nameof(item));
 
+            _isDirty = true;
+
             this.AddAddNewThingSelectorCallbackTo(item);
             this.AddRemoveThingSelectorCallbackTo(item);
             this.AddStackCountChangedCallbackTo(item);
@@ -174,6 +176,7 @@ namespace AwesomeInventory.Loadout
                 group => _removeThingGroupSelectorCallbacks.ForEach(
                     c => c.Invoke(group)));
 
+            _isDirty = true;
             _thingGroupSelectors.Clear();
         }
 
@@ -203,6 +206,7 @@ namespace AwesomeInventory.Loadout
         /// <inheritdoc/>
         public bool Remove(ThingGroupSelector item)
         {
+            _isDirty = true;
             _removeThingGroupSelectorCallbacks.ForEach(c => c.Invoke(item));
             return _thingGroupSelectors.Remove(item);
         }
