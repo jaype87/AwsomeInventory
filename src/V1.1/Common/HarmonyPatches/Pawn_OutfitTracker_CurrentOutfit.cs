@@ -38,6 +38,10 @@ namespace AwesomeInventory.Common.HarmonyPatches
             {
                 __instance.pawn.SetLoadout(loadout);
             }
+            else
+            {
+                __instance.pawn.GetComp<CompAwesomeInventoryLoadout>()?.RemoveLoadout();
+            }
         }
     }
 }

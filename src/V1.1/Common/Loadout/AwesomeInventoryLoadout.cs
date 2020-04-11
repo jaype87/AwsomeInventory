@@ -85,6 +85,7 @@ namespace AwesomeInventory.Loadout
 
             this.uniqueId = Current.Game.outfitDatabase.AllOutfits.Max(o => o.uniqueId) + 1;
             this.label = LoadoutManager.GetIncrementalLabel(other.label);
+            this.filter.SetAllow(ThingCategoryDefOf.Apparel, true);
         }
 
         /// <summary>
@@ -98,6 +99,7 @@ namespace AwesomeInventory.Loadout
             this.AddItems(pawn.equipment?.AllEquipmentListForReading);
             this.AddItems(pawn.apparel?.WornApparel);
             this.AddItems(pawn.inventory?.innerContainer);
+            this.filter.SetAllow(ThingCategoryDefOf.Apparel, true);
 
             this.uniqueId = Current.Game.outfitDatabase.AllOutfits.Max(o => o.uniqueId) + 1;
             CompAwesomeInventoryLoadout compLoadout = pawn.TryGetComp<CompAwesomeInventoryLoadout>();

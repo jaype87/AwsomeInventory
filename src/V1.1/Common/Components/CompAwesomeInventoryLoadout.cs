@@ -56,7 +56,7 @@ namespace AwesomeInventory.Loadout
         {
             get
             {
-                if (InventoryMargins == null)
+                if (!AwesomeInvnetoryMod.Settings.UseLoadout || _initialized == false)
                 {
                     return false;
                 }
@@ -121,7 +121,6 @@ namespace AwesomeInventory.Loadout
                 if (pawn.outfits?.CurrentOutfit is AwesomeInventoryLoadout loadout)
                 {
                     this.UpdateForNewLoadout(loadout);
-                    this.Loadout = loadout;
                 }
             }
         }
@@ -197,8 +196,22 @@ namespace AwesomeInventory.Loadout
             newLoadout.AddRemoveThingGroupSelectorCallback(this.RemoveThingGroupSelectorCallback);
             newLoadout.AddStackCountChangedCallback(this.StackCountChangedCallback);
 
-            Loadout = newLoadout;
+            this.Loadout = newLoadout;
             _initialized = true;
+        }
+
+        /// <summary>
+        /// Remove AI loadout from this pawn.
+        /// </summary>
+        public void RemoveLoadout()
+        {
+            this.Loadout?.RemoveAddNewThingGroupSelectorCallback(this.AddNewThingGroupSelectorCallback);
+            this.Loadout?.RemoveRemoveThingGroupSelectorCallback(this.RemoveThingGroupSelectorCallback);
+            this.Loadout?.RemoveStackCountChangedCallback(this.StackCountChangedCallback);
+
+            this.Loadout = null;
+            this.InventoryMargins = null;
+            _initialized = false;
         }
 
         /// <summary>
