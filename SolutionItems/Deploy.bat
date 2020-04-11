@@ -27,7 +27,4 @@ IF NOT "%3"=="Debug" (
     IF EXIST "%~dp2..\%_assemblies%\*.pdb" (
         DEL /q "%~dp2..\%_assemblies%\*.pdb"
     )
-    IF EXIST "%~dp2..\%_assemblies%\*.xml" (
-        DEL /q "%~dp2..\%_assemblies%\*.xml"
-    )
 )
