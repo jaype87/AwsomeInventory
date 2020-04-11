@@ -20,6 +20,16 @@ namespace AwesomeInventory.UI
     /// </summary>
     public class Dialog_ManageLoadouts : Window, IReset
     {
+        /// <summary>
+        /// The current loadout the dialog window shows.
+        /// </summary>
+        protected AwesomeInventoryLoadout _currentLoadout;
+
+        /// <summary>
+        /// The selected pawn for this dialog window.
+        /// </summary>
+        protected Pawn _pawn;
+
         private const float _paneDivider = 5 / 9f;
         private const int _loadoutNameMaxLength = 50;
         private static readonly HashSet<ThingDef> _allSuitableDefs = DefManager.SuitableDefs;
@@ -28,12 +38,10 @@ namespace AwesomeInventory.UI
         /// Controls the window size and position.
         /// </summary>
         private static Vector2 _initialSize;
-        private static Pawn _pawn;
         private static List<ItemContext> _itemContexts;
         private static List<IReset> _resettables = new List<IReset>();
 
         private Vector2 _sourceListScrollPosition = Vector2.zero;
-        private AwesomeInventoryLoadout _currentLoadout;
         private string _filter = string.Empty;
         private float _scrollViewHeight;
         private Vector2 _loadoutListScrollPosition = Vector2.zero;
@@ -173,11 +181,13 @@ namespace AwesomeInventory.UI
                 useableSize.x * _paneDivider,
                 GenUI.SmallIconSize);
 
+            Rect weightBarRect = this.GetWeightRect(whiteBlackListRect.ReplaceyMax(canvas.yMax));
+
             Rect loadoutItemsRect = new Rect(
                 0,
                 whiteBlackListRect.yMax + GenUI.GapTiny,
                 whiteBlackListRect.width,
-                useableSize.y - whiteBlackListRect.yMax - GenUI.ListSpacing);
+                useableSize.y - whiteBlackListRect.yMax - GenUI.GapTiny - weightBarRect.height);
 
             Rect sourceButtonRect = new Rect(
                 loadoutItemsRect.xMax + Listing.ColumnSpacing,
@@ -190,12 +200,6 @@ namespace AwesomeInventory.UI
                 sourceButtonRect.yMax + GenUI.GapTiny,
                 sourceButtonRect.width,
                 useableSize.y - sourceButtonRect.yMax);
-
-            Rect weightBarRect = new Rect(
-                0,
-                canvas.yMax - DrawUtility.CurrentPadding - GenUI.SmallIconSize,
-                loadoutItemsRect.width,
-                GenUI.SmallIconSize);
 
             this.DrawWhiteBlackListOptions(whiteBlackListRect);
             this.DrawLoadoutNameField(nameFieldRect);
@@ -518,6 +522,17 @@ namespace AwesomeInventory.UI
         }
 
         /// <summary>
+        /// Get a weight rect for drawing weight bar.
+        /// </summary>
+        /// <param name="canvas"> The canvas at which bottom a weight bar is drawn. </param>
+        /// <returns> Return a rect for drawing weight bar. </returns>
+        protected virtual Rect GetWeightRect(Rect canvas)
+        {
+            canvas.Set(canvas.x, canvas.yMax - DrawUtility.CurrentPadding - GenUI.ListSpacing, canvas.width, GenUI.ListSpacing);
+            return canvas;
+        }
+
+        /// <summary>
         /// Draw weight bar at the bottom of the loadout window.
         /// </summary>
         /// <param name="canvas"> Rect for drawing. </param>
@@ -529,7 +544,7 @@ namespace AwesomeInventory.UI
                 fillPercent,
                 this.IsOverEncumbered(_pawn, _currentLoadout) ? AwesomeInventoryTex.ValvetTex as Texture2D : AwesomeInventoryTex.RWPrimaryTex as Texture2D,
                 UIText.Weight.Translate(),
-                _currentLoadout.Weight.ToString("0.#") + "/" + MassUtility.Capacity(_pawn).ToStringMass(),
+                _currentLoadout.Weight.ToString("0.##") + "/" + MassUtility.Capacity(_pawn).ToStringMass(),
                 string.Empty);
         }
 

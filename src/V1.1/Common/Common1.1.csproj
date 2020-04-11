@@ -204,6 +204,7 @@
     <Compile Include="Utilities\DefUtility.cs" />
     <Compile Include="Utilities\GenBar.cs" />
     <Compile Include="Plugins\CustomRace.cs" />
+    <Compile Include="Utilities\InventoryUtility.cs" />
     <Compile Include="Utilities\RectUtility.cs" />
     <Compile Include="Utilities\WidgetRowUtility.cs" />
     <Compile Include="Utilities\Utility.cs" />

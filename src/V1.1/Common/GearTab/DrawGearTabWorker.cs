@@ -251,20 +251,11 @@ namespace AwesomeInventory.UI
             }
             #endregion Draw Inventory
 
-            // TODO Add support for smart medicine
-            /*
-            //if (AccessTools.TypeByName("SmartMedicine.FillTab_Patch") is Type smartMedicine)
-            //{
-            //    smartMedicine.GetMethod("DrawStockUpButton", BindingFlags.Public | BindingFlags.Static)
-            //    .Invoke(null, new object[] { selPawn, rollingY, viewRect.width });
-            //}
-            */
-
             _scrollViewHeight = rollingY + InspectPaneUtility.TabHeight;
 
             Widgets.EndScrollView();
 
-            this.DrawWeightBar(new Rect(outRect.x, outRect.yMax, viewRect.width, GenUI.ListSpacing), selPawn);
+            this.DrawWeightBar(new Rect(outRect.x, outRect.yMax, viewRect.width, GenUI.SmallIconSize), selPawn);
 
             GUI.color = Color.white;
             Text.Anchor = TextAnchor.UpperLeft;
@@ -353,7 +344,7 @@ namespace AwesomeInventory.UI
 
             Widgets.EndScrollView();
 
-            this.DrawWeightBar(new Rect(outRect.x, outRect.yMax, viewRect.width, GenUI.ListSpacing), selPawn);
+            this.DrawWeightBar(new Rect(outRect.x, outRect.yMax, viewRect.width, GenUI.SmallIconSize), selPawn);
 
             GUI.color = Color.white;
             Text.Anchor = TextAnchor.UpperLeft;
@@ -429,8 +420,9 @@ namespace AwesomeInventory.UI
         /// <param name="selPawn"> Selected pawn. </param>
         protected virtual void DrawWeightBar(Rect rect, Pawn selPawn)
         {
+            Widgets.DrawLineHorizontal(rect.x, rect.y, rect.width);
             GenBar.BarWithOverlay(
-                rect,
+                rect.ReplaceY(rect.y + GenUI.GapTiny),
                 MassUtility.EncumbrancePercent(selPawn),
                 MassUtility.IsOverEncumbered(selPawn) ? AwesomeInventoryTex.ValvetTex as Texture2D : AwesomeInventoryTex.RWPrimaryTex as Texture2D,
                 UIText.Weight.TranslateSimple(),
@@ -461,7 +453,8 @@ namespace AwesomeInventory.UI
                         selPawn.SetLoadout(loadout);
                     }
 
-                    Find.WindowStack.Add(new Dialog_ManageLoadouts(selPawn.GetLoadout(), selPawn));
+                    Find.WindowStack.Add(
+                        AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(selPawn.GetLoadout(), selPawn));
                 }
 
                 if (row.ButtonText(UIText.SelectLoadout.Translate()))

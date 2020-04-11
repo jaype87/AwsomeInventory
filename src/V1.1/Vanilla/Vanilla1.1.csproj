@@ -87,7 +87,6 @@
     <None Include="ClassDiagram1.cd" />
     <None Include="HarmonyPatches\Game_FinalizeInit_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\Pawn_CarryTracker_CarriedThing_AwesomeInventory_Patch.cs" />
-    <Compile Include="Loadout\MassBulkUtility.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +139,7 @@
     <Folder Include="Gizmos\" />
     <Folder Include="Interface\" />
     <Folder Include="Languages\" />
+    <Folder Include="Loadout\" />
     <Folder Include="Patches\" />
     <Folder Include="Resources\" />
     <Folder Include="UI\" />

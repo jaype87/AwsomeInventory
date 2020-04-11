@@ -78,35 +78,6 @@ namespace AwesomeInventory.UI
             Text.WordWrap = true;
         }
 
-        /// <summary>
-        /// Return button size based on the provided rect
-        /// </summary>
-        /// <param name="rect"></param>
-        /// <param name="scale"> size of the button relative to rect </param>
-        /// <param name="ratio"> ratio of the button's length to width. Default is golden ratio. </param>
-        /// <param name="vertical">direction for the length of the button </param>
-        /// <returns></returns>
-        public static Vector2 GetButtonSize(Rect rect, float scale, float ratio = 1.62f, bool vertical = false)
-        {
-            if (rect == null)
-            {
-                throw new ArgumentNullException(nameof(rect));
-            }
-            if (scale <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(scale));
-            }
-            double size = rect.width * rect.height * scale;
-            float width = (float)Math.Sqrt(size / ratio);
-            float length = width * ratio;
-
-            if (vertical)
-            {
-                return new Vector2(width, length);
-            }
-            return new Vector2(length, width);
-        }
-
         public static Vector2 GetStartPositionForDrag(Rect realRect, Vector2 listMin, float index, float rowHeight)
         {
             float x = realRect.xMin + listMin.x;

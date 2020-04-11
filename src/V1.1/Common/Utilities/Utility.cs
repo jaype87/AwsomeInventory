@@ -13,7 +13,6 @@ using AwesomeInventory.UI;
 using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
-using RPG_Inventory_Remake_Common;
 using RPGIResource;
 using UnityEngine;
 using Verse;
@@ -46,11 +45,6 @@ namespace AwesomeInventory
          *
         *****************************************************************************/
 
-        public static bool ShouldShowOverallArmor(Pawn p)
-        {
-            return p.RaceProps.Humanlike || ShouldShowApparel(p) || p.GetStatValue(StatDefOf.ArmorRating_Sharp, true) > 0f || p.GetStatValue(StatDefOf.ArmorRating_Blunt, true) > 0f || p.GetStatValue(StatDefOf.ArmorRating_Heat, true) > 0f;
-        }
-
         public static bool ShouldShowInventory(Pawn p)
         {
             return p.RaceProps.Humanlike || p.inventory.innerContainer.Any;
@@ -64,48 +58,6 @@ namespace AwesomeInventory
         public static bool ShouldShowEquipment(Pawn p)
         {
             return p.equipment != null;
-        }
-
-        public static void TryDrawComfyTemperatureRange(Pawn selPawn, ref float curY, float width)
-        {
-            if (selPawn.Dead)
-            {
-                return;
-            }
-            Rect rect = new Rect(0f, curY, width, 22f);
-            float statValue = selPawn.GetStatValue(StatDefOf.ComfyTemperatureMin, true);
-            float statValue2 = selPawn.GetStatValue(StatDefOf.ComfyTemperatureMax, true);
-            Widgets.Label(rect, string.Concat(new string[]
-            {
-                "ComfyTemperatureRange".Translate(),
-                ": ",
-                statValue.ToStringTemperature("F0"),
-                "~",
-                statValue2.ToStringTemperature("F0")
-            }));
-            curY += 22f;
-        }
-
-        /// <summary>
-        ///     Draw overall armor in a format as "Sharp   100 Rha", wihout the double quotes
-        /// </summary>
-        /// <param name="selPawn"></param>
-        /// <param name="curY">current Y position</param>
-        /// <param name="width"></param>
-        /// <param name="stat"></param>
-        /// <param name="label"></param>
-        /// <param name="unit"></param>
-        public static void TryDrawOverallArmor(Pawn selPawn, ref float curY, float width, StatDef stat, string label, string unit)
-        {
-            Rect rect = new Rect(0f, curY, width, StandardLineHeight);
-            string toolTipText = "";
-            float armorRating = CalculateArmorByParts(selPawn, stat, out toolTipText);
-            if (!toolTipText.NullOrEmpty())
-            {
-                TooltipHandler.TipRegion(rect, toolTipText);
-            }
-            DrawArmorRatingWithText(rect, label, armorRating, unit);
-            curY += StandardLineHeight;
         }
 
         /// <summary>
@@ -140,36 +92,6 @@ namespace AwesomeInventory
                 value *= 100f;
             }
             return value.ToStringByStyle(asPercent ? ToStringStyle.FloatMaxOne : ToStringStyle.FloatMaxTwo) + unit;
-        }
-
-        public static void TryDrawComfyTemperatureRange(Pawn pawn, Rect rect)
-        {
-            if (pawn.Dead)
-            {
-                return;
-            }
-            Rect rect1 = new Rect(rect.x, rect.y + 26f, 24f, 24f);
-            GUI.DrawTexture(rect1, ContentFinder<Texture2D>.Get("UI/Icons/minumun_temperature", true));
-            TooltipHandler.TipRegion(rect1, "ComfyTemperatureRange".Translate());
-            float statValue = pawn.GetStatValue(StatDefOf.ComfyTemperatureMin, true);
-            Rect rect2 = new Rect(rect.x + 30f, rect.y + 28f, 104f, 24f);
-            Widgets.Label(rect2, string.Concat(new string[]
-            {
-                " ",
-                statValue.ToStringTemperature("F0")
-            }));
-
-            rect1 = new Rect(rect.x, rect.y + 52f, 24f, 24f);
-            GUI.DrawTexture(rect1, ContentFinder<Texture2D>.Get("UI/Icons/max_temperature", true));
-            TooltipHandler.TipRegion(rect1, "ComfyTemperatureRange".Translate());
-            float statValue2 = pawn.GetStatValue(StatDefOf.ComfyTemperatureMax, true);
-            rect2 = new Rect(rect.x + 30f, rect.y + 56f, 104f, 24f);
-            Widgets.Label(rect2, string.Concat(new string[]
-            {
-                " ",
-                statValue2.ToStringTemperature("F0")
-            }));
-
         }
 
         /// <summary>
@@ -256,84 +178,10 @@ namespace AwesomeInventory
             return num;
         }
 
-        public static void DrawArmorRatingWithText(Rect pos, string label, float armorRating, string unit)
-        {
-            // Draw Label
-            Widgets.Label(pos, label.Truncate(200f, null));
-            // Draw armor value
-            pos.x += 200;
-            Widgets.Label(pos, FormatArmorValue(armorRating, unit));
-        }
-
-        public static void TryDrawMassInfo(Pawn pawn, ref float curY, float width)
-        {
-            if (pawn.Dead || !ShouldShowInventory(pawn))
-            {
-                return;
-            }
-            Rect rect = new Rect(0f, curY, width, 22f);
-            float num = MassUtility.GearAndInventoryMass(pawn);
-            float num2 = MassUtility.Capacity(pawn, null);
-            Widgets.Label(rect, "MassCarried".Translate(num.ToString("0.##"), num2.ToString("0.##")));
-            curY += 22f;
-        }
-
         public static void DrawColonist(Rect rect, Pawn pawn)
         {
             Vector2 pos = new Vector2(rect.width, rect.height);
             GUI.DrawTexture(rect, PortraitsCache.Get(pawn, pos, PawnTextureCameraOffset, 1.18f));
-        }
-
-        // TODO Add brawler have ranged weapon text
-        public static string TooltipTextForThing(Thing thing, bool labelCap, bool isForced)
-        {
-            string text = string.Empty;
-            if (labelCap)
-            {
-                text = thing.LabelCap;
-                if (isForced)
-                {
-                    text += ", " + "ApparelForcedLower".Translate();
-                }
-            }
-
-            text += thing.DescriptionDetailed;
-
-            // hit points
-            if (thing.def.useHitPoints)
-            {
-                text += "\n" + UIText.HitPointsBasic.Translate().CapitalizeFirst() + ": " + thing.HitPoints + " / " + thing.MaxHitPoints;
-            }
-
-            // mass
-            string mass = (thing.GetStatValue(StatDefOf.Mass, true) * (float)thing.stackCount)
-                            .ToString("G") + " kg";
-            text += "\n" + UIText.Mass.Translate() + ": " + mass;
-
-            if (thing is Apparel app)
-            {
-                text += "\n";
-                float sharp = app.GetStatValue(StatDefOf.ArmorRating_Sharp);
-                float blunt = app.GetStatValue(StatDefOf.ArmorRating_Blunt);
-                float heat = app.GetStatValue(StatDefOf.ArmorRating_Heat);
-                if (sharp > 0.005)
-                {
-                    // string.Concat has a minor performance advantage over the good old fashion +
-                    // no need for premature optimization, just a note
-                    text = string.Concat(text, "\n", "ArmorSharp".Translate(), ":", sharp.ToStringPercent());
-                }
-                if (blunt > 0.005)
-                {
-                    text = string.Concat(text, "\n", "ArmorBlunt".Translate(), ":", blunt.ToStringPercent());
-                }
-                if (heat > 0.005)
-                {
-                    text = string.Concat(text, "\n", "ArmorHeat".Translate(), ":", heat.ToStringPercent());
-                }
-
-            }
-
-            return text;
         }
 
         // Most part is from the source code
@@ -401,37 +249,6 @@ namespace AwesomeInventory
                 value *= 100f;
             }
             return value.ToStringByStyle(asPercent ? ToStringStyle.FloatMaxOne : ToStringStyle.FloatMaxTwo) + unit;
-        }
-
-        public static void DrawMassBreakdown(Pawn pawn, Rect rect)
-        {
-            string text = "";
-            float value;
-            foreach (ThingWithComps eq in pawn.equipment.AllEquipmentListForReading)
-            {
-                value = eq.GetStatValue(StatDefOf.Mass) * eq.stackCount;
-                if (value > 0.1)
-                {
-                    text += string.Concat(eq.LabelShortCap, ": ", value, "kg\n");
-                }
-            }
-            foreach (Apparel apparel in pawn.apparel.WornApparel)
-            {
-                value = apparel.GetStatValue(StatDefOf.Mass) * apparel.stackCount;
-                if (value > 0.1)
-                {
-                    text += string.Concat(apparel.LabelShortCap, ": ", value, "kg\n");
-                }
-            }
-            foreach (Thing thing in pawn.inventory.innerContainer)
-            {
-                value = thing.GetStatValue(StatDefOf.Mass) * thing.stackCount;
-                if (value > 0.1)
-                {
-                    text += string.Concat(thing.LabelShortCap, ": ", value, "kg\n");
-                }
-            }
-            TooltipHandler.TipRegion(rect, text);
         }
 
         [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]

@@ -19,7 +19,7 @@ namespace AwesomeInventory.UI
         /// </summary>
         public AwesomeInventoryTab()
         {
-            _drawGearTab = new CEGearTabWorker(this);
+            _drawGearTab = new CEDrawGearTabWorker(this);
         }
     }
 }

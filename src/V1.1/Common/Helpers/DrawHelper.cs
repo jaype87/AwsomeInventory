@@ -44,15 +44,14 @@ namespace AwesomeInventory.UI
             }
 
             text.AppendLine(thing.DescriptionDetailed);
+            text.AppendLine();
+
             if (thing.def.useHitPoints)
             {
                 text.AppendLine(UIText.HitPointsBasic.Translate().CapitalizeFirst() + ": " + thing.HitPoints + " / " + thing.MaxHitPoints);
             }
 
-            // mass
-            string mass = (thing.GetStatValue(StatDefOf.Mass, true) * (float)thing.stackCount).ToString("G") + " kg";
-            text.AppendLine(UIText.Mass.Translate() + ": " + mass);
-
+            // Draw armor stats
             if (thing is Apparel app)
             {
                 float sharp = app.GetStatValue(StatDefOf.ArmorRating_Sharp);
@@ -75,6 +74,12 @@ namespace AwesomeInventory.UI
                 }
             }
 
+            text.AppendLine();
+
+            // mass
+            string mass = (thing.GetStatValue(StatDefOf.Mass, true) * (float)thing.stackCount).ToString("G") + " kg";
+            text.AppendLine(UIText.Mass.Translate() + ": " + mass);
+
             return text.ToString();
         }
 
@@ -87,54 +92,40 @@ namespace AwesomeInventory.UI
         {
             ValidateArg.NotNull(pawn, nameof(pawn));
 
-            StringBuilder stringBuilder = new StringBuilder();
+            string text = string.Empty;
 
-            if (pawn.equipment != null)
+            GetStatTooltipForThings(pawn.equipment?.AllEquipmentListForReading ?? Enumerable.Empty<Thing>(), StatDefOf.Mass, (value) => value.ToStringMass(), ref text);
+            GetStatTooltipForThings(pawn.apparel?.WornApparel ?? Enumerable.Empty<Thing>(), StatDefOf.Mass, (value) => value.ToStringMass(), ref text);
+            GetStatTooltipForThings(pawn.inventory?.innerContainer ?? Enumerable.Empty<Thing>(), StatDefOf.Mass, (value) => value.ToStringMass(), ref text);
+
+            return text;
+        }
+
+        /// <summary>
+        /// Build a <paramref name="tooltip"/> text for <paramref name="things"/> on <paramref name="stat"/>.
+        /// </summary>
+        /// <param name="things"> A list of things that need tooltip text. </param>
+        /// <param name="stat"> Stat for <paramref name="things"/>. </param>
+        /// <param name="toString"> A function to transform float value to string presentation. </param>
+        /// <param name="tooltip"> A string to build on.</param>
+        protected static void GetStatTooltipForThings(IEnumerable<Thing> things, StatDef stat, Func<float, string> toString, ref string tooltip)
+        {
+            ValidateArg.NotNull(things, nameof(things));
+
+            float value;
+            StringBuilder stringBuilder = new StringBuilder(tooltip);
+            foreach (Thing thing in things)
             {
-                IEnumerable<Tuple<ThingWithComps, float>> tuples =
-                    pawn.equipment.AllEquipmentListForReading
-                    .Select(e => Tuple.Create(e, e.GetStatValue(StatDefOf.Mass)))
-                    .OrderByDescending(t => t.Item2);
-
-                foreach (var tuple in tuples)
+                value = thing.GetStatValue(stat) * thing.stackCount;
+                if (value > 0.1)
                 {
-                    stringBuilder.Append(tuple.Item1.LabelCap);
-                    stringBuilder.AppendWithSeparator(tuple.Item2.ToStringMass(), ": ");
+                    stringBuilder.Append(thing.LabelShortCap);
+                    stringBuilder.AppendWithSeparator(toString(value), ": ");
                     stringBuilder.AppendLine();
                 }
             }
 
-            if (pawn.apparel != null)
-            {
-                IEnumerable<Tuple<Apparel, float>> tuples =
-                    pawn.apparel.WornApparel
-                    .Select(e => Tuple.Create(e, e.GetStatValue(StatDefOf.Mass)))
-                    .OrderByDescending(t => t.Item2);
-
-                foreach (var tuple in tuples)
-                {
-                    stringBuilder.Append(tuple.Item1.LabelCap);
-                    stringBuilder.AppendWithSeparator(tuple.Item2.ToStringMass(), ": ");
-                    stringBuilder.AppendLine();
-                }
-            }
-
-            if (pawn.inventory != null)
-            {
-                IEnumerable<Tuple<Thing, float>> tuples =
-                    pawn.inventory.innerContainer
-                    .Select(e => Tuple.Create(e, e.GetStatValue(StatDefOf.Mass) * e.stackCount))
-                    .OrderByDescending(t => t.Item2);
-
-                foreach (var tuple in tuples)
-                {
-                    stringBuilder.Append(tuple.Item1.LabelCap);
-                    stringBuilder.AppendWithSeparator(tuple.Item2.ToStringMass(), ": ");
-                    stringBuilder.AppendLine();
-                }
-            }
-
-            return stringBuilder.ToString();
+            tooltip = stringBuilder.ToString();
         }
     }
 }

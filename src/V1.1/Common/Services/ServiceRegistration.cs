@@ -72,6 +72,14 @@ namespace AwesomeInventory
                 => AwesomeInventoryServiceProvider.AddType(typeof(ThingGroupSelector), typeof(T));
 
         /// <summary>
+        /// Register derived type of <see cref="Dialog_ManageLoadouts"/>.
+        /// </summary>
+        /// <typeparam name="T"> Derived type of <see cref="Dialog_ManageLoadouts"/>. </typeparam>
+        protected static void RegisterDialogManageLoadout<T>()
+            where T : Dialog_ManageLoadouts
+                => AwesomeInventoryServiceProvider.AddType(typeof(Dialog_ManageLoadouts), typeof(T));
+
+        /// <summary>
         /// Register all services needed for Awesome Inventory.
         /// </summary>
         protected abstract void RegisterAllServies();

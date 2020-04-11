@@ -14,32 +14,113 @@
             Custom apparel layer added by CE.
             </summary>
         </member>
-        <member name="T:AwesomeInventory.UI.CEGearTabWorker">
+        <member name="T:AwesomeInventory.UI.AwesomeInventoryTab">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.UI.AwesomeInventoryTab.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.UI.AwesomeInventoryTab"/> class.
+            </summary>
+        </member>
+        <member name="T:AwesomeInventory.UI.CEDrawGearTabWorker">
             <summary>
             Draws window content for CE gear tab.
             </summary>
         </member>
-        <member name="M:AwesomeInventory.UI.CEGearTabWorker.#ctor(AwesomeInventory.UI.AwesomeInventoryTab)">
+        <member name="M:AwesomeInventory.UI.CEDrawGearTabWorker.#ctor(AwesomeInventory.UI.AwesomeInventoryTab)">
             <summary>
-            Initializes a new instance of the <see cref="T:AwesomeInventory.UI.CEGearTabWorker"/> class.
+            Initializes a new instance of the <see cref="T:AwesomeInventory.UI.CEDrawGearTabWorker"/> class.
             </summary>
             <param name="awesomeInventoryTab"> Gear tab to draw. </param>
         </member>
-        <member name="M:AwesomeInventory.UI.CEGearTabWorker.SetOutRectForJealousTab(UnityEngine.Rect)">
+        <member name="M:AwesomeInventory.UI.CEDrawGearTabWorker.SetOutRectForJealousTab(UnityEngine.Rect)">
             <inheritdoc/>
         </member>
-        <member name="T:AwesomeInventory.UI.DrawHelper">
+        <member name="M:AwesomeInventory.UI.CEDrawGearTabWorker.DrawWeightBar(UnityEngine.Rect,Verse.Pawn)">
+            <inheritdoc/>
+        </member>
+        <member name="T:AwesomeInventory.UI.DrawHelperCE">
             <summary>
             A helper class for drawing in game.
             It only consists of member methods while <see cref="T:AwesomeInventory.UI.DrawUtility"/> only has static methods.
             </summary>
         </member>
-        <member name="M:AwesomeInventory.UI.DrawHelper.BulkBreakdownTooltip(Verse.Pawn)">
+        <member name="M:AwesomeInventory.UI.DrawHelperCE.BulkTextFor(Verse.Pawn)">
             <summary>
             Build a tooltip string for gears worn by <paramref name="pawn"/>.
             </summary>
             <param name="pawn"> Pawn that the tooltip is for. </param>
             <returns> A tooltip on bulk for gears worn by <paramref name="pawn"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.DrawHelperCE.TooltipTextFor(Verse.Thing,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="T:AwesomeInventory.UI.Dialog_ManageLoadoutCE">
+            <inheritdoc/>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_ManageLoadoutCE.#ctor(AwesomeInventory.Loadout.AwesomeInventoryLoadout,Verse.Pawn)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.UI.Dialog_ManageLoadoutCE"/> class.
+            </summary>
+            <param name="loadout"> Loadout to display. </param>
+            <param name="pawn"> Pawn who wears the <paramref name="loadout"/>. </param>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_ManageLoadoutCE.GetWeightRect(UnityEngine.Rect)">
+            <summary>
+            Returns a rect for drawing weight bar and bulk bar.
+            </summary>
+            <param name="canvas"> Canvas at which bottom two bars will be drawn. </param>
+            <returns> A rect where two bars are drawn. </returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_ManageLoadoutCE.DrawWeightBar(UnityEngine.Rect)">
+            <summary>
+            Draw weight bar and bulk bar.
+            </summary>
+            <param name="canvas"> Rect for drawing weight bar and bulk bar. </param>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.InventoryHelper">
+            <summary>
+            Helper class for inventory management.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.InventoryHelper.WillBeOverEncumberedAfterPickingUp(Verse.Pawn,Verse.Thing,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.BulkUtility">
+            <summary>
+            Provide utility support for bulk stats on <see cref="T:Verse.Pawn"/> and <see cref="T:Verse.Thing"/>.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.BulkUtility.BulkFor(Verse.Thing)">
+            <summary>
+            Get bulk value for <see cref="T:Verse.Thing"/>.
+            </summary>
+            <param name="thing"> Thing to inspect. </param>
+            <returns> Bulk value on <paramref name="thing"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.BulkUtility.WornBulkFor(RimWorld.Apparel)">
+            <summary>
+            Get bulk value for <paramref name="apparel"/>.
+            </summary>
+            <param name="apparel"> Apparel to inspect. </param>
+            <returns> WornBulk value on <paramref name="apparel"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.BulkUtility.BulkFor(Verse.ThingDef,Verse.ThingDef,System.Boolean)">
+            <summary>
+            Get bulk value for <see cref="T:Verse.ThingDef"/>.
+            </summary>
+            <param name="thingDef"> ThingDef that requests bulk stat. </param>
+            <param name="stuff"> Stuff that thing is made of. </param>
+            <param name="wornBulk"> Whether the thing is to be worn. </param>
+            <returns> Bulk value for request. </returns>
+        </member>
+        <member name="T:AwesomeInventory.CEServicesRegistration">
+            <summary>
+            Register service for CE.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.CEServicesRegistration.RegisterAllServies">
+            <inheritdoc/>
         </member>
     </members>
 </doc>

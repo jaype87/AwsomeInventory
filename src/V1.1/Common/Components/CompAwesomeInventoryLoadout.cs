@@ -359,16 +359,6 @@ namespace AwesomeInventory.Loadout
             }
         }
 
-        private static List<Thing> MakeListForPawnGearAndInventory(Pawn pawn)
-        {
-            List<Thing> things = new List<Thing>();
-            things.AddRange(pawn.equipment.AllEquipmentListForReading.Cast<Thing>());
-            things.AddRange(pawn.apparel.WornApparel.Cast<Thing>());
-            things.AddRange(pawn.inventory.innerContainer);
-
-            return things;
-        }
-
         private void UpdateInventoryMargin(IEnumerable<ThingGroupSelector> groupSelectors)
         {
             ValidateArg.NotNull(groupSelectors, nameof(groupSelectors));
@@ -380,7 +370,7 @@ namespace AwesomeInventory.Loadout
 
             ConcurrentBag<ThingGroupSelectorPool> pools = new ConcurrentBag<ThingGroupSelectorPool>();
             Parallel.ForEach(
-                Partitioner.Create(MakeListForPawnGearAndInventory(_pawn)),
+                Partitioner.Create(InventoryUtility.MakeListForPawnGearAndInventory(_pawn)),
                 (Thing thing) =>
                 {
                     ThingGroupSelectorPool pool = this.FindPotentialThingGroupSelectors(thing, groupSelectors);

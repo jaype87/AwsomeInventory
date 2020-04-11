@@ -38,7 +38,7 @@ namespace AwesomeInventory.UI
             Widgets.Label(labelRect, label);
 
             rect.xMin += labelRect.width + WidgetRow.DefaultGap;
-            Widgets.FillableBar(rect, fillPercent, fillTex, BaseContent.BlackTex, true);
+            Widgets.FillableBar(rect, fillPercent, fillTex, BaseContent.BlackTex, false);
 
             if (Mouse.IsOver(rect) && !tooltip.NullOrEmpty())
                 TooltipHandler.TipRegion(rect, tooltip);

@@ -117,6 +117,15 @@
             <param name="pawn"> Pawn who carries weight. </param>
             <returns> A tooltip text on weight <paramref name="pawn"/> carries. </returns>
         </member>
+        <member name="M:AwesomeInventory.UI.DrawHelper.GetStatTooltipForThings(System.Collections.Generic.IEnumerable{Verse.Thing},RimWorld.StatDef,System.Func{System.Single,System.String},System.String@)">
+            <summary>
+            Build a <paramref name="tooltip"/> text for <paramref name="things"/> on <paramref name="stat"/>.
+            </summary>
+            <param name="things"> A list of things that need tooltip text. </param>
+            <param name="stat"> Stat for <paramref name="things"/>. </param>
+            <param name="toString"> A function to transform float value to string presentation. </param>
+            <param name="tooltip"> A string to build on.</param>
+        </member>
         <member name="T:AwesomeInventory.UI.DrawGearTabWorker">
             <summary>
             Draw contents for <see cref="T:RimWorld.ITab_Pawn_Gear"/>.
@@ -578,6 +587,16 @@
             A dialog window for managing loadouts.
             </summary>
         </member>
+        <member name="F:AwesomeInventory.UI.Dialog_ManageLoadouts._currentLoadout">
+            <summary>
+            The current loadout the dialog window shows.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.Dialog_ManageLoadouts._pawn">
+            <summary>
+            The selected pawn for this dialog window.
+            </summary>
+        </member>
         <member name="F:AwesomeInventory.UI.Dialog_ManageLoadouts._initialSize">
             <summary>
             Controls the window size and position.
@@ -686,6 +705,13 @@
             <param name="pawn"> The pawn used for baseline. </param>
             <param name="loadout"> Loadout to check. </param>
             <returns> Returns true if <paramref name="loadout"/> is too heavy for <paramref name="pawn"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.UI.Dialog_ManageLoadouts.GetWeightRect(UnityEngine.Rect)">
+            <summary>
+            Get a weight rect for drawing weight bar.
+            </summary>
+            <param name="canvas"> The canvas at which bottom a weight bar is drawn. </param>
+            <returns> Return a rect for drawing weight bar. </returns>
         </member>
         <member name="M:AwesomeInventory.UI.Dialog_ManageLoadouts.DrawWeightBar(UnityEngine.Rect)">
             <summary>
@@ -1191,16 +1217,6 @@
             <param name="label"> Label to draw in <paramref name="rect"/>. </param>
             <param name="action"> Action to take when it is clicked. </param>
             <param name="toggleable"> Indicates if button can be toggled and uses a selected texture if true. </param>
-        </member>
-        <member name="M:AwesomeInventory.UI.DrawUtility.GetButtonSize(UnityEngine.Rect,System.Single,System.Single,System.Boolean)">
-            <summary>
-            Return button size based on the provided rect
-            </summary>
-            <param name="rect"></param>
-            <param name="scale"> size of the button relative to rect </param>
-            <param name="ratio"> ratio of the button's length to width. Default is golden ratio. </param>
-            <param name="vertical">direction for the length of the button </param>
-            <returns></returns>
         </member>
         <member name="M:AwesomeInventory.UI.DrawUtility.ColorizeByQuality(System.String,Verse.Thing)">
             <summary>
@@ -2681,6 +2697,18 @@
             <param name="withID"> If true, assign ID to the newly created thing. </param>
             <returns> A copy of <paramref name="thing"/>. </returns>
         </member>
+        <member name="T:AwesomeInventory.Loadout.InventoryUtility">
+            <summary>
+            Utility support for inventory.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.InventoryUtility.MakeListForPawnGearAndInventory(Verse.Pawn)">
+            <summary>
+            Make a list of thing that consists of gears and inventory a pawn carries.
+            </summary>
+            <param name="pawn"> Pawn who carriees <see cref="T:Verse.Thing"/>s. </param>
+            <returns> A list of <see cref="T:Verse.Thing"/> on <paramref name="pawn"/>. </returns>
+        </member>
         <member name="T:AwesomeInventory.Logger">
             <summary>
             Implementation of <see cref="T:AwesomeInventory.ILogger"/>.
@@ -2730,6 +2758,12 @@
             Register derived type of <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/>.
             </summary>
             <typeparam name="T"> Derived Type of <see cref="T:AwesomeInventory.Loadout.ThingGroupSelector"/>. </typeparam>
+        </member>
+        <member name="M:AwesomeInventory.ServiceRegistration.RegisterDialogManageLoadout``1">
+            <summary>
+            Register derived type of <see cref="T:AwesomeInventory.UI.Dialog_ManageLoadouts"/>.
+            </summary>
+            <typeparam name="T"> Derived type of <see cref="T:AwesomeInventory.UI.Dialog_ManageLoadouts"/>. </typeparam>
         </member>
         <member name="M:AwesomeInventory.ServiceRegistration.RegisterAllServies">
             <summary>
@@ -3047,17 +3081,6 @@
             <summary>
             Gets a harmony instance.
             </summary>
-        </member>
-        <member name="M:AwesomeInventory.Utility.TryDrawOverallArmor(Verse.Pawn,System.Single@,System.Single,RimWorld.StatDef,System.String,System.String)">
-            <summary>
-                Draw overall armor in a format as "Sharp   100 Rha", wihout the double quotes
-            </summary>
-            <param name="selPawn"></param>
-            <param name="curY">current Y position</param>
-            <param name="width"></param>
-            <param name="stat"></param>
-            <param name="label"></param>
-            <param name="unit"></param>
         </member>
         <member name="M:AwesomeInventory.Utility.TryDrawOverallArmorCE(Verse.Pawn,UnityEngine.Rect,RimWorld.StatDef,System.String,UnityEngine.Texture,System.String)">
             <summary>

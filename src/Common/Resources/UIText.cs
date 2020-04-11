@@ -214,6 +214,9 @@ namespace AwesomeInventory.UI
 
         public const string VanillaWear = "AwesomeInventory_VanillaWear";
 
+        /***************** CE *************************/
+        public const string Bulk = "CE_Bulk";
+
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning restore SA1600 // Elements should be documented
     }
