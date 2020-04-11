@@ -322,7 +322,7 @@ namespace AwesomeInventory.UI
         protected virtual void DrawWishBlackListOptions(Rect canvas)
         {
             Rect globalSettingIconRect = canvas.ReplaceWidth(GenUI.SmallIconSize);
-            TooltipHandler.TipRegion(globalSettingIconRect, UIText.GlobalApparelSetting);
+            TooltipHandler.TipRegion(globalSettingIconRect, UIText.GlobalApparelSetting.TranslateSimple());
             if (Widgets.ButtonImage(globalSettingIconRect, TexResource.Gear))
             {
                 Find.WindowStack.Add(new Dialog_ManageOutfitSettings(_currentLoadout.filter));

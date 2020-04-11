@@ -150,6 +150,10 @@ namespace AwesomeInventory.UI
 
         public const string Pant = "AwesomeInventory_Pants";
 
+        public const string PatchAllRaces = "AwesomeInventory_PatchAllRaces";
+
+        public const string PatchAllRacesTooltip = "AwesomeInventory_PatchAllRacesTooltip";
+
         public const string Pickup = "AwesomeInventory_Pickup";
 
         public const string PrimaryWeapon = "AwesomeInventory_PrimaryWeapon";

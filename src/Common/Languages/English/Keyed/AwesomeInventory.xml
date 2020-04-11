@@ -67,6 +67,7 @@
     <AwesomeInventory_UseGearTabToggle>Use gear tab gizmo/toggle</AwesomeInventory_UseGearTabToggle>
     <AwesomeInventory_UseLoadout>Use Loadout</AwesomeInventory_UseLoadout>
     <AwesomeInventory_ToggleGearTab>Toggle Gear Tab</AwesomeInventory_ToggleGearTab>
+    <AwesomeInventory_PatchAllRaces>Patch all races</AwesomeInventory_PatchAllRaces>
 
     <!-- Option texts on context menu -->
     <AwesomeInventory_Default>Awesome Inventory Default</AwesomeInventory_Default>
@@ -82,6 +83,7 @@
     <AwesomeInventory_AutoEquipWeaponTooltip>Allows Awesome Inventory choose and equip weapons for unarmed pawns.</AwesomeInventory_AutoEquipWeaponTooltip>
     <AwesomeInventory_BlacklistTooltip>Items that fit in blacklist will not be considered for the Wishlist. Blacklist will not come into effect if items in it do not fit the Wishlist.</AwesomeInventory_BlacklistTooltip>
     <AwesomeInventory_CurrentTemperature>Current Temperature</AwesomeInventory_CurrentTemperature>
+    <AwesomeInventory_PatchAllRacesTooltip>Patch all races to use Awesome Inventory's gear tab.</AwesomeInventory_PatchAllRacesTooltip>
     <AwesomeInventory_PreviewQuality_Tooltip>Choose quality level for preview item. </AwesomeInventory_PreviewQuality_Tooltip>
     <AwesomeInventory_Separate_Tooltip>Set quality and hit points for each selected stuff separately.</AwesomeInventory_Separate_Tooltip>
     <AwesomeInventory_UseGearTabToggleTooltip>Gear tab toggle allows users to bind hotkey to open the gear tab.</AwesomeInventory_UseGearTabToggleTooltip>

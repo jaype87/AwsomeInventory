@@ -36,6 +36,11 @@ namespace AwesomeInventory
         public int QualityColorPluginID;
 
         /// <summary>
+        /// Patch all races to use AI's gear tab.
+        /// </summary>
+        public bool PatchAllRaces;
+
+        /// <summary>
         /// Save state.
         /// </summary>
         public override void ExposeData()
@@ -44,6 +49,7 @@ namespace AwesomeInventory
             Scribe_Values.Look(ref AutoEquipWeapon, nameof(AutoEquipWeapon));
             Scribe_Values.Look(ref QualityColorPluginID, nameof(QualityColorPluginID));
             Scribe_Values.Look(ref UseToggleGizmo, nameof(UseToggleGizmo));
+            Scribe_Values.Look(ref PatchAllRaces, nameof(PatchAllRaces));
         }
     }
 
