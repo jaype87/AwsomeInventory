@@ -453,7 +453,7 @@ namespace AwesomeInventory.UI
             // Draw delete icon.
             if (widgetRow.ButtonIcon(TexResource.CloseXSmall, UIText.Delete.TranslateSimple()))
             {
-                groupSelectors.RemoveAt(index);
+                groupSelectors.Remove(groupSelector);
             }
 
             Text.Anchor = TextAnchor.MiddleLeft;

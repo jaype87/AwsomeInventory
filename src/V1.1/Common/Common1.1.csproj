@@ -43,7 +43,11 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+<<<<<<< HEAD
     <DocumentationFile>AwesomeInventoryCommon1.1.xml</DocumentationFile>
+=======
+    <DocumentationFile>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\Common\Assemblies\AwesomeInventoryCommon1.1.xml</DocumentationFile>
+>>>>>>> master
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CE Build|AnyCPU'">
     <OutputPath>bin\CE Build\</OutputPath>
