@@ -10,7 +10,7 @@ using HarmonyLib;
 using Verse;
 using Verse.AI;
 
-namespace AwesomeInventory.Common.HarmonyPatches
+namespace AwesomeInventory.HarmonyPatches
 {
     /// <summary>
     /// Trick <see cref="Pawn_CarryTracker"/> to think it has a carried thing when pawn is on an unload job.

@@ -37,8 +37,7 @@ namespace AwesomeInventory.UI
         /// <inheritdoc/>
         protected override void DrawWeightBar(Rect rect, Pawn selPawn)
         {
-            Log.Warning("DrawWeightBarBase: " + rect.width);
-            base.DrawWeightBar(rect, selPawn);
+            base.DrawWeightBar(rect.ReplaceHeight(GenUI.SmallIconSize), selPawn);
 
             List<Thing> things = new List<Thing>();
             if (selPawn.equipment?.AllEquipmentListForReading != null)
@@ -56,7 +55,6 @@ namespace AwesomeInventory.UI
                 + selPawn.apparel?.WornApparel.Sum(apparel => apparel.GetStatValue(CE_StatDefOf.WornBulk)) ?? 0;
             float carryBulk = selPawn.GetStatValue(CE_StatDefOf.CarryBulk);
             float fillPercent = Mathf.Clamp01(currentBulk / carryBulk);
-            Log.Warning("DrawWeightBar: " + rect.width);
             GenBar.BarWithOverlay(
             rect.ReplaceY(rect.yMax + GenUI.GapSmall)
             , fillPercent

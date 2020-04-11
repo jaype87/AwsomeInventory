@@ -80,13 +80,11 @@
     <Compile Include="GearTab\AwesomeInventoryTab.cs" />
     <Compile Include="GearTab\VanillaGearTabWorker.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="HarmonyPatches\ThingOwner_RPGI_Patch.cs" />
+    <Compile Include="HarmonyPatches\AddPickupOption.cs" />
     <Compile Include="Helpers\InventoryHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\VanillaServicesRegistration.cs" />
     <None Include="ClassDiagram1.cd" />
-    <None Include="HarmonyPatches\Game_FinalizeInit_RPGI_Patch.cs" />
-    <Compile Include="HarmonyPatches\Pawn_CarryTracker_CarriedThing_AwesomeInventory_Patch.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -451,17 +451,14 @@ namespace AwesomeInventory.UI
             ThingGroupSelector groupSelector = groupSelectors[index];
 
             // Draw delete icon.
-            if (widgetRow.ButtonIcon(TexResource.CloseXSmall, UIText.Delete.TranslateSimple()))
-            {
-                groupSelectors.Remove(groupSelector);
-            }
+            this.DrawDeleteIconInThingRow(widgetRow, groupSelectors, groupSelector);
 
             Text.Anchor = TextAnchor.MiddleLeft;
 
             // Draw count field.
             if (WhiteBlacklistView.IsWishlist)
             {
-                this.DrawCountField(
+                this.DrawCountFieldInThingRow(
                 new Rect(widgetRow.FinalX - WidgetRow.IconSize * 2 - WidgetRow.DefaultGap, widgetRow.FinalY, WidgetRow.IconSize * 2, GenUI.ListSpacing),
                 groupSelector);
                 widgetRow.GapButtonIcon();
@@ -469,12 +466,7 @@ namespace AwesomeInventory.UI
             }
 
             // Draw gear icon.
-            ThingDef allowedThing = groupSelector.AllowedThing;
-            if ((allowedThing.MadeFromStuff || allowedThing.HasComp(typeof(CompQuality)) || allowedThing.useHitPoints)
-                && widgetRow.ButtonIcon(TexResource.Gear))
-            {
-                Find.WindowStack.Add(new Dialog_StuffAndQuality(groupSelector));
-            }
+            this.DrawGearIconInThingRow(widgetRow, groupSelector);
 
             Text.WordWrap = false;
 
@@ -505,6 +497,41 @@ namespace AwesomeInventory.UI
                 {
                     TooltipHandler.TipRegion(labelRect, UIText.DragToReorder.Translate());
                 }
+            }
+        }
+
+        /// <summary>
+        /// Draw a gear icon in thing row.
+        /// </summary>
+        /// <param name="widgetRow"> A drawing helper. </param>
+        /// <param name="groupSelector"> The target group selector.</param>
+        protected virtual void DrawGearIconInThingRow(WidgetRow widgetRow, ThingGroupSelector groupSelector)
+        {
+            ValidateArg.NotNull(widgetRow, nameof(widgetRow));
+            ValidateArg.NotNull(groupSelector, nameof(groupSelector));
+
+            ThingDef allowedThing = groupSelector.AllowedThing;
+            if ((allowedThing.MadeFromStuff || allowedThing.HasComp(typeof(CompQuality)) || allowedThing.useHitPoints)
+                && widgetRow.ButtonIcon(TexResource.Gear))
+            {
+                Find.WindowStack.Add(new Dialog_StuffAndQuality(groupSelector));
+            }
+        }
+
+        /// <summary>
+        /// Draw a delete icon in thing row.
+        /// </summary>
+        /// <param name="widgetRow"> Helper for drawing. </param>
+        /// <param name="groupSelectors"> A list of <see cref="ThingGroupSelector"/> displayed in loadout window. </param>
+        /// <param name="groupSelector"> The <see cref="ThingGroupSelector"/> the delete icon attached to. </param>
+        protected virtual void DrawDeleteIconInThingRow(WidgetRow widgetRow, IList<ThingGroupSelector> groupSelectors, ThingGroupSelector groupSelector)
+        {
+            ValidateArg.NotNull(widgetRow, nameof(widgetRow));
+            ValidateArg.NotNull(groupSelectors, nameof(groupSelectors));
+
+            if (widgetRow.ButtonIcon(TexResource.CloseXSmall, UIText.Delete.TranslateSimple()))
+            {
+                groupSelectors.Remove(groupSelector);
             }
         }
 
@@ -548,17 +575,15 @@ namespace AwesomeInventory.UI
                 string.Empty);
         }
 
-        private static void ReorderItems(int oldIndex, int newIndex, IList<ThingGroupSelector> groupSelectors)
+        /// <summary>
+        /// Draw count field in a thing row.
+        /// </summary>
+        /// <param name="canvas"> Rect for drawing. </param>
+        /// <param name="groupSelector"> The selected group selector. </param>
+        protected virtual void DrawCountFieldInThingRow(Rect canvas, ThingGroupSelector groupSelector)
         {
-            if (oldIndex != newIndex)
-            {
-                groupSelectors.Insert(newIndex, groupSelectors[oldIndex]);
-                groupSelectors.RemoveAt((oldIndex >= newIndex) ? (oldIndex + 1) : oldIndex);
-            }
-        }
+            ValidateArg.NotNull(groupSelector, nameof(groupSelector));
 
-        private void DrawCountField(Rect canvas, ThingGroupSelector groupSelector)
-        {
             int countInt = groupSelector.AllowedStackCount;
             string buffer = countInt.ToString();
             Widgets.TextFieldNumeric(canvas, ref countInt, ref buffer);
@@ -567,6 +592,15 @@ namespace AwesomeInventory.UI
             if (countInt != groupSelector.AllowedStackCount)
             {
                 groupSelector.SetStackCount(countInt);
+            }
+        }
+
+        private static void ReorderItems(int oldIndex, int newIndex, IList<ThingGroupSelector> groupSelectors)
+        {
+            if (oldIndex != newIndex)
+            {
+                groupSelectors.Insert(newIndex, groupSelectors[oldIndex]);
+                groupSelectors.RemoveAt((oldIndex >= newIndex) ? (oldIndex + 1) : oldIndex);
             }
         }
 
@@ -709,14 +743,29 @@ namespace AwesomeInventory.UI
 
         #endregion Methods
 
-        private class WhiteBlacklistView : IReset
+        /// <summary>
+        /// Store states on if the loadout window is displaying wish list or blacklist.
+        /// </summary>
+        protected class WhiteBlacklistView : IReset
         {
+            /// <summary>
+            /// Display name for wish list.
+            /// </summary>
             public static readonly string WishlistDisplayName = UIText.Wishlist.TranslateSimple();
 
+            /// <summary>
+            /// Display name for blacklist.
+            /// </summary>
             public static readonly string BlacklistDisplayName = UIText.Blacklist.TranslateSimple();
 
+            /// <summary>
+            /// Gets or sets a value indicating whether the loadout window is displaying wish list.
+            /// </summary>
             public static bool IsWishlist { get; set; } = true;
 
+            /// <summary>
+            /// Reset state.
+            /// </summary>
             public void Reset()
             {
                 IsWishlist = true;

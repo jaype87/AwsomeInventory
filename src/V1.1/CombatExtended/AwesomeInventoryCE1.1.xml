@@ -14,6 +14,57 @@
             Custom apparel layer added by CE.
             </summary>
         </member>
+        <member name="T:AwesomeInventory.Loadout.GenericAmmo">
+            <summary>
+            Generic def for ammo.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.GenericAmmo.#ctor(System.String,System.String,System.String,System.Type,System.Collections.Generic.IEnumerable{CombatExtended.AmmoDef})">
+            <summary>
+            Initializes a new instance of the <see cref="T:AwesomeInventory.Loadout.GenericAmmo"/> class.
+            </summary>
+            <param name="defName"> Def Name. </param>
+            <param name="description"> Description for this def. </param>
+            <param name="label"> Label to display. </param>
+            <param name="thingClass"> Type of Thing that this def defines. </param>
+            <param name="ammoDefs"> A list of ammo defs. </param>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.InventoryHelper">
+            <summary>
+            Helper class for inventory management.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.InventoryHelper.WillBeOverEncumberedAfterPickingUp(Verse.Pawn,Verse.Thing,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="T:AwesomeInventory.Loadout.BulkUtility">
+            <summary>
+            Provide utility support for bulk stats on <see cref="T:Verse.Pawn"/> and <see cref="T:Verse.Thing"/>.
+            </summary>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.BulkUtility.BulkFor(Verse.Thing)">
+            <summary>
+            Get bulk value for <see cref="T:Verse.Thing"/>.
+            </summary>
+            <param name="thing"> Thing to inspect. </param>
+            <returns> Bulk value on <paramref name="thing"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.BulkUtility.WornBulkFor(RimWorld.Apparel)">
+            <summary>
+            Get bulk value for <paramref name="apparel"/>.
+            </summary>
+            <param name="apparel"> Apparel to inspect. </param>
+            <returns> WornBulk value on <paramref name="apparel"/>. </returns>
+        </member>
+        <member name="M:AwesomeInventory.Loadout.BulkUtility.BulkFor(Verse.ThingDef,Verse.ThingDef,System.Boolean)">
+            <summary>
+            Get bulk value for <see cref="T:Verse.ThingDef"/>.
+            </summary>
+            <param name="thingDef"> ThingDef that requests bulk stat. </param>
+            <param name="stuff"> Stuff that thing is made of. </param>
+            <param name="wornBulk"> Whether the thing is to be worn. </param>
+            <returns> Bulk value for request. </returns>
+        </member>
         <member name="T:AwesomeInventory.UI.AwesomeInventoryTab">
             <inheritdoc/>
         </member>
@@ -55,6 +106,16 @@
         <member name="M:AwesomeInventory.UI.DrawHelperCE.TooltipTextFor(Verse.Thing,System.Boolean)">
             <inheritdoc/>
         </member>
+        <member name="T:AwesomeInventory.UI.ImageResource">
+            <summary>
+            Image resource for CE.
+            </summary>
+        </member>
+        <member name="F:AwesomeInventory.UI.ImageResource.IconAmmo">
+            <summary>
+            Icon for ammo.
+            </summary>
+        </member>
         <member name="T:AwesomeInventory.UI.Dialog_ManageLoadoutCE">
             <inheritdoc/>
         </member>
@@ -78,41 +139,25 @@
             </summary>
             <param name="canvas"> Rect for drawing weight bar and bulk bar. </param>
         </member>
-        <member name="T:AwesomeInventory.Loadout.InventoryHelper">
+        <member name="T:AwesomeInventory.CEStrings">
             <summary>
-            Helper class for inventory management.
+            String resources for CE.
             </summary>
         </member>
-        <member name="M:AwesomeInventory.Loadout.InventoryHelper.WillBeOverEncumberedAfterPickingUp(Verse.Pawn,Verse.Thing,System.Int32)">
-            <inheritdoc/>
-        </member>
-        <member name="T:AwesomeInventory.Loadout.BulkUtility">
+        <member name="F:AwesomeInventory.CEStrings.GenericAmmoPrefix">
             <summary>
-            Provide utility support for bulk stats on <see cref="T:Verse.Pawn"/> and <see cref="T:Verse.Thing"/>.
+            Prefix for generic ammo def of a specified gun in CE.
             </summary>
         </member>
-        <member name="M:AwesomeInventory.Loadout.BulkUtility.BulkFor(Verse.Thing)">
+        <member name="F:AwesomeInventory.CEStrings.AmmoDescription">
             <summary>
-            Get bulk value for <see cref="T:Verse.Thing"/>.
+            Description for generic ammo.
             </summary>
-            <param name="thing"> Thing to inspect. </param>
-            <returns> Bulk value on <paramref name="thing"/>. </returns>
         </member>
-        <member name="M:AwesomeInventory.Loadout.BulkUtility.WornBulkFor(RimWorld.Apparel)">
+        <member name="F:AwesomeInventory.CEStrings.AmmoLabel">
             <summary>
-            Get bulk value for <paramref name="apparel"/>.
+            Label for generic ammo.
             </summary>
-            <param name="apparel"> Apparel to inspect. </param>
-            <returns> WornBulk value on <paramref name="apparel"/>. </returns>
-        </member>
-        <member name="M:AwesomeInventory.Loadout.BulkUtility.BulkFor(Verse.ThingDef,Verse.ThingDef,System.Boolean)">
-            <summary>
-            Get bulk value for <see cref="T:Verse.ThingDef"/>.
-            </summary>
-            <param name="thingDef"> ThingDef that requests bulk stat. </param>
-            <param name="stuff"> Stuff that thing is made of. </param>
-            <param name="wornBulk"> Whether the thing is to be worn. </param>
-            <returns> Bulk value for request. </returns>
         </member>
         <member name="T:AwesomeInventory.CEServicesRegistration">
             <summary>

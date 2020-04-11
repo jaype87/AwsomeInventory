@@ -10,10 +10,16 @@ using System.Text;
 using UnityEngine;
 using Verse;
 
-namespace RPG_Inventory_Remake_Common
+namespace AwesomeInventory.UI
 {
+    /// <summary>
+    /// Color themes.
+    /// </summary>
     public static class Theme
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable SA1600 // Elements should be documented
+
         public static class MilkySlicky
         {
             public static Color BackGround = GenColor.FromHex("C7AF84C0");
@@ -22,5 +28,8 @@ namespace RPG_Inventory_Remake_Common
             public static Color DarkForeGround = GenColor.FromHex("3B1F2B");
             public static Color Warning = GenColor.FromHex("DB162F");
         }
+
+#pragma warning restore SA1600 // Elements should be documented
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

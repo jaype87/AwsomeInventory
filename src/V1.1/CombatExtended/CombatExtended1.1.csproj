@@ -70,7 +70,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\CombatExtended\Assemblies\</OutputPath>
     <DebugType>portable</DebugType>
-    <DocumentationFile>AwesomeInventoryCE1.1.xml</DocumentationFile>
+    <DocumentationFile>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\CombatExtended\Assemblies\AwesomeInventoryCE1.1.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CE Build|AnyCPU'">
     <OutputPath>..\..\Assemblies\</OutputPath>
@@ -115,6 +115,14 @@
       <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
@@ -122,11 +130,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefOfs\CEApparelLayerDefOf.cs" />
+    <Compile Include="DynamicDefs\GenericAmmo.cs" />
     <Compile Include="GeatTab\AwesomeInventoryTab.cs" />
     <Compile Include="GeatTab\CEDrawGearTabWorker.cs" />
     <Compile Include="Helper\DrawHelperCE.cs" />
     <Compile Include="Helper\InventoryHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\CEStrings.cs" />
+    <Compile Include="Resources\ImageResource.cs" />
     <Compile Include="Services\CEServicesRegistration.cs" />
     <Compile Include="UI\Dialog_ManageLoadoutCE.cs" />
     <Compile Include="Utilities\BulkUtility.cs" />

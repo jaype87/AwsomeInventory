@@ -43,11 +43,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
-<<<<<<< HEAD
-    <DocumentationFile>AwesomeInventoryCommon1.1.xml</DocumentationFile>
-=======
     <DocumentationFile>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\Common\Assemblies\AwesomeInventoryCommon1.1.xml</DocumentationFile>
->>>>>>> master
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CE Build|AnyCPU'">
     <OutputPath>bin\CE Build\</OutputPath>
@@ -81,6 +77,8 @@
     <Compile Include="HarmonyPatches\AddHumanlikeOrders_AwesomeInventory_Patch.cs" />
     <Compile Include="HarmonyPatches\Outfit_ExposeData.cs" />
     <Compile Include="HarmonyPatches\Pawn_ApparelTracker_ApparelChanged_Patch.cs" />
+    <Compile Include="HarmonyPatches\Pawn_CarryTracker_CarriedThing_AwesomeInventory_Patch.cs" />
+    <Compile Include="HarmonyPatches\ThingOwner_RPGI_Patch.cs" />
     <Compile Include="Helpers\DrawHelper.cs" />
     <Compile Include="Interfaces\IInventoryHelper.cs" />
     <Compile Include="Jobs\DressJob.cs" />
@@ -127,7 +125,6 @@
     <Compile Include="Jobs\JobDriver_AwesomeInventory_MapEquip.cs" />
     <Compile Include="Jobs\AwesomeInventoryUnloadNow.cs" />
     <Compile Include="Jobs\ThinkNode_AwesomeInventory_Core.cs" />
-    <None Include="Loadout\AILoadout.cs" />
     <Compile Include="Loadout\LoadoutComparer.cs" />
     <Compile Include="DynamicDefs\AIGenericDefManager.cs" />
     <Compile Include="Loadout\LoadoutUtilities.cs" />

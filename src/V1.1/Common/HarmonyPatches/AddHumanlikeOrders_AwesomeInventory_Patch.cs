@@ -25,7 +25,6 @@ namespace AwesomeInventory.Common.HarmonyPatches
     /// </summary>
     [StaticConstructorOnStartup]
     public static class AddHumanlikeOrders_AwesomeInventory_Patch
-
     {
         static AddHumanlikeOrders_AwesomeInventory_Patch()
         {
@@ -43,12 +42,6 @@ namespace AwesomeInventory.Common.HarmonyPatches
         [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Harmony patch")]
         public static void Postfix(Vector3 clickPos, Pawn pawn, List<FloatMenuOption> opts)
         {
-            if (!AwesomeInventoryServiceProvider.TryGetImplementation<IInventoryHelper>(out IInventoryHelper inventoryHelper))
-            {
-                Log.Error(string.Format(ErrorMessage.NotImplemented, typeof(IInventoryHelper).Name));
-                return;
-            }
-
             IntVec3 position = IntVec3.FromVector3(clickPos);
 
             // Add options for equipment.
@@ -173,35 +166,6 @@ namespace AwesomeInventory.Common.HarmonyPatches
                             apparel);
                         opts.Add(option);
                     }
-                }
-            }
-
-            List<Thing> items = position.GetThingList(pawn.Map);
-            foreach (Thing item in items)
-            {
-                if (item.def.category == ThingCategory.Item)
-                {
-                    int count = MassUtility.CountToPickUpUntilOverEncumbered(pawn, item);
-                    if (count == 0)
-                    {
-                        continue;
-                    }
-
-                    count = Math.Min(count, item.stackCount);
-
-                    string displayText = UIText.Pickup.Translate(item.LabelNoCount + " x" + count);
-                    var option = FloatMenuUtility.DecoratePrioritizedTask(
-                        new FloatMenuOption(
-                            displayText
-                            , () =>
-                            {
-                                Job job = JobMaker.MakeJob(JobDefOf.TakeInventory, item);
-                                job.count = count;
-                                pawn.jobs.TryTakeOrderedJob(job);
-                            })
-                        , pawn
-                        , item);
-                    opts.Add(option);
                 }
             }
         }
