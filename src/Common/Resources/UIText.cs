@@ -126,6 +126,10 @@ namespace AwesomeInventory.UI
 
         public const string FailToDrop = "AwesomeInventory_FailToDrop";
 
+        public const string GlobalApparelSetting = "AwesomeInventory_GlobalApparelSetting";
+
+        public const string GlobalOutfitSettingWarning = "AwesomeInventory_GlobalOutfitSettingWarning";
+
         public const string GreedyTab = "AwesomeInventory_GreedyTab";
 
         public const string Head = "AwesomeInventory_Head";

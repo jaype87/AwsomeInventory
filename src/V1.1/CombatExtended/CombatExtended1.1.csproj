@@ -60,7 +60,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\CombatExtended\Assemblies\</OutputPath>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>AwesomeInventoryCE1.1.xml</DocumentationFile>
+    <DocumentationFile>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\CombatExtended\Assemblies\AwesomeInventoryCE1.1.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>

@@ -201,7 +201,7 @@ namespace AwesomeInventory.UI
                 sourceButtonRect.width,
                 useableSize.y - sourceButtonRect.yMax);
 
-            this.DrawWhiteBlackListOptions(whiteBlackListRect);
+            this.DrawWishBlackListOptions(whiteBlackListRect);
             this.DrawLoadoutNameField(nameFieldRect);
 
             if (WhiteBlacklistView.IsWishlist)
@@ -319,8 +319,16 @@ namespace AwesomeInventory.UI
         /// Draw wishlist/blacklist choice on screen.
         /// </summary>
         /// <param name="canvas"> Rect for drawing. </param>
-        protected virtual void DrawWhiteBlackListOptions(Rect canvas)
+        protected virtual void DrawWishBlackListOptions(Rect canvas)
         {
+            Rect globalSettingIconRect = canvas.ReplaceWidth(GenUI.SmallIconSize);
+            TooltipHandler.TipRegion(globalSettingIconRect, UIText.GlobalApparelSetting);
+            if (Widgets.ButtonImage(globalSettingIconRect, TexResource.Gear))
+            {
+                Find.WindowStack.Add(new Dialog_ManageOutfitSettings(_currentLoadout.filter));
+            }
+
+            canvas = canvas.ReplacexMin(canvas.x + GenUI.SmallIconSize);
             Rect drawingRect = new Rect(0, canvas.y, GenUI.SmallIconSize * 2 + DrawUtility.TwentyCharsWidth + GenUI.GapTiny * 2, GenUI.ListSpacing);
             Rect centeredRect = drawingRect.CenteredOnXIn(canvas);
             WidgetRow widgetRow = new WidgetRow(centeredRect.x, centeredRect.y, UIDirection.RightThenDown);

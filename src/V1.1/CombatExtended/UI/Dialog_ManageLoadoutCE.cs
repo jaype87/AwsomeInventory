@@ -185,10 +185,10 @@ namespace AwesomeInventory.UI
         }
 
         /// <inheritdoc/>
-        protected override void DrawWhiteBlackListOptions(Rect canvas)
+        protected override void DrawWishBlackListOptions(Rect canvas)
         {
             Rect leftRect = canvas.ReplaceWidth(canvas.width - UIText.TenCharsString.GetWidthCached());
-            base.DrawWhiteBlackListOptions(leftRect);
+            base.DrawWishBlackListOptions(leftRect);
 
             Rect righRect = new Rect(leftRect.xMax, leftRect.y, UIText.TenCharsString.GetWidthCached(), canvas.height);
             if (_drawWeight && Widgets.ButtonText(righRect, UIText.Weight.TranslateSimple()))

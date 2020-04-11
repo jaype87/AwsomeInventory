@@ -244,6 +244,7 @@ namespace AwesomeInventory.Loadout
         /// <inheritdoc/>
         public void Insert(int index, ThingGroupSelector item)
         {
+            _isDirty = true;
             _thingGroupSelectors.Insert(index, item);
             _addNewThingGroupSelectorCallbacks.ForEach(c => c.Invoke(item));
         }
@@ -251,6 +252,7 @@ namespace AwesomeInventory.Loadout
         /// <inheritdoc/>
         public void RemoveAt(int index)
         {
+            _isDirty = true;
             _removeThingGroupSelectorCallbacks.ForEach(c => c.Invoke(_thingGroupSelectors[index]));
             _thingGroupSelectors.RemoveAt(index);
         }

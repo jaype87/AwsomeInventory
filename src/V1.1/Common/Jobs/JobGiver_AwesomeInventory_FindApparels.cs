@@ -56,7 +56,8 @@ namespace AwesomeInventory.Jobs
                         _parent.FindItem(
                             pawn
                             , pawn.Map.listerThings.ThingsInGroup(ThingRequestGroup.Apparel)
-                            , (thing) => groupSelector.Allows(thing, out _)
+                            , (thing) => ailoadout.Loadout.filter.Allows(thing)
+                                         && groupSelector.Allows(thing, out _)
                                          && !ailoadout.Loadout.IncludedInBlacklist(thing)
                                          && (thing.def.apparel.gender == Gender.None || thing.def.apparel.gender == pawn.gender)
                                          && (!thing.def.apparel.tags.Contains("Royal") || pawn.royalty.AllTitlesInEffectForReading.Count != 0));
