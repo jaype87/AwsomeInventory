@@ -101,6 +101,7 @@ namespace AwesomeInventory.UI
                 , true);
         }
 
+        /// <inheritdoc/>
         protected override Tuple<float, string> GetArmorStat(Pawn pawn, StatDef stat, bool apparelChanged)
         {
             Tuple<float, string> tuple;

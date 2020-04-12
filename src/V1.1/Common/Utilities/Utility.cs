@@ -146,9 +146,14 @@ namespace AwesomeInventory
 
         public static float CalculateArmorByPartsCE(Pawn pawn, StatDef stat, ref string text, string unit)
         {
+            ValidateArg.NotNull(pawn, nameof(pawn));
+
             text = string.Empty;
             float num = 0f;
-            List<Apparel> wornApparel = pawn.apparel.WornApparel;
+            List<Apparel> wornApparel = pawn.apparel?.WornApparel;
+            if (wornApparel == null)
+                return num;
+
             for (int i = 0; i < wornApparel.Count; i++)
             {
                 num += wornApparel[i].GetStatValue(stat, true) * wornApparel[i].def.apparel.HumanBodyCoverage;
