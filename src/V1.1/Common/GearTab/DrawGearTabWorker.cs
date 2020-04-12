@@ -972,7 +972,10 @@ namespace AwesomeInventory.UI
                 FloatMenuOption equipOption;
 
                 // Add put away option
-                if (selPawn.equipment.AllEquipmentListForReading.Contains(equipment) && selPawn.inventory != null)
+                if (selPawn.equipment.AllEquipmentListForReading.Contains(equipment)
+                    && selPawn.inventory != null
+                    && this.ShowDropButton(selPawn, equipment, false, out bool canDrop, out _)
+                    && canDrop)
                 {
                     equipOption = new FloatMenuOption(
                         UIText.PutAway.Translate(labelShort),
@@ -1078,7 +1081,10 @@ namespace AwesomeInventory.UI
             }
 
             // Put away option
-            if (pawn.apparel.Contains(apparel) && pawn.inventory != null)
+            if (pawn.apparel.Contains(apparel)
+                && pawn.inventory != null
+                && this.ShowDropButton(selPawn, apparel, false, out bool canDrop, out _)
+                && canDrop)
             {
                 option = new FloatMenuOption(
                     UIText.PutAway.Translate(labelShort),
