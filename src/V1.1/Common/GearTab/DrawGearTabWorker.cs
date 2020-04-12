@@ -824,20 +824,18 @@ namespace AwesomeInventory.UI
 
             Tuple<float, string> tuple = this.GetArmorStat(pawn, stat, apparelChanged);
 
+            if (row.AvailableWidth() < WidgetRow.IconSize + WidgetRow.DefaultGap + Text.CalcSize(tuple.Item1.ToStringPercent()).x)
+                row.Gap(int.MaxValue);
+
             Rect iconRect = row.Icon(icon, string.Empty);
             Rect numberRect = row.Label(tuple.Item1.ToStringPercent());
             Rect tipRect = new Rect(iconRect) { xMax = numberRect.xMax };
 
-            // Move row to next level.
-            float length = GenUI.SmallIconSize + Text.CalcSize(tuple.Item1.ToStringPercent()).x;
-            if (changeLine || row.AvailableWidth() < length)
+            if (changeLine)
                 row.Gap(int.MaxValue);
 
-            if (Mouse.IsOver(tipRect))
-            {
-                TooltipHandler.TipRegion(tipRect, string.Concat(altIconText, Environment.NewLine, tuple.Item2));
-                Widgets.DrawHighlightIfMouseover(tipRect);
-            }
+            TooltipHandler.TipRegion(tipRect, string.Concat(altIconText, Environment.NewLine, tuple.Item2));
+            Widgets.DrawHighlightIfMouseover(tipRect);
         }
 
         /// <summary>
