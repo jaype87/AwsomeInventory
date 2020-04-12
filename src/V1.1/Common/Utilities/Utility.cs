@@ -146,13 +146,14 @@ namespace AwesomeInventory
 
         public static float CalculateArmorByPartsCE(Pawn pawn, StatDef stat, ref string text, string unit)
         {
-            text = "";
+            text = string.Empty;
             float num = 0f;
             List<Apparel> wornApparel = pawn.apparel.WornApparel;
             for (int i = 0; i < wornApparel.Count; i++)
             {
                 num += wornApparel[i].GetStatValue(stat, true) * wornApparel[i].def.apparel.HumanBodyCoverage;
             }
+
             if (num > 0.005f)
             {
                 List<BodyPartRecord> bpList = pawn.RaceProps.body.AllParts;
@@ -175,6 +176,7 @@ namespace AwesomeInventory
                     }
                 }
             }
+
             return num;
         }
 

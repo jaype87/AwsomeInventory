@@ -3,6 +3,7 @@
 // Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AwesomeInventory.Loadout;
@@ -62,6 +63,70 @@ namespace AwesomeInventory.UI
             , UIText.Bulk.TranslateSimple()
             , currentBulk.ToString("0.#") + "/" + carryBulk.ToString()
             , (this.DrawHelper as DrawHelperCE).BulkTextFor(selPawn));
+        }
+
+        /// <inheritdoc/>
+        protected override void DrawArmorStats(WidgetRow row, Pawn pawn, bool apparelChanged)
+        {
+            string format = "0.#";
+
+            this.DrawArmorStatsWorker(
+                row
+                , pawn
+                , StatDefOf.ArmorRating_Blunt
+                , (value) => value.ToString(format) + CEStrings.MPa.TranslateSimple()
+                , TexResource.ArmorBlunt
+                , UIText.ArmorBlunt.TranslateSimple()
+                , apparelChanged
+                , false);
+
+            this.DrawArmorStatsWorker(
+                row
+                , pawn
+                , StatDefOf.ArmorRating_Sharp
+                , (value) => value.ToString(format) + CEStrings.mmRHA.TranslateSimple()
+                , TexResource.ArmorSharp
+                , UIText.ArmorSharp.TranslateSimple()
+                , apparelChanged
+                , false);
+
+            this.DrawArmorStatsWorker(
+                row
+                , pawn
+                , StatDefOf.ArmorRating_Heat
+                , (value) => value.ToString(format) + UIText.ArmorHeat.TranslateSimple()
+                , TexResource.ArmorHeat
+                , UIText.ArmorHeat.TranslateSimple()
+                , apparelChanged
+                , true);
+        }
+
+        protected override Tuple<float, string> GetArmorStat(Pawn pawn, StatDef stat, bool apparelChanged)
+        {
+            Tuple<float, string> tuple;
+            if (apparelChanged)
+            {
+                string unit = string.Empty;
+                if (stat == StatDefOf.ArmorRating_Blunt)
+                    unit = CEStrings.MPa.TranslateSimple();
+                else if (stat == StatDefOf.ArmorRating_Sharp)
+                    unit = CEStrings.mmRHA.TranslateSimple();
+                else if (stat == StatDefOf.ArmorRating_Heat)
+                    unit = UIText.ArmorHeat.TranslateSimple();
+
+                string tooltip = string.Empty;
+                float value = Utility.CalculateArmorByPartsCE(pawn, stat, ref tooltip, unit);
+                _statCache[stat] = tuple = Tuple.Create(value, tooltip);
+            }
+            else
+            {
+                if (!_statCache.TryGetValue(stat, out tuple))
+                {
+                    Log.Error("Armor stat is not initiated.");
+                }
+            }
+
+            return tuple;
         }
     }
 }

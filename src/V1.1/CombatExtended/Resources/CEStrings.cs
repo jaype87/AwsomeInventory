@@ -30,5 +30,16 @@ namespace AwesomeInventory
         /// Label for generic ammo.
         /// </summary>
         public const string AmmoLabel = "CE_Generic_Ammo";
+
+        /// <summary>
+        /// Unit of sharp penetration power.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1303:Const field names should begin with upper-case letter", Justification = "Convention usage.")]
+        public const string mmRHA = "CE_mmRHA";
+
+        /// <summary>
+        /// Unit of blunt Penetration power.
+        /// </summary>
+        public const string MPa = "CE_MPa";
     }
 }

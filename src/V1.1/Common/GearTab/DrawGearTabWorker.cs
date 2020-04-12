@@ -34,6 +34,11 @@ namespace AwesomeInventory.UI
         /// </summary>
         protected float _divider = 0.35f;
 
+        /// <summary>
+        /// Cache for stat values.
+        /// </summary>
+        protected Dictionary<StatDef, Tuple<float, string>> _statCache = new Dictionary<StatDef, Tuple<float, string>>();
+
         private const float _apparelRectWidth = 56f;
         private const float _apparelRectHeight = 56f;
         private const float _startingXforRect = 150f;
@@ -42,7 +47,6 @@ namespace AwesomeInventory.UI
         private static float _scrollViewHeight;
         private SmartRectList<Apparel> _smartRectList;
 
-        private Dictionary<StatDef, Tuple<float, string>> _statCache = new Dictionary<StatDef, Tuple<float, string>>();
         private Dictionary<Thing, Tuple<string, string>> _thingTooltipCache = new Dictionary<Thing, Tuple<string, string>>();
         private Dictionary<Pawn, List<Tuple<Trait, string>>> _traitCache = new Dictionary<Pawn, List<Tuple<Trait, string>>>();
         private AwesomeInventoryTabBase _gearTab;
