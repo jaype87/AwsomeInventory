@@ -246,7 +246,7 @@ namespace AwesomeInventory.UI
                 ThingOwner<Thing> things = selPawn.inventory.innerContainer;
                 for (int i = 0; i < things.Count; i++)
                 {
-                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, things[i]);
+                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, things[i], true);
                 }
             }
             #endregion Draw Inventory
@@ -300,7 +300,7 @@ namespace AwesomeInventory.UI
                 Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Equipment.TranslateSimple());
                 foreach (ThingWithComps equipment in selPawn.equipment.AllEquipmentListForReading)
                 {
-                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, equipment);
+                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, equipment, false);
                 }
             }
 
@@ -311,7 +311,7 @@ namespace AwesomeInventory.UI
                                             orderby ap.def.apparel.bodyPartGroups[0].listOrder descending
                                             select ap)
                 {
-                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, apparel);
+                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, apparel, false);
                 }
             }
 
@@ -327,7 +327,7 @@ namespace AwesomeInventory.UI
                 ThingOwner<Thing> things = selPawn.inventory.innerContainer;
                 for (int i = 0; i < things.Count; i++)
                 {
-                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, things[i]);
+                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, things[i], true);
                 }
             }
 
@@ -592,7 +592,8 @@ namespace AwesomeInventory.UI
         /// <param name="y"> The yMax coordinate after the row is drawn. </param>
         /// <param name="width"> Width of this row. </param>
         /// <param name="thing"> Thing to draw. </param>
-        protected virtual void DrawThingRow(Pawn selPawn, ref float y, float width, Thing thing)
+        /// <param name="inventory"> Whether <paramref name="thing"/> is in inventory section. </param>
+        protected virtual void DrawThingRow(Pawn selPawn, ref float y, float width, Thing thing, bool inventory)
         {
             ValidateArg.NotNull(selPawn, nameof(selPawn));
             ValidateArg.NotNull(thing, nameof(thing));
@@ -602,34 +603,47 @@ namespace AwesomeInventory.UI
 
             WidgetRow row = new WidgetRow(xInfoButton, y, UIDirection.LeftThenDown, xInfoButton);
 
-            if (selPawn.IsColonist)
+            if (this.ShowDropButton(selPawn, thing, inventory, out bool canDrop, out string tooltip))
             {
-                // Draw drop button.
-                if (row.ButtonIcon(TexResource.Drop, UIText.DropThing.TranslateSimple()))
+                if (canDrop)
                 {
-                    AwesomeInventoryTabBase.InterfaceDrop.Invoke(_gearTab, new object[] { thing });
-                }
-
-                Rect unloadButtonRect = new Rect(row.FinalX - GenUI.SmallIconSize, row.FinalY, GenUI.SmallIconSize, GenUI.ListSpacing);
-
-                // Draw unload now button
-                TooltipHandler.TipRegion(unloadButtonRect, UIText.UnloadNow.TranslateSimple());
-                if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
-                {
-                    if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, AwesomeInventoryTex.HighlightBrown, AwesomeInventoryTex.HighlightGreen))
+                    if (row.ButtonIcon(TexResource.Drop, tooltip))
                     {
-                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                        InterfaceUnloadNow(thing, selPawn);
+                        AwesomeInventoryTabBase.InterfaceDrop.Invoke(_gearTab, new object[] { thing });
+                    }
+
+                    Rect unloadButtonRect = new Rect(row.FinalX - GenUI.SmallIconSize, row.FinalY, GenUI.SmallIconSize, GenUI.ListSpacing);
+
+                    if (_gearTab.IsColonistPlayerControlled())
+                    {
+                        // Draw unload now button
+                        TooltipHandler.TipRegion(unloadButtonRect, UIText.UnloadNow.TranslateSimple());
+                        if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
+                        {
+                            if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, AwesomeInventoryTex.HighlightBrown, AwesomeInventoryTex.HighlightGreen))
+                            {
+                                SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                                InterfaceUnloadNow(thing, selPawn);
+                            }
+                        }
+                        else
+                        {
+                            if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, Color.white, AwesomeInventoryTex.HighlightGreen))
+                            {
+                                SoundDefOf.Tick_High.PlayOneShotOnCamera();
+                                InterfaceUnloadNow(thing, selPawn);
+                            }
+                        }
                     }
                 }
                 else
                 {
-                    if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, Color.white, AwesomeInventoryTex.HighlightGreen))
-                    {
-                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                        InterfaceUnloadNow(thing, selPawn);
-                    }
+                    Rect iconRect = new Rect(row.FinalX - GenUI.SmallIconSize, row.FinalY, GenUI.SmallIconSize, GenUI.SmallIconSize);
+                    Widgets.ButtonImage(iconRect, TexResource.Drop, Color.grey, Color.grey, false);
+                    TooltipHandler.TipRegion(iconRect, tooltip);
                 }
+
+                row.GapButtonIcon();
             }
 
             GUI.color = Color.white;
@@ -637,7 +651,7 @@ namespace AwesomeInventory.UI
             row.GapButtonIcon();
 
             // Draw ingest button.
-            if (selPawn.IsColonist && (thing.def.IsNutritionGivingIngestible || thing.def.IsNonMedicalDrug) && thing.IngestibleNow && selPawn.WillEat(thing))
+            if ((bool)AwesomeInventoryTabBase.CanControlColonist.GetValue(_gearTab) && (thing.def.IsNutritionGivingIngestible || thing.def.IsNonMedicalDrug) && thing.IngestibleNow && selPawn.WillEat(thing))
             {
                 if (row.ButtonIcon(TexResource.Ingest, UIText.ConsumeThing.Translate(thing.LabelNoCount, thing)))
                 {
@@ -871,7 +885,7 @@ namespace AwesomeInventory.UI
                 Widgets.InfoCardButton(rect.x, rect.y, thing);
 
                 // Draw Unload Now button
-                if (selPawn.IsColonist)
+                if (this.ShowDropButton(selPawn, thing, false, out bool canDrop, out _) && canDrop && _gearTab.IsColonistPlayerControlled())
                 {
                     TooltipHandler.TipRegion(buttonRect, UIText.UnloadNow.Translate());
                     if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
@@ -1341,6 +1355,81 @@ namespace AwesomeInventory.UI
         {
             // Substract the height of one line for a weight bar and a bulk bar.
             return canvas.ReplaceHeight(canvas.height - GenUI.ListSpacing);
+        }
+
+        /// <summary>
+        /// Check if AI should show drop button for <paramref name="thing"/>.
+        /// </summary>
+        /// <param name="pawn"> Pawn who carries <paramref name="thing"/>. </param>
+        /// <param name="thing"> Thing to check. </param>
+        /// <param name="inventory"> If <paramref name="thing"/> is in the inventory section. </param>
+        /// <param name="canDrop"> Whether the thing can be dropped. </param>
+        /// <param name="tooltip"> Tooltip for the drop button. </param>
+        /// <returns> Returns true if AI should show the drop button. </returns>
+        protected virtual bool ShowDropButton(Pawn pawn, Thing thing, bool inventory, out bool canDrop, out string tooltip)
+        {
+            ValidateArg.NotNull(pawn, nameof(pawn));
+            ValidateArg.NotNull(thing, nameof(thing));
+
+            bool showDropButton = false;
+            canDrop = false;
+            tooltip = string.Empty;
+            if ((bool)AwesomeInventoryTabBase.CanControl.GetValue(_gearTab)
+                && (inventory
+                    || (bool)AwesomeInventoryTabBase.CanControlColonist.GetValue((ITab_Pawn_Gear)_gearTab)
+                    || (pawn.Spawned && !pawn.Map.IsPlayerHome)))
+            {
+                showDropButton = true;
+
+                // Check for bio-coded weapon and inventory
+                bool flag2;
+                if (pawn.IsQuestLodger())
+                {
+                    if (inventory)
+                    {
+                        flag2 = true;
+                    }
+                    else
+                    {
+                        CompBiocodableWeapon compBiocodableWeapon = thing.TryGetComp<CompBiocodableWeapon>();
+                        if (compBiocodableWeapon != null && compBiocodableWeapon.Biocoded)
+                        {
+                            flag2 = true;
+                        }
+                        else
+                        {
+                            CompBladelinkWeapon compBladelinkWeapon = thing.TryGetComp<CompBladelinkWeapon>();
+                            flag2 = compBladelinkWeapon != null && compBladelinkWeapon.bondedPawn == pawn;
+                        }
+                    }
+                }
+                else
+                {
+                    flag2 = false;
+                }
+
+                Apparel apparel;
+                bool flag3 = (apparel = thing as Apparel) != null && pawn.apparel != null && pawn.apparel.IsLocked(apparel);
+
+                canDrop = !(flag2 || flag3);
+
+                if (flag3)
+                {
+                    tooltip = "DropThingLocked".TranslateSimple();
+                }
+                else if (flag2)
+                {
+                    tooltip = "DropThingLodger".TranslateSimple();
+                }
+                else
+                {
+                    tooltip = UIText.DropThing.TranslateSimple();
+                }
+
+                return showDropButton;
+            }
+
+            return showDropButton;
         }
     }
 }
