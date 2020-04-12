@@ -30,4 +30,14 @@
             SkipUnchangedFiles="true"
             />
     </Target>
+
+    <Target Name="CompressFolder" AfterTargets="Build">
+        <!-- Compress mod folder -->
+        <ZipDirectory
+            Condition="'$(Configuration)'=='Release'"
+            SourceDirectory="G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory"
+            DestinationFile="G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory.zip"
+            Overwrite="true"
+        />
+    </Target>
 </Project>

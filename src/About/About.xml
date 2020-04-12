@@ -20,5 +20,6 @@
     </modDependencies>
     <loadAfter>
         <li>brrainz.harmony</li>
+        <li>CETeam.CombatExtended</li>
     </loadAfter>
 </ModMetaData>
