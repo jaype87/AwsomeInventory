@@ -756,12 +756,24 @@ namespace AwesomeInventory.UI
             row.Gap(int.MaxValue);
 
             // Draw armor stats
-            this.DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Blunt, TexResource.ArmorBlunt, UIText.ArmorBlunt.TranslateSimple(), apparelChanged, false);
-            this.DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Sharp, TexResource.ArmorSharp, UIText.ArmorSharp.TranslateSimple(), apparelChanged, false);
-            this.DrawArmorStats(row, pawn, StatDefOf.ArmorRating_Heat, TexResource.ArmorHeat, UIText.ArmorHeat.TranslateSimple(), apparelChanged, true);
+            this.DrawArmorStats(row, pawn, apparelChanged);
 
             Text.Anchor = TextAnchor.UpperLeft;
             rollingY = row.FinalY;
+        }
+
+        /// <summary>
+        /// Draw armor stats on gear tab.
+        /// </summary>
+        /// <param name="row"> Drawing helper. </param>
+        /// <param name="pawn"> Selected pawn. </param>
+        /// <param name="apparelChanged"> If true, worn apparels have changed since last read. </param>
+        protected virtual void DrawArmorStats(WidgetRow row, Pawn pawn, bool apparelChanged)
+        {
+            Func<float, string> numToString = (float value) => value.ToStringPercent("0.#");
+            this.DrawArmorStatsWorker(row, pawn, StatDefOf.ArmorRating_Blunt, numToString, TexResource.ArmorBlunt, UIText.ArmorBlunt.TranslateSimple(), apparelChanged, false);
+            this.DrawArmorStatsWorker(row, pawn, StatDefOf.ArmorRating_Sharp, numToString, TexResource.ArmorSharp, UIText.ArmorSharp.TranslateSimple(), apparelChanged, false);
+            this.DrawArmorStatsWorker(row, pawn, StatDefOf.ArmorRating_Heat, numToString, TexResource.ArmorHeat, UIText.ArmorHeat.TranslateSimple(), apparelChanged, true);
         }
 
         /// <summary>
@@ -813,22 +825,23 @@ namespace AwesomeInventory.UI
         /// <param name="row"> A drawing helper for drawing in a row. </param>
         /// <param name="pawn"> Selected pawn. </param>
         /// <param name="stat"> Stat to draw. </param>
+        /// <param name="numToString"> Transform float value to string presentation. </param>
         /// <param name="icon"> Icon for <paramref name="stat"/>. </param>
         /// <param name="altIconText"> Description for <paramref name="icon"/>. </param>
         /// <param name="apparelChanged"> Indicates whether apparels on pawn have changed. </param>
         /// <param name="changeLine"> If true, move <paramref name="row"/> to next line. </param>
         /// <remarks> It costs 1ms to calculate one stat for a pawn with 16 apparels, therefore the cache. </remarks>
-        protected virtual void DrawArmorStats(WidgetRow row, Pawn pawn, StatDef stat, Texture2D icon, string altIconText, bool apparelChanged, bool changeLine)
+        protected virtual void DrawArmorStatsWorker(WidgetRow row, Pawn pawn, StatDef stat, Func<float, string> numToString, Texture2D icon, string altIconText, bool apparelChanged, bool changeLine)
         {
             ValidateArg.NotNull(row, nameof(row));
 
             Tuple<float, string> tuple = this.GetArmorStat(pawn, stat, apparelChanged);
 
-            if (row.AvailableWidth() < WidgetRow.IconSize + WidgetRow.DefaultGap + Text.CalcSize(tuple.Item1.ToStringPercent()).x)
+            if (row.AvailableWidth() < WidgetRow.IconSize + WidgetRow.DefaultGap + Text.CalcSize(numToString(tuple.Item1)).x)
                 row.Gap(int.MaxValue);
 
             Rect iconRect = row.Icon(icon, string.Empty);
-            Rect numberRect = row.Label(tuple.Item1.ToStringPercent());
+            Rect numberRect = row.Label(numToString(tuple.Item1));
             Rect tipRect = new Rect(iconRect) { xMax = numberRect.xMax };
 
             if (changeLine)
