@@ -445,55 +445,90 @@ namespace AwesomeInventory.UI
         {
             ValidateArg.NotNull(selPawn, nameof(selPawn));
 
+            bool openLoadout = false;
             if (AwesomeInvnetoryMod.Settings.UseLoadout)
             {
+                List<FloatMenuOption> loadoutOptions = BuildMenuOptions(LoadoutManager.Loadouts.OfType<Outfit>().ToList());
+                List<FloatMenuOption> outfitOptions = BuildMenuOptions(Current.Game.outfitDatabase.AllOutfits);
+
                 WidgetRow row = new WidgetRow(x, rollingY, UIDirection.LeftThenDown, width);
                 if (row.ButtonText(UIText.OpenLoadout.Translate()))
                 {
-                    if (selPawn.IsColonist && selPawn.GetLoadout() == null)
+                    if (selPawn.outfits.CurrentOutfit is AwesomeInventoryLoadout)
                     {
-                        AwesomeInventoryLoadout loadout = new AwesomeInventoryLoadout(selPawn);
-                        LoadoutManager.AddLoadout(loadout);
-                        selPawn.SetLoadout(loadout);
+                        Find.WindowStack.Add(
+                            AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(selPawn.outfits.CurrentOutfit, selPawn));
                     }
-
-                    Find.WindowStack.Add(
-                        AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(selPawn.GetLoadout(), selPawn));
+                    else
+                    {
+                        openLoadout = true;
+                        Find.WindowStack.Add(new FloatMenu(MakeActionableLoadoutOption().Concat(loadoutOptions).ToList(), UIText.ChooseLoadut.TranslateSimple()));
+                    }
                 }
 
                 if (row.ButtonText(UIText.SelectLoadout.Translate()))
                 {
-                    List<AwesomeInventoryLoadout> loadouts = LoadoutManager.Loadouts;
-                    List<FloatMenuOption> list = new List<FloatMenuOption>();
-                    if (loadouts.Count == 0)
-                    {
-                        list.Add(new FloatMenuOption(UIText.NoLoadout.Translate(), null));
-                    }
-                    else
-                    {
-                        for (int i = 0; i < loadouts.Count; i++)
-                        {
-                            int local_i = i;
-                            list.Add(new FloatMenuOption(
-                                loadouts[i].label,
-                                () =>
-                                {
-                                    selPawn.SetLoadout(loadouts[local_i]);
-                                }));
-                        }
-                    }
-
-                    Find.WindowStack.Add(new FloatMenu(list));
+                    openLoadout = false;
+                    Find.WindowStack.Add(new FloatMenu(outfitOptions.ToList()));
                 }
 
                 Text.Anchor = TextAnchor.MiddleRight;
                 Text.WordWrap = false;
 
-                row.Label(selPawn.GetLoadout()?.label, GenUI.GetWidthCached(UIText.TenCharsString.Times(2.5f)));
+                row.Label(selPawn.GetLoadout()?.label ?? selPawn.outfits.CurrentOutfit.label, GenUI.GetWidthCached(UIText.TenCharsString.Times(2.5f)));
 
                 Text.Anchor = TextAnchor.UpperLeft;
                 Text.WordWrap = true;
                 rollingY = row.FinalY + WidgetRow.IconSize - Text.LineHeight;
+            }
+
+            List<FloatMenuOption> BuildMenuOptions(IList<Outfit> outfits)
+            {
+                List<FloatMenuOption> options = new List<FloatMenuOption>();
+                for (int i = 0; i < outfits.Count; i++)
+                {
+                    int local_i = i;
+                    options.Add(new FloatMenuOption(
+                        outfits[local_i].label,
+                        () =>
+                        {
+                            selPawn.outfits.CurrentOutfit = outfits[local_i];
+                            if (openLoadout && outfits[local_i] is AwesomeInventoryLoadout loadout)
+                            {
+                                Find.WindowStack.Add(
+                                    AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(loadout, selPawn));
+                            }
+                        }));
+                }
+
+                return options;
+            }
+
+            List<FloatMenuOption> MakeActionableLoadoutOption()
+            {
+                return new List<FloatMenuOption>()
+                {
+                    new FloatMenuOption(
+                        UIText.MakeEmptyLoadout.Translate(selPawn.NameShortColored)
+                        , () =>
+                        {
+                            AwesomeInventoryLoadout emptyLoadout = AwesomeInventoryLoadout.MakeEmptyLoadout(selPawn);
+                            LoadoutManager.AddLoadout(emptyLoadout);
+                            selPawn.SetLoadout(emptyLoadout);
+                            Find.WindowStack.Add(
+                                AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(emptyLoadout, selPawn));
+                        }),
+                    new FloatMenuOption(
+                         UIText.MakeNewLoadout.Translate(selPawn.NameShortColored)
+                        , () =>
+                        {
+                            AwesomeInventoryLoadout loadout = new AwesomeInventoryLoadout(selPawn);
+                            LoadoutManager.AddLoadout(loadout);
+                            selPawn.SetLoadout(loadout);
+                            Find.WindowStack.Add(
+                                AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(loadout, selPawn));
+                        }),
+                };
             }
         }
 

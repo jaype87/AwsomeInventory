@@ -376,6 +376,9 @@ namespace AwesomeInventory.Loadout
         {
             ValidateArg.NotNull(groupSelectors, nameof(groupSelectors));
 
+            if (!groupSelectors.Any())
+                return;
+
             foreach (ThingGroupSelector groupSelector in groupSelectors)
             {
                 this.InventoryMargins[groupSelector] = groupSelector.AllowedStackCount * -1;

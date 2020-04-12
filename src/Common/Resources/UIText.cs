@@ -88,6 +88,8 @@ namespace AwesomeInventory.UI
 
         public const string AsceticTab = "AwesomeInventory_Ascetic";
 
+        public const string Assorted = "AwesomeInventory_Assorted";
+
         public const string AutoEquipWeapon = "AwesomeInventory_AutoEquipWeapon";
 
         public const string AutoEquipWeaponTooltip = "AwesomeInventory_AutoEquipWeaponTooltip";
@@ -102,6 +104,8 @@ namespace AwesomeInventory.UI
 
         public const string CantUnloadIncapableManipulation = "AwesomeInventory_CantUnloadIncapableManipulation";
 
+        public const string ChooseLoadut = "AwesomeInventory_ChooseLoadout";
+
         public const string ChooseMaterialAndQuality = "AwesomeInventory_ChooseMaterialAndQuality";
 
         public const string ComfyTemperatureRange = "ComfyTemperatureRange";
@@ -114,11 +118,7 @@ namespace AwesomeInventory.UI
 
         public const string Customize = "AwesomeInventory_Customize";
 
-        public const string LoadoutName = "AwesomeInventory_LoadoutName";
-
         public const string DeleteLoadout = "AwesomeInventory_DeleteLoadout";
-
-        public const string Assorted = "AwesomeInventory_Assorted";
 
         public const string DragToReorder = "AwesomeInventory_DragToReorder";
 
@@ -135,6 +135,12 @@ namespace AwesomeInventory.UI
         public const string Head = "AwesomeInventory_Head";
 
         public const string JealousTab = "AwesomeInventory_JealousTab";
+
+        public const string LoadoutName = "AwesomeInventory_LoadoutName";
+
+        public const string MakeEmptyLoadout = "AwesomeInventory_MakeEmptyLoadout";
+
+        public const string MakeNewLoadout = "AwesomeInventory_MakeNewLoadout";
 
         public const string MouseOverNumbersForDetails = "AwesomeInventory_MouseOverNumbersForDetails";
 
@@ -209,6 +215,8 @@ namespace AwesomeInventory.UI
         public const string TenCharsString = "AAAAAAAAAA";
 
         public const string Traits = "Traits";
+
+        public const string EmptyLoadout = "AwesomeInventory_EmptyLoadout";
 
         public const string UnloadNow = "AwesomeInventory_UnloadNow";
 

@@ -144,6 +144,23 @@ namespace AwesomeInventory.Loadout
         }
 
         /// <summary>
+        /// Make an empty loadout.
+        /// </summary>
+        /// <param name="pawn"> Make empty loadout for this pawn. </param>
+        /// <returns> Returns an empty loadout. </returns>
+        public static AwesomeInventoryLoadout MakeEmptyLoadout(Pawn pawn)
+        {
+            ValidateArg.NotNull(pawn, nameof(pawn));
+
+            AwesomeInventoryLoadout loadout = new AwesomeInventoryLoadout();
+            loadout.filter.SetAllow(ThingCategoryDefOf.Apparel, true);
+            loadout.uniqueId = Current.Game.outfitDatabase.AllOutfits.Max(o => o.uniqueId) + 1;
+            loadout.label = pawn.NameShortColored + "'s " + UIText.EmptyLoadout.TranslateSimple();
+
+            return loadout;
+        }
+
+        /// <summary>
         /// Check if <paramref name="thing"/> is included in the blacklist.
         /// </summary>
         /// <param name="thing"> Thing to check. </param>

@@ -2,10 +2,13 @@
 <LanguageData>
     <!-- Inventory Window -->
     <AwesomeInventory_Belt>Belt</AwesomeInventory_Belt>
+    <AwesomeInventory_ChooseLoadout>Choose an Awesome Inventory loadout</AwesomeInventory_ChooseLoadout>
     <AwesomeInventory_ExtraApparels>Extra Equipped Apparels</AwesomeInventory_ExtraApparels>
     <AwesomeInventory_GreedyTab>Greedy (List)</AwesomeInventory_GreedyTab>
     <AwesomeInventory_Head>Head Overhead</AwesomeInventory_Head>
     <AwesomeInventory_JealousTab>Jealous (RPG Style)</AwesomeInventory_JealousTab>
+    <AwesomeInventory_MakeEmptyLoadout>Make empty loadout for {0}</AwesomeInventory_MakeEmptyLoadout>
+    <AwesomeInventory_MakeNewLoadout>Make new loadout for {0}</AwesomeInventory_MakeNewLoadout>
     <AwesomeInventory_MassCarried>Mass carried</AwesomeInventory_MassCarried>
     <AwesomeInventory_Pants>Legs OnSkin Layer</AwesomeInventory_Pants>
     <AwesomeInventory_PrimaryWeapon>Primary Weapon</AwesomeInventory_PrimaryWeapon>
@@ -25,6 +28,7 @@
     <AwesomeInventory_Customize>Customize</AwesomeInventory_Customize>
     <AwesomeInventory_DeleteLoadout>Delete Loadout</AwesomeInventory_DeleteLoadout>
     <AwesomeInventory_DragToReorder>Drag to reorder</AwesomeInventory_DragToReorder>
+    <AwesomeInventory_EmptyLoadout>Empty Loadout</AwesomeInventory_EmptyLoadout>
     <AwesomeInventory_GlobalApparelSetting>Global Apparel Setting</AwesomeInventory_GlobalApparelSetting>
     <AwesomeInventory_GlobalOutfitSettingWarning>Be advised: Settings here take precedence over those of apparels in Loadout window(Weapons and other items are not affected).</AwesomeInventory_GlobalOutfitSettingWarning>
     <AwesomeInventory_LoadoutName>{0}'s Loadout</AwesomeInventory_LoadoutName>

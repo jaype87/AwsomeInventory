@@ -144,9 +144,8 @@ namespace AwesomeInventory.UI
                     AwesomeInventoryLoadout loadout = _pawn.GetLoadout();
                     if (loadout == null)
                     {
-                        loadout = new AwesomeInventoryLoadout(pawn);
-                        LoadoutManager.AddLoadout(loadout);
-                        pawn.SetLoadout(loadout);
+                        this.Close();
+                        return;
                     }
 
                     _currentLoadout = loadout;
