@@ -67,7 +67,7 @@
     <AwesomeInventory_AIGenericMedicine_Description>Placeholder for any medicine. Most commonly used by doctors.</AwesomeInventory_AIGenericMedicine_Description>
     
     <!-- Mod settings -->
-    <AwesomeInventory_AutoEquipWeapon>Automatically equip weapon</AwesomeInventory_AutoEquipWeapon>
+    <AwesomeInventory_AutoEquipWeapon>Find and equip weapon</AwesomeInventory_AutoEquipWeapon>
     <AwesomeInventory_UseGearTabToggle>Use gear tab gizmo/toggle</AwesomeInventory_UseGearTabToggle>
     <AwesomeInventory_UseLoadout>Use Loadout</AwesomeInventory_UseLoadout>
     <AwesomeInventory_ToggleGearTab>Toggle Gear Tab</AwesomeInventory_ToggleGearTab>

@@ -1130,33 +1130,33 @@ namespace AwesomeInventory.UI
                 floatOptionList.Add(option);
             }
 
-            // Put away option
-            if (pawn.apparel.Contains(apparel)
-                && pawn.inventory != null
-                && this.ShowDropButton(selPawn, apparel, false, out bool canDrop, out _)
-                && canDrop)
+            if (this.ShowDropButton(selPawn, apparel, false, out bool canDrop, out _))
             {
-                option = new FloatMenuOption(
-                    UIText.PutAway.Translate(labelShort),
-                    () =>
-                    {
-                        pawn.jobs.TryTakeOrderedJob(
-                            JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_Undress, apparel),
-                            JobTag.ChangingApparel);
-                    });
-                floatOptionList.Add(option);
-            }
+                // Put away option
+                if (pawn.apparel.Contains(apparel) && pawn.inventory != null)
+                {
+                    option = new FloatMenuOption(
+                        UIText.PutAway.Translate(labelShort),
+                        () =>
+                        {
+                            pawn.jobs.TryTakeOrderedJob(
+                                JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_Undress, apparel),
+                                JobTag.ChangingApparel);
+                        });
+                    floatOptionList.Add(option);
+                }
 
-            // Drop option
-            if (pawn.apparel.Contains(apparel) || pawn.inventory.Contains(apparel))
-            {
-                option = new FloatMenuOption(
-                    UIText.DropThing.Translate(),
-                    () =>
-                    {
-                        AwesomeInventoryTabBase.InterfaceDrop.Invoke(_gearTab, new object[] { apparel });
-                    });
-                floatOptionList.Add(option);
+                // Drop option
+                if (pawn.apparel.Contains(apparel) || pawn.inventory.Contains(apparel))
+                {
+                    option = new FloatMenuOption(
+                        UIText.DropThing.Translate(),
+                        () =>
+                        {
+                            AwesomeInventoryTabBase.InterfaceDrop.Invoke(_gearTab, new object[] { apparel });
+                        });
+                    floatOptionList.Add(option);
+                }
             }
         }
 
