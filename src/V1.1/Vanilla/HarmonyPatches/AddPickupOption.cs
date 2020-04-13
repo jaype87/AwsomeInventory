@@ -64,6 +64,7 @@ namespace AwesomeInventory.HarmonyPatches
                             {
                                 Job job = JobMaker.MakeJob(JobDefOf.TakeInventory, item);
                                 job.count = count;
+                                job.checkEncumbrance = true;
                                 pawn.jobs.TryTakeOrderedJob(job);
                             })
                         , pawn
