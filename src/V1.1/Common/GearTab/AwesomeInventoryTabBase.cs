@@ -33,7 +33,7 @@ namespace AwesomeInventory.UI
 
         private const BindingFlags _nonPublicInstance = BindingFlags.NonPublic | BindingFlags.Instance;
 
-        private static bool _isJealous = false;
+        private static bool _isJealous = true;
         private static bool _isGreedy = false;
         private static bool _isAscetic = false;
         private static IEnumerable<CustomRace> _customRaces
@@ -162,11 +162,6 @@ namespace AwesomeInventory.UI
                 {
                     _apparelChanged = true;
                 }
-
-                if (_selPawn.IsColonist)
-                    this.SetJealous();
-                else
-                    this.SetGreedy();
             }
 
             Text.Font = GameFont.Small;
@@ -175,15 +170,12 @@ namespace AwesomeInventory.UI
             string translatedText;
             Rect headerRect = Rect.zero;
 
-            if (this.IsColonist())
+            // Draw checkbox option for Jealous
+            translatedText = UIText.JealousTab.TranslateSimple();
+            headerRect = GetHeaderRect(GenUI.Gap, translatedText);
+            if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isJealous))
             {
-                // Draw checkbox option for Jealous
-                translatedText = UIText.JealousTab.TranslateSimple();
-                headerRect = GetHeaderRect(GenUI.Gap, translatedText);
-                if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isJealous))
-                {
-                    this.SetJealous();
-                }
+                this.SetJealous();
             }
 
             // Draw checkbox option for Greedy

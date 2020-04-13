@@ -244,7 +244,9 @@ namespace AwesomeInventory.UI
 
                 rollingY += Utility.StandardLineHeight;
 
-                this.DrawLoadoutButtons(selPawn, viewRect.xMax, ref rollingY, viewRect.width);
+                if (selPawn.IsColonist)
+                    this.DrawLoadoutButtons(selPawn, viewRect.xMax, ref rollingY, viewRect.width);
+
                 Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Inventory.Translate());
 
                 ThingOwner<Thing> things = selPawn.inventory.innerContainer;
@@ -973,7 +975,7 @@ namespace AwesomeInventory.UI
             bool isForced = false;
             if (thing is Apparel apparel)
             {
-                isForced = selPawn.outfits.forcedHandler.IsForced(apparel);
+                isForced = selPawn.outfits?.forcedHandler?.IsForced(apparel) ?? false;
                 if (apparel.WornByCorpse)
                 {
                     Rect rect3 = new Rect(rect.xMax - DrawUtility.TinyIconSize, rect.y, DrawUtility.TinyIconSize, DrawUtility.TinyIconSize);
