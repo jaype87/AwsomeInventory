@@ -127,8 +127,7 @@ namespace AwesomeInventory.Common.HarmonyPatches
                 {
                     if (pawn.CanReach(apparel, PathEndMode.ClosestTouch, Danger.Deadly)
                         && !apparel.IsBurning()
-                        && !pawn.apparel.WouldReplaceLockedApparel(apparel)
-                        && ApparelUtility.HasPartsToWear(pawn, apparel.def))
+                        && ApparelOptionUtility.CanWear(pawn, apparel))
                     {
                         FloatMenuOption option = FloatMenuUtility.DecoratePrioritizedTask(
                             new FloatMenuOption(

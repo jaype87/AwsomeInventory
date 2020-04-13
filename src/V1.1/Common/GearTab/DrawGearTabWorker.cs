@@ -969,7 +969,7 @@ namespace AwesomeInventory.UI
                 GUI.color = Color.white;
             }
 
-            // Draw tainted and forced icon.
+            // Draw tainted, locked or forced icon.
             bool isForced = false;
             if (thing is Apparel apparel)
             {
@@ -981,12 +981,17 @@ namespace AwesomeInventory.UI
                     TooltipHandler.TipRegion(rect3, "WasWornByCorpse".Translate());
                 }
 
-                // NOTE Can weapon be forced?
                 if (isForced)
                 {
                     Rect rect4 = new Rect(rect.x, rect.yMax - 20f, 20f, 20f);
                     GUI.DrawTexture(rect4, TexResource.IconForced);
                     TooltipHandler.TipRegion(rect4, UIText.ForcedApparel.Translate());
+                }
+
+                if (selPawn.apparel.IsLocked(apparel))
+                {
+                    GUI.DrawTexture(buttonRect, TexResource.IconLock);
+                    TooltipHandler.TipRegion(buttonRect, UIText.DropThingLocked.TranslateSimple());
                 }
             }
 
@@ -1103,7 +1108,7 @@ namespace AwesomeInventory.UI
             FloatMenuOption option = null;
 
             // Equip option
-            if (pawn.inventory.Contains(apparel))
+            if (pawn.inventory.Contains(apparel) && ApparelOptionUtility.CanWear(pawn, apparel))
             {
                 option = new FloatMenuOption(
                     UIText.VanillaWear.Translate(labelShort),
@@ -1130,7 +1135,7 @@ namespace AwesomeInventory.UI
                 floatOptionList.Add(option);
             }
 
-            if (this.ShowDropButton(selPawn, apparel, false, out bool canDrop, out _))
+            if (this.ShowDropButton(selPawn, apparel, false, out bool canDrop, out _) && canDrop)
             {
                 // Put away option
                 if (pawn.apparel.Contains(apparel) && pawn.inventory != null)

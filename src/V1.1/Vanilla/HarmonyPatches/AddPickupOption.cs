@@ -42,6 +42,9 @@ namespace AwesomeInventory.HarmonyPatches
             ValidateArg.NotNull(pawn, nameof(pawn));
             ValidateArg.NotNull(opts, nameof(opts));
 
+            if (pawn.IsQuestLodger())
+                return;
+
             IntVec3 position = IntVec3.FromVector3(clickPos);
             List<Thing> items = position.GetThingList(pawn.Map);
             foreach (Thing item in items)

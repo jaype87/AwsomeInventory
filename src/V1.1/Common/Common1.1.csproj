@@ -204,6 +204,7 @@
       <DependentUpon>StringResource.resx</DependentUpon>
     </Compile>
     <Compile Include="UnitTest\UI\UnitTestButton.cs" />
+    <Compile Include="Utilities\ApparelOptionUtility.cs" />
     <Compile Include="Utilities\DefUtility.cs" />
     <Compile Include="Utilities\GenBar.cs" />
     <Compile Include="Plugins\CustomRace.cs" />

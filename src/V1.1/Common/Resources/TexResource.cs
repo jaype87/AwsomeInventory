@@ -184,6 +184,8 @@ namespace AwesomeInventory.UI
 
         public static readonly Texture2D IconForced = ContentFinder<Texture2D>.Get("UI/Icons/Sandy_Forced_Icon");
 
+        public static readonly Texture2D IconLock = ContentFinder<Texture2D>.Get("UI/Icons/LockedLock");
+
         public static readonly Texture2D Mass = ContentFinder<Texture2D>.Get("UI/Icons/Sandy_MassCarried_Icon");
 
         public static readonly Texture2D MaxTemperature = ContentFinder<Texture2D>.Get("UI/Icons/Fire_Mini");

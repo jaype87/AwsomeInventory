@@ -122,6 +122,8 @@ namespace AwesomeInventory.UI
 
         public const string DragToReorder = "AwesomeInventory_DragToReorder";
 
+        public const string DropThingLocked = "DropThingLocked";
+
         public const string ExtraApparels = "AwesomeInventory_ExtraApparels";
 
         public const string FailToDrop = "AwesomeInventory_FailToDrop";
