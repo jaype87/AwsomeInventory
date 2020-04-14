@@ -16,6 +16,7 @@ namespace AwesomeInventory.UI
     /// <summary>
     /// Image resource for CE.
     /// </summary>
+    [StaticConstructorOnStartup]
     public static class ImageResource
     {
         /// <summary>

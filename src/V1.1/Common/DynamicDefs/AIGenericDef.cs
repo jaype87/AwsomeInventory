@@ -15,7 +15,7 @@ namespace AwesomeInventory.Loadout
     /// <summary>
     /// Generic def used for loadout purpose.
     /// </summary>
-    public abstract class AIGenericDef : ThingDef, IEquatable<AIGenericDef>
+    public class AIGenericDef : ThingDef, IEquatable<AIGenericDef>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AIGenericDef"/> class.
@@ -41,7 +41,7 @@ namespace AwesomeInventory.Loadout
             this.tradeability = Tradeability.None;
         }
 
-        private AIGenericDef()
+        public AIGenericDef()
         {
         }
 

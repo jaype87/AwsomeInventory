@@ -13,8 +13,14 @@ using Verse;
 
 namespace AwesomeInventory.UI
 {
+    /// <summary>
+    /// Draw settings for Awesome Inventory.
+    /// </summary>
     public class Dialog_Settings : Window
     {
+        private Mod _awesomeInventory = LoadedModManager.ModHandles
+                .First(mod => mod.SettingsCategory() == UIText.AwesomeInventoryDisplayName.TranslateSimple());
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Dialog_Settings"/> class.
         /// </summary>
@@ -37,9 +43,15 @@ namespace AwesomeInventory.UI
         /// <param name="inRect"> Rect for drawing. </param>
         public override void DoWindowContents(Rect inRect)
         {
-            LoadedModManager.ModHandles
-                .First(mod => mod.SettingsCategory() == UIText.AwesomeInventoryDisplayName.TranslateSimple())
-                .DoSettingsWindowContents(inRect);
+            _awesomeInventory.DoSettingsWindowContents(inRect);
+        }
+
+        /// <summary>
+        /// Invoked before the dialog is closed.
+        /// </summary>
+        public override void PreClose()
+        {
+            _awesomeInventory.WriteSettings();
         }
     }
 }

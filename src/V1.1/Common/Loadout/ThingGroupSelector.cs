@@ -331,17 +331,48 @@ namespace AwesomeInventory.Loadout
         public void ExposeData()
         {
             ThingDef thingDef = this.AllowedThing;
+            bool isGenericDef = false;
             int allowedStackCount = this.AllowedStackCount;
             int groupID = this.GroupID;
 
-            Scribe_Defs.Look(ref thingDef, nameof(this.AllowedThing));
+            if (Scribe.mode == LoadSaveMode.Saving)
+            {
+                if (thingDef is AIGenericDef aIGenericDef)
+                {
+                    Log.Warning("Is generic def");
+                    isGenericDef = true;
+                    Scribe_Defs.Look(ref aIGenericDef, nameof(this.AllowedThing));
+                }
+                else
+                {
+                    Log.Warning("Is not a generic def");
+                    Scribe_Defs.Look(ref thingDef, nameof(this.AllowedThing));
+                }
+
+                Scribe_Values.Look(ref isGenericDef, nameof(isGenericDef));
+            }
+            else if (Scribe.mode == LoadSaveMode.LoadingVars)
+            {
+                Scribe_Values.Look(ref isGenericDef, nameof(isGenericDef));
+                if (isGenericDef)
+                {
+                    AIGenericDef aIGenericDef = null;
+                    Scribe_Defs.Look(ref aIGenericDef, nameof(this.AllowedThing));
+                    this.AllowedThing = aIGenericDef;
+                }
+                else
+                {
+                    Scribe_Defs.Look(ref thingDef, nameof(this.AllowedThing));
+                    this.AllowedThing = thingDef;
+                }
+            }
+
             Scribe_Values.Look(ref allowedStackCount, nameof(this.AllowedStackCount));
             Scribe_Values.Look(ref groupID, nameof(this.GroupID));
             Scribe_Collections.Look(ref _selectors, nameof(_selectors), LookMode.Deep);
 
             if (Scribe.mode == LoadSaveMode.LoadingVars)
             {
-                this.AllowedThing = thingDef;
                 this.AllowedStackCount = allowedStackCount;
                 this.GroupID = groupID;
 

@@ -43,34 +43,25 @@ namespace AwesomeInventory
         /// <summary>
         /// Width of gear tab.
         /// </summary>
-        public float GearTabWidth;
+        public float GearTabWidth = 575f;
 
         /// <summary>
         /// Height of gear tab.
         /// </summary>
-        public float GearTabHeight;
+        public float GearTabHeight = 500f;
 
         /// <summary>
         /// Save state.
         /// </summary>
         public override void ExposeData()
         {
-            Scribe_Values.Look(ref UseLoadout, nameof(UseLoadout));
-            Scribe_Values.Look(ref AutoEquipWeapon, nameof(AutoEquipWeapon));
+            Scribe_Values.Look(ref UseLoadout, nameof(UseLoadout), true);
+            Scribe_Values.Look(ref AutoEquipWeapon, nameof(AutoEquipWeapon), true);
             Scribe_Values.Look(ref QualityColorPluginID, nameof(QualityColorPluginID));
-            Scribe_Values.Look(ref UseToggleGizmo, nameof(UseToggleGizmo));
-            Scribe_Values.Look(ref PatchAllRaces, nameof(PatchAllRaces));
-            Scribe_Values.Look(ref GearTabWidth, nameof(GearTabWidth));
-            Scribe_Values.Look(ref GearTabHeight, nameof(GearTabHeight));
-
-            if (Scribe.mode == LoadSaveMode.LoadingVars)
-            {
-                if (GearTabHeight < 1f)
-                    GearTabHeight = 500f;
-
-                if (GearTabWidth < 1f)
-                    GearTabWidth = 575f;
-            }
+            Scribe_Values.Look(ref UseToggleGizmo, nameof(UseToggleGizmo), true);
+            Scribe_Values.Look(ref PatchAllRaces, nameof(PatchAllRaces), false);
+            Scribe_Values.Look(ref GearTabWidth, nameof(GearTabWidth), 575f);
+            Scribe_Values.Look(ref GearTabHeight, nameof(GearTabHeight), 500f);
         }
     }
 

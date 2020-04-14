@@ -184,7 +184,11 @@ namespace AwesomeInventory.Loadout
             this.AddRemoveThingSelectorCallbackTo(item);
             this.AddStackCountChangedCallbackTo(item);
             _thingGroupSelectors.Add(item);
-            this.filter.SetAllow(item.AllowedThing, true);
+            if (!(item.AllowedThing is AIGenericDef))
+            {
+                this.filter.SetAllow(item.AllowedThing, true);
+            }
+
             _addNewThingGroupSelectorCallbacks.ForEach(c => c.Invoke(item));
         }
 
