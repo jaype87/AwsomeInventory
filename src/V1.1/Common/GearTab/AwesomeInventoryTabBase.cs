@@ -171,11 +171,18 @@ namespace AwesomeInventory.UI
             Rect headerRect = Rect.zero;
 
             // Draw checkbox option for Jealous
-            translatedText = UIText.JealousTab.TranslateSimple();
-            headerRect = GetHeaderRect(GenUI.Gap, translatedText);
-            if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isJealous))
+            if (_selPawn.RaceProps.Humanlike)
             {
-                this.SetJealous();
+                translatedText = UIText.JealousTab.TranslateSimple();
+                headerRect = GetHeaderRect(GenUI.Gap, translatedText);
+                if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isJealous))
+                {
+                    this.SetJealous();
+                }
+            }
+            else
+            {
+                this.SetGreedy();
             }
 
             // Draw checkbox option for Greedy
