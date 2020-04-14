@@ -102,6 +102,8 @@ namespace AwesomeInventory.UI
 
         public const string BlacklistTooltip = "AwesomeInventory_BlacklistTooltip";
 
+        public const string CantExceedStackCount = "AwesomeInventory_CantExceedStackCount";
+
         public const string CantUnloadIncapableManipulation = "AwesomeInventory_CantUnloadIncapableManipulation";
 
         public const string ChooseLoadut = "AwesomeInventory_ChooseLoadout";
@@ -172,6 +174,10 @@ namespace AwesomeInventory.UI
 
         public const string PutAway = "AwesomeInventory_PutAway";
 
+        public const string RestockAlways = "AwesomeInventory_RestockAlways";
+
+        public const string RestockBottomThreshold = "AwesomeInventory_RestockBottomThreshold";
+
         public const string SelectLoadout = "AwesomeInventory_SelectLoadout";
 
         public const string SelectedStuff = "AwesomeInventory_SelectorStuff";
@@ -191,6 +197,8 @@ namespace AwesomeInventory.UI
         public const string SourceMinifiedTip = "AwesomeInventory_SourceMinifiedTip";
 
         public const string SourceRangedTip = "AwesomeInventory_SourceRangedTip";
+
+        public const string StockMode = "AwesomeInventory_StockMode";
 
         public const string StuffSource = "AwesomeInventory_StuffSource";
 

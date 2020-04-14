@@ -60,7 +60,7 @@ namespace AwesomeInventory.UI
             ValidateArg.NotNull(loadout, nameof(loadout));
             _pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
 
-            float width = GenUI.GetWidthCached(UIText.TenCharsString.Times(10));
+            float width = GenUI.GetWidthCached(UIText.TenCharsString.Times(11));
             _initialSize = new Vector2(width, Verse.UI.screenHeight / 2f);
 
             _currentLoadout = loadout;
@@ -474,6 +474,12 @@ namespace AwesomeInventory.UI
 
             // Draw gear icon.
             this.DrawGearIconInThingRow(widgetRow, groupSelector);
+
+            // Draw threshold.
+            if (widgetRow.ButtonIcon(TexResource.Threshold, UIText.StockMode.TranslateSimple()))
+            {
+                Find.WindowStack.Add(new Dialog_RestockTrigger(groupSelector));
+            }
 
             Text.WordWrap = false;
 

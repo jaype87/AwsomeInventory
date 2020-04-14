@@ -675,6 +675,8 @@ namespace AwesomeInventory.UI
                                 InterfaceUnloadNow(thing, selPawn);
                             }
                         }
+
+                        row.GapButtonIcon();
                     }
                 }
                 else
@@ -682,14 +684,11 @@ namespace AwesomeInventory.UI
                     Rect iconRect = new Rect(row.FinalX - GenUI.SmallIconSize, row.FinalY, GenUI.SmallIconSize, GenUI.SmallIconSize);
                     Widgets.ButtonImage(iconRect, TexResource.Drop, Color.grey, Color.grey, false);
                     TooltipHandler.TipRegion(iconRect, tooltip);
+                    row.GapButtonIcon();
                 }
-
-                row.GapButtonIcon();
             }
 
             GUI.color = Color.white;
-
-            row.GapButtonIcon();
 
             // Draw ingest button.
             if ((bool)AwesomeInventoryTabBase.CanControlColonist.GetValue(_gearTab) && (thing.def.IsNutritionGivingIngestible || thing.def.IsNonMedicalDrug) && thing.IngestibleNow && selPawn.WillEat(thing))

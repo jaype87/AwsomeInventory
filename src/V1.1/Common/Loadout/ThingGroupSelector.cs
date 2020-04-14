@@ -19,9 +19,16 @@ namespace AwesomeInventory.Loadout
     /// <summary>
     /// A gorup of <see cref="ThingSelector"/> that shares a common <see cref="ThingDef"/>.
     /// </summary>
-    public class ThingGroupSelector : ICollection<ThingSelector>, IExposable, ILoadReferenceable
+    public class ThingGroupSelector : ICollection<ThingSelector>, IExposable, ILoadReferenceable, IReset
     {
         private List<ThingSelector> _selectors = new List<ThingSelector>();
+
+        /// <summary>
+        /// When true, pawn will not restock until stack count drop to _bottomThresholdCount.
+        /// </summary>
+        private bool _useBottomThreshold = false;
+
+        private int _bottomThresholdCount = 0;
 
         /// <summary>
         /// A callback for stack count changed event.
@@ -124,6 +131,33 @@ namespace AwesomeInventory.Loadout
 
         /// <inheritdoc/>
         public bool IsReadOnly => false;
+
+        /// <summary>
+        /// Gets a value indicating whether this selector uses bottom threshold.
+        /// </summary>
+        public bool UseBottomThreshold => _useBottomThreshold;
+
+        /// <summary>
+        /// Gets stack count for bottom threshold.
+        /// </summary>
+        public int BottomThresoldCount => _bottomThresholdCount;
+
+        /// <inheritdoc/>
+        public void Reset()
+        {
+            this.SetBottomThreshold(false, 0);
+        }
+
+        /// <summary>
+        /// Set bottom threshold. When <paramref name="useBottomThreshold"/> is true, pawn won't restock until stack count falls to <paramref name="thresholdCount"/>.
+        /// </summary>
+        /// <param name="useBottomThreshold"> Whether should use bottom threshold. </param>
+        /// <param name="thresholdCount"> Stack count for threshold. </param>
+        public void SetBottomThreshold(bool useBottomThreshold, int thresholdCount)
+        {
+            _bottomThresholdCount = (_useBottomThreshold = useBottomThreshold) ? thresholdCount : 0;
+            _stackCountChangedCallback?.Invoke(this, this.AllowedStackCount);
+        }
 
         /// <summary>
         /// Add callback to stack-count-changed event.

@@ -204,6 +204,8 @@ namespace AwesomeInventory.UI
 
         public static readonly Texture2D ThermometerGen = ContentFinder<Texture2D>.Get("UI/Icons/Gen_Thermometer");
 
+        public static readonly Texture2D Threshold = ContentFinder<Texture2D>.Get("UI/Icons/ThresholdMini");
+
         public static readonly Texture2D TriangleLeft = ContentFinder<Texture2D>.Get("UI/Icons/LeftTriangle");
 
         public static readonly Texture2D TriangleRight = ContentFinder<Texture2D>.Get("UI/Icons/RightTriangle");

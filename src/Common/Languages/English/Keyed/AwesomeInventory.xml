@@ -21,6 +21,7 @@
     <AwesomeInventory_Assorted>Assorted {0}</AwesomeInventory_Assorted>
     <AwesomeInventory_DisplayName>Awesome Inventory</AwesomeInventory_DisplayName>
     <AwesomeInventory_Blacklist>Blacklist</AwesomeInventory_Blacklist>
+    <AwesomeInventory_CantExceedStackCount>Cannot exceed stack count.</AwesomeInventory_CantExceedStackCount>
     <AwesomeInventory_CantUnloadIncapableManipulation>Pawn can't perform unload action due to incapable of manipulation.</AwesomeInventory_CantUnloadIncapableManipulation>
     <AwesomeInventory_ChooseMaterialAndQuality>Choose Material and Quality</AwesomeInventory_ChooseMaterialAndQuality>
     <AwesomeInventory_CopyLoadout>Copy Loadout</AwesomeInventory_CopyLoadout>
@@ -39,6 +40,8 @@
     <AwesomeInventory_NoMaterial>No Material Available</AwesomeInventory_NoMaterial>
     <AwesomeInventory_OpenLoadout>Open Loadout</AwesomeInventory_OpenLoadout>
     <AwesomeInventory_PreviewQuality>Preview Quality: </AwesomeInventory_PreviewQuality>
+    <AwesomeInventory_RestockAlways>Restock at first oppourtunity</AwesomeInventory_RestockAlways>
+    <AwesomeInventory_RestockBottomThreshold>Only restock when inventory level drops to:</AwesomeInventory_RestockBottomThreshold>
     <AwesomeInventory_SelectLoadout>Select Loadout</AwesomeInventory_SelectLoadout>
     <AwesomeInventory_SourceAllTip>All items</AwesomeInventory_SourceAllTip>
     <AwesomeInventory_SourceApparelTip>Apparels</AwesomeInventory_SourceApparelTip>
@@ -49,6 +52,7 @@
     <AwesomeInventory_SourceRangedTip>Ranged weapons</AwesomeInventory_SourceRangedTip>
     <AwesomeInventory_Separate>Separate</AwesomeInventory_Separate>
     <AwesomeInventory_SelectorStuff>Selected Stuff</AwesomeInventory_SelectorStuff>
+    <AwesomeInventory_StockMode>Stock mode</AwesomeInventory_StockMode>
     <AwesomeInventory_StuffSource>Stuff Source</AwesomeInventory_StuffSource>
     <AwesomeInventory_TryToDeleteLastLoadout>Cannot delete the last loadout</AwesomeInventory_TryToDeleteLastLoadout>
     <AwesomeInventory_Weight>Weight</AwesomeInventory_Weight>

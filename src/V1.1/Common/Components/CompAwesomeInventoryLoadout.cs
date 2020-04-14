@@ -31,6 +31,8 @@ namespace AwesomeInventory.Loadout
         private Pawn _pawn;
         private bool _initialized;
 
+        private Dictionary<ThingGroupSelector, ThresholdState> _bottomThresholdLookup;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CompAwesomeInventoryLoadout"/> class.
         /// </summary>
@@ -72,7 +74,7 @@ namespace AwesomeInventory.Loadout
 
                 Log.Warning(stringBuilder.ToString(), true);
 #endif
-                return InventoryMargins.Values.Any(m => m < 0);
+                return InventoryMargins.Any(pair => this.ItemNeedsRestock(pair.Key));
             }
         }
 
@@ -90,7 +92,7 @@ namespace AwesomeInventory.Loadout
 
                 foreach (var item in InventoryMargins)
                 {
-                    if (item.Value < 0)
+                    if (this.ItemNeedsRestock(item.Key))
                     {
                         yield return item;
                     }
@@ -182,9 +184,15 @@ namespace AwesomeInventory.Loadout
                 return;
 
             if (this.InventoryMargins == null)
+            {
                 this.InventoryMargins = new Dictionary<ThingGroupSelector, int>();
+                _bottomThresholdLookup = new Dictionary<ThingGroupSelector, ThresholdState>();
+            }
             else
+            {
                 this.InventoryMargins.Clear();
+                _bottomThresholdLookup.Clear();
+            }
 
             this.Loadout?.RemoveAddNewThingGroupSelectorCallback(this.AddNewThingGroupSelectorCallback);
             this.Loadout?.RemoveRemoveThingGroupSelectorCallback(this.RemoveThingGroupSelectorCallback);
@@ -211,6 +219,7 @@ namespace AwesomeInventory.Loadout
 
             this.Loadout = null;
             this.InventoryMargins = null;
+            _bottomThresholdLookup = null;
             _initialized = false;
         }
 
@@ -220,12 +229,16 @@ namespace AwesomeInventory.Loadout
         /// <param name="groupSelector"> The newly added selector. </param>
         protected virtual void AddNewThingGroupSelectorCallback(ThingGroupSelector groupSelector)
         {
+            ValidateArg.NotNull(groupSelector, nameof(groupSelector));
+
             List<ThingGroupSelector> selectors = this.InventoryMargins
                 .Where(pair => ThingDefComparer.Instance.Equals(pair.Key.AllowedThing, groupSelector.AllowedThing))
                 .Select(pair => pair.Key)
                 .ToList();
+
             selectors.Add(groupSelector);
             this.UpdateInventoryMargin(selectors);
+            this.UpdateThreshold(new[] { groupSelector });
         }
 
         /// <summary>
@@ -238,13 +251,18 @@ namespace AwesomeInventory.Loadout
             ValidateArg.NotNull(groupSelector, nameof(groupSelector));
 
             this.InventoryMargins[groupSelector] += oldStackCount - groupSelector.AllowedStackCount;
+            this.UpdateThreshold(new[] { groupSelector });
         }
 
         /// <summary>
         /// A callback to handle event where a <see cref="ThingGroupSelector"/> is removed from loadout.
         /// </summary>
         /// <param name="groupSelector"> The selector that has been removed. </param>
-        protected virtual void RemoveThingGroupSelectorCallback(ThingGroupSelector groupSelector) => this.InventoryMargins.Remove(groupSelector);
+        protected virtual void RemoveThingGroupSelectorCallback(ThingGroupSelector groupSelector)
+        {
+            this.InventoryMargins.Remove(groupSelector);
+            _bottomThresholdLookup.Remove(groupSelector);
+        }
 
         /// <summary>
         /// Find <see cref="ThingGroupSelector"/> that allows <paramref name="thing"/>.
@@ -318,16 +336,23 @@ namespace AwesomeInventory.Loadout
             int restockCount = pool.StackCount;
             foreach (var tuple in pool.OrderedSelectorTuples)
             {
-                if (this.InventoryMargins[tuple.Item2] + restockCount <= 0)
+                if (!tuple.Item2.UseBottomThreshold || _bottomThresholdLookup[tuple.Item2].CanRestock)
                 {
-                    this.InventoryMargins[tuple.Item2] += restockCount;
-                    restockCount = 0;
-                    break;
-                }
-                else
-                {
-                    restockCount += this.InventoryMargins[tuple.Item2];
-                    this.InventoryMargins[tuple.Item2] = 0;
+                    if (this.InventoryMargins[tuple.Item2] + restockCount <= 0)
+                    {
+                        this.InventoryMargins[tuple.Item2] += restockCount;
+                        if (this.InventoryMargins[tuple.Item2] == 0)
+                            this.UpdateThreshold(new[] { tuple.Item2 });
+
+                        restockCount = 0;
+                        break;
+                    }
+                    else
+                    {
+                        restockCount += this.InventoryMargins[tuple.Item2];
+                        this.InventoryMargins[tuple.Item2] = 0;
+                        this.UpdateThreshold(new[] { tuple.Item2 });
+                    }
                 }
             }
 
@@ -363,12 +388,19 @@ namespace AwesomeInventory.Loadout
                 {
                     pool.StackCount -= this.InventoryMargins[tuple.Item2] - maxNegativeMargin;
                     this.InventoryMargins[tuple.Item2] = maxNegativeMargin;
+                    this.UpdateThreshold(new[] { tuple.Item2 });
                 }
                 else
                 {
                     this.InventoryMargins[tuple.Item2] -= pool.StackCount;
+                    this.UpdateThreshold(new[] { tuple.Item2 });
                     break;
                 }
+            }
+
+            if (pool.OrderedSelectorTuples.Any(t => t.Item2.UseBottomThreshold && _bottomThresholdLookup[t.Item2].CanRestock))
+            {
+                this.UpdateInventoryMargin(pool.OrderedSelectorTuples.Select(t => t.Item2));
             }
         }
 
@@ -401,10 +433,74 @@ namespace AwesomeInventory.Loadout
             }
         }
 
+        // Make sure margin is up-to-date before calling this method.
+        private void UpdateThreshold(IEnumerable<ThingGroupSelector> groupSelectors)
+        {
+            if (!groupSelectors.Any())
+                return;
+
+            foreach (ThingGroupSelector groupSelector in groupSelectors)
+            {
+                if (groupSelector.UseBottomThreshold)
+                {
+                    if (_bottomThresholdLookup.TryGetValue(groupSelector, out ThresholdState state))
+                    {
+                        // Only when margin rise from NegBottomThresholdCount to 0 would CanRestock be true,
+                        // otherwise, when margin falls from 0 to NegBottomThresholdCount, it is false.
+                        if (this.InventoryMargins[groupSelector] >= 0)
+                        {
+                            state.CanRestock = false;
+                            state.NegBottomThresholdCount = groupSelector.BottomThresoldCount - groupSelector.AllowedStackCount;
+                            _bottomThresholdLookup[groupSelector] = state;
+                        }
+                        else
+                        {
+                            state.NegBottomThresholdCount = groupSelector.BottomThresoldCount - groupSelector.AllowedStackCount;
+                            state.CanRestock = state.NegBottomThresholdCount >= this.InventoryMargins[groupSelector] || state.CanRestock;
+                            _bottomThresholdLookup[groupSelector] = state;
+                        }
+                    }
+                    else
+                    {
+                        state = new ThresholdState
+                        {
+                            NegBottomThresholdCount = groupSelector.BottomThresoldCount - groupSelector.AllowedStackCount,
+                        };
+                        state.CanRestock = this.InventoryMargins[groupSelector] <= state.NegBottomThresholdCount;
+                        _bottomThresholdLookup[groupSelector] = state;
+                    }
+                }
+                else
+                {
+                    _bottomThresholdLookup.Remove(groupSelector);
+                }
+            }
+        }
+
+        private bool ItemNeedsRestock(ThingGroupSelector groupSelector)
+        {
+            return this.InventoryMargins[groupSelector] < 0
+                && (_bottomThresholdLookup.TryGetValue(groupSelector, out ThresholdState state)
+                   ? state.CanRestock
+                   : true);
+        }
+
+        private struct ThresholdState
+        {
+            /// <summary>
+            /// This field is toggle to true when inventory level drops to BottomThresoldCount and
+            /// will not toggle to false until corresponding inventory margin reaches 0.
+            /// </summary>
+            public bool CanRestock;
+
+            public int NegBottomThresholdCount;
+        }
+
         /// <summary>
         /// A datat structure thtat contains necessary information for <see cref="CompAwesomeInventoryLoadout.InventoryMargins"/> to update.
         /// </summary>
         [SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types", Justification = "Not in design.")]
+        [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:Elements should be ordered by access", Justification = "Convention")]
         protected struct ThingGroupSelectorPool
         {
             /// <summary>
@@ -413,7 +509,7 @@ namespace AwesomeInventory.Loadout
             public Thing Thing;
 
             /// <summary>
-            /// Count of Thing.
+            /// Count of thing that are being added to or removed from inventory.
             /// </summary>
             public int StackCount;
 
