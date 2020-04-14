@@ -101,6 +101,12 @@ namespace AwesomeInventory.UI
                 widgetRow.GapButtonIcon();
             }
 
+            // Draw threshold.
+            if (widgetRow.ButtonIcon(TexResource.Threshold, UIText.StockMode.TranslateSimple()))
+            {
+                Find.WindowStack.Add(new Dialog_RestockTrigger(groupSelector));
+            }
+
             // Draw gear icon.
             this.DrawGearIconInThingRow(widgetRow, groupSelector);
 

@@ -41,6 +41,16 @@ namespace AwesomeInventory
         public bool PatchAllRaces;
 
         /// <summary>
+        /// Width of gear tab.
+        /// </summary>
+        public float GearTabWidth;
+
+        /// <summary>
+        /// Height of gear tab.
+        /// </summary>
+        public float GearTabHeight;
+
+        /// <summary>
         /// Save state.
         /// </summary>
         public override void ExposeData()
@@ -50,6 +60,17 @@ namespace AwesomeInventory
             Scribe_Values.Look(ref QualityColorPluginID, nameof(QualityColorPluginID));
             Scribe_Values.Look(ref UseToggleGizmo, nameof(UseToggleGizmo));
             Scribe_Values.Look(ref PatchAllRaces, nameof(PatchAllRaces));
+            Scribe_Values.Look(ref GearTabWidth, nameof(GearTabWidth));
+            Scribe_Values.Look(ref GearTabHeight, nameof(GearTabHeight));
+
+            if (Scribe.mode == LoadSaveMode.LoadingVars)
+            {
+                if (GearTabHeight < 1f)
+                    GearTabHeight = 500f;
+
+                if (GearTabWidth < 1f)
+                    GearTabWidth = 575f;
+            }
         }
     }
 

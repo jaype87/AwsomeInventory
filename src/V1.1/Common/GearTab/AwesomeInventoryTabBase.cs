@@ -47,7 +47,6 @@ namespace AwesomeInventory.UI
         /// </summary>
         public AwesomeInventoryTabBase()
         {
-            this.size = new Vector2(575f, 500f);
             this.labelKey = "TabGear";
             this.tutorTag = "Gear";
             Pawn_ApparelTracker_ApparelChanged_Patch.ApparelChangedEvent +=
@@ -144,6 +143,7 @@ namespace AwesomeInventory.UI
         /// </summary>
         protected override void UpdateSize()
         {
+            this.size = new Vector2(AwesomeInvnetoryMod.Settings.GearTabWidth, AwesomeInvnetoryMod.Settings.GearTabHeight);
         }
 
         /// <summary>
@@ -184,6 +184,12 @@ namespace AwesomeInventory.UI
             if (Widgets.RadioButtonLabeled(headerRect, translatedText, _isGreedy))
             {
                 this.SetGreedy();
+            }
+
+            headerRect.Set(size.x - GenUI.ListSpacing * 2, headerRect.y + headerRect.height / 2 - GenUI.SmallIconSize / 2, GenUI.SmallIconSize, GenUI.SmallIconSize);
+            if (Widgets.ButtonImage(headerRect, TexResource.Gear))
+            {
+                Find.WindowStack.Add(new Dialog_Settings());
             }
 
             /*

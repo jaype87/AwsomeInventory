@@ -14,8 +14,7 @@ namespace AwesomeInventory.UI
     /// <summary>
     /// Text displayed on UI. Call Translate() on members whenever they are referenced, e.g., UIText.Equip.Translate(); .
     /// </summary>
-    public static class
-        UIText
+    public static class UIText
     {
 #pragma warning disable SA1600 // Elements should be documented
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
@@ -110,6 +109,8 @@ namespace AwesomeInventory.UI
 
         public const string ChooseMaterialAndQuality = "AwesomeInventory_ChooseMaterialAndQuality";
 
+        public const string ChooseThemeColorForQuality = "AwesomeInventory_ChooseThemeColorForQuality";
+
         public const string ComfyTemperatureRange = "ComfyTemperatureRange";
 
         public const string CopyLoadout = "AwesomeInventory_CopyLoadout";
@@ -130,9 +131,15 @@ namespace AwesomeInventory.UI
 
         public const string FailToDrop = "AwesomeInventory_FailToDrop";
 
+        public const string GearTabHeight = "AwesomeInventory_GearTabHeight";
+
+        public const string GearTabWidth = "AwesomeInventory_GearTabWidht";
+
         public const string GlobalApparelSetting = "AwesomeInventory_GlobalApparelSetting";
 
         public const string GlobalOutfitSettingWarning = "AwesomeInventory_GlobalOutfitSettingWarning";
+
+        public const string GoNuts = "AwesomeInventory_GoNuts";
 
         public const string GreedyTab = "AwesomeInventory_GreedyTab";
 

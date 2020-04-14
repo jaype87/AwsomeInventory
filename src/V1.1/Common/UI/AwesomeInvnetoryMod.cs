@@ -44,7 +44,7 @@ namespace AwesomeInventory
         }
 
         /// <summary>
-        /// Draw content in window.
+        /// Draw mod settings.
         /// </summary>
         /// <param name="inRect"> Rect for drawing. </param>
         public override void DoSettingsWindowContents(Rect inRect)
@@ -60,6 +60,26 @@ namespace AwesomeInventory
 
             listingStandard.NewColumn();
             this.DrawQualityColorScrollableList(listingStandard);
+            listingStandard.Gap();
+
+            // Draw gear tab size settings.
+            Text.Font = GameFont.Medium;
+            listingStandard.Label(UIText.GoNuts.TranslateSimple());
+            Text.Font = GameFont.Small;
+            listingStandard.GapLine();
+            Rect rect = listingStandard.GetRect(GenUI.ListSpacing);
+            string widthBuffer = _settings.GearTabWidth.ToString(), heightBuffer = _settings.GearTabHeight.ToString();
+
+            Widgets.Label(rect, UIText.GearTabWidth.TranslateSimple());
+            rect.Set(rect.x + UIText.GearTabWidth.TranslateSimple().GetWidthCached() + GenUI.GapTiny, rect.y, GenUI.SmallIconSize * 2, GenUI.SmallIconSize);
+            Widgets.TextFieldNumeric(rect, ref _settings.GearTabWidth, ref widthBuffer);
+
+            rect = listingStandard.GetRect(GenUI.ListSpacing);
+
+            Widgets.Label(rect, UIText.GearTabHeight.TranslateSimple());
+            rect.Set(rect.x + UIText.GearTabHeight.TranslateSimple().GetWidthCached() + GenUI.GapTiny, rect.y, GenUI.SmallIconSize * 2, GenUI.SmallIconSize);
+            Widgets.TextFieldNumeric(rect, ref _settings.GearTabHeight, ref heightBuffer);
+
             listingStandard.End();
 
             base.DoSettingsWindowContents(inRect);
@@ -91,7 +111,7 @@ namespace AwesomeInventory
 
         private void DrawQualityColorScrollableList(Listing_Standard listingStandard)
         {
-            Rect labelRect = listingStandard.Label("Choose theme for quality color: ");
+            Rect labelRect = listingStandard.Label(UIText.ChooseThemeColorForQuality.TranslateSimple());
             Widgets.DrawLineHorizontal(labelRect.x, listingStandard.CurHeight, labelRect.width - GenUI.ScrollBarWidth);
 
             Rect outRect = listingStandard.GetRect(GenUI.ListSpacing * 4);

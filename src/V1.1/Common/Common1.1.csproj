@@ -166,6 +166,7 @@
     <Compile Include="UI\Dialog_ManageLoadouts.cs" />
     <Compile Include="UI\Dialog_ManageOutfitSettings.cs" />
     <Compile Include="UI\Dialog_RestockTrigger.cs" />
+    <Compile Include="UI\Dialog_Settings.cs" />
     <Compile Include="UI\Dialog_StuffAndQuality.cs" />
     <Compile Include="UI\AwesomeInventoryTex.cs" />
     <Compile Include="UI\QualityColor.cs" />
