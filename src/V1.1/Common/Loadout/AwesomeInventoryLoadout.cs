@@ -85,7 +85,7 @@ namespace AwesomeInventory.Loadout
 
             this.uniqueId = Current.Game.outfitDatabase.AllOutfits.Max(o => o.uniqueId) + 1;
             this.label = LoadoutManager.GetIncrementalLabel(other.label);
-            this.filter.SetAllow(ThingCategoryDefOf.Apparel, true);
+            this.filter.CopyAllowancesFrom(other.filter);
         }
 
         /// <summary>

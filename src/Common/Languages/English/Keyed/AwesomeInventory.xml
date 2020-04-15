@@ -30,7 +30,7 @@
     <AwesomeInventory_DeleteLoadout>Delete Loadout</AwesomeInventory_DeleteLoadout>
     <AwesomeInventory_DragToReorder>Drag to reorder</AwesomeInventory_DragToReorder>
     <AwesomeInventory_EmptyLoadout>Empty Loadout</AwesomeInventory_EmptyLoadout>
-    <AwesomeInventory_GlobalApparelSetting>Global Apparel Setting</AwesomeInventory_GlobalApparelSetting>
+    <AwesomeInventory_GlobalApparelSetting>Loadout top level setting</AwesomeInventory_GlobalApparelSetting>
     <AwesomeInventory_GlobalOutfitSettingWarning>Be advised: Settings here take precedence over those of apparels in Loadout window(Weapons and other items are not affected).</AwesomeInventory_GlobalOutfitSettingWarning>
     <AwesomeInventory_LoadoutName>{0}'s Loadout</AwesomeInventory_LoadoutName>
     <AwesomeInventory_MouseOverNumbersForDetails>Mouse over number for details</AwesomeInventory_MouseOverNumbersForDetails>
