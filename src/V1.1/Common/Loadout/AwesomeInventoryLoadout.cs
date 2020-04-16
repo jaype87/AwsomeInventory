@@ -56,9 +56,19 @@ namespace AwesomeInventory.Loadout
         private List<Action<ThingGroupSelector, int>> _thingGroupSelectorStackCountChangedCallbacks = new List<Action<ThingGroupSelector, int>>();
 
         /// <summary>
+        /// Items in a getup.
+        /// </summary>
+        private List<ThingGroupSelector> _getupItems = new List<ThingGroupSelector>();
+
+        /// <summary>
         /// If true, this loadout has changed since last read.
         /// </summary>
         private bool _isDirty = true;
+
+        /// <summary>
+        /// If true, pawn will change their apparels when switch to this loadout.
+        /// </summary>
+        private bool _isGetup = false;
 
         private float _weight;
 
@@ -109,6 +119,11 @@ namespace AwesomeInventory.Loadout
 
             pawn.SetLoadout(this);
         }
+
+        /// <summary>
+        /// Gets sibling loadouts.
+        /// </summary>
+        public List<AwesomeInventoryLoadout> Siblings { get; private set; } = new List<AwesomeInventoryLoadout>();
 
         /// <summary>
         /// Gets weight for this loadout.
