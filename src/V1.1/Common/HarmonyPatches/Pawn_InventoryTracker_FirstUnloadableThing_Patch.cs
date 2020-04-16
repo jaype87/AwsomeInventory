@@ -54,7 +54,6 @@ namespace AwesomeInventory.HarmonyPatches
             Utility.Harmony.Patch(original, transpiler: new HarmonyMethod(transpiler));
         }
 
-
         /// <summary>
         /// Patch the IL code in <see cref="Pawn_InventoryTracker.FirstUnloadableThing"/>, so that it ignores things in loadout.
         /// </summary>
@@ -64,6 +63,29 @@ namespace AwesomeInventory.HarmonyPatches
         [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Harmony patch")]
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator iLGenerator)
         {
+            /* <Before>
+                    * for (int j = 0; j < this.innerContainer.Count; j++)
+                    * {
+                    *       if (!this.innerContainer[j].def.IsDrug)
+                    *      {
+                    *            return new ThingCount(this.innerContainer[j], this.innerContainer[j].stackCount);
+                    *       }
+                    *  ......
+                    * }
+                    *
+                    * <After>
+                    * for (int j = 0; j < this.innerContainer.Count; j++)
+                    * {
+                    *       if (ThingInLoadout(this, j)
+                    *            continue;
+                    *
+                    *       if (!this.innerContainer[j].def.IsDrug)
+                    *      {
+                    *            return new ThingCount(this.innerContainer[j], this.innerContainer[j].stackCount);
+                    *       }
+                    *  ......
+                    * }
+                    */
             Label startLabel = iLGenerator.DefineLabel();
             Label continueLabel = iLGenerator.DefineLabel();
             List<CodeInstruction> invert = new List<CodeInstruction>(instructions);

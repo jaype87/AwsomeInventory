@@ -367,6 +367,8 @@ namespace AwesomeInventory.Loadout
                 }
             }
 
+            Scribe_Values.Look(ref _useBottomThreshold, nameof(_useBottomThreshold));
+            Scribe_Values.Look(ref _bottomThresholdCount, nameof(_bottomThresholdCount));
             Scribe_Values.Look(ref allowedStackCount, nameof(this.AllowedStackCount));
             Scribe_Values.Look(ref groupID, nameof(this.GroupID));
             Scribe_Collections.Look(ref _selectors, nameof(_selectors), LookMode.Deep);
