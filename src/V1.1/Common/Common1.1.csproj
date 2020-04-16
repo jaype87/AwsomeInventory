@@ -78,6 +78,7 @@
     <Compile Include="HarmonyPatches\Outfit_ExposeData.cs" />
     <Compile Include="HarmonyPatches\Pawn_ApparelTracker_ApparelChanged_Patch.cs" />
     <Compile Include="HarmonyPatches\Pawn_CarryTracker_CarriedThing_AwesomeInventory_Patch.cs" />
+    <Compile Include="HarmonyPatches\Pawn_InventoryTracker_FirstUnloadableThing_Patch.cs" />
     <Compile Include="HarmonyPatches\ThingOwner_RPGI_Patch.cs" />
     <Compile Include="HarmonyPatches\Thing_GetInspectTabs_Patch.cs" />
     <Compile Include="Helpers\DrawHelper.cs" />

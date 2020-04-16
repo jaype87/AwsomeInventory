@@ -398,6 +398,7 @@ namespace AwesomeInventory.Loadout
                 }
             }
 
+            // Rebalance inventory margin for cases where bottom threshold in ThingGroupSelectors are set to CanRestock in the code above.
             if (pool.OrderedSelectorTuples.Any(t => t.Item2.UseBottomThreshold && _bottomThresholdLookup[t.Item2].CanRestock))
             {
                 this.UpdateInventoryMargin(pool.OrderedSelectorTuples.Select(t => t.Item2));
