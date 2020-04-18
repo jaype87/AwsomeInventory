@@ -25,9 +25,11 @@
     <AwesomeInventory_CantUnloadIncapableManipulation>Pawn can't perform unload action due to incapable of manipulation.</AwesomeInventory_CantUnloadIncapableManipulation>
     <AwesomeInventory_ChooseMaterialAndQuality>Choose Material and Quality</AwesomeInventory_ChooseMaterialAndQuality>
     <AwesomeInventory_CopyLoadout>Copy Loadout</AwesomeInventory_CopyLoadout>
+    <AwesomeInventory_CostumeSettings>Costume settings</AwesomeInventory_CostumeSettings>
     <AwesomeInventory_CountFieldTip>Number of items</AwesomeInventory_CountFieldTip>
     <AwesomeInventory_Customize>Customize</AwesomeInventory_Customize>
     <AwesomeInventory_DeleteLoadout>Delete Loadout</AwesomeInventory_DeleteLoadout>
+    <AwesomeInventory_DontUseCostume>Don't use costume</AwesomeInventory_DontUseCostume>
     <AwesomeInventory_DragToReorder>Drag to reorder</AwesomeInventory_DragToReorder>
     <AwesomeInventory_EmptyLoadout>Empty Loadout</AwesomeInventory_EmptyLoadout>
     <AwesomeInventory_GlobalApparelSetting>Loadout top level setting</AwesomeInventory_GlobalApparelSetting>
@@ -40,7 +42,7 @@
     <AwesomeInventory_NoMaterial>No Material Available</AwesomeInventory_NoMaterial>
     <AwesomeInventory_OpenLoadout>Open Loadout</AwesomeInventory_OpenLoadout>
     <AwesomeInventory_PreviewQuality>Preview Quality: </AwesomeInventory_PreviewQuality>
-    <AwesomeInventory_RestockAlways>Restock at first oppourtunity</AwesomeInventory_RestockAlways>
+    <AwesomeInventory_RestockAlways>Restock at first opportunity</AwesomeInventory_RestockAlways>
     <AwesomeInventory_RestockBottomThreshold>Only restock when inventory level drops to:</AwesomeInventory_RestockBottomThreshold>
     <AwesomeInventory_SelectLoadout>Select Loadout</AwesomeInventory_SelectLoadout>
     <AwesomeInventory_SourceAllTip>All items</AwesomeInventory_SourceAllTip>
@@ -57,6 +59,18 @@
     <AwesomeInventory_TryToDeleteLastLoadout>Cannot delete the last loadout</AwesomeInventory_TryToDeleteLastLoadout>
     <AwesomeInventory_Weight>Weight</AwesomeInventory_Weight>
     <AwesomeInventory_Wishlist>Wishlist</AwesomeInventory_Wishlist>
+
+    <!-- Costume Window -->
+    <AwesomeInventory_CreateCostume>Create Costume</AwesomeInventory_CreateCostume>
+    <AwesomeInventory_CopyCostume>Copy Costume</AwesomeInventory_CopyCostume>
+    <AwesomeInventory_CopySuffix> - Copy</AwesomeInventory_CopySuffix>
+    <AwesomeInventory_Costume> Costume</AwesomeInventory_Costume>
+    <AwesomeInventory_DeleteCostume>Delete Costume</AwesomeInventory_DeleteCostume>
+    <AwesomeInventory_ItemsInCostume>Items in costume</AwesomeInventory_ItemsInCostume>
+    <AwesomeInventory_ApparelsInLoadout>Apparels in loadout</AwesomeInventory_ApparelsInLoadout>
+    <AwesomeInventory_NoCostumeAvailable>No costume available</AwesomeInventory_NoCostumeAvailable>
+    <AwesomeInventory_NoCostumeSelected>Please select a costume.</AwesomeInventory_NoCostumeSelected>
+    <AwesomeInventory_SelectCostume>Select Costume</AwesomeInventory_SelectCostume>
   
     <!-- Labels -->
     <AwesomeInventory_GenericMeal_Label>Generic Meals</AwesomeInventory_GenericMeal_Label>

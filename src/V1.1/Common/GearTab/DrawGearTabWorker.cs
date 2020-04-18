@@ -450,11 +450,11 @@ namespace AwesomeInventory.UI
             bool openLoadout = false;
             if (AwesomeInvnetoryMod.Settings.UseLoadout)
             {
-                List<FloatMenuOption> loadoutOptions = BuildMenuOptions(LoadoutManager.Loadouts.OfType<Outfit>().ToList());
-                List<FloatMenuOption> outfitOptions = BuildMenuOptions(Current.Game.outfitDatabase.AllOutfits);
+                List<FloatMenuOption> loadoutOptions = BuildMenuOptions(LoadoutManager.Loadouts.Where(l => l.GetType() == typeof(AwesomeInventoryLoadout)).OfType<Outfit>().ToList()).ToList();
+                List<FloatMenuOption> outfitOptions = BuildMenuOptions(Current.Game.outfitDatabase.AllOutfits.Where(o => o.GetType() != typeof(AwesomeInventoryCostume)).ToList());
 
                 WidgetRow row = new WidgetRow(x, rollingY, UIDirection.LeftThenDown, width);
-                if (row.ButtonText(UIText.OpenLoadout.Translate()))
+                if (row.ButtonText(UIText.OpenLoadout.TranslateSimple()))
                 {
                     if (selPawn.outfits.CurrentOutfit is AwesomeInventoryLoadout)
                     {
@@ -468,20 +468,58 @@ namespace AwesomeInventory.UI
                     }
                 }
 
-                if (row.ButtonText(UIText.SelectLoadout.Translate()))
+                string costumeButtonText;
+                if (selPawn.outfits?.CurrentOutfit is AwesomeInventoryLoadout loadout)
+                {
+                    IList<AwesomeInventoryCostume> costumes;
+                    if (loadout is AwesomeInventoryCostume costume)
+                    {
+                        costumeButtonText = costume.label;
+                        costumes = costume.Base.Costumes;
+                    }
+                    else if (loadout.Costumes.Any())
+                    {
+                        costumeButtonText = UIText.SelectCostume.TranslateSimple();
+                        costumes = loadout.Costumes;
+                    }
+                    else
+                    {
+                        costumeButtonText = UIText.NoCostumeAvailable.TranslateSimple();
+                        costumes = Enumerable.Empty<AwesomeInventoryCostume>().ToList();
+                    }
+
+                    if (row.ButtonText(costumeButtonText))
+                    {
+                        openLoadout = false;
+                        if (costumes.Any())
+                        {
+                            Find.WindowStack.Add(
+                                new FloatMenu(
+                                    BuildMenuOptions(costumes.OfType<Outfit>().ToList())
+                                    .Concat(new FloatMenuOption(
+                                        UIText.DontUseCostume.TranslateSimple()
+                                        , () => selPawn.outfits.CurrentOutfit = (loadout as AwesomeInventoryCostume)?.Base ?? loadout))
+                                    .ToList()));
+                        }
+                    }
+                }
+                else
+                {
+                    row.ButtonText(UIText.NoCostumeAvailable.TranslateSimple());
+                }
+
+                string selectButtonText = selPawn.outfits?.CurrentOutfit != null
+                                          ? (selPawn.outfits.CurrentOutfit.GetType() != typeof(AwesomeInventoryCostume))
+                                            ? selPawn.outfits.CurrentOutfit.label
+                                            : (selPawn.outfits.CurrentOutfit as AwesomeInventoryCostume).Base.label
+                                          : UIText.NoLoadout.TranslateSimple();
+                if (row.ButtonText(selectButtonText))
                 {
                     openLoadout = false;
                     Find.WindowStack.Add(new FloatMenu(outfitOptions.ToList()));
                 }
 
-                Text.Anchor = TextAnchor.MiddleRight;
-                Text.WordWrap = false;
-
-                row.Label(selPawn.GetLoadout()?.label ?? selPawn.outfits.CurrentOutfit.label, GenUI.GetWidthCached(UIText.TenCharsString.Times(2.5f)));
-
-                Text.Anchor = TextAnchor.UpperLeft;
-                Text.WordWrap = true;
-                rollingY = row.FinalY + WidgetRow.IconSize - Text.LineHeight;
+                rollingY = row.FinalY + WidgetRow.IconSize;
             }
 
             List<FloatMenuOption> BuildMenuOptions(IList<Outfit> outfits)

@@ -75,6 +75,7 @@
     <Compile Include="GearTab\IconRect.cs" />
     <Compile Include="GearTab\SmartRectList.cs" />
     <Compile Include="HarmonyPatches\AddHumanlikeOrders_AwesomeInventory_Patch.cs" />
+    <Compile Include="HarmonyPatches\JobGiver_OptimizeApparel_TryGiveJob_Patch.cs" />
     <Compile Include="HarmonyPatches\Outfit_ExposeData.cs" />
     <Compile Include="HarmonyPatches\Pawn_ApparelTracker_ApparelChanged_Patch.cs" />
     <Compile Include="HarmonyPatches\Pawn_CarryTracker_CarriedThing_AwesomeInventory_Patch.cs" />
@@ -93,6 +94,8 @@
     <Compile Include="Jobs\JobGiver_AwesomeInventory_OpportunisticHaul.cs" />
     <Compile Include="Jobs\JobGiver_AwesomeInventory_TakeArm.cs" />
     <Compile Include="Jobs\JobGiver_FindItemByRadius.cs" />
+    <Compile Include="Jobs\JobGiver_OptimizeApparel_Supplement.cs" />
+    <Compile Include="Loadout\AwesomeInventoryCostume.cs" />
     <Compile Include="Loadout\AwesomeInventoryLoadout.cs" />
     <Compile Include="Loadout\GenericThingSelector.cs" />
     <Compile Include="Loadout\SingleThingSelector.cs" />
@@ -163,6 +166,7 @@
     </Compile>
     <Compile Include="GearTab\SmartRect.cs" />
     <Compile Include="Resources\TexResource.cs" />
+    <Compile Include="UI\Dialog_Costume.cs" />
     <Compile Include="UI\Dialog_InstantMessage.cs" />
     <Compile Include="UI\Dialog_ManageLoadouts.cs" />
     <Compile Include="UI\Dialog_ManageOutfitSettings.cs" />
@@ -260,7 +264,7 @@
     <EmbeddedResource Include="Resources\ErrorMessage.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ErrorMessage.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>AwesomeInventory.Resources</CustomToolNamespace>
+      <CustomToolNamespace>AwesomeInventory</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Labels.resx">
       <Generator>ResXFileCodeGenerator</Generator>

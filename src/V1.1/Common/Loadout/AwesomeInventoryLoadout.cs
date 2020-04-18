@@ -33,7 +33,7 @@ namespace AwesomeInventory.Loadout
         /// <summary>
         /// A collection of <see cref="ThingGroupSelector"/>s that dictates what items to look for.
         /// </summary>
-        private List<ThingGroupSelector> _thingGroupSelectors = new List<ThingGroupSelector>();
+        protected List<ThingGroupSelector> _thingGroupSelectors = new List<ThingGroupSelector>();
 
         /// <summary>
         /// Items fit in this selectors will be excluded from things the pawn are actively searching for.
@@ -56,19 +56,9 @@ namespace AwesomeInventory.Loadout
         private List<Action<ThingGroupSelector, int>> _thingGroupSelectorStackCountChangedCallbacks = new List<Action<ThingGroupSelector, int>>();
 
         /// <summary>
-        /// Items in a getup.
-        /// </summary>
-        private List<ThingGroupSelector> _getupItems = new List<ThingGroupSelector>();
-
-        /// <summary>
         /// If true, this loadout has changed since last read.
         /// </summary>
         private bool _isDirty = true;
-
-        /// <summary>
-        /// If true, pawn will change their apparels when switch to this loadout.
-        /// </summary>
-        private bool _isGetup = false;
 
         private float _weight;
 
@@ -83,19 +73,43 @@ namespace AwesomeInventory.Loadout
         /// Initializes a new instance of the <see cref="AwesomeInventoryLoadout"/> class.
         /// </summary>
         /// <param name="other"> Copy <paramref name="other"/> to this loadout. </param>
-        public AwesomeInventoryLoadout(AwesomeInventoryLoadout other)
+        /// <param name="shallow"> Make a shallow copy. </param>
+        public AwesomeInventoryLoadout(AwesomeInventoryLoadout other, bool shallow = false)
         {
             ValidateArg.NotNull(other, nameof(other));
 
-            foreach (ThingGroupSelector selector in other._thingGroupSelectors)
+            if (shallow)
             {
-                ThingGroupSelector newSelector = new ThingGroupSelector(selector);
-                this.Add(newSelector);
+                _thingGroupSelectors = other._thingGroupSelectors;
+                _blacklistSelectors = other._blacklistSelectors;
+                this.filter = other.filter;
+                _isDirty = true;
+                foreach (ThingGroupSelector selector in _thingGroupSelectors)
+                {
+                    this.AddAddNewThingSelectorCallbackTo(selector);
+                    this.AddRemoveThingSelectorCallbackTo(selector);
+                    this.AddStackCountChangedCallbackTo(selector);
+                }
+            }
+            else
+            {
+                foreach (ThingGroupSelector selector in other._thingGroupSelectors)
+                {
+                    ThingGroupSelector newSelector = new ThingGroupSelector(selector);
+                    this.Add(newSelector);
+                }
+
+                foreach (ThingGroupSelector selector in other._blacklistSelectors)
+                {
+                    ThingGroupSelector newSelector = new ThingGroupSelector(selector);
+                    this.AddToBlacklist(newSelector);
+                }
+
+                this.filter.CopyAllowancesFrom(other.filter);
             }
 
             this.uniqueId = Current.Game.outfitDatabase.AllOutfits.Max(o => o.uniqueId) + 1;
             this.label = LoadoutManager.GetIncrementalLabel(other.label);
-            this.filter.CopyAllowancesFrom(other.filter);
         }
 
         /// <summary>
@@ -121,9 +135,9 @@ namespace AwesomeInventory.Loadout
         }
 
         /// <summary>
-        /// Gets sibling loadouts.
+        /// Gets costumes.
         /// </summary>
-        public List<AwesomeInventoryLoadout> Siblings { get; private set; } = new List<AwesomeInventoryLoadout>();
+        public List<AwesomeInventoryCostume> Costumes { get; private set; } = new List<AwesomeInventoryCostume>();
 
         /// <summary>
         /// Gets weight for this loadout.
@@ -191,6 +205,16 @@ namespace AwesomeInventory.Loadout
         /// <param name="item"> Item to add. </param>
         public void Add(ThingGroupSelector item)
         {
+            this.Add(item, false);
+        }
+
+        /// <summary>
+        /// Add new item to loadout.
+        /// </summary>
+        /// <param name="item"> Item to add. </param>
+        /// <param name="fromSibling"> Whether <paramref name="item"/> is added by a sibling loadout. </param>
+        public void Add(ThingGroupSelector item, bool fromSibling)
+        {
             ValidateArg.NotNull(item, nameof(item));
 
             _isDirty = true;
@@ -198,10 +222,16 @@ namespace AwesomeInventory.Loadout
             this.AddAddNewThingSelectorCallbackTo(item);
             this.AddRemoveThingSelectorCallbackTo(item);
             this.AddStackCountChangedCallbackTo(item);
-            _thingGroupSelectors.Add(item);
-            if (!(item.AllowedThing is AIGenericDef))
+
+            if (!fromSibling)
             {
-                this.filter.SetAllow(item.AllowedThing, true);
+                _thingGroupSelectors.Add(item);
+                if (!(item.AllowedThing is AIGenericDef))
+                {
+                    this.filter.SetAllow(item.AllowedThing, true);
+                }
+
+                this.NotifySiblingsSelectorAdded(item);
             }
 
             _addNewThingGroupSelectorCallbacks.ForEach(c => c.Invoke(item));
@@ -210,12 +240,28 @@ namespace AwesomeInventory.Loadout
         /// <inheritdoc/>
         public void Clear()
         {
-            _thingGroupSelectors.ForEach(
-                group => _removeThingGroupSelectorCallbacks.ForEach(
-                    c => c.Invoke(group)));
+            this.Clear(false);
+        }
 
+        /// <summary>
+        /// Clear all selectors in loadout.
+        /// </summary>
+        /// <param name="fromSibling"> Whether it is called from a sibling loadout. </param>
+        public void Clear(bool fromSibling)
+        {
             _isDirty = true;
-            _thingGroupSelectors.Clear();
+            _thingGroupSelectors.ForEach(
+                group =>
+                {
+                    _removeThingGroupSelectorCallbacks.ForEach(c => c.Invoke(group));
+                    if (!fromSibling)
+                        this.NotifySiblingsSelectorRemoved(group);
+                });
+
+            if (!fromSibling)
+            {
+                _thingGroupSelectors.Clear();
+            }
         }
 
         /// <inheritdoc/>
@@ -244,9 +290,32 @@ namespace AwesomeInventory.Loadout
         /// <inheritdoc/>
         public bool Remove(ThingGroupSelector item)
         {
+            return this.Remove(item, false);
+        }
+
+        /// <summary>
+        /// Remove <paramref name="item"/> from loadout.
+        /// </summary>
+        /// <param name="item"> Selector to remove. </param>
+        /// <param name="fromSibling"> Whether it is called from a sibling loadout. </param>
+        /// <returns> Whether the removal of <paramref name="item"/> is successful. </returns>
+        public virtual bool Remove(ThingGroupSelector item, bool fromSibling)
+        {
+            ValidateArg.NotNull(item, nameof(item));
+
             _isDirty = true;
             _removeThingGroupSelectorCallbacks.ForEach(c => c.Invoke(item));
-            return _thingGroupSelectors.Remove(item);
+            item.RemoveAddNewThingSelectorCallback(this.AddNewThingSelectorCallback);
+            item.RemoveStackCountChangedCallback(this.StackCountChangedCallback);
+            item.RemoveRemoveThingSelectorCallback(this.RemoveThingSelectorCallback);
+
+            if (!fromSibling)
+            {
+                this.NotifySiblingsSelectorRemoved(item);
+                return _thingGroupSelectors.Remove(item);
+            }
+
+            return true;
         }
 
         /// <inheritdoc/>
@@ -282,17 +351,59 @@ namespace AwesomeInventory.Loadout
         /// <inheritdoc/>
         public void Insert(int index, ThingGroupSelector item)
         {
+            this.Insert(index, item, false);
+        }
+
+        /// <summary>
+        /// Insert <paramref name="item"/> to index position <paramref name="index"/>.
+        /// </summary>
+        /// <param name="index"> Index position to which <paramref name="item"/> is inserted. </param>
+        /// <param name="item"> Selector to add. </param>
+        /// <param name="fromSibling"> Whether it is called from a sibling loadout. </param>
+        public void Insert(int index, ThingGroupSelector item, bool fromSibling)
+        {
+            ValidateArg.NotNull(item, nameof(item));
+
             _isDirty = true;
-            _thingGroupSelectors.Insert(index, item);
             _addNewThingGroupSelectorCallbacks.ForEach(c => c.Invoke(item));
+
+            this.AddAddNewThingSelectorCallbackTo(item);
+            this.AddRemoveThingSelectorCallbackTo(item);
+            this.AddStackCountChangedCallbackTo(item);
+
+            if (!fromSibling)
+            {
+                _thingGroupSelectors.Insert(index, item);
+                if (!(item.AllowedThing is AIGenericDef))
+                {
+                    this.filter.SetAllow(item.AllowedThing, true);
+                }
+
+                this.NotifySiblingsSelectorAdded(item);
+            }
         }
 
         /// <inheritdoc/>
         public void RemoveAt(int index)
         {
+            this.RemoveAt(index, false);
+        }
+
+        /// <summary>
+        /// Remove <see cref="ThingGroupSelector"/> at <paramref name="index"/>.
+        /// </summary>
+        /// <param name="index"> Index postion of the selector to remove. </param>
+        /// <param name="fromSibling"> Whether it is called from a sibling loadout. </param>
+        public void RemoveAt(int index, bool fromSibling)
+        {
             _isDirty = true;
-            _removeThingGroupSelectorCallbacks.ForEach(c => c.Invoke(_thingGroupSelectors[index]));
-            _thingGroupSelectors.RemoveAt(index);
+            ThingGroupSelector toRemove = _thingGroupSelectors[index];
+            _removeThingGroupSelectorCallbacks.ForEach(c => c.Invoke(toRemove));
+
+            if (!fromSibling)
+            {
+                this.Remove(toRemove);
+            }
         }
 
         /// <summary>
@@ -367,10 +478,14 @@ namespace AwesomeInventory.Loadout
         /// <summary>
         /// Save state.
         /// </summary>
-        public new void ExposeData()
+#pragma warning disable CS0108 // Member hides inherited member; missing new keyword
+        public virtual void ExposeData()
         {
+            List<AwesomeInventoryCostume> costumes = this.Costumes;
             List<ThingGroupSelector> groupSelectorsCopy = _thingGroupSelectors;
+
             Scribe_Collections.Look(ref groupSelectorsCopy, nameof(_thingGroupSelectors), LookMode.Deep);
+            Scribe_Collections.Look(ref costumes, nameof(this.Costumes), LookMode.Reference);
 
             if (Scribe.mode == LoadSaveMode.LoadingVars)
             {
@@ -378,8 +493,11 @@ namespace AwesomeInventory.Loadout
                 {
                     this.Add(groupSelector);
                 }
+
+                this.Costumes = costumes;
             }
         }
+#pragma warning restore CS0108 // Member hides inherited member; missing new keyword
 
         /// <summary>
         /// Update readout if the loadout has changed.
@@ -439,6 +557,22 @@ namespace AwesomeInventory.Loadout
         private void RemoveThingSelectorCallback(ThingSelector thingSelector)
         {
             _isDirty = true;
+        }
+
+        private void NotifySiblingsSelectorAdded(ThingGroupSelector selector)
+        {
+            if (this is AwesomeInventoryCostume costume)
+                costume.Base.Costumes.ForEach(c => c.Add(selector, true));
+            else
+                this.Costumes.ForEach(c => c.Add(selector, true));
+        }
+
+        private void NotifySiblingsSelectorRemoved(ThingGroupSelector selector)
+        {
+            if (this is AwesomeInventoryCostume costume)
+                costume.Base.Costumes.ForEach(c => c.Remove(selector, true));
+            else
+                this.Costumes.ForEach(c => c.Remove(selector, true));
         }
     }
 }

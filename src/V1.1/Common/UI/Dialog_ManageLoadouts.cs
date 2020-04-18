@@ -151,6 +151,10 @@ namespace AwesomeInventory.UI
                     _currentLoadout = loadout;
                     _resettables.ForEach(r => r.Reset());
                 }
+                else
+                {
+                    _currentLoadout = _pawn.GetLoadout();
+                }
             }
             else
             {
@@ -327,7 +331,14 @@ namespace AwesomeInventory.UI
                 Find.WindowStack.Add(new Dialog_ManageOutfitSettings(_currentLoadout.filter));
             }
 
-            canvas = canvas.ReplacexMin(canvas.x + GenUI.SmallIconSize);
+            Rect costumeIconRect = globalSettingIconRect.ReplaceX(globalSettingIconRect.xMax);
+            TooltipHandler.TipRegion(costumeIconRect, UIText.CostumeSettings.TranslateSimple());
+            if (Widgets.ButtonImage(costumeIconRect, TexResource.Costume))
+            {
+                Find.WindowStack.Add(new Dialog_Costume(_currentLoadout, _pawn));
+            }
+
+            canvas = canvas.ReplacexMin(canvas.x + GenUI.SmallIconSize * 2);
             Rect drawingRect = new Rect(0, canvas.y, GenUI.SmallIconSize * 2 + DrawUtility.TwentyCharsWidth + GenUI.GapTiny * 2, GenUI.ListSpacing);
             Rect centeredRect = drawingRect.CenteredOnXIn(canvas);
             WidgetRow widgetRow = new WidgetRow(centeredRect.x, centeredRect.y, UIDirection.RightThenDown);
@@ -360,7 +371,7 @@ namespace AwesomeInventory.UI
         {
             ValidateArg.NotNull(row, nameof(row));
 
-            List<AwesomeInventoryLoadout> loadouts = LoadoutManager.Loadouts;
+            List<AwesomeInventoryLoadout> loadouts = LoadoutManager.Loadouts.Where(l => l.GetType() != typeof(AwesomeInventoryCostume)).ToList();
 
             if (row.ButtonText(UIText.DeleteLoadout.TranslateSimple()))
             {

@@ -51,6 +51,16 @@ namespace AwesomeInventory
         public float GearTabHeight = 500f;
 
         /// <summary>
+        /// Width of the costume window.
+        /// </summary>
+        public float CostumeWindowWidth = 800f;
+
+        /// <summary>
+        /// Height of the costume window.
+        /// </summary>
+        public float CostumeWindowHeight = 350f;
+
+        /// <summary>
         /// Save state.
         /// </summary>
         public override void ExposeData()

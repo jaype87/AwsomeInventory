@@ -10,10 +10,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AwesomeInventory.Resources;
+using AwesomeInventory.Jobs;
 using RimWorld;
 using UnityEngine;
 using Verse;
+using Verse.AI;
 
 namespace AwesomeInventory.Loadout
 {
@@ -206,6 +207,8 @@ namespace AwesomeInventory.Loadout
 
             this.Loadout = newLoadout;
             _initialized = true;
+
+            this.ChangeCostume(newLoadout);
         }
 
         /// <summary>
@@ -221,6 +224,80 @@ namespace AwesomeInventory.Loadout
             this.InventoryMargins = null;
             _bottomThresholdLookup = null;
             _initialized = false;
+        }
+
+        /// <summary>
+        /// Change getup when switch loadout.
+        /// </summary>
+        /// <param name="newLoadout"> New loadout pawn switch to. </param>
+        protected void ChangeCostume(AwesomeInventoryLoadout newLoadout)
+        {
+            ValidateArg.NotNull(newLoadout, nameof(newLoadout));
+
+            if (newLoadout is AwesomeInventoryCostume costume)
+            {
+                ConcurrentBag<Apparel> wornApparels = new ConcurrentBag<Apparel>();
+                Parallel.ForEach(
+                    Partitioner.Create(_pawn.apparel.WornApparel)
+                    , (Apparel apparel) =>
+                    {
+                        if (!costume.CostumeItems.Any(c => c.Allows(apparel, out _)))
+                        {
+                            wornApparels.Add(apparel);
+                        }
+                    });
+                if (wornApparels.Any())
+                {
+                    _pawn.jobs.StopAll(true);
+                    foreach (Apparel apparel in wornApparels)
+                    {
+                        Job job = JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_Undress, apparel);
+                        if (_pawn.CurJob == null)
+                            _pawn.jobs.StartJob(job);
+                        else
+                            _pawn.jobs.jobQueue.EnqueueLast(job);
+                    }
+                }
+
+                if (costume.CostumeItems.Any())
+                {
+                    ConcurrentBag<Thing> things = new ConcurrentBag<Thing>();
+                    Parallel.ForEach(
+                        Partitioner.Create(costume.CostumeItems)
+                        , (ThingGroupSelector selector) =>
+                        {
+                            Thing thing = _pawn.inventory.innerContainer.FirstOrDefault(t => selector.Allows(t, out _));
+                            if (thing != null)
+                                things.Add(thing);
+                        });
+
+                    if (things.Any())
+                    {
+                        if (_pawn.jobs.curJob.def != AwesomeInventory_JobDefOf.AwesomeInventory_Undress)
+                            _pawn.jobs.StopAll(true);
+
+                        foreach (Thing thing in things.Distinct())
+                        {
+                            if (thing.def.IsApparel)
+                            {
+                                Job job = new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, thing, false);
+                                if (_pawn.CurJob == null)
+                                    _pawn.jobs.StartJob(job);
+                                else
+                                    _pawn.jobs.jobQueue.EnqueueLast(job);
+                            }
+                            else if (thing.def.IsWeapon)
+                            {
+                                Job job = JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_MapEquip, thing);
+                                if (_pawn.CurJob == null)
+                                    _pawn.jobs.StartJob(job);
+                                else
+                                    _pawn.jobs.jobQueue.EnqueueLast(job);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>

@@ -28,7 +28,7 @@ namespace AwesomeInventory.Jobs
         {
             ValidateArg.NotNull(pawn, nameof(pawn));
 #if DEBUG
-            Log.Message(pawn.Name + "Looking for apparels");
+            Log.Message(pawn.Name + " Looking for apparels");
 #endif
 
             CompAwesomeInventoryLoadout ailoadout = ((ThingWithComps)pawn).TryGetComp<CompAwesomeInventoryLoadout>();
@@ -64,16 +64,21 @@ namespace AwesomeInventory.Jobs
 
                     if (targetA != null)
                     {
-                        Job job = new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, targetA, false);
-                        if (pawn.Reserve(targetA, job, errorOnFailed: false))
+                        if (pawn.outfits?.CurrentOutfit is AwesomeInventoryCostume costume)
                         {
-                            return job;
+                            if (costume.CostumeItems.Any(c => c.Allows(targetA, out _)))
+                            {
+                                return new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, targetA, false);
+                            }
+                            else
+                            {
+                                Job job = JobMaker.MakeJob(JobDefOf.TakeInventory, targetA);
+                                job.count = targetA.stackCount;
+                                return job;
+                            }
                         }
-                        else
-                        {
-                            JobMaker.ReturnToPool(job);
-                            return null;
-                        }
+
+                        return new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, targetA, false);
                     }
                 }
             }

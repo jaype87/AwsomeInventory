@@ -148,11 +148,15 @@ namespace AwesomeInventory.UI
 
         public static readonly Texture2D ArrowUp = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/arrowUp");
 
+        public static readonly Texture2D Costume = ContentFinder<Texture2D>.Get("UI/Icons/Costume");
+
         public static readonly Texture2D DarkBackground = SolidColorMaterials.NewSolidColorTexture(0f, 0f, 0f, .2f);
 
         public static readonly Texture2D DoubleDownArrow = ContentFinder<Texture2D>.Get("UI/Icons/DoubleDownArrow", true);
 
         public static readonly Texture2D GearHelmet = ContentFinder<Texture2D>.Get("UI/Icons/Gear_Helmet_Colored", true);
+
+        public static readonly Texture2D Getup = ContentFinder<Texture2D>.Get("UI/Icons/Getup");
 
         public static readonly Texture2D IconEdit = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/edit");
 

@@ -13,7 +13,7 @@ using Verse;
 namespace AwesomeInventory.Common.HarmonyPatches
 {
     /// <summary>
-    /// Patch <see cref="Thing.SplitOff(int)"/>, so to synchronize with <see cref="AILoadout"/>.
+    /// Patch <see cref="Thing.SplitOff(int)"/>, so to synchronize with <see cref="AwesomeInventoryLoadout"/>.
     /// </summary>
     [StaticConstructorOnStartup]
     public static class Thing_RPGI_Patch
@@ -26,7 +26,7 @@ namespace AwesomeInventory.Common.HarmonyPatches
         }
 
         /// <summary>
-        /// Patch <see cref="Thing.SplitOff(int)"/>, so to synchronize with <see cref="AILoadout"/>.
+        /// Patch <see cref="Thing.SplitOff(int)"/>, so to synchronize with <see cref="AwesomeInventoryLoadout"/>.
         /// </summary>
         /// <param name="__instance"> Thing that is being splitted. </param>
         /// <param name="count"> Number of thing that is splitted. </param>

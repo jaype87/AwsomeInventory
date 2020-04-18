@@ -28,7 +28,7 @@ namespace AwesomeInventory.Loadout
             bool needRestock = base.Satisfied(pawn)
                             && ((pawn.TryGetComp<CompAwesomeInventoryLoadout>()?.NeedRestock ?? false)
                                 ||
-                                pawn.equipment.Primary == null);
+                                (pawn.equipment.Primary == null && AwesomeInvnetoryMod.Settings.AutoEquipWeapon));
 #if DEBUG
             Log.Message(
                 string.Format(

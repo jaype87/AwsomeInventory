@@ -33,17 +33,17 @@ namespace AwesomeInventory.Loadout
         /// <summary>
         /// A callback for stack count changed event.
         /// </summary>
-        private Action<ThingGroupSelector, int> _stackCountChangedCallback;
+        private List<Action<ThingGroupSelector, int>> _stackCountChangedCallbacks = new List<Action<ThingGroupSelector, int>>();
 
         /// <summary>
         /// A callback that would be invoked when a <see cref="ThingSelector"/> is added to this group.
         /// </summary>
-        private Action<ThingSelector> _addNewThingSelectorCallback;
+        private List<Action<ThingSelector>> _addNewThingSelectorCallbacks = new List<Action<ThingSelector>>();
 
         /// <summary>
         /// A callback that would be invoked when a <see cref="ThingSelector"/> is removed from this group.
         /// </summary>
-        private Action<ThingSelector> _removeThingSelectorCallback;
+        private List<Action<ThingSelector>> _removeThingSelectorCallbacks = new List<Action<ThingSelector>>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThingGroupSelector"/> class.
@@ -156,55 +156,61 @@ namespace AwesomeInventory.Loadout
         public void SetBottomThreshold(bool useBottomThreshold, int thresholdCount)
         {
             _bottomThresholdCount = (_useBottomThreshold = useBottomThreshold) ? thresholdCount : 0;
-            _stackCountChangedCallback?.Invoke(this, this.AllowedStackCount);
+            _stackCountChangedCallbacks.ForEach(action => action.Invoke(this, this.AllowedStackCount));
         }
 
         /// <summary>
         /// Add callback to stack-count-changed event.
         /// </summary>
         /// <param name="callback"> It would be invoked when stack count in this <see cref="ThingGroupSelector"/> is changed. </param>
-        /// <returns> Returns true if <paramref name="callback"/> is added, otherwise, false when there is already a callback in place. </returns>
-        public bool AddStackCountChangedCallback(Action<ThingGroupSelector, int> callback)
+        public void AddStackCountChangedCallback(Action<ThingGroupSelector, int> callback)
         {
-            if (_stackCountChangedCallback == null)
-            {
-                _stackCountChangedCallback = callback;
-                return true;
-            }
-
-            return false;
+            _stackCountChangedCallbacks.Add(callback);
         }
 
         /// <summary>
         /// Add callback to add-new-thingselector event.
         /// </summary>
         /// <param name="callback"> It would be invoked when a new <see cref="ThingSelector"/> is added to this <see cref="ThingGroupSelector"/>. </param>
-        /// <returns> Returns true if <paramref name="callback"/> is added, otherwise, false when there is already a callback in place. </returns>
-        public bool AddAddNewThingSelectorCallback(Action<ThingSelector> callback)
+        public void AddAddNewThingSelectorCallback(Action<ThingSelector> callback)
         {
-            if (_addNewThingSelectorCallback == null)
-            {
-                _addNewThingSelectorCallback = callback;
-                return true;
-            }
-
-            return false;
+            _addNewThingSelectorCallbacks.Add(callback);
         }
 
         /// <summary>
         /// Add callback to add-remove-thingselector event.
         /// </summary>
         /// <param name="callback"> It would be invoked when a <see cref="ThingSelector"/> is removed from this <see cref="ThingGroupSelector"/>. </param>
-        /// <returns> Returns true if <paramref name="callback"/> is added, otherwise, false when there is already a callback in place. </returns>
-        public bool AddRemoveThingSelectorCallback(Action<ThingSelector> callback)
+        public void AddRemoveThingSelectorCallback(Action<ThingSelector> callback)
         {
-            if (_removeThingSelectorCallback == null)
-            {
-                _removeThingSelectorCallback = callback;
-                return true;
-            }
+            _removeThingSelectorCallbacks.Add(callback);
+        }
 
-            return false;
+        /// <summary>
+        /// Remove callback to stack-count-changed event.
+        /// </summary>
+        /// <param name="callback"> It would be invoked when stack count in this <see cref="ThingGroupSelector"/> is changed. </param>
+        public void RemoveStackCountChangedCallback(Action<ThingGroupSelector, int> callback)
+        {
+            _stackCountChangedCallbacks.Remove(callback);
+        }
+
+        /// <summary>
+        /// Remove callback to add-new-thingselector event.
+        /// </summary>
+        /// <param name="callback"> It would be invoked when a new <see cref="ThingSelector"/> is added to this <see cref="ThingGroupSelector"/>. </param>
+        public void RemoveAddNewThingSelectorCallback(Action<ThingSelector> callback)
+        {
+            _addNewThingSelectorCallbacks.Remove(callback);
+        }
+
+        /// <summary>
+        /// Remove callback to add-remove-thingselector event.
+        /// </summary>
+        /// <param name="callback"> It would be invoked when a <see cref="ThingSelector"/> is removed from this <see cref="ThingGroupSelector"/>. </param>
+        public void RemoveRemoveThingSelectorCallback(Action<ThingSelector> callback)
+        {
+            _removeThingSelectorCallbacks.Remove(callback);
         }
 
         /// <summary>
@@ -227,7 +233,7 @@ namespace AwesomeInventory.Loadout
             int oldStackCount = this.AllowedStackCount;
             this.AllowedStackCount = stackCount;
             _selectors.ForEach(s => s.SetStackCount(stackCount));
-            this._stackCountChangedCallback?.Invoke(this, oldStackCount);
+            this._stackCountChangedCallbacks.ForEach(action => action.Invoke(this, oldStackCount));
         }
 
         /// <summary>
@@ -267,13 +273,13 @@ namespace AwesomeInventory.Loadout
         {
             _selectors.Add(item);
             this.AddQualityAndHitpointsChangedCallbackTo(item);
-            this._addNewThingSelectorCallback?.Invoke(item);
+            this._addNewThingSelectorCallbacks.ForEach(action => action.Invoke(item));
         }
 
         /// <inheritdoc/>
         public void Clear()
         {
-            _selectors.ForEach(t => this._removeThingSelectorCallback?.Invoke(t));
+            _selectors.ForEach(t => this._removeThingSelectorCallbacks.ForEach(action => action.Invoke(t)));
             _selectors.Clear();
         }
 
@@ -306,7 +312,7 @@ namespace AwesomeInventory.Loadout
             if (item == null)
                 return false;
 
-            this._removeThingSelectorCallback?.Invoke(item);
+            this._removeThingSelectorCallbacks.ForEach(action => action.Invoke(item));
             return _selectors.Remove(item);
         }
 

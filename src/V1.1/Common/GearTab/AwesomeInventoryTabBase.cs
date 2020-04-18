@@ -230,7 +230,7 @@ namespace AwesomeInventory.UI
                     }
                     else
                     {
-                        throw new InvalidOperationException(Resources.ErrorMessage.NoDisplayOptionChosen);
+                        throw new InvalidOperationException(ErrorMessage.NoDisplayOptionChosen);
                     }
 
                     GUI.EndGroup();

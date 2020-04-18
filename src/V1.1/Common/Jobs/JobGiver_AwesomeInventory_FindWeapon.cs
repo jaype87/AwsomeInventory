@@ -30,6 +30,7 @@ namespace AwesomeInventory.Jobs
         protected override Job TryGiveJob(Pawn pawn)
         {
 #if DEBUG
+            ValidateArg.NotNull(pawn, nameof(pawn));
             Log.Message(pawn.Name + "Looking for weapons");
 #endif
             ValidateArg.NotNull(pawn, nameof(pawn));

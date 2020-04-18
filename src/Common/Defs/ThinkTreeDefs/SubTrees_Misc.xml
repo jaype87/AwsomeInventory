@@ -18,4 +18,12 @@
             </subNodes>
         </thinkRoot>
     </ThinkTreeDef>
+
+    <ThinkTreeDef>
+        <defName>AwesomeInventoryLoadoutSupplement</defName>
+        <insertTag>Humanlike_PostDuty</insertTag>
+        <insertPriority>101</insertPriority>
+        <thinkRoot Class="AwesomeInventory.Jobs.JobGiver_OptimizeApparel_Supplement">
+        </thinkRoot>
+    </ThinkTreeDef>
 </Defs>

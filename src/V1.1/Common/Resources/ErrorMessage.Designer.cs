@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AwesomeInventory.Resources {
+namespace AwesomeInventory {
     using System;
     
     
@@ -138,6 +138,15 @@ namespace AwesomeInventory.Resources {
         public static string ReportString {
             get {
                 return ResourceManager.GetString("ReportString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Corgi_TryToDeleteLastLoadout.
+        /// </summary>
+        public static string TryToDeleteLastLoadout {
+            get {
+                return ResourceManager.GetString("TryToDeleteLastLoadout", resourceCulture);
             }
         }
         

@@ -113,15 +113,29 @@ namespace AwesomeInventory.UI
 
         public const string ComfyTemperatureRange = "ComfyTemperatureRange";
 
+        public const string CopyCostume = "AwesomeInventory_CopyCostume";
+
         public const string CopyLoadout = "AwesomeInventory_CopyLoadout";
 
+        public const string CopySuffix = "AwesomeInventory_CopySuffix";
+
+        public const string Costume = "AwesomeInventory_Costume";
+
+        public const string CostumeSettings = "AwesomeInventory_CostumeSettings";
+
         public const string CountFieldTip = "AwesomeInventory_CountFieldTip";
+
+        public const string CreateCostume = "AwesomeInventory_CreateCostume";
 
         public const string CurrentTemperature = "AwesomeInventory_CurrentTemperature";
 
         public const string Customize = "AwesomeInventory_Customize";
 
+        public const string DeleteCostume = "AwesomeInventory_DeleteCostume";
+
         public const string DeleteLoadout = "AwesomeInventory_DeleteLoadout";
+
+        public const string DontUseCostume = "AwesomeInventory_DontUseCostume";
 
         public const string DragToReorder = "AwesomeInventory_DragToReorder";
 
@@ -145,6 +159,10 @@ namespace AwesomeInventory.UI
 
         public const string Head = "AwesomeInventory_Head";
 
+        public const string ItemsInCostume = "AwesomeInventory_ItemsInCostume";
+
+        public const string ApparelsInLoadout = "AwesomeInventory_ApparelsInLoadout";
+
         public const string JealousTab = "AwesomeInventory_JealousTab";
 
         public const string LoadoutName = "AwesomeInventory_LoadoutName";
@@ -156,6 +174,10 @@ namespace AwesomeInventory.UI
         public const string MouseOverNumbersForDetails = "AwesomeInventory_MouseOverNumbersForDetails";
 
         public const string NewLoadout = "AwesomeInventory_NewLoadout";
+
+        public const string NoCostumeAvailable = "AwesomeInventory_NoCostumeAvailable";
+
+        public const string NoCostumeSelected = "AwesomeInventory_NoCostumeSelected";
 
         public const string NoLoadout = "AwesomeInventory_NoLoadout";
 
@@ -184,6 +206,8 @@ namespace AwesomeInventory.UI
         public const string RestockAlways = "AwesomeInventory_RestockAlways";
 
         public const string RestockBottomThreshold = "AwesomeInventory_RestockBottomThreshold";
+
+        public const string SelectCostume = "AwesomeInventory_SelectCostume";
 
         public const string SelectLoadout = "AwesomeInventory_SelectLoadout";
 
