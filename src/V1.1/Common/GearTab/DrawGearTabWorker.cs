@@ -456,7 +456,7 @@ namespace AwesomeInventory.UI
                 WidgetRow row = new WidgetRow(x, rollingY, UIDirection.LeftThenDown, width);
                 if (row.ButtonText(UIText.OpenLoadout.TranslateSimple()))
                 {
-                    if (selPawn.outfits.CurrentOutfit is AwesomeInventoryLoadout)
+                    if (selPawn.outfits?.CurrentOutfit is AwesomeInventoryLoadout)
                     {
                         Find.WindowStack.Add(
                             AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(selPawn.outfits.CurrentOutfit, selPawn));
@@ -525,6 +525,9 @@ namespace AwesomeInventory.UI
             List<FloatMenuOption> BuildMenuOptions(IList<Outfit> outfits)
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
+                if (outfits == null)
+                    return options;
+
                 for (int i = 0; i < outfits.Count; i++)
                 {
                     int local_i = i;

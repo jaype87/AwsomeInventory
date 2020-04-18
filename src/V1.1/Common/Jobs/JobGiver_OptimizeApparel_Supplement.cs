@@ -21,10 +21,16 @@ namespace AwesomeInventory.Jobs
     /// <remarks> Vanilla optimizaiton only looks for better apparels on the map. </remarks>
     public class JobGiver_OptimizeApparel_Supplement : ThinkNode
     {
+        private int _optimizedTick = Find.TickManager.TicksGame;
+        private int _optmizedInterval = 6000;
+
         /// <inheritdoc/>
         public override ThinkResult TryIssueJobPackage(Pawn pawn, JobIssueParams jobParams)
         {
             ValidateArg.NotNull(pawn, nameof(pawn));
+
+            if (Find.TickManager.TicksGame < _optimizedTick)
+                return ThinkResult.NoJob;
 
             CompAwesomeInventoryLoadout comp = pawn.TryGetComp<CompAwesomeInventoryLoadout>();
             if (comp == null || !(comp.Loadout is AwesomeInventoryLoadout))
@@ -33,6 +39,12 @@ namespace AwesomeInventory.Jobs
             List<Thing> list = pawn.inventory?.innerContainer?.ToList();
             if (list == null)
                 return ThinkResult.NoJob;
+
+            if (!list.Any())
+            {
+                _optimizedTick += _optmizedInterval;
+                return ThinkResult.NoJob;
+            }
 
             float bestScore = 0f;
             Thing thing = null;
@@ -56,9 +68,14 @@ namespace AwesomeInventory.Jobs
             }
 
             if (thing == null)
+            {
+                _optimizedTick += _optmizedInterval;
                 return ThinkResult.NoJob;
+            }
             else
+            {
                 return new ThinkResult(new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, thing, false), this, JobTag.ChangingApparel);
+            }
         }
     }
 }

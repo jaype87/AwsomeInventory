@@ -101,13 +101,16 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         public override void ExposeData()
         {
-            base.ExposeData();
-
             AwesomeInventoryLoadout b = this.Base;
             Scribe_Collections.Look(ref _costumeItems, nameof(_costumeItems), LookMode.Reference);
             Scribe_References.Look(ref b, nameof(this.Base));
 
             this.Base = b;
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                _thingGroupSelectors = this.Base.ThingGroupSelectors;
+                _thingGroupSelectors.ForEach(g => this.Add(g, true));
+            }
         }
     }
 }

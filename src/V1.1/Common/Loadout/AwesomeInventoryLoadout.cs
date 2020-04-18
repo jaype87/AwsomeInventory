@@ -73,7 +73,7 @@ namespace AwesomeInventory.Loadout
         /// Initializes a new instance of the <see cref="AwesomeInventoryLoadout"/> class.
         /// </summary>
         /// <param name="other"> Copy <paramref name="other"/> to this loadout. </param>
-        /// <param name="shallow"> Make a shallow copy. </param>
+        /// <param name="shallow"> Make a shallow copy for costume. </param>
         public AwesomeInventoryLoadout(AwesomeInventoryLoadout other, bool shallow = false)
         {
             ValidateArg.NotNull(other, nameof(other));
@@ -133,6 +133,12 @@ namespace AwesomeInventory.Loadout
 
             pawn.SetLoadout(this);
         }
+
+        /// <summary>
+        /// Gets a list of ThingGroupSelector used by this loadout.
+        /// </summary>
+        /// <remarks> Should only be used for children costumes. </remarks>
+        public List<ThingGroupSelector> ThingGroupSelectors => _thingGroupSelectors;
 
         /// <summary>
         /// Gets costumes.
@@ -493,7 +499,10 @@ namespace AwesomeInventory.Loadout
                 {
                     this.Add(groupSelector);
                 }
+            }
 
+            if (Scribe.mode == LoadSaveMode.ResolvingCrossRefs)
+            {
                 this.Costumes = costumes;
             }
         }
