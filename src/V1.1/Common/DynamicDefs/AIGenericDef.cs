@@ -53,7 +53,7 @@ namespace AwesomeInventory.Loadout
         /// <summary>
         /// Gets a group used for requesting things from <see cref="ListerThings"/>.
         /// </summary>
-        public IEnumerable<ThingCategoryDef> ThingCategoryDefs { get; }
+        public IEnumerable<ThingCategoryDef> ThingCategoryDefs { get => thingCategories; private set => thingCategories = value.ToList(); }
 
         /// <summary>
         /// Gets a predicate function which returns true if <see cref="ThingDef"/> belongs.

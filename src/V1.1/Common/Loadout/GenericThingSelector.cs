@@ -51,7 +51,7 @@ namespace AwesomeInventory.Loadout
             ValidateArg.NotNull(other, nameof(other));
 
             _genericDef = other._genericDef;
-            _genericDef.thingCategories.ForEach(t => _thingFilter.SetAllow(t, true, _genericDef.ExcepDefs));
+            _genericDef.ThingCategoryDefs.ToList().ForEach(t => _thingFilter.SetAllow(t, true, _genericDef.ExcepDefs));
         }
 
         /// <inheritdoc/>

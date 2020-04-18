@@ -21,7 +21,7 @@ namespace AwesomeInventory.Jobs
     /// <remarks> Vanilla optimizaiton only looks for better apparels on the map. </remarks>
     public class JobGiver_OptimizeApparel_Supplement : ThinkNode
     {
-        private int _optimizedTick = Find.TickManager.TicksGame;
+        private int _optimizedTick;
         private int _optmizedInterval = 6000;
 
         /// <inheritdoc/>
@@ -42,7 +42,7 @@ namespace AwesomeInventory.Jobs
 
             if (!list.Any())
             {
-                _optimizedTick += _optmizedInterval;
+                _optimizedTick = _optmizedInterval + Find.TickManager.TicksGame;
                 return ThinkResult.NoJob;
             }
 
@@ -69,7 +69,7 @@ namespace AwesomeInventory.Jobs
 
             if (thing == null)
             {
-                _optimizedTick += _optmizedInterval;
+                _optimizedTick = _optmizedInterval + Find.TickManager.TicksGame;
                 return ThinkResult.NoJob;
             }
             else
