@@ -1066,7 +1066,7 @@ namespace AwesomeInventory.UI
             if (equipment.def.IsWeapon)
             {
                 string labelShort = equipment.LabelShort;
-                FloatMenuOption equipOption;
+                FloatMenuOption equipOption = null;
 
                 // Add put away option
                 if (selPawn.equipment.AllEquipmentListForReading.Contains(equipment)
@@ -1089,7 +1089,7 @@ namespace AwesomeInventory.UI
                 {
                     equipOption = new FloatMenuOption(UIText.CannotEquip.Translate(labelShort) + " (" + UIText.Incapable.Translate() + ")", null);
                 }
-                else
+                else if (EquipmentUtility.CanEquip(equipment, selPawn))
                 {
                     // Add equip option
                     string text5 = UIText.Equip.Translate(labelShort);
@@ -1129,7 +1129,8 @@ namespace AwesomeInventory.UI
                         });
                 }
 
-                menuOptions.Add(equipOption);
+                if (equipOption != null)
+                    menuOptions.Add(equipOption);
             }
         }
 

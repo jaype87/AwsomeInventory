@@ -93,7 +93,9 @@ namespace AwesomeInventory.Jobs
                                     , pawn.Map.listerThings.ThingsInGroup(ThingRequestGroup.Weapon)
                                     , (thing) => pair.Key.Allows(thing, out _)
                                                  &&
-                                                 !compLoadout.Loadout.IncludedInBlacklist(thing));
+                                                 !compLoadout.Loadout.IncludedInBlacklist(thing)
+                                                 &&
+                                                 EquipmentUtility.CanEquip(thing, pawn));
 
                             if (targetThingA != null)
                             {

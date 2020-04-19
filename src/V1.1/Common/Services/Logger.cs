@@ -16,12 +16,28 @@ namespace AwesomeInventory
     /// <summary>
     /// Implementation of <see cref="ILogger"/>.
     /// </summary>
+    [StaticConstructorOnStartup]
     public class Logger : ILogger
     {
+        static Logger()
+        {
+            AwesomeInventoryServiceProvider.AddService(typeof(ILogger), new Logger());
+        }
+
         /// <inheritdoc/>
         public void Message(string message)
         {
+#if DEBUG
             Log.Message(message, true);
+#endif
+        }
+
+        /// <inheritdoc/>
+        public void Warning(string warning)
+        {
+#if DEBUG
+            Log.Warning(warning, true);
+#endif
         }
     }
 }

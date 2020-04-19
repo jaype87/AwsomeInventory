@@ -72,8 +72,10 @@ namespace AwesomeInventory.Loadout
             ValidateArg.NotNull(other, nameof(other));
 
             this.GroupID = LoadoutManager.ThingGroupSelectorID;
-            AllowedStackCount = other.AllowedStackCount;
-            AllowedThing = other.AllowedThing;
+            this.AllowedStackCount = other.AllowedStackCount;
+            this.AllowedThing = other.AllowedThing;
+            _bottomThresholdCount = other._bottomThresholdCount;
+            _useBottomThreshold = other._useBottomThreshold;
 
             foreach (ThingSelector thingSelector in other._selectors)
             {
@@ -345,13 +347,11 @@ namespace AwesomeInventory.Loadout
             {
                 if (thingDef is AIGenericDef aIGenericDef)
                 {
-                    Log.Warning("Is generic def");
                     isGenericDef = true;
                     Scribe_Defs.Look(ref aIGenericDef, nameof(this.AllowedThing));
                 }
                 else
                 {
-                    Log.Warning("Is not a generic def");
                     Scribe_Defs.Look(ref thingDef, nameof(this.AllowedThing));
                 }
 

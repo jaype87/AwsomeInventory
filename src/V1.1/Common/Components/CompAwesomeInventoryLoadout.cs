@@ -33,6 +33,8 @@ namespace AwesomeInventory.Loadout
         private bool _initialized;
 
         private Dictionary<ThingGroupSelector, ThresholdState> _bottomThresholdLookup;
+        private List<ThingGroupSelector> _thingSelectors;
+        private List<ThresholdState> _thresholdStates;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompAwesomeInventoryLoadout"/> class.
@@ -199,6 +201,7 @@ namespace AwesomeInventory.Loadout
             this.Loadout?.RemoveRemoveThingGroupSelectorCallback(this.RemoveThingGroupSelectorCallback);
             this.Loadout?.RemoveStackCountChangedCallback(this.StackCountChangedCallback);
 
+            this.InitThreshold(newLoadout);
             this.UpdateInventoryMargin(newLoadout);
 
             newLoadout.AddAddNewThingGroupSelectorCallback(this.AddNewThingGroupSelectorCallback);
@@ -224,6 +227,15 @@ namespace AwesomeInventory.Loadout
             this.InventoryMargins = null;
             _bottomThresholdLookup = null;
             _initialized = false;
+        }
+
+        /// <summary>
+        /// This function is invoked after the thing which owns this comp has finished ExposeData().
+        /// </summary>
+        public override void PostExposeData()
+        {
+            base.PostExposeData();
+            Scribe_Collections.Look(ref _bottomThresholdLookup, nameof(_bottomThresholdLookup), LookMode.Reference, LookMode.Deep, ref _thingSelectors, ref _thresholdStates);
         }
 
         /// <summary>
@@ -555,6 +567,29 @@ namespace AwesomeInventory.Loadout
             }
         }
 
+        /// <summary>
+        /// Initialize bottom thresholds when pawn is spawned.
+        /// </summary>
+        /// <param name="groupSelectors"> Selectors from loadout. </param>
+        /// <remarks> This function is to make old saves compatible. </remarks>
+        private void InitThreshold(IEnumerable<ThingGroupSelector> groupSelectors)
+        {
+            if (_bottomThresholdLookup.Any())
+                return;
+
+            foreach (ThingGroupSelector selector in groupSelectors)
+            {
+                if (selector.UseBottomThreshold)
+                {
+                    _bottomThresholdLookup[selector] = new ThresholdState()
+                    {
+                        NegBottomThresholdCount = selector.BottomThresoldCount - selector.AllowedStackCount,
+                        CanRestock = true,
+                    };
+                }
+            }
+        }
+
         private bool ItemNeedsRestock(ThingGroupSelector groupSelector)
         {
             return this.InventoryMargins[groupSelector] < 0
@@ -563,7 +598,7 @@ namespace AwesomeInventory.Loadout
                    : true);
         }
 
-        private struct ThresholdState
+        private class ThresholdState : IExposable
         {
             /// <summary>
             /// This field is toggle to true when inventory level drops to BottomThresoldCount and
@@ -572,6 +607,15 @@ namespace AwesomeInventory.Loadout
             public bool CanRestock;
 
             public int NegBottomThresholdCount;
+
+            /// <summary>
+            /// Save states.
+            /// </summary>
+            public void ExposeData()
+            {
+                Scribe_Values.Look(ref this.CanRestock, nameof(this.CanRestock), forceSave: true);
+                Scribe_Values.Look(ref this.NegBottomThresholdCount, nameof(this.NegBottomThresholdCount), forceSave: true);
+            }
         }
 
         /// <summary>

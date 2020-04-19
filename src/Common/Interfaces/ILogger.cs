@@ -15,5 +15,11 @@ namespace AwesomeInventory
         /// </summary>
         /// <param name="message"> Message to write. </param>
         void Message(string message);
+
+        /// <summary>
+        /// Write warning to the logger.
+        /// </summary>
+        /// <param name="warning"> Warning to write. </param>
+        void Warning(string warning);
     }
 }

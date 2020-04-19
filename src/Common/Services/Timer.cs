@@ -5,7 +5,6 @@
 
 using System.Diagnostics;
 
-#if DEBUG
 namespace AwesomeInventory
 {
     /// <summary>
@@ -22,9 +21,11 @@ namespace AwesomeInventory
         /// <param name="logger"> Logger for writing messages. </param>
         public Timer(ILogger logger)
         {
+#if DEBUG
             _logger = logger;
             _stopwatch.Start();
             _stopwatch.Reset();
+#endif
         }
 
         /// <summary>
@@ -32,8 +33,10 @@ namespace AwesomeInventory
         /// </summary>
         public void Start()
         {
+#if DEBUG
             _stopwatch.Reset();
             _stopwatch.Start();
+#endif
         }
 
         /// <summary>
@@ -42,10 +45,11 @@ namespace AwesomeInventory
         /// <param name="header"> Header to prepand to output message. </param>
         public void Stop(string header)
         {
+#if DEBUG
             _stopwatch.Stop();
             long elapsed = _stopwatch.ElapsedMilliseconds;
             _logger?.Message(header + " time elapsed: " + elapsed + "ms");
+#endif
         }
     }
 }
-#endif
