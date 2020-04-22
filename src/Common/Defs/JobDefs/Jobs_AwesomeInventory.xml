@@ -31,4 +31,12 @@
         <suspendable>false</suspendable>
         <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
     </JobDef>
+
+    <JobDef>
+        <defName>AwesomeInventory_TakeInventory</defName>
+        <driverClass>JobDriver_TakeInventory</driverClass>
+        <reportString>taking TargetA.</reportString>
+        <allowOpportunisticPrefix>true</allowOpportunisticPrefix>
+        <suspendable>false</suspendable>
+    </JobDef>
 </Defs>

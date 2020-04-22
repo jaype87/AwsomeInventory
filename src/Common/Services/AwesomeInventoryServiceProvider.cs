@@ -114,6 +114,10 @@ namespace AwesomeInventory
             return (T)Activator.CreateInstance(concreteType, ctorArgs);
         }
 
+        /// <summary>
+        /// Add plugins to service provider.
+        /// </summary>
+        /// <param name="plugin"> Plugin to add. </param>
         public static void AddPlugIn(Plugin plugin)
         {
             ValidateArg.NotNull(plugin, nameof(plugin));
@@ -121,16 +125,31 @@ namespace AwesomeInventory
             _pluginService[plugin.ID] = plugin;
         }
 
+        /// <summary>
+        /// Get plugin of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T"> Type of the plugin. </typeparam>
+        /// <param name="id"> ID of the plugin. </param>
+        /// <returns> Instance of type <typeparamref name="T"/>. </returns>
         public static T GetPlugin<T>(int id)
         {
             return (T)_pluginService[id];
         }
 
+        /// <summary>
+        /// Get a list of plugins of <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T"> Type of plugins. </typeparam>
+        /// <returns> A list of plugins. </returns>
         public static IEnumerable<T> GetPluginsOfType<T>()
         {
             return _pluginService.Values.OfType<T>();
         }
 
+        /// <summary>
+        /// Gets next available plugin ID.
+        /// </summary>
+        /// <returns> ID for plugin. </returns>
         public static int GetNextAvailablePluginID()
         {
             int counter = 0;

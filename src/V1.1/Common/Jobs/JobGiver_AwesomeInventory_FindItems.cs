@@ -135,7 +135,7 @@ namespace AwesomeInventory.Jobs
             }
             else
             {
-                Job job = JobMaker.MakeJob(JobDefOf.TakeInventory, targetA);
+                Job job = JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_TakeInventory, targetA);
                 job.count = Math.Min(targetA.stackCount, stackcount * -1);
                 return job;
             }

@@ -237,6 +237,9 @@ namespace AwesomeInventory.UI
                     _apparelChanged = false;
                 }
             }
+
+            // StatPanelToggle toggle = new StatPanelToggle(TabRect.xMax, TabRect.y);
+            // StatPanelToggle.Draw();
         }
 
         private Rect GetHeaderRect(float x, string translatedText)

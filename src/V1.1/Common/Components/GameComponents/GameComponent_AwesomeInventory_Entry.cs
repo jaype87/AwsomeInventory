@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using AwesomeInventory.Jobs;
+using UnityEngine;
 using Verse;
 
 namespace AwesomeInventory

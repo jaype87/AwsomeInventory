@@ -44,6 +44,11 @@ namespace AwesomeInventory.Jobs
         /// </summary>
         public static JobDef AwesomeInventory_MapEquip;
 
+        /// <summary>
+        /// Restock items on wish list.
+        /// </summary>
+        public static JobDef AwesomeInventory_TakeInventory;
+
 #pragma warning restore CA2211 // Non-constant fields should not be visible
 #pragma warning restore SA1310 // Field names should not contain underscore
 #pragma warning restore SA1401 // Fields should be private

@@ -55,11 +55,8 @@ namespace AwesomeInventory.Jobs
         /// </summary>
         protected Func<Pawn, Thing, bool> _validatorBase = (Pawn p, Thing x) =>
         {
-            if (x.TryGetComp<CompBiocodable>() is CompBiocodable compBiocodable)
-            {
-                if (compBiocodable.CodedPawn != p)
-                    return false;
-            }
+            if (!EquipmentUtility.CanEquip(x, p))
+                return false;
 
             return p.CanReserve(x) && !x.IsForbidden(p) && x.IsSociallyProper(p);
         };

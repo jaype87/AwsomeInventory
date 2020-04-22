@@ -178,6 +178,7 @@
     <Compile Include="UI\QualityColorDefault.cs" />
     <Compile Include="UI\QualityColorPlugins\QualityColorCCMB.cs" />
     <Compile Include="UI\QualityColorPlugins\QualityColorLCT.cs" />
+    <Compile Include="UI\StatPanelToggle.cs" />
     <Compile Include="UI\Theme.cs" />
     <Compile Include="UI\WindowOnMouseDrag.cs" />
     <Compile Include="UnitTest\Loadout\compRPGILoadout\TestcompRPGILoadout.cs" />
@@ -243,6 +244,10 @@
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
       <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
