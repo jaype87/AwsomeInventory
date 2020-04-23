@@ -4,9 +4,9 @@
 // </copyright>
 
 using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
 using System.Reflection;
 using AwesomeInventory.Loadout;
-using AwesomeInventory.Utilities;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -37,13 +37,12 @@ namespace AwesomeInventory.Common.HarmonyPatches
             if (__instance != null)
             {
                 if (value is AwesomeInventoryLoadout loadout)
-                {
                     __instance.pawn.SetLoadout(loadout);
-                }
                 else
-                {
                     __instance.pawn.GetComp<CompAwesomeInventoryLoadout>()?.RemoveLoadout();
-                }
+
+                if (BetterPawnControlUtility.IsPresent)
+                    BetterPawnControlUtility.SaveState(new List<Pawn> { __instance.pawn });
             }
         }
     }

@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <Patch>
-	<Operation Class="PatchOperationAdd">
-		<xpath>Defs/ThingDef[@Name="BasePawn"]/comps</xpath>
-		<value>
-			<li>
-                <compClass>AwesomeInventory.Loadout.CompAwesomeInventoryLoadout</compClass>
+    <Operation Class="PatchOperationSequence">
+        <operations>
+            <li Class="PatchOperationTest">
+                <xpath>Defs/ThingDef[@Name="BasePawn"]/comps/li[compClass="AwesomeInventory.Loadout.CompAwesomeInventoryLoadout"]</xpath>
+                <success>Invert</success>
             </li>
-		</value>
-	</Operation>
+            <li Class="PatchOperationAdd">
+                <xpath>Defs/ThingDef[@Name="BasePawn"]/comps</xpath>
+                <value>
+                    <li>
+                        <compClass>AwesomeInventory.Loadout.CompAwesomeInventoryLoadout</compClass>
+                    </li>
+                </value>
+            </li>
+        </operations>
+    </Operation>
 </Patch>

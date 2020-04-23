@@ -75,6 +75,7 @@ namespace AwesomeInventory.Loadout
                 }
 
                 comp.UpdateForNewLoadout(loadout);
+
                 if (loadout == pawn.outfits.CurrentOutfit)
                 {
                     return;

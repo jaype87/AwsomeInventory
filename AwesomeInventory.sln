@@ -119,6 +119,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Keyed", "Keyed", "{AFC06769
 		src\Common\Languages\ChineseTraditional\Keyed\AwesomeInventory.xml = src\Common\Languages\ChineseTraditional\Keyed\AwesomeInventory.xml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RacePatches", "RacePatches", "{C772EBDA-6805-4E3C-96C2-036259E7CC88}"
+	ProjectSection(SolutionItems) = preProject
+		src\Common\Patches\RacePatches\Dragonian.xml = src\Common\Patches\RacePatches\Dragonian.xml
+		src\Common\Patches\RacePatches\Rabbie.xml = src\Common\Patches\RacePatches\Rabbie.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CE Build|Any CPU = CE Build|Any CPU
@@ -468,6 +474,7 @@ Global
 		{A5510120-6D54-4E98-B2CB-FCEA98F3120E} = {2BE75905-230F-433B-B761-F965FB0349C7}
 		{81E93C88-73B8-4DA8-8EF1-4D32EFDB56B0} = {4D6226DB-4959-4742-B90B-2B55BBE2BC01}
 		{AFC06769-C4C0-42AD-863C-E037F784EF25} = {81E93C88-73B8-4DA8-8EF1-4D32EFDB56B0}
+		{C772EBDA-6805-4E3C-96C2-036259E7CC88} = {D0A09C7F-E220-46EF-B831-8ABAF5958F24}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DF3E1E8A-DA28-4614-BE77-C5C3D6CE2974}
