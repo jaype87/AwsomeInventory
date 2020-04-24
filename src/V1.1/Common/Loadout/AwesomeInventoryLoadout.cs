@@ -408,7 +408,7 @@ namespace AwesomeInventory.Loadout
 
             if (!fromSibling)
             {
-                this.Remove(toRemove);
+                _thingGroupSelectors.RemoveAt(index);
             }
         }
 
