@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -22,7 +23,8 @@ namespace AwesomeInventory
         /// <summary>
         /// Package ID of the mod to support.
         /// </summary>
-        private static string _packageID = "VouLT.BetterPawnControl".ToLower();
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase", Justification = "Lower case required.")]
+        private static string _packageID = "VouLT.BetterPawnControl".ToLowerInvariant();
 
         private static string _assemblyName = "BetterPawnControl";
 
@@ -33,7 +35,7 @@ namespace AwesomeInventory
             IsPresent = LoadedModManager.RunningModsListForReading.Any(m => m.PackageId == _packageID);
             if (IsPresent)
             {
-                _saveState = AppDomain.CurrentDomain.GetAssemblies().FirstOrFallback((a) => a.GetName().Name == _assemblyName)
+                _saveState = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault((a) => a.GetName().Name == _assemblyName)
                     ?.GetType("BetterPawnControl.AssignManager").GetMethod("SaveCurrentState", BindingFlags.NonPublic | BindingFlags.Static);
 
                 if (_saveState == null)

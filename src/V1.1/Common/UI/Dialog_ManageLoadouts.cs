@@ -442,6 +442,9 @@ namespace AwesomeInventory.UI
                                 _currentLoadout = loadouts[i];
                                 _loadoutListScrollPosition = Vector2.zero;
                                 _pawn.SetLoadout(_currentLoadout);
+
+                                if (BetterPawnControlUtility.IsPresent)
+                                    BetterPawnControlUtility.SaveState(new List<Pawn> { _pawn });
                             }));
                     }
                 }
@@ -715,7 +718,7 @@ namespace AwesomeInventory.UI
 
                 Rect row = new Rect(0f, i * GenUI.ListSpacing, canvas.width, GenUI.ListSpacing);
                 Rect labelRect = new Rect(row);
-                TooltipHandler.TipRegion(row, _source[i].ThingDef.GetWeightAndBulkTip());
+                TooltipHandler.TipRegion(row, _source[i].ThingDef.GetDetailedTooltip());
 
                 labelRect.xMin += GenUI.GapTiny;
                 if (i % 2 == 0)

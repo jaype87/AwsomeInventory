@@ -66,7 +66,11 @@ namespace AwesomeInventory.UI
         {
             base.PreClose();
             if (_costume != null)
+            {
                 _pawn.outfits.CurrentOutfit = _costume;
+                if (BetterPawnControlUtility.IsPresent)
+                    BetterPawnControlUtility.SaveState(new List<Pawn> { _pawn });
+            }
 
             AwesomeInvnetoryMod.Settings.CostumeWindowHeight = windowRect.height;
             AwesomeInvnetoryMod.Settings.CostumeWindowWidth = windowRect.width;

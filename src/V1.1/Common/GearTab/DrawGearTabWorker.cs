@@ -498,7 +498,13 @@ namespace AwesomeInventory.UI
                                     BuildMenuOptions(costumes.OfType<Outfit>().ToList())
                                     .Concat(new FloatMenuOption(
                                         UIText.DontUseCostume.TranslateSimple()
-                                        , () => selPawn.outfits.CurrentOutfit = (loadout as AwesomeInventoryCostume)?.Base ?? loadout))
+                                        , () =>
+                                        {
+                                            selPawn.outfits.CurrentOutfit = (loadout as AwesomeInventoryCostume)?.Base ?? loadout;
+
+                                            if (BetterPawnControlUtility.IsPresent)
+                                                BetterPawnControlUtility.SaveState(new List<Pawn> { selPawn });
+                                        }))
                                     .ToList()));
                         }
                     }
@@ -541,6 +547,9 @@ namespace AwesomeInventory.UI
                                 Find.WindowStack.Add(
                                     AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(loadout, selPawn));
                             }
+
+                            if (BetterPawnControlUtility.IsPresent)
+                                BetterPawnControlUtility.SaveState(new List<Pawn> { selPawn });
                         }));
                 }
 
@@ -560,6 +569,9 @@ namespace AwesomeInventory.UI
                             selPawn.SetLoadout(emptyLoadout);
                             Find.WindowStack.Add(
                                 AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(emptyLoadout, selPawn));
+
+                            if (BetterPawnControlUtility.IsPresent)
+                                BetterPawnControlUtility.SaveState(new List<Pawn> { selPawn });
                         }),
                     new FloatMenuOption(
                          UIText.MakeNewLoadout.Translate(selPawn.NameShortColored)
@@ -570,6 +582,9 @@ namespace AwesomeInventory.UI
                             selPawn.SetLoadout(loadout);
                             Find.WindowStack.Add(
                                 AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(loadout, selPawn));
+
+                            if (BetterPawnControlUtility.IsPresent)
+                                BetterPawnControlUtility.SaveState(new List<Pawn> { selPawn });
                         }),
                 };
             }

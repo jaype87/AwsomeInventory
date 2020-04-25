@@ -3,8 +3,8 @@
 // Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
-using System.Diagnostics.CodeAnalysis;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using AwesomeInventory.Loadout;
 using HarmonyLib;
@@ -40,9 +40,6 @@ namespace AwesomeInventory.Common.HarmonyPatches
                     __instance.pawn.SetLoadout(loadout);
                 else
                     __instance.pawn.GetComp<CompAwesomeInventoryLoadout>()?.RemoveLoadout();
-
-                if (BetterPawnControlUtility.IsPresent)
-                    BetterPawnControlUtility.SaveState(new List<Pawn> { __instance.pawn });
             }
         }
     }

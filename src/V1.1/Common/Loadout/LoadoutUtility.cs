@@ -1,4 +1,4 @@
-﻿// <copyright file="LoadoutUtilities.cs" company="Zizhen Li">
+﻿// <copyright file="LoadoutUtility.cs" company="Zizhen Li">
 // Copyright (c) 2019 - 2020 Zizhen Li. All rights reserved.
 // Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -16,20 +16,17 @@ using Verse;
 
 namespace AwesomeInventory.Loadout
 {
+    /// <summary>
+    /// Utility support for loadout.
+    /// </summary>
     [StaticConstructorOnStartup]
     public static class LoadoutUtility
     {
-        #region Fields
-
-        private static float _labelSize = -1f;
-        private static float _margin = 6f;
-        private static bool _loadoutSet = false;
-        private static Texture2D _overburdenedTex;
-
-        #endregion Fields
-
-        #region Methods
-
+        /// <summary>
+        /// Get the current loadout from <paramref name="pawn"/>.
+        /// </summary>
+        /// <param name="pawn"> Target pawn. </param>
+        /// <returns> Loadout assigned to <paramref name="pawn"/>. </returns>
         public static AwesomeInventoryLoadout GetLoadout(this Pawn pawn)
         {
             if (pawn == null)
@@ -40,7 +37,7 @@ namespace AwesomeInventory.Loadout
             return pawn.TryGetComp<CompAwesomeInventoryLoadout>()?.Loadout;
         }
 
-        public static string GetWeightAndBulkTip(this ThingDef def, int count = 1)
+        public static string GetDetailedTooltip(this ThingDef def, int count = 1)
         {
             return def.description +
                 (count != 1 ? " x" + count : string.Empty) +
@@ -51,13 +48,6 @@ namespace AwesomeInventory.Loadout
         {
             return
                 UIText.Weight.Translate() + ": " + StatDefOf.Mass.ValueToString(def.GetStatValueAbstract(StatDefOf.Mass) * count, StatDefOf.Mass.toStringNumberSense);
-        }
-
-        public static string GetWeightTip(this Thing thing)
-        {
-            if (thing == null) throw new ArgumentNullException(nameof(thing));
-            return
-                UIText.Weight.Translate() + ": " + (thing.GetStatValue(StatDefOf.Mass) * thing.stackCount).ToStringMass();
         }
 
         /// <summary>
@@ -205,33 +195,18 @@ namespace AwesomeInventory.Loadout
             {
                 throw new ArgumentNullException(nameof(thing));
             }
+
             if (thing.TryGetQuality(out QualityCategory quality))
             {
                 return new ThingStuffPairWithQuality(thing.def, thing.Stuff, quality);
             }
+
             return new ThingStuffPairWithQuality
             {
                 thing = thing.def,
                 stuff = thing.Stuff,
-                quality = null
+                quality = null,
             };
         }
-
-        public static bool CompareThing(Thing x, Thing y)
-        {
-            if (ReferenceEquals(x, y))
-            {
-                return true;
-            }
-            if (x == null || y == null)
-            {
-                return false;
-            }
-            ThingStuffPairWithQuality pairX = x.MakeThingStuffPairWithQuality();
-            ThingStuffPairWithQuality pairY = y.MakeThingStuffPairWithQuality();
-            return pairX == pairY;
-        }
-
-        #endregion Methods
     }
 }
