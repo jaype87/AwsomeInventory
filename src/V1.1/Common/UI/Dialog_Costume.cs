@@ -68,7 +68,7 @@ namespace AwesomeInventory.UI
             if (_costume != null)
             {
                 _pawn.outfits.CurrentOutfit = _costume;
-                if (BetterPawnControlUtility.IsPresent)
+                if (BetterPawnControlUtility.IsActive)
                     BetterPawnControlUtility.SaveState(new List<Pawn> { _pawn });
             }
 

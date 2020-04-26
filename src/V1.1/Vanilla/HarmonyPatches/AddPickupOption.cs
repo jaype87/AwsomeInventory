@@ -47,32 +47,35 @@ namespace AwesomeInventory.HarmonyPatches
 
             IntVec3 position = IntVec3.FromVector3(clickPos);
             List<Thing> items = position.GetThingList(pawn.Map);
-            foreach (Thing item in items)
+            if (!PickUpAndHaulUtility.IsActive)
             {
-                if (item.def.category == ThingCategory.Item)
+                foreach (Thing item in items)
                 {
-                    int count = MassUtility.CountToPickUpUntilOverEncumbered(pawn, item);
-                    if (count == 0)
+                    if (item.def.category == ThingCategory.Item)
                     {
-                        continue;
+                        int count = MassUtility.CountToPickUpUntilOverEncumbered(pawn, item);
+                        if (count == 0)
+                        {
+                            continue;
+                        }
+
+                        count = Math.Min(count, item.stackCount);
+
+                        string displayText = UIText.Pickup.Translate(item.LabelNoCount + " x" + count);
+                        var option = FloatMenuUtility.DecoratePrioritizedTask(
+                            new FloatMenuOption(
+                                displayText
+                                , () =>
+                                {
+                                    Job job = JobMaker.MakeJob(JobDefOf.TakeInventory, item);
+                                    job.count = count;
+                                    job.checkEncumbrance = true;
+                                    pawn.jobs.TryTakeOrderedJob(job);
+                                })
+                            , pawn
+                            , item);
+                        opts.Add(option);
                     }
-
-                    count = Math.Min(count, item.stackCount);
-
-                    string displayText = UIText.Pickup.Translate(item.LabelNoCount + " x" + count);
-                    var option = FloatMenuUtility.DecoratePrioritizedTask(
-                        new FloatMenuOption(
-                            displayText
-                            , () =>
-                            {
-                                Job job = JobMaker.MakeJob(JobDefOf.TakeInventory, item);
-                                job.count = count;
-                                job.checkEncumbrance = true;
-                                pawn.jobs.TryTakeOrderedJob(job);
-                            })
-                        , pawn
-                        , item);
-                    opts.Add(option);
                 }
             }
         }

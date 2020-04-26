@@ -32,8 +32,8 @@ namespace AwesomeInventory
 
         static BetterPawnControlUtility()
         {
-            IsPresent = LoadedModManager.RunningModsListForReading.Any(m => m.PackageId == _packageID);
-            if (IsPresent)
+            IsActive = LoadedModManager.RunningModsListForReading.Any(m => m.PackageId == _packageID);
+            if (IsActive)
             {
                 _saveState = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault((a) => a.GetName().Name == _assemblyName)
                     ?.GetType("BetterPawnControl.AssignManager").GetMethod("SaveCurrentState", BindingFlags.NonPublic | BindingFlags.Static);
@@ -46,7 +46,7 @@ namespace AwesomeInventory
         /// <summary>
         /// Gets a value indicating whether the mod to support is present in the current save.
         /// </summary>
-        public static bool IsPresent { get; private set; }
+        public static bool IsActive { get; private set; }
 
         /// <summary>
         /// Save states of <paramref name="pawns"/> in BPC.

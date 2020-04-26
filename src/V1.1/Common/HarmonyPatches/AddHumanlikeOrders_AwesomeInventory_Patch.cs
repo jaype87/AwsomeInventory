@@ -54,7 +54,9 @@ namespace AwesomeInventory.Common.HarmonyPatches
                     {
                         ThingWithComps equipment = (ThingWithComps)thing;
 
-                        if (equipment.def.IsWeapon
+                        if (!SimpleSidearmUtility.IsActive
+                            && equipment.def.IsWeapon
+                            && !MassUtility.WillBeOverEncumberedAfterPickingUp(pawn, equipment, 1)
                             && !pawn.WorkTagIsDisabled(WorkTags.Violent)
                             && pawn.CanReach(equipment, PathEndMode.ClosestTouch, Danger.Deadly)
                             && pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation)

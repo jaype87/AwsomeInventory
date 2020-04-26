@@ -129,5 +129,28 @@ namespace AwesomeInventory.UI
 
             return tuple;
         }
+
+        /// <inheritdoc/>
+        protected override void DrawArmorStatsRow(WidgetRow row, Pawn pawn, StatDef stat, string label, bool apparelChanged)
+        {
+            ValidateArg.NotNull(row, nameof(row));
+
+            Tuple<float, string> tuple = this.GetArmorStat(pawn, stat, apparelChanged);
+            row.Label(label);
+            row.Gap((WidgetRow.LabelGap * 120) - row.FinalX);
+
+            if (stat == StatDefOf.ArmorRating_Blunt)
+                row.Label(Utility.FormatArmorValue(tuple.Item1, CEStrings.MPa.TranslateSimple()));
+            else if (stat == StatDefOf.ArmorRating_Sharp)
+                row.Label(Utility.FormatArmorValue(tuple.Item1, CEStrings.mmRHA.TranslateSimple()));
+            else if (stat == StatDefOf.ArmorRating_Heat)
+                row.Label(Utility.FormatArmorValue(tuple.Item1, UIText.ArmorHeat.TranslateSimple()));
+
+            Rect tipRegion = new Rect(0, row.FinalY, row.FinalX, WidgetRow.IconSize);
+            row.Gap(int.MaxValue);
+
+            TooltipHandler.TipRegion(tipRegion, tuple.Item2);
+            Widgets.DrawHighlightIfMouseover(tipRegion);
+        }
     }
 }

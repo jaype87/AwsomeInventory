@@ -476,7 +476,7 @@ namespace AwesomeInventory.UI
                                 _loadoutListScrollPosition = Vector2.zero;
                                 _pawn.SetLoadout(_currentLoadout);
 
-                                if (BetterPawnControlUtility.IsPresent)
+                                if (BetterPawnControlUtility.IsActive)
                                     BetterPawnControlUtility.SaveState(new List<Pawn> { _pawn });
                             }));
                     }

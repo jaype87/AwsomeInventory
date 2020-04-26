@@ -502,7 +502,7 @@ namespace AwesomeInventory.UI
                                         {
                                             selPawn.outfits.CurrentOutfit = (loadout as AwesomeInventoryCostume)?.Base ?? loadout;
 
-                                            if (BetterPawnControlUtility.IsPresent)
+                                            if (BetterPawnControlUtility.IsActive)
                                                 BetterPawnControlUtility.SaveState(new List<Pawn> { selPawn });
                                         }))
                                     .ToList()));
@@ -548,7 +548,7 @@ namespace AwesomeInventory.UI
                                     AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(loadout, selPawn));
                             }
 
-                            if (BetterPawnControlUtility.IsPresent)
+                            if (BetterPawnControlUtility.IsActive)
                                 BetterPawnControlUtility.SaveState(new List<Pawn> { selPawn });
                         }));
                 }
@@ -570,7 +570,7 @@ namespace AwesomeInventory.UI
                             Find.WindowStack.Add(
                                 AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(emptyLoadout, selPawn));
 
-                            if (BetterPawnControlUtility.IsPresent)
+                            if (BetterPawnControlUtility.IsActive)
                                 BetterPawnControlUtility.SaveState(new List<Pawn> { selPawn });
                         }),
                     new FloatMenuOption(
@@ -583,7 +583,7 @@ namespace AwesomeInventory.UI
                             Find.WindowStack.Add(
                                 AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(loadout, selPawn));
 
-                            if (BetterPawnControlUtility.IsPresent)
+                            if (BetterPawnControlUtility.IsActive)
                                 BetterPawnControlUtility.SaveState(new List<Pawn> { selPawn });
                         }),
                 };
