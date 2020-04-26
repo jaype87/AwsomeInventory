@@ -35,6 +35,7 @@ namespace AwesomeInventory.Loadout
         private Dictionary<ThingGroupSelector, ThresholdState> _bottomThresholdLookup;
         private List<ThingGroupSelector> _thingSelectors;
         private List<ThresholdState> _thresholdStates;
+        private List<Apparel> _apparelsBeforeChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompAwesomeInventoryLoadout"/> class.
@@ -208,10 +209,11 @@ namespace AwesomeInventory.Loadout
             newLoadout.AddRemoveThingGroupSelectorCallback(this.RemoveThingGroupSelectorCallback);
             newLoadout.AddStackCountChangedCallback(this.StackCountChangedCallback);
 
+            AwesomeInventoryLoadout oldLoadout = this.Loadout;
             this.Loadout = newLoadout;
             _initialized = true;
 
-            this.ChangeCostume(newLoadout);
+            this.ChangeCostume(newLoadout, oldLoadout);
         }
 
         /// <summary>
@@ -236,18 +238,25 @@ namespace AwesomeInventory.Loadout
         {
             base.PostExposeData();
             Scribe_Collections.Look(ref _bottomThresholdLookup, nameof(_bottomThresholdLookup), LookMode.Reference, LookMode.Deep, ref _thingSelectors, ref _thresholdStates);
+            Scribe_Collections.Look(ref _apparelsBeforeChanged, nameof(_apparelsBeforeChanged), LookMode.Reference);
         }
 
         /// <summary>
         /// Change getup when switch loadout.
         /// </summary>
         /// <param name="newLoadout"> New loadout pawn switch to. </param>
-        protected void ChangeCostume(AwesomeInventoryLoadout newLoadout)
+        /// <param name="oldLoadout"> Loadout that is replaced with <paramref name="newLoadout"/>. </param>
+        protected void ChangeCostume(AwesomeInventoryLoadout newLoadout, AwesomeInventoryLoadout oldLoadout)
         {
             ValidateArg.NotNull(newLoadout, nameof(newLoadout));
 
             if (newLoadout is AwesomeInventoryCostume costume)
             {
+                if (oldLoadout != null && oldLoadout.GetType() == typeof(AwesomeInventoryLoadout))
+                {
+                    _apparelsBeforeChanged = new List<Apparel>(_pawn.apparel.WornApparel);
+                }
+
                 ConcurrentBag<Apparel> wornApparels = new ConcurrentBag<Apparel>();
                 Parallel.ForEach(
                     Partitioner.Create(_pawn.apparel.WornApparel)
@@ -260,15 +269,7 @@ namespace AwesomeInventory.Loadout
                     });
                 if (wornApparels.Any())
                 {
-                    _pawn.jobs.StopAll(true);
-                    foreach (Apparel apparel in wornApparels)
-                    {
-                        Job job = JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_Undress, apparel);
-                        if (_pawn.CurJob == null)
-                            _pawn.jobs.StartJob(job);
-                        else
-                            _pawn.jobs.jobQueue.EnqueueLast(job);
-                    }
+                    StartUndressJobs(wornApparels, _pawn);
                 }
 
                 if (costume.CostumeItems.Any())
@@ -308,6 +309,55 @@ namespace AwesomeInventory.Loadout
                             }
                         }
                     }
+                }
+            }
+            else if (oldLoadout is AwesomeInventoryCostume oldCostume && newLoadout.GetType() == typeof(AwesomeInventoryLoadout))
+            {
+                if (_apparelsBeforeChanged != null)
+                {
+                    ConcurrentBag<Apparel> apparelsToRemove = new ConcurrentBag<Apparel>();
+                    Parallel.ForEach(
+                        Partitioner.Create(_pawn.apparel.WornApparel)
+                        , (Apparel apparel) =>
+                        {
+                            if (!_apparelsBeforeChanged.Contains(apparel) && !_pawn.outfits.forcedHandler.IsForced(apparel))
+                                apparelsToRemove.Add(apparel);
+                        });
+
+                    if (apparelsToRemove.Any())
+                    {
+                        StartUndressJobs(apparelsToRemove, _pawn);
+                    }
+
+                    if (_pawn.jobs.curJob.def != AwesomeInventory_JobDefOf.AwesomeInventory_Undress)
+                        _pawn.jobs.StopAll(true);
+
+                    foreach (Apparel apparel1 in _apparelsBeforeChanged)
+                    {
+                        if (_pawn.inventory.innerContainer.Contains(apparel1))
+                        {
+                            Job job = new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, apparel1, false);
+                            if (_pawn.CurJob == null)
+                                _pawn.jobs.StartJob(job);
+                            else
+                                _pawn.jobs.jobQueue.EnqueueLast(job);
+                        }
+                    }
+
+                    _apparelsBeforeChanged = null;
+                }
+            }
+
+            void StartUndressJobs(IEnumerable<Apparel> apparels, Pawn pawn)
+            {
+                pawn.jobs.StopAll(true);
+                foreach (Apparel apparel in apparels)
+                {
+                    Job job = JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_Undress, apparel);
+                    if (pawn.CurJob == null)
+                        pawn.jobs.StartJob(job);
+                    else
+                        pawn.jobs.jobQueue.EnqueueLast(job);
                 }
             }
         }
@@ -623,6 +673,7 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         [SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types", Justification = "Not in design.")]
         [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:Elements should be ordered by access", Justification = "Convention")]
+        [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:Elements should appear in the correct order", Justification = "Convention")]
         protected struct ThingGroupSelectorPool
         {
             /// <summary>

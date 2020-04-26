@@ -97,6 +97,18 @@ namespace AwesomeInventory.Loadout
         }
 
         /// <summary>
+        /// Check if this costume is derived from <paramref name="loadout"/>.
+        /// </summary>
+        /// <param name="loadout"> Loadout used for query. </param>
+        /// <returns> Returns true if this costume is derived from <paramref name="loadout"/>. </returns>
+        public virtual bool CostumeOf(AwesomeInventoryLoadout loadout)
+        {
+            ValidateArg.NotNull(loadout, nameof(loadout));
+
+            return loadout.Costumes.Contains(this);
+        }
+
+        /// <summary>
         /// Save states of this costume to xml.
         /// </summary>
         public override void ExposeData()
