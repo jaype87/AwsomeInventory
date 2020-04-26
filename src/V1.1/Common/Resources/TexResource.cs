@@ -158,9 +158,11 @@ namespace AwesomeInventory.UI
 
         public static readonly Texture2D DarkBackground = SolidColorMaterials.NewSolidColorTexture(0f, 0f, 0f, .2f);
 
-        public static readonly Texture2D DoubleDownArrow = ContentFinder<Texture2D>.Get("UI/Icons/DoubleDownArrow", true);
+        public static readonly Texture2D DoubleDownArrow = ContentFinder<Texture2D>.Get("UI/Icons/DoubleDownArrow");
 
-        public static readonly Texture2D GearHelmet = ContentFinder<Texture2D>.Get("UI/Icons/Gear_Helmet_Colored", true);
+        public static readonly Texture2D GearHelmet = ContentFinder<Texture2D>.Get("UI/Icons/Gear_Helmet_Colored");
+
+        public static readonly Texture2D GenericTransform = ContentFinder<Texture2D>.Get("UI/Icons/GenericTransform");
 
         public static readonly Texture2D Getup = ContentFinder<Texture2D>.Get("UI/Icons/Getup");
 
@@ -207,6 +209,8 @@ namespace AwesomeInventory.UI
         public static readonly Texture2D ArmorSharp = ContentFinder<Texture2D>.Get("UI/Icons/Sandy_ArmorSharp_Icon");
 
         public static readonly Texture2D ArmorHeat = ContentFinder<Texture2D>.Get("UI/Icons/Sandy_ArmorHeat_Icon");
+
+        public static readonly Texture2D SortLetterA = ContentFinder<Texture2D>.Get("UI/Icons/SortLetterA");
 
         public static readonly Texture2D ThermometerHot = ContentFinder<Texture2D>.Get("UI/Icons/Hot_Thermometer");
 

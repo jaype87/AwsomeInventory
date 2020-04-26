@@ -4,6 +4,7 @@
 // </copyright>
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AwesomeInventory.Loadout;
@@ -338,9 +339,9 @@ namespace AwesomeInventory.UI
                 Find.WindowStack.Add(new Dialog_Costume(_currentLoadout, _pawn));
             }
 
-            canvas = canvas.ReplacexMin(canvas.x + GenUI.SmallIconSize * 2);
-            Rect drawingRect = new Rect(0, canvas.y, GenUI.SmallIconSize * 2 + DrawUtility.TwentyCharsWidth + GenUI.GapTiny * 2, GenUI.ListSpacing);
-            Rect centeredRect = drawingRect.CenteredOnXIn(canvas);
+            Rect centerCanvas = canvas.ReplacexMin(canvas.x + GenUI.SmallIconSize * 2).ReplacexMax(canvas.xMax - 2 * GenUI.SmallIconSize);
+            Rect drawingRect = new Rect(0, centerCanvas.y, GenUI.SmallIconSize * 2 + DrawUtility.TwentyCharsWidth + GenUI.GapTiny * 2, GenUI.ListSpacing);
+            Rect centeredRect = drawingRect.CenteredOnXIn(centerCanvas);
             WidgetRow widgetRow = new WidgetRow(centeredRect.x, centeredRect.y, UIDirection.RightThenDown);
 
             if (widgetRow.ButtonIcon(TexResource.TriangleLeft))
@@ -361,6 +362,38 @@ namespace AwesomeInventory.UI
 
             if (widgetRow.ButtonIcon(TexResource.TriangleRight))
                 WhiteBlacklistView.IsWishlist ^= true;
+
+            // Sort list alphabetically.
+            Rect sortRect = new Rect(centerCanvas.xMax, canvas.y, GenUI.SmallIconSize, canvas.height);
+            TooltipHandler.TipRegion(sortRect, UIText.SortListAlphabetically.TranslateSimple());
+            if (Widgets.ButtonImage(sortRect, TexResource.SortLetterA))
+            {
+                _currentLoadout.ThingGroupSelectors.SortBy(g => g.LabelCapNoCount.StripTags());
+            }
+
+            // Use generic stuff for all apparels in list.
+            Rect genericAssignRect = sortRect.ReplaceX(sortRect.xMax);
+            if (Widgets.ButtonImage(genericAssignRect, TexResource.GenericTransform))
+            {
+                Find.WindowStack.Add(
+                    new Dialog_InstantMessage(
+                        UIText.UseGenericStuff.TranslateSimple()
+                        , new Vector2(400, 150)
+                        , buttonAAction: () =>
+                        {
+                            foreach (ThingGroupSelector groupSelector in _currentLoadout)
+                            {
+                                if (groupSelector.AllowedThing.IsApparel)
+                                {
+                                    foreach (ThingSelector selector in groupSelector)
+                                    {
+                                        (selector as SingleThingSelector).SetStuff(null);
+                                    }
+                                }
+                            }
+                        }
+                        , buttonBText: UIText.CancelButton.TranslateSimple()));
+            }
         }
 
         /// <summary>

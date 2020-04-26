@@ -45,6 +45,7 @@
     <AwesomeInventory_RestockAlways>Restock at first opportunity</AwesomeInventory_RestockAlways>
     <AwesomeInventory_RestockBottomThreshold>Only restock when inventory level drops to:</AwesomeInventory_RestockBottomThreshold>
     <AwesomeInventory_SelectLoadout>Select Loadout</AwesomeInventory_SelectLoadout>
+    <AwesomeInventory_SortListAlphabetically>Sort list alphabetically</AwesomeInventory_SortListAlphabetically>
     <AwesomeInventory_SourceAllTip>All items</AwesomeInventory_SourceAllTip>
     <AwesomeInventory_SourceApparelTip>Apparels</AwesomeInventory_SourceApparelTip>
     <AwesomeInventory_SourceFilterTip>Filter</AwesomeInventory_SourceFilterTip>
@@ -57,6 +58,7 @@
     <AwesomeInventory_StockMode>Stock mode</AwesomeInventory_StockMode>
     <AwesomeInventory_StuffSource>Stuff Source</AwesomeInventory_StuffSource>
     <AwesomeInventory_TryToDeleteLastLoadout>Cannot delete the last loadout</AwesomeInventory_TryToDeleteLastLoadout>
+    <AwesomeInventory_UseGenericStuff>Use generic stuff for all apparel in loadout</AwesomeInventory_UseGenericStuff>
     <AwesomeInventory_Weight>Weight</AwesomeInventory_Weight>
     <AwesomeInventory_Wishlist>Wishlist</AwesomeInventory_Wishlist>
 

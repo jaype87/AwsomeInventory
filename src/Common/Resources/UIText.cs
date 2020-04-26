@@ -29,6 +29,8 @@ namespace AwesomeInventory.UI
 
         public const string ArmorSharp = "ArmorSharp";
 
+        public const string CancelButton = "CancelButton";
+
         public const string CannotEquip = "CannotEquip";
 
         public const string ConsumeThing = "ConsumeThing";
@@ -217,6 +219,8 @@ namespace AwesomeInventory.UI
 
         public const string SeparateTooltip = "AwesomeInventory_Separate_Tooltip";
 
+        public const string SortListAlphabetically = "AwesomeInventory_SortListAlphabetically";
+
         public const string SourceAllTip = "AwesomeInventory_SourceAllTip";
 
         public const string SourceFilterTip = "AwesomeInventory_SourceFilterTip";
@@ -262,6 +266,8 @@ namespace AwesomeInventory.UI
         public const string UnloadNow = "AwesomeInventory_UnloadNow";
 
         public const string UseGearTabToggle = "AwesomeInventory_UseGearTabToggle";
+
+        public const string UseGenericStuff = "AwesomeInventory_UseGenericStuff";
 
         public const string UseGearTabToggleTooltip = "AwesomeInventory_UseGearTabToggleTooltip";
 
