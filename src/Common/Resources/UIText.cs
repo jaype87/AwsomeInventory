@@ -145,6 +145,8 @@ namespace AwesomeInventory.UI
 
         public const string ExtraApparels = "AwesomeInventory_ExtraApparels";
 
+        public const string ExplainFeatures = "AwesomeInventory_ExplainFeatures";
+
         public const string FailToDrop = "AwesomeInventory_FailToDrop";
 
         public const string GearTabHeight = "AwesomeInventory_GearTabHeight";
@@ -160,6 +162,8 @@ namespace AwesomeInventory.UI
         public const string GreedyTab = "AwesomeInventory_GreedyTab";
 
         public const string Head = "AwesomeInventory_Head";
+
+        public const string TipsOnCostume = "AwesomeInventory_TipsOnCostume";
 
         public const string ItemsInCostume = "AwesomeInventory_ItemsInCostume";
 

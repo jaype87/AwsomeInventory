@@ -59,10 +59,79 @@ namespace AwesomeInventory
             listingStandard.CheckboxLabeled(UIText.UseGearTabToggle.TranslateSimple(), ref _settings.UseToggleGizmo, UIText.UseGearTabToggleTooltip.TranslateSimple());
 
             listingStandard.NewColumn();
+
             this.DrawQualityColorScrollableList(listingStandard);
             listingStandard.Gap();
 
-            // Draw gear tab size settings.
+            DrawGearTabSizeSetting(listingStandard);
+            listingStandard.Gap();
+
+            DrawHelpUrl(listingStandard);
+
+            listingStandard.End();
+
+            base.DoSettingsWindowContents(inRect);
+        }
+
+        /// <summary>
+        /// Return the name for display in the game's mod setting section.
+        /// </summary>
+        /// <returns> Display name for Awesome Inventory. </returns>
+        public override string SettingsCategory()
+        {
+            return UIText.AwesomeInventoryDisplayName.TranslateSimple();
+        }
+
+        private static void DrawHelpUrl(Listing_Standard listingStandard)
+        {
+            Rect labelRect = listingStandard.GetRect(GenUI.ListSpacing);
+            DrawUrl(
+                labelRect
+                , UIText.ExplainFeatures.TranslateSimple()
+                , @"https://github.com/Mhburg/AwsomeInventory/wiki/Explanations-on-Loadout-Costume-feature");
+
+            labelRect = listingStandard.GetRect(GenUI.ListSpacing);
+            DrawUrl(
+                labelRect
+                , UIText.TipsOnCostume.TranslateSimple()
+                , @"https://github.com/Mhburg/AwsomeInventory/wiki/How-to-use-costume");
+        }
+
+        private static void DrawUrl(Rect labelRect, string text, string url)
+        {
+            Widgets.Label(labelRect, text.Colorize(ColorLibrary.SkyBlue));
+            if (Mouse.IsOver(labelRect))
+            {
+                Vector2 size = Text.CalcSize(text);
+                Widgets.DrawLine(
+                    new Vector2(labelRect.x, labelRect.y + size.y)
+                    , new Vector2(labelRect.x + size.x, labelRect.y + size.y)
+                    , ColorLibrary.SkyBlue, 1);
+            }
+
+            if (Widgets.ButtonInvisible(labelRect))
+            {
+                Application.OpenURL(url);
+            }
+        }
+
+        private static string TooltipForQualityColor(QualityColor qualityColor)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("Legendary".Colorize(qualityColor.Legendary));
+            stringBuilder.AppendLine("Masterwork".Colorize(qualityColor.Masterwork));
+            stringBuilder.AppendLine("Excellent".Colorize(qualityColor.Excellent));
+            stringBuilder.AppendLine("Good".Colorize(qualityColor.Good));
+            stringBuilder.AppendLine("Normal".Colorize(qualityColor.Normal));
+            stringBuilder.AppendLine("Poor".Colorize(qualityColor.Poor));
+            stringBuilder.AppendLine("Awful".Colorize(qualityColor.Awful));
+            stringBuilder.AppendLine("Generic".Colorize(qualityColor.Generic));
+
+            return stringBuilder.ToString();
+        }
+
+        private static void DrawGearTabSizeSetting(Listing_Standard listingStandard)
+        {
             Text.Font = GameFont.Medium;
             listingStandard.Label(UIText.GoNuts.TranslateSimple());
             Text.Font = GameFont.Small;
@@ -79,34 +148,6 @@ namespace AwesomeInventory
             Widgets.Label(rect, UIText.GearTabHeight.TranslateSimple());
             rect.Set(rect.x + UIText.GearTabHeight.TranslateSimple().GetWidthCached() + GenUI.GapTiny, rect.y, GenUI.SmallIconSize * 2, GenUI.SmallIconSize);
             Widgets.TextFieldNumeric(rect, ref _settings.GearTabHeight, ref heightBuffer);
-
-            listingStandard.End();
-
-            base.DoSettingsWindowContents(inRect);
-        }
-
-        /// <summary>
-        /// Return the name for display in the game's mod setting section.
-        /// </summary>
-        /// <returns> Display name for Awesome Inventory. </returns>
-        public override string SettingsCategory()
-        {
-            return UIText.AwesomeInventoryDisplayName.TranslateSimple();
-        }
-
-        private static string TooltipForQualityColor(QualityColor qualityColor)
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("Legendary".Colorize(qualityColor.Legendary));
-            stringBuilder.AppendLine("Masterwork".Colorize(qualityColor.Masterwork));
-            stringBuilder.AppendLine("Excellent".Colorize(qualityColor.Excellent));
-            stringBuilder.AppendLine("Good".Colorize(qualityColor.Good));
-            stringBuilder.AppendLine("Normal".Colorize(qualityColor.Normal));
-            stringBuilder.AppendLine("Poor".Colorize(qualityColor.Poor));
-            stringBuilder.AppendLine("Awful".Colorize(qualityColor.Awful));
-            stringBuilder.AppendLine("Generic".Colorize(qualityColor.Generic));
-
-            return stringBuilder.ToString();
         }
 
         private void DrawQualityColorScrollableList(Listing_Standard listingStandard)

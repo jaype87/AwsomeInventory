@@ -89,10 +89,12 @@
     <!-- Mod settings -->
     <AwesomeInventory_AutoEquipWeapon>Find and equip weapon</AwesomeInventory_AutoEquipWeapon>
     <AwesomeInventory_ChooseThemeColorForQuality>Choose theme for quality color:</AwesomeInventory_ChooseThemeColorForQuality>
+    <AwesomeInventory_ExplainFeatures>Explanations on Loadout/Costume</AwesomeInventory_ExplainFeatures>
     <AwesomeInventory_GearTabHeight>Gear tab height:</AwesomeInventory_GearTabHeight>
     <AwesomeInventory_GearTabWidht>Gear tab width:</AwesomeInventory_GearTabWidht>
     <AwesomeInventory_GoNuts>Go Nuts!</AwesomeInventory_GoNuts>
     <AwesomeInventory_PatchAllRaces>Patch all races</AwesomeInventory_PatchAllRaces>
+    <AwesomeInventory_TipsOnCostume>How to use costume</AwesomeInventory_TipsOnCostume>
     <AwesomeInventory_ToggleGearTab>Toggle Gear Tab</AwesomeInventory_ToggleGearTab>
     <AwesomeInventory_UseGearTabToggle>Use gear tab gizmo/toggle</AwesomeInventory_UseGearTabToggle>
     <AwesomeInventory_UseLoadout>Use Loadout</AwesomeInventory_UseLoadout>

@@ -178,29 +178,8 @@ namespace AwesomeInventory.UI
             SmartRect<Apparel> lastSmartRect = _smartRectList.SmartRects.Last();
             float traitY = lastSmartRect.yMax + lastSmartRect.HeightGap;
             WidgetRow traitRow = new WidgetRow(viewRect.x, traitY, UIDirection.RightThenDown, statRect.x - viewRect.x);
-            List<Trait> traits = selPawn.story.traits.allTraits;
 
-            if (!_traitCache.TryGetValue(selPawn, out List<Tuple<Trait, string>> cache))
-            {
-                List<Tuple<Trait, string>> tuples = new List<Tuple<Trait, string>>();
-                foreach (Trait trait in traits)
-                {
-                    tuples.Add(Tuple.Create(trait, trait.TipString(selPawn)));
-                }
-
-                _traitCache.Add(selPawn, tuples);
-            }
-
-            traitRow.Label(UIText.Traits.Translate() + ": ");
-            for (int i = 0; i < traits.Count; i++)
-            {
-                Rect tipRegion = traitRow.Label(traits[i].LabelCap + (i != traits.Count ? ", " : string.Empty));
-
-                TooltipHandler.TipRegion(
-                    tipRegion,
-                    _traitCache[selPawn].Find(t => t.Item1 == traits[i]).Item2);
-                Widgets.DrawHighlightIfMouseover(tipRegion);
-            }
+            this.DrawTraits(traitRow, selPawn);
 
             float rollingY = traitRow.FinalY + WidgetRow.IconSize;
             #endregion
@@ -950,19 +929,47 @@ namespace AwesomeInventory.UI
         /// <summary>
         /// Draw traits on gear tab.
         /// </summary>
-        /// <param name="row"> A drawing helper for drawing in a row. </param>
-        /// <param name="traits"> Traits to draw. </param>
-        /// <param name="pawn"> Selected pawn. </param>
-        protected virtual void DrawTraits(WidgetRow row, IEnumerator<Trait> traits, Pawn pawn)
+        /// <param name="traitRow"> A drawing helper for drawing in a row. </param>
+        /// <param name="selPawn"> Selected pawn. </param>
+        protected virtual void DrawTraits(WidgetRow traitRow,  Pawn selPawn)
         {
-            ValidateArg.NotNull(row, nameof(row));
-            ValidateArg.NotNull(traits, nameof(traits));
+            ValidateArg.NotNull(traitRow, nameof(traitRow));
 
-            if (traits.MoveNext())
+            List<Trait> traits = selPawn.story.traits.allTraits;
+
+            if (!_traitCache.TryGetValue(selPawn, out List<Tuple<Trait, string>> cache))
             {
-                Trait trait = traits.Current;
-                TooltipHandler.TipRegion(row.Label(trait.LabelCap), trait.TipString(pawn));
-                row.Gap(int.MaxValue);
+                List<Tuple<Trait, string>> tuples = new List<Tuple<Trait, string>>();
+                foreach (Trait trait in traits)
+                {
+                    tuples.Add(Tuple.Create(trait, trait.TipString(selPawn)));
+                }
+
+                _traitCache.Add(selPawn, tuples);
+            }
+            else
+            {
+                if (cache.Count != traits.Count)
+                {
+                    foreach (Trait trait in traits)
+                    {
+                        if (!cache.Any(t => t.Item1 != trait))
+                        {
+                            cache.Add(Tuple.Create(trait, trait.TipString(selPawn)));
+                        }
+                    }
+                }
+            }
+
+            traitRow.Label(UIText.Traits.Translate() + ": ");
+            for (int i = 0; i < traits.Count; i++)
+            {
+                Rect tipRegion = traitRow.Label(traits[i].LabelCap + (i != traits.Count ? ", " : string.Empty));
+
+                TooltipHandler.TipRegion(
+                    tipRegion,
+                    _traitCache[selPawn].Find(t => t.Item1 == traits[i]).Item2);
+                Widgets.DrawHighlightIfMouseover(tipRegion);
             }
         }
 

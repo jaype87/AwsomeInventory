@@ -35,7 +35,7 @@ namespace AwesomeInventory.UI
         /// <summary>
         /// Gets initial size for dialog.
         /// </summary>
-        public override Vector2 InitialSize => new Vector2(900, 350);
+        public override Vector2 InitialSize => new Vector2(900, 370);
 
         /// <summary>
         /// Draw mod settings.

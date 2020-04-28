@@ -7,8 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using AwesomeInventory.Jobs;
-using AwesomeInventory.Loadout;
 using AwesomeInventory.UI;
 using HarmonyLib;
 using RimWorld;
@@ -24,6 +22,10 @@ namespace AwesomeInventory
     public static class Utility
     {
         public const float StandardLineHeight = 22f;
+
+        /// <summary>
+        /// Camera offset used for drawing paper doll in Jealous tab.
+        /// </summary>
         public static readonly Vector3 PawnTextureCameraOffset = new Vector3(0f, 0f, 0f);
 
         /// <summary>
@@ -45,42 +47,57 @@ namespace AwesomeInventory
          *
         *****************************************************************************/
 
+        /// <summary>
+        /// Check if inventory should be shown for <paramref name="p"/>.
+        /// </summary>
+        /// <param name="p"> Pawn to check. </param>
+        /// <returns> Returns true if inventory should be displayed. </returns>
         public static bool ShouldShowInventory(Pawn p)
         {
+            ValidateArg.NotNull(p, nameof(p));
+
             return p.RaceProps.Humanlike || p.inventory.innerContainer.Any;
         }
 
+        /// <summary>
+        /// Check if apparel should be shown for <paramref name="p"/>.
+        /// </summary>
+        /// <param name="p"> Pawn to check. </param>
+        /// <returns> Returns true if apparel should be displayed. </returns>
         public static bool ShouldShowApparel(Pawn p)
         {
             return p.apparel != null && (p.RaceProps.Humanlike || p.apparel.WornApparel.Any<Apparel>());
         }
 
+        /// <summary>
+        /// Check if Equipment should be shown for <paramref name="p"/>.
+        /// </summary>
+        /// <param name="p"> Pawn to check. </param>
+        /// <returns> Returns true if Equipment should be displayed. </returns>
         public static bool ShouldShowEquipment(Pawn p)
         {
             return p.equipment != null;
         }
 
         /// <summary>
-        ///     Draw overall armor for the jealous tab
+        ///     Draw overall armor for the jealous tab.
         /// </summary>
-        /// <param name="selPawn"></param>
-        /// <param name="rect"></param>
-        /// <param name="stat"></param>
-        /// <param name="label"></param>
-        /// <param name="image"></param>
-        /// <param name="unit"></param>
+        /// <param name="selPawn"> Selected pawn. </param>
+        /// <param name="rect"> Rect for drawing. </param>
+        /// <param name="stat"> Stat to draw. </param>
+        /// <param name="label"> Label for <paramref name="stat"/>. </param>
+        /// <param name="image"> Image that represents <paramref name="stat"/>. </param>
+        /// <param name="unit"> Unit of <paramref name="stat"/>. </param>
         public static void TryDrawOverallArmorCE(Pawn selPawn, Rect rect, StatDef stat, string label, Texture image, string unit)
         {
-            string text = "";
+            string text;
             float armorRating = CalculateArmorByParts(selPawn, stat, out text);
             Rect rect1 = new Rect(rect.x, rect.y, 24f, 27f);
             GUI.DrawTexture(rect1, image);
             TooltipHandler.TipRegion(rect1, label);
             Rect rect2 = new Rect(rect.x + 60f, rect.y + 3f, 104f, 24f);
-            if (text.NullOrEmpty())
-            {
-                TooltipHandler.TipRegion(rect2, text);
-            }
+            TooltipHandler.TipRegion(rect2, text);
+
             Widgets.Label(rect2, armorRating.ToStringPercent());
         }
 
@@ -88,9 +105,8 @@ namespace AwesomeInventory
         {
             var asPercent = unit.Equals("%", StringComparison.InvariantCulture);
             if (asPercent)
-            {
                 value *= 100f;
-            }
+
             return value.ToStringByStyle(asPercent ? ToStringStyle.FloatMaxOne : ToStringStyle.FloatMaxTwo) + unit;
         }
 
@@ -98,10 +114,10 @@ namespace AwesomeInventory
         /// Not a very effective way to get armor number, but one with most compatibility, only if modders add
         /// the "ListOrder" tag and correct value to their new "BodyPartGroup" element in xml.
         /// </summary>
-        /// <param name="pawn"></param>
+        /// <param name="pawn"> Selected pawn. </param>
         /// <param name="stat">Sharp, blunt or heat, maybe electrical?. </param>
         /// <param name="text">Text for tooltip. </param>
-        /// <returns></returns>
+        /// <returns> Value for <paramref name="stat"/>. </returns>
         public static float CalculateArmorByParts(Pawn pawn, StatDef stat, out string text)
         {
             text = string.Empty;
