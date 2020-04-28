@@ -934,8 +934,12 @@ namespace AwesomeInventory.UI
         protected virtual void DrawTraits(WidgetRow traitRow,  Pawn selPawn)
         {
             ValidateArg.NotNull(traitRow, nameof(traitRow));
+            ValidateArg.NotNull(selPawn, nameof(selPawn));
 
-            List<Trait> traits = selPawn.story.traits.allTraits;
+            List<Trait> traits = selPawn.story?.traits?.allTraits;
+
+            if (traits == null)
+                return;
 
             if (!_traitCache.TryGetValue(selPawn, out List<Tuple<Trait, string>> cache))
             {
@@ -953,7 +957,7 @@ namespace AwesomeInventory.UI
                 {
                     foreach (Trait trait in traits)
                     {
-                        if (!cache.Any(t => t.Item1 != trait))
+                        if (!cache.Any(t => t.Item1 == trait))
                         {
                             cache.Add(Tuple.Create(trait, trait.TipString(selPawn)));
                         }
