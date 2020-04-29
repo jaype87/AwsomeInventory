@@ -64,5 +64,22 @@ namespace AwesomeInventory
                 return jobDef == AwesomeInventory_JobDefOf.AwesomeInventory_Undress || jobDef == AwesomeInventory_JobDefOf.AwesomeInventory_Dress;
             }
         }
+
+        /// <summary>
+        /// Check if pawn is in a capable state to change apparel.
+        /// </summary>
+        /// <param name="pawn"> Pawn to check. </param>
+        /// <returns> If true, pawn is capbale of changing apparel. </returns>
+        public static bool CapableOfWearing(Pawn pawn)
+        {
+            ValidateArg.NotNull(pawn, nameof(pawn));
+
+            if (pawn.Downed || pawn.IsBurning() || pawn.InMentalState || !pawn.health.capacities.CanBeAwake || !pawn.health.capacities.CapableOf(PawnCapacityDefOf.Moving) || !pawn.health.capacities.CapableOf(PawnCapacityDefOf.Manipulation))
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

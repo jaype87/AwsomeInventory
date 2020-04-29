@@ -89,8 +89,11 @@
 
     <!-- Gizmo -->
     <AwesomeInventory_CurrentHotSwapCostume>Current hot swap costume: {0}</AwesomeInventory_CurrentHotSwapCostume>
+    <AwesomeInventory_NotCapaleChangingApparel>{0} is not capable of changing apparel. </AwesomeInventory_NotCapaleChangingApparel>
     <AwesomeInventory_NoCostumeForHotSwap>No costume available. Choose a loadout for pawn that has costumes</AwesomeInventory_NoCostumeForHotSwap>
     <AwesomeInventory_ForceHotSwap>Force hot swap</AwesomeInventory_ForceHotSwap>
+    <AwesomeInventory_SameCostumeForHotSwap>Current active costume is the same as hot-swap costume</AwesomeInventory_SameCostumeForHotSwap>
+
 
     <!-- Mod settings -->
     <AwesomeInventory_AutoEquipWeapon>Find and equip weapon</AwesomeInventory_AutoEquipWeapon>
@@ -101,6 +104,7 @@
     <AwesomeInventory_GoNuts>Go Nuts!</AwesomeInventory_GoNuts>
     <AwesomeInventory_PatchAllRaces>Patch all races</AwesomeInventory_PatchAllRaces>
     <AwesomeInventory_TipsOnCostume>How to use costume</AwesomeInventory_TipsOnCostume>
+    <AwesomeInventory_TipsForHotSwap>How to hot swap costume</AwesomeInventory_TipsForHotSwap>
     <AwesomeInventory_ToggleGearTab>Toggle Gear Tab</AwesomeInventory_ToggleGearTab>
     <AwesomeInventory_UseGearTabToggle>Use gear tab gizmo/toggle</AwesomeInventory_UseGearTabToggle>
     <AwesomeInventory_UseLoadout>Use Loadout</AwesomeInventory_UseLoadout>

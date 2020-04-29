@@ -187,6 +187,8 @@ namespace AwesomeInventory.UI
 
         public const string NewLoadout = "AwesomeInventory_NewLoadout";
 
+        public const string NotCapableChangingApparel = "AwesomeInventory_NotCapaleChangingApparel";
+
         public const string NoCostumeAvailable = "AwesomeInventory_NoCostumeAvailable";
 
         public const string NoCostumeForHotSwap = "AwesomeInventory_NoCostumeForHotSwap";
@@ -221,6 +223,8 @@ namespace AwesomeInventory.UI
 
         public const string RestockBottomThreshold = "AwesomeInventory_RestockBottomThreshold";
 
+        public const string SameCostumeForHotSwap = "AwesomeInventory_SameCostumeForHotSwap";
+
         public const string SelectCostume = "AwesomeInventory_SelectCostume";
 
         public const string SelectLoadout = "AwesomeInventory_SelectLoadout";
@@ -248,6 +252,8 @@ namespace AwesomeInventory.UI
         public const string StockMode = "AwesomeInventory_StockMode";
 
         public const string StuffSource = "AwesomeInventory_StuffSource";
+
+        public const string TipsForHotSwap = "AwesomeInventory_TipsForHotSwap";
 
         public const string ToggleGearTab = "AwesomeInventory_ToggleGearTab";
 

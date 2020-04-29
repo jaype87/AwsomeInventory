@@ -66,6 +66,7 @@ namespace AwesomeInventory
             DrawGearTabSizeSetting(listingStandard);
             listingStandard.Gap();
 
+            listingStandard.NewColumn();
             DrawHelpUrl(listingStandard);
 
             listingStandard.End();
@@ -95,6 +96,12 @@ namespace AwesomeInventory
                 labelRect
                 , UIText.TipsOnCostume.TranslateSimple()
                 , @"https://github.com/Mhburg/AwsomeInventory/wiki/How-to-use-costume");
+
+            labelRect = listingStandard.GetRect(GenUI.ListSpacing);
+            DrawUrl(
+                labelRect
+                , UIText.TipsForHotSwap.TranslateSimple()
+                , @"https://github.com/Mhburg/AwsomeInventory/wiki/Hot-Swap-Costume");
         }
 
         private static void DrawUrl(Rect labelRect, string text, string url)

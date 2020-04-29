@@ -64,7 +64,7 @@ namespace AwesomeInventory
         {
             get
             {
-                if (_comp.HotSwapCostume != null)
+                if (_comp.HotSwapCostume != null || ApparelOptionUtility.CapableOfWearing(_pawn))
                 {
                     yield return new FloatMenuOption(
                         UIText.ForceHotSwap.TranslateSimple()
@@ -106,13 +106,19 @@ namespace AwesomeInventory
 
         private void ChangeCostume()
         {
+            if (!ApparelOptionUtility.CapableOfWearing(_pawn))
+            {
+                Messages.Message(UIText.NotCapableChangingApparel.Translate(_pawn.NameShortColored), MessageTypeDefOf.NeutralEvent);
+                return;
+            }
+
             if (_comp.HotSwapCostume != null)
             {
                 if (_comp.HotswapState == HotSwapState.Inactive)
                 {
                     if (_comp.HotSwapCostume == _comp.Loadout)
                     {
-                        Messages.Message("Current active costume is the same as hot-swap costume.", MessageTypeDefOf.NeutralEvent);
+                        Messages.Message(UIText.SameCostumeForHotSwap.TranslateSimple(), MessageTypeDefOf.NeutralEvent);
                         return;
                     }
 
