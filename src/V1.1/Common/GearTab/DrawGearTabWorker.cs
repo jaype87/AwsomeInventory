@@ -931,7 +931,7 @@ namespace AwesomeInventory.UI
         /// </summary>
         /// <param name="traitRow"> A drawing helper for drawing in a row. </param>
         /// <param name="selPawn"> Selected pawn. </param>
-        protected virtual void DrawTraits(WidgetRow traitRow,  Pawn selPawn)
+        protected virtual void DrawTraits(WidgetRow traitRow, Pawn selPawn)
         {
             ValidateArg.NotNull(traitRow, nameof(traitRow));
             ValidateArg.NotNull(selPawn, nameof(selPawn));
@@ -953,14 +953,12 @@ namespace AwesomeInventory.UI
             }
             else
             {
-                if (cache.Count != traits.Count)
+                IEnumerable<Trait> newTraits = traits.Except(cache.Select(t => t.Item1));
+                if (newTraits.Any())
                 {
-                    foreach (Trait trait in traits)
+                    foreach (Trait trait in newTraits)
                     {
-                        if (!cache.Any(t => t.Item1 == trait))
-                        {
-                            cache.Add(Tuple.Create(trait, trait.TipString(selPawn)));
-                        }
+                        cache.Add(Tuple.Create(trait, trait.TipString(selPawn)));
                     }
                 }
             }

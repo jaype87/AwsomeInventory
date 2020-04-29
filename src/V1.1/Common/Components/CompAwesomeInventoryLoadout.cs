@@ -341,7 +341,7 @@ namespace AwesomeInventory.Loadout
 
                     if (things.Any())
                     {
-                        if (!(_pawn.jobs.curJob.def == AwesomeInventory_JobDefOf.AwesomeInventory_Undress || delay))
+                        if (!(_pawn.CurJobDef == AwesomeInventory_JobDefOf.AwesomeInventory_Undress || delay))
                             _pawn.jobs.StopAll(true);
 
                         foreach (Thing thing in things.Distinct())
