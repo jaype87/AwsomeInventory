@@ -37,11 +37,36 @@ namespace AwesomeInventory.Loadout
         private List<ThresholdState> _thresholdStates;
         private List<Apparel> _apparelsBeforeChanged;
 
+        private HotSwapState _hotswapActive = HotSwapState.Inactive;
+        private AwesomeInventoryCostume _hotswapCostume;
+        private AwesomeInventoryLoadout _loadoutBeforeHotSwap;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CompAwesomeInventoryLoadout"/> class.
         /// </summary>
         public CompAwesomeInventoryLoadout()
         {
+        }
+
+        /// <summary>
+        /// States of hot swap.
+        /// </summary>
+        public enum HotSwapState
+        {
+            /// <summary>
+            /// Hot-swap costume is active.
+            /// </summary>
+            Active,
+
+            /// <summary>
+            /// Hot-swap action is interrupted.
+            /// </summary>
+            Interuppted,
+
+            /// <summary>
+            /// Hot-swap costume is inactive.
+            /// </summary>
+            Inactive,
         }
 
         /// <summary>
@@ -51,7 +76,7 @@ namespace AwesomeInventory.Loadout
         public Dictionary<ThingGroupSelector, int> InventoryMargins { get; private set; }
 
         /// <summary>
-        /// Gets a <see cref="AwesomeInventoryLoadout"/> this comp holds.
+        /// Gets an <see cref="AwesomeInventoryLoadout"/> this comp holds.
         /// </summary>
         public AwesomeInventoryLoadout Loadout { get; private set; }
 
@@ -107,6 +132,24 @@ namespace AwesomeInventory.Loadout
         }
 
         /// <summary>
+        /// Gets or sets costume for hot swap.
+        /// </summary>
+        [SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "Required by design")]
+        public AwesomeInventoryCostume HotSwapCostume { get => _hotswapCostume; set => _hotswapCostume = value; }
+
+        /// <summary>
+        /// Gets or sets loadout before hot swap.
+        /// </summary>
+        [SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "Required by design")]
+        public AwesomeInventoryLoadout LoadoutBeforeHotSwap { get => _loadoutBeforeHotSwap; set => _loadoutBeforeHotSwap = value; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether hot-swap is active.
+        /// </summary>
+        [SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "Required by design")]
+        public HotSwapState HotswapState { get => _hotswapActive; set => _hotswapActive = value; }
+
+        /// <summary>
         /// Called by game code when the game starts.
         /// </summary>
         /// <param name="props"> Properties used for initializing this comp. </param>
@@ -126,7 +169,7 @@ namespace AwesomeInventory.Loadout
             {
                 if (pawn.outfits?.CurrentOutfit is AwesomeInventoryLoadout loadout)
                 {
-                    this.UpdateForNewLoadout(loadout);
+                    this.UpdateForNewLoadout(loadout, false, true);
                 }
             }
         }
@@ -182,9 +225,12 @@ namespace AwesomeInventory.Loadout
         /// Update <see cref="CompAwesomeInventoryLoadout.InventoryMargins"/> whenever a new loadout is assigned to pawn.
         /// </summary>
         /// <param name="newLoadout"> The new loadout assigned to pawn. </param>
-        public void UpdateForNewLoadout(AwesomeInventoryLoadout newLoadout)
+        /// <param name="delay"> If true, pawn will queue changing costume jobs after the current job. </param>
+        /// <param name="respawn"> If true, thie method is invoked while the pawn is being respawn. </param>
+        /// <param name="forced"> If true, update for <paramref name="newLoadout"/> even though it is the same as current loadout. </param>
+        public void UpdateForNewLoadout(AwesomeInventoryLoadout newLoadout, bool delay = false, bool respawn = false, bool forced = false)
         {
-            if (newLoadout == null || this.Loadout == newLoadout)
+            if (newLoadout == null || (this.Loadout == newLoadout && !forced))
                 return;
 
             if (this.InventoryMargins == null)
@@ -213,7 +259,7 @@ namespace AwesomeInventory.Loadout
             this.Loadout = newLoadout;
             _initialized = true;
 
-            this.ChangeCostume(newLoadout, oldLoadout);
+            this.ChangeCostume(newLoadout, oldLoadout, delay, respawn || forced);
         }
 
         /// <summary>
@@ -239,6 +285,9 @@ namespace AwesomeInventory.Loadout
             base.PostExposeData();
             Scribe_Collections.Look(ref _bottomThresholdLookup, nameof(_bottomThresholdLookup), LookMode.Reference, LookMode.Deep, ref _thingSelectors, ref _thresholdStates);
             Scribe_Collections.Look(ref _apparelsBeforeChanged, nameof(_apparelsBeforeChanged), LookMode.Reference);
+            Scribe_Values.Look(ref _hotswapActive, nameof(_hotswapActive), HotSwapState.Inactive);
+            Scribe_References.Look(ref _hotswapCostume, nameof(_hotswapCostume));
+            Scribe_References.Look(ref _loadoutBeforeHotSwap, nameof(_loadoutBeforeHotSwap));
         }
 
         /// <summary>
@@ -246,7 +295,9 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         /// <param name="newLoadout"> New loadout pawn switch to. </param>
         /// <param name="oldLoadout"> Loadout that is replaced with <paramref name="newLoadout"/>. </param>
-        protected void ChangeCostume(AwesomeInventoryLoadout newLoadout, AwesomeInventoryLoadout oldLoadout)
+        /// <param name="delay"> If true, pawn will queue changing costume jobs after the current job. </param>
+        /// <param name="keepCache"> If false, <see cref="_apparelsBeforeChanged"/> will be set to null. </param>
+        protected void ChangeCostume(AwesomeInventoryLoadout newLoadout, AwesomeInventoryLoadout oldLoadout, bool delay, bool keepCache)
         {
             ValidateArg.NotNull(newLoadout, nameof(newLoadout));
 
@@ -256,13 +307,17 @@ namespace AwesomeInventory.Loadout
                 {
                     _apparelsBeforeChanged = new List<Apparel>(_pawn.apparel.WornApparel);
                 }
+                else if (!keepCache)
+                {
+                    _apparelsBeforeChanged = null;
+                }
 
                 ConcurrentBag<Apparel> wornApparels = new ConcurrentBag<Apparel>();
                 Parallel.ForEach(
                     Partitioner.Create(_pawn.apparel.WornApparel)
                     , (Apparel apparel) =>
                     {
-                        if (!costume.CostumeItems.Any(c => c.Allows(apparel, out _)))
+                        if (!_pawn.outfits.forcedHandler.IsForced(apparel) && !costume.CostumeItems.Any(c => c.Allows(apparel, out _)))
                         {
                             wornApparels.Add(apparel);
                         }
@@ -286,7 +341,7 @@ namespace AwesomeInventory.Loadout
 
                     if (things.Any())
                     {
-                        if (_pawn.jobs.curJob.def != AwesomeInventory_JobDefOf.AwesomeInventory_Undress)
+                        if (!(_pawn.jobs.curJob.def == AwesomeInventory_JobDefOf.AwesomeInventory_Undress || delay))
                             _pawn.jobs.StopAll(true);
 
                         foreach (Thing thing in things.Distinct())
@@ -320,7 +375,9 @@ namespace AwesomeInventory.Loadout
                         Partitioner.Create(_pawn.apparel.WornApparel)
                         , (Apparel apparel) =>
                         {
-                            if (!_apparelsBeforeChanged.Contains(apparel) && !_pawn.outfits.forcedHandler.IsForced(apparel))
+                            if (!_apparelsBeforeChanged.Contains(apparel)
+                                && !newLoadout.Any(s => s.Allows(apparel, out _))
+                                && !_pawn.outfits.forcedHandler.IsForced(apparel))
                                 apparelsToRemove.Add(apparel);
                         });
 
@@ -329,7 +386,7 @@ namespace AwesomeInventory.Loadout
                         StartUndressJobs(apparelsToRemove, _pawn);
                     }
 
-                    if (_pawn.jobs.curJob.def != AwesomeInventory_JobDefOf.AwesomeInventory_Undress)
+                    if (!(_pawn.CurJobDef == AwesomeInventory_JobDefOf.AwesomeInventory_Undress || delay))
                         _pawn.jobs.StopAll(true);
 
                     foreach (Apparel apparel1 in _apparelsBeforeChanged)
@@ -350,7 +407,9 @@ namespace AwesomeInventory.Loadout
 
             void StartUndressJobs(IEnumerable<Apparel> apparels, Pawn pawn)
             {
-                pawn.jobs.StopAll(true);
+                if (!delay)
+                    pawn.jobs.StopAll(true);
+
                 foreach (Apparel apparel in apparels)
                 {
                     Job job = JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_Undress, apparel);

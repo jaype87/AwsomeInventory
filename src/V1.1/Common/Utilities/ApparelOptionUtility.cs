@@ -8,8 +8,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AwesomeInventory.Jobs;
 using RimWorld;
 using Verse;
+using Verse.AI;
 
 namespace AwesomeInventory
 {
@@ -33,6 +35,34 @@ namespace AwesomeInventory
                 && (apparel.def.apparel.gender == Gender.None || apparel.def.apparel.gender == pawn.gender)
                 && (!apparel.def.apparel.tags.Contains("Royal") || pawn.royalty.AllTitlesInEffectForReading.Count != 0)
                 && ApparelUtility.HasPartsToWear(pawn, apparel.def);
+        }
+
+        /// <summary>
+        /// Stop jobs that are either of <see cref="AwesomeInventory_JobDefOf.AwesomeInventory_Dress"/> or <see cref="AwesomeInventory_JobDefOf.AwesomeInventory_Undress"/>.
+        /// </summary>
+        /// <param name="pawn"> Pawn who has jobs. </param>
+        public static void StopDressingJobs(Pawn pawn)
+        {
+            ValidateArg.NotNull(pawn, nameof(pawn));
+
+            if (IsDressingJob(pawn.CurJobDef))
+            {
+                pawn.jobs.EndCurrentJob(JobCondition.InterruptForced, false);
+            }
+
+            List<QueuedJob> queuedJobs = new List<QueuedJob>(pawn.jobs.jobQueue);
+            foreach (QueuedJob queuedJob in queuedJobs)
+            {
+                if (IsDressingJob(queuedJob.job.def))
+                {
+                    pawn.jobs.EndCurrentOrQueuedJob(queuedJob.job, JobCondition.InterruptForced);
+                }
+            }
+
+            bool IsDressingJob(JobDef jobDef)
+            {
+                return jobDef == AwesomeInventory_JobDefOf.AwesomeInventory_Undress || jobDef == AwesomeInventory_JobDefOf.AwesomeInventory_Dress;
+            }
         }
     }
 }

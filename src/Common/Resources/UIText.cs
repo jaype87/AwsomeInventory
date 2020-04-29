@@ -63,6 +63,8 @@ namespace AwesomeInventory.UI
 
         public const string NoEmptyPlaceLower = "NoEmptyPlaceLower";
 
+        public const string None = "None";
+
         public const string OK = "OK";
 
         public const string OverallArmor = "OverallArmor";
@@ -131,6 +133,8 @@ namespace AwesomeInventory.UI
 
         public const string CurrentTemperature = "AwesomeInventory_CurrentTemperature";
 
+        public const string CurrentHotSwapCostume = "AwesomeInventory_CurrentHotSwapCostume";
+
         public const string Customize = "AwesomeInventory_Customize";
 
         public const string DeleteCostume = "AwesomeInventory_DeleteCostume";
@@ -148,6 +152,8 @@ namespace AwesomeInventory.UI
         public const string ExplainFeatures = "AwesomeInventory_ExplainFeatures";
 
         public const string FailToDrop = "AwesomeInventory_FailToDrop";
+
+        public const string ForceHotSwap = "AwesomeInventory_ForceHotSwap";
 
         public const string GearTabHeight = "AwesomeInventory_GearTabHeight";
 
@@ -182,6 +188,8 @@ namespace AwesomeInventory.UI
         public const string NewLoadout = "AwesomeInventory_NewLoadout";
 
         public const string NoCostumeAvailable = "AwesomeInventory_NoCostumeAvailable";
+
+        public const string NoCostumeForHotSwap = "AwesomeInventory_NoCostumeForHotSwap";
 
         public const string NoCostumeSelected = "AwesomeInventory_NoCostumeSelected";
 

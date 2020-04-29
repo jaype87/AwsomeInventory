@@ -43,7 +43,7 @@ namespace AwesomeInventory.HarmonyPatches
 
             if (AwesomeInvnetoryMod.Settings.UseToggleGizmo)
             {
-                if (Find.Selector.SingleSelectedThing is Pawn pawn && pawn.IsColonist)
+                if (Find.Selector.SingleSelectedThing is Pawn pawn)
                 {
                     if (AwesomeInventoryServiceProvider.TryGetImplementation<AwesomeInventoryTabBase>(out AwesomeInventoryTabBase tab))
                     {
@@ -52,6 +52,8 @@ namespace AwesomeInventory.HarmonyPatches
                     }
                 }
             }
+
+            yield return new ChangeCostumeInPlace(__instance);
         }
     }
 }

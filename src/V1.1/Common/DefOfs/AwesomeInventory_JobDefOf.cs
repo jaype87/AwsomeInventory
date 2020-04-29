@@ -49,6 +49,11 @@ namespace AwesomeInventory.Jobs
         /// </summary>
         public static JobDef AwesomeInventory_TakeInventory;
 
+        /// <summary>
+        /// Check state of hot-swap.
+        /// </summary>
+        public static JobDef AwesomeInventory_HotSwapStateChecker;
+
 #pragma warning restore CA2211 // Non-constant fields should not be visible
 #pragma warning restore SA1310 // Field names should not contain underscore
 #pragma warning restore SA1401 // Fields should be private

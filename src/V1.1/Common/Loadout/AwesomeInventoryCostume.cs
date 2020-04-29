@@ -109,6 +109,29 @@ namespace AwesomeInventory.Loadout
         }
 
         /// <summary>
+        /// Check if <paramref name="costume"/> is a sibling of this costume.
+        /// </summary>
+        /// <param name="costume"> Costume to check. </param>
+        /// <returns> If true, these two costumes share the same loadout parent. </returns>
+        public virtual bool SibilingOf(AwesomeInventoryCostume costume)
+        {
+            return this.Base.Costumes.Contains(costume);
+        }
+
+        /// <summary>
+        /// Check if <paramref name="loadout"/> is in the same family tree of this costume.
+        /// </summary>
+        /// <param name="loadout"> loadout to check. </param>
+        /// <returns> Returns true if <paramref name="loadout"/> is the parent or sibling of this costume. </returns>
+        public virtual bool InSameLoadoutTree(AwesomeInventoryLoadout loadout)
+        {
+            return this.CostumeOf(loadout)
+                || (loadout is AwesomeInventoryCostume costume
+                    &&
+                    this.SibilingOf(costume));
+        }
+
+        /// <summary>
         /// Save states of this costume to xml.
         /// </summary>
         public override void ExposeData()

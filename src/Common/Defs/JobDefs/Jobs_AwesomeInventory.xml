@@ -39,4 +39,12 @@
         <allowOpportunisticPrefix>true</allowOpportunisticPrefix>
         <suspendable>false</suspendable>
     </JobDef>
+
+    <JobDef>
+        <defName>AwesomeInventory_HotSwapStateChecker</defName>
+        <driverClass>AwesomeInventory.Jobs.JobDriver_AwesomeInventory_HotSwapStateChecker</driverClass>
+        <reportString>Finalize hot-swap</reportString>
+        <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
+        <suspendable>false</suspendable>
+    </JobDef>
 </Defs>

@@ -65,7 +65,7 @@ namespace AwesomeInventory.UI
         public override void PreClose()
         {
             base.PreClose();
-            if (_costume != null)
+            if (_costume != null && _pawn.outfits.CurrentOutfit != _costume)
             {
                 _pawn.outfits.CurrentOutfit = _costume;
                 if (BetterPawnControlUtility.IsActive)

@@ -52,6 +52,7 @@ namespace AwesomeInventory.HarmonyPatches
                     if (__result.targetA.HasThing && !costume.CostumeItems.Any(s => s.Allows(job.targetA.Thing, out _)))
                     {
                         __result = null;
+                        JobMaker.ReturnToPool(job);
                         return;
                     }
                 }

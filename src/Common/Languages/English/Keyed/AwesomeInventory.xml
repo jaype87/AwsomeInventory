@@ -73,7 +73,7 @@
     <AwesomeInventory_NoCostumeAvailable>No costume available</AwesomeInventory_NoCostumeAvailable>
     <AwesomeInventory_NoCostumeSelected>Please select a costume.</AwesomeInventory_NoCostumeSelected>
     <AwesomeInventory_SelectCostume>Select Costume</AwesomeInventory_SelectCostume>
-  
+
     <!-- Labels -->
     <AwesomeInventory_GenericMeal_Label>Generic Meals</AwesomeInventory_GenericMeal_Label>
     <AwesomeInventory_AIGenericRawFood_Label>Generic RawFood</AwesomeInventory_AIGenericRawFood_Label>
@@ -85,7 +85,13 @@
     <AwesomeInventory_AIGenericRawFood_Description>Placeholder for any raw food.  Intended for compatibility with pawns automatically picking up raw food to train animals.</AwesomeInventory_AIGenericRawFood_Description>
     <AwesomeInventory_AIGenericDrugs_Description>Placeholder for any drugs. It includes medical drugs and has the same mass as Flake.</AwesomeInventory_AIGenericDrugs_Description>
     <AwesomeInventory_AIGenericMedicine_Description>Placeholder for any medicine. Most commonly used by doctors.</AwesomeInventory_AIGenericMedicine_Description>
-    
+
+
+    <!-- Gizmo -->
+    <AwesomeInventory_CurrentHotSwapCostume>Current hot swap costume: {0}</AwesomeInventory_CurrentHotSwapCostume>
+    <AwesomeInventory_NoCostumeForHotSwap>No costume available. Choose a loadout for pawn that has costumes</AwesomeInventory_NoCostumeForHotSwap>
+    <AwesomeInventory_ForceHotSwap>Force hot swap</AwesomeInventory_ForceHotSwap>
+
     <!-- Mod settings -->
     <AwesomeInventory_AutoEquipWeapon>Find and equip weapon</AwesomeInventory_AutoEquipWeapon>
     <AwesomeInventory_ChooseThemeColorForQuality>Choose theme for quality color:</AwesomeInventory_ChooseThemeColorForQuality>

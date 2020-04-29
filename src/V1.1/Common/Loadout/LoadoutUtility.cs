@@ -55,16 +55,19 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         /// <param name="pawn"> Set loadout on this <paramref name="pawn"/>. </param>
         /// <param name="loadout"> Loadout to assign to <paramref name="pawn"/>. </param>
-        public static void SetLoadout(this Pawn pawn, AwesomeInventoryLoadout loadout)
+        /// <param name="delay"> If true, put jobs for changing apparel in job queue, otherwise, execute jobs immediately. </param>
+        /// <param name="forced"> If true, update for <paramref name="loadout"/> even though it is the same as current loadout. </param>
+        public static void SetLoadout(this Pawn pawn, AwesomeInventoryLoadout loadout, bool delay = false, bool forced = false)
         {
             if (pawn.TryGetComp<CompAwesomeInventoryLoadout>() is CompAwesomeInventoryLoadout comp)
             {
-                if (comp.Loadout == loadout)
+                if (comp.Loadout == loadout && !forced)
                 {
                     return;
                 }
 
-                comp.UpdateForNewLoadout(loadout);
+                ApparelOptionUtility.StopDressingJobs(pawn);
+                comp.UpdateForNewLoadout(loadout, delay, forced: forced);
 
                 if (loadout == pawn.outfits.CurrentOutfit)
                 {
@@ -72,6 +75,13 @@ namespace AwesomeInventory.Loadout
                 }
 
                 pawn.outfits.CurrentOutfit = loadout;
+
+                if (!comp.HotSwapCostume.InSameLoadoutTree(loadout))
+                {
+                    comp.HotSwapCostume = null;
+                    comp.LoadoutBeforeHotSwap = null;
+                    comp.HotswapState = CompAwesomeInventoryLoadout.HotSwapState.Inactive;
+                }
             }
         }
 

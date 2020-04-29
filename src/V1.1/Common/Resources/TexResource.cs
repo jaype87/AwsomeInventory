@@ -166,6 +166,12 @@ namespace AwesomeInventory.UI
 
         public static readonly Texture2D Getup = ContentFinder<Texture2D>.Get("UI/Icons/Getup");
 
+        public static readonly Texture2D ChangeClothActive = ContentFinder<Texture2D>.Get("UI/Icons/ChangeClothActive");
+
+        public static readonly Texture2D ChangeClothInactive = ContentFinder<Texture2D>.Get("UI/Icons/ChangeClothInactive");
+
+        public static readonly Texture2D ChangeClothInterrupted = ContentFinder<Texture2D>.Get("UI/Icons/ChangeClothInterrupted");
+
         public static readonly Texture2D IconEdit = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/edit");
 
         public static readonly Texture2D IconClear = ContentFinder<Texture2D>.Get("UI/Icons/RPGI_Loadout/clear");
