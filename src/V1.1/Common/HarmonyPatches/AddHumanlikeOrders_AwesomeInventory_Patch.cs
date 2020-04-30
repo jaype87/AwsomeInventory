@@ -129,6 +129,7 @@ namespace AwesomeInventory.Common.HarmonyPatches
                 {
                     if (pawn.CanReach(apparel, PathEndMode.ClosestTouch, Danger.Deadly)
                         && !apparel.IsBurning()
+                        && !MassUtility.WillBeOverEncumberedAfterPickingUp(pawn, apparel, apparel.stackCount)
                         && ApparelOptionUtility.CanWear(pawn, apparel))
                     {
                         FloatMenuOption option = FloatMenuUtility.DecoratePrioritizedTask(

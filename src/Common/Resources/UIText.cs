@@ -169,9 +169,13 @@ namespace AwesomeInventory.UI
 
         public const string Head = "AwesomeInventory_Head";
 
+        public const string HotSwapInterrupted = "AwesomeInventory_HotSwapInterrupted";
+
         public const string TipsOnCostume = "AwesomeInventory_TipsOnCostume";
 
         public const string ItemsInCostume = "AwesomeInventory_ItemsInCostume";
+
+        public const string ImportLoadout = "AwesomeInventory_ImportLoadout";
 
         public const string ApparelsInLoadout = "AwesomeInventory_ApparelsInLoadout";
 

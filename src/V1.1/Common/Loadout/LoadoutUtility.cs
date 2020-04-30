@@ -76,7 +76,7 @@ namespace AwesomeInventory.Loadout
 
                 pawn.outfits.CurrentOutfit = loadout;
 
-                if (!comp.HotSwapCostume.InSameLoadoutTree(loadout))
+                if (!comp.HotSwapCostume?.InSameLoadoutTree(loadout) ?? true)
                 {
                     comp.HotSwapCostume = null;
                     comp.LoadoutBeforeHotSwap = null;

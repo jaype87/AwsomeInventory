@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AwesomeInventory.Jobs;
+using AwesomeInventory.UI;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -91,6 +92,13 @@ namespace AwesomeInventory.Loadout
                 {
                     return false;
                 }
+
+                if (this.Loadout == null)
+                {
+                    Log.Error("this.Loadout is out of sync with _initialized in CompAwesomeInventory. This message is harmless.");
+                    this.RemoveLoadout();
+                    return false;
+                }
 #if DEBUG
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.Append(((Pawn)parent).Name + "'s inventory");
@@ -165,7 +173,7 @@ namespace AwesomeInventory.Loadout
         /// <param name="respawningAfterLoad"> True if the <see cref="ThingComp.parent"/> is respawned after load. </param>
         public override void PostSpawnSetup(bool respawningAfterLoad)
         {
-            if (parent is Pawn pawn)
+            if ((respawningAfterLoad || this.Loadout == null) && parent is Pawn pawn)
             {
                 if (pawn.outfits?.CurrentOutfit is AwesomeInventoryLoadout loadout)
                 {
@@ -312,96 +320,110 @@ namespace AwesomeInventory.Loadout
                     _apparelsBeforeChanged = null;
                 }
 
-                ConcurrentBag<Apparel> wornApparels = new ConcurrentBag<Apparel>();
-                Parallel.ForEach(
-                    Partitioner.Create(_pawn.apparel.WornApparel)
-                    , (Apparel apparel) =>
-                    {
-                        if (!_pawn.outfits.forcedHandler.IsForced(apparel) && !costume.CostumeItems.Any(c => c.Allows(apparel, out _)))
-                        {
-                            wornApparels.Add(apparel);
-                        }
-                    });
-                if (wornApparels.Any())
+                if (ApparelOptionUtility.CapableOfWearing(_pawn))
                 {
-                    StartUndressJobs(wornApparels, _pawn);
-                }
-
-                if (costume.CostumeItems.Any())
-                {
-                    ConcurrentBag<Thing> things = new ConcurrentBag<Thing>();
-                    Parallel.ForEach(
-                        Partitioner.Create(costume.CostumeItems)
-                        , (ThingGroupSelector selector) =>
-                        {
-                            Thing thing = _pawn.inventory.innerContainer.FirstOrDefault(t => selector.Allows(t, out _));
-                            if (thing != null)
-                                things.Add(thing);
-                        });
-
-                    if (things.Any())
-                    {
-                        if (!(_pawn.CurJobDef == AwesomeInventory_JobDefOf.AwesomeInventory_Undress || delay))
-                            _pawn.jobs.StopAll(true);
-
-                        foreach (Thing thing in things.Distinct())
-                        {
-                            if (thing.def.IsApparel)
-                            {
-                                Job job = new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, thing, false);
-                                if (_pawn.CurJob == null)
-                                    _pawn.jobs.StartJob(job);
-                                else
-                                    _pawn.jobs.jobQueue.EnqueueLast(job);
-                            }
-                            else if (thing.def.IsWeapon)
-                            {
-                                Job job = JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_MapEquip, thing);
-                                if (_pawn.CurJob == null)
-                                    _pawn.jobs.StartJob(job);
-                                else
-                                    _pawn.jobs.jobQueue.EnqueueLast(job);
-                            }
-                        }
-                    }
-                }
-            }
-            else if (oldLoadout is AwesomeInventoryCostume oldCostume && newLoadout.GetType() == typeof(AwesomeInventoryLoadout))
-            {
-                if (_apparelsBeforeChanged != null)
-                {
-                    ConcurrentBag<Apparel> apparelsToRemove = new ConcurrentBag<Apparel>();
+                    ConcurrentBag<Apparel> wornApparels = new ConcurrentBag<Apparel>();
                     Parallel.ForEach(
                         Partitioner.Create(_pawn.apparel.WornApparel)
                         , (Apparel apparel) =>
                         {
-                            if (!_apparelsBeforeChanged.Contains(apparel)
-                                && !newLoadout.Any(s => s.Allows(apparel, out _))
-                                && !_pawn.outfits.forcedHandler.IsForced(apparel))
-                                apparelsToRemove.Add(apparel);
+                            if (!_pawn.outfits.forcedHandler.IsForced(apparel) && !costume.CostumeItems.Any(c => c.Allows(apparel, out _)))
+                            {
+                                wornApparels.Add(apparel);
+                            }
                         });
-
-                    if (apparelsToRemove.Any())
+                    if (wornApparels.Any())
                     {
-                        StartUndressJobs(apparelsToRemove, _pawn);
+                        StartUndressJobs(wornApparels, _pawn);
                     }
 
-                    if (!(_pawn.CurJobDef == AwesomeInventory_JobDefOf.AwesomeInventory_Undress || delay))
-                        _pawn.jobs.StopAll(true);
-
-                    foreach (Apparel apparel1 in _apparelsBeforeChanged)
+                    if (costume.CostumeItems.Any())
                     {
-                        if (_pawn.inventory.innerContainer.Contains(apparel1))
+                        ConcurrentBag<Thing> things = new ConcurrentBag<Thing>();
+                        Parallel.ForEach(
+                            Partitioner.Create(costume.CostumeItems)
+                            , (ThingGroupSelector selector) =>
+                            {
+                                Thing thing = _pawn.inventory.innerContainer.FirstOrDefault(t => selector.Allows(t, out _));
+                                if (thing != null)
+                                    things.Add(thing);
+                            });
+
+                        if (things.Any())
                         {
-                            Job job = new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, apparel1, false);
-                            if (_pawn.CurJob == null)
-                                _pawn.jobs.StartJob(job);
-                            else
-                                _pawn.jobs.jobQueue.EnqueueLast(job);
+                            if (!(_pawn.CurJobDef == AwesomeInventory_JobDefOf.AwesomeInventory_Undress || delay))
+                                _pawn.jobs.StopAll(true);
+
+                            foreach (Thing thing in things.Distinct())
+                            {
+                                if (thing.def.IsApparel)
+                                {
+                                    Job job = new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, thing, false);
+                                    if (_pawn.CurJob == null)
+                                        _pawn.jobs.StartJob(job);
+                                    else
+                                        _pawn.jobs.jobQueue.EnqueueLast(job);
+                                }
+                                else if (thing.def.IsWeapon)
+                                {
+                                    Job job = JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_MapEquip, thing);
+                                    if (_pawn.CurJob == null)
+                                        _pawn.jobs.StartJob(job);
+                                    else
+                                        _pawn.jobs.jobQueue.EnqueueLast(job);
+                                }
+                            }
                         }
                     }
+                }
+                else
+                {
+                    Messages.Message(UIText.NotCapableChangingApparel.TranslateSimple(), MessageTypeDefOf.NeutralEvent);
+                }
+            }
+            else if (oldLoadout is AwesomeInventoryCostume oldCostume && newLoadout.GetType() == typeof(AwesomeInventoryLoadout))
+            {
+                if (ApparelOptionUtility.CapableOfWearing(_pawn))
+                {
+                    if (_apparelsBeforeChanged != null)
+                    {
+                        ConcurrentBag<Apparel> apparelsToRemove = new ConcurrentBag<Apparel>();
+                        Parallel.ForEach(
+                            Partitioner.Create(_pawn.apparel.WornApparel)
+                            , (Apparel apparel) =>
+                            {
+                                if (!_apparelsBeforeChanged.Contains(apparel)
+                                    && !newLoadout.Any(s => s.Allows(apparel, out _))
+                                    && !_pawn.outfits.forcedHandler.IsForced(apparel))
+                                    apparelsToRemove.Add(apparel);
+                            });
 
-                    _apparelsBeforeChanged = null;
+                        if (apparelsToRemove.Any())
+                        {
+                            StartUndressJobs(apparelsToRemove, _pawn);
+                        }
+
+                        if (!(_pawn.CurJobDef == AwesomeInventory_JobDefOf.AwesomeInventory_Undress || delay))
+                            _pawn.jobs.StopAll(true);
+
+                        foreach (Apparel apparel1 in _apparelsBeforeChanged)
+                        {
+                            if (_pawn.inventory.innerContainer.Contains(apparel1))
+                            {
+                                Job job = new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, apparel1, false);
+                                if (_pawn.CurJob == null)
+                                    _pawn.jobs.StartJob(job);
+                                else
+                                    _pawn.jobs.jobQueue.EnqueueLast(job);
+                            }
+                        }
+
+                        _apparelsBeforeChanged = null;
+                    }
+                }
+                else
+                {
+                    Messages.Message(UIText.NotCapableChangingApparel.TranslateSimple(), MessageTypeDefOf.NeutralEvent);
                 }
             }
 
@@ -428,6 +450,16 @@ namespace AwesomeInventory.Loadout
         protected virtual void AddNewThingGroupSelectorCallback(ThingGroupSelector groupSelector)
         {
             ValidateArg.NotNull(groupSelector, nameof(groupSelector));
+
+            if (groupSelector.UseBottomThreshold)
+            {
+                var state = new ThresholdState()
+                {
+                    NegBottomThresholdCount = groupSelector.BottomThresoldCount - groupSelector.AllowedStackCount,
+                    CanRestock = true,
+                };
+                _bottomThresholdLookup[groupSelector] = state;
+            }
 
             List<ThingGroupSelector> selectors = this.InventoryMargins
                 .Where(pair => ThingDefComparer.Instance.Equals(pair.Key.AllowedThing, groupSelector.AllowedThing))

@@ -166,6 +166,14 @@ namespace AwesomeInventory.HarmonyPatches
 
                 return false;
             }
+            else if (comp != null)
+            {
+                if (comp.InventoryMargins != null)
+                {
+                    Log.Error("Loadout and InventoryMargins are out of sync. This message is harmless. Resetting");
+                    comp.RemoveLoadout();
+                }
+            }
 
             return false;
         }

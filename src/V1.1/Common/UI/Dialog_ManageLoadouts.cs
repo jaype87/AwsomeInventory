@@ -339,7 +339,7 @@ namespace AwesomeInventory.UI
                 Find.WindowStack.Add(new Dialog_Costume(_currentLoadout, _pawn));
             }
 
-            Rect centerCanvas = canvas.ReplacexMin(canvas.x + GenUI.SmallIconSize * 2).ReplacexMax(canvas.xMax - 2 * GenUI.SmallIconSize);
+            Rect centerCanvas = canvas.ReplacexMin(canvas.x + GenUI.SmallIconSize * 2).ReplacexMax(canvas.xMax - 3 * GenUI.SmallIconSize);
             Rect drawingRect = new Rect(0, centerCanvas.y, GenUI.SmallIconSize * 2 + DrawUtility.TwentyCharsWidth + GenUI.GapTiny * 2, GenUI.ListSpacing);
             Rect centeredRect = drawingRect.CenteredOnXIn(centerCanvas);
             WidgetRow widgetRow = new WidgetRow(centeredRect.x, centeredRect.y, UIDirection.RightThenDown);
@@ -363,8 +363,12 @@ namespace AwesomeInventory.UI
             if (widgetRow.ButtonIcon(TexResource.TriangleRight))
                 WhiteBlacklistView.IsWishlist ^= true;
 
+            // Import items from other loadout
+            Rect importRect = new Rect(centerCanvas.xMax, canvas.y, GenUI.SmallIconSize, canvas.height);
+            this.DrawImportLoadout(importRect);
+
             // Sort list alphabetically.
-            Rect sortRect = new Rect(centerCanvas.xMax, canvas.y, GenUI.SmallIconSize, canvas.height);
+            Rect sortRect = importRect.ReplaceX(importRect.xMax);
             TooltipHandler.TipRegion(sortRect, UIText.SortListAlphabetically.TranslateSimple());
             if (Widgets.ButtonImage(sortRect, TexResource.SortLetterA))
             {
@@ -393,6 +397,30 @@ namespace AwesomeInventory.UI
                             }
                         }
                         , buttonBText: UIText.CancelButton.TranslateSimple()));
+            }
+        }
+
+        protected virtual void DrawImportLoadout(Rect importRect)
+        {
+            TooltipHandler.TipRegion(importRect, UIText.ImportLoadout.TranslateSimple());
+            if (Widgets.ButtonImage(importRect, TexResource.ImportLoadout))
+            {
+                List<FloatMenuOption> options = new List<FloatMenuOption>();
+                foreach (var loadout in LoadoutManager.Loadouts.OfType<AwesomeInventoryLoadout>())
+                {
+                    options.Add(
+                        new FloatMenuOption(
+                            loadout.label
+                            , () =>
+                            {
+                                foreach (ThingGroupSelector selector in loadout)
+                                {
+                                    _currentLoadout.Add(new ThingGroupSelector(selector));
+                                }
+                            }));
+                }
+
+                Find.WindowStack.Add(new FloatMenu(options));
             }
         }
 

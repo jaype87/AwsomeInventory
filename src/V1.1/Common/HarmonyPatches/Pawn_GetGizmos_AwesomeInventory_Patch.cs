@@ -4,10 +4,12 @@
 // </copyright>
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using AwesomeInventory.Loadout;
 using AwesomeInventory.UI;
-using AwesomeInventory.Utilities;
 using HarmonyLib;
+using RimWorld;
 using Verse;
 
 namespace AwesomeInventory.HarmonyPatches
@@ -31,6 +33,7 @@ namespace AwesomeInventory.HarmonyPatches
         /// <param name="gizmos"> Gizmos to add to. </param>
         /// <param name="__instance"> Pawn who owns the gizmos. </param>
         /// <returns> A collection of <see cref="Gizmo"/> that will display on screen. </returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Harmony Patch")]
         public static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> gizmos, Pawn __instance)
         {
             if (gizmos == null)
@@ -47,13 +50,19 @@ namespace AwesomeInventory.HarmonyPatches
                 {
                     if (AwesomeInventoryServiceProvider.TryGetImplementation<AwesomeInventoryTabBase>(out AwesomeInventoryTabBase tab))
                     {
-                        ToggleGearTab toggleGearTab = new ToggleGearTab(tab.GetType());
-                        yield return toggleGearTab;
+                        if (tab.IsVisible)
+                        {
+                            ToggleGearTab toggleGearTab = new ToggleGearTab(tab.GetType());
+                            yield return toggleGearTab;
+                        }
                     }
                 }
             }
 
-            yield return new ChangeCostumeInPlace(__instance);
+            var comp = __instance.TryGetComp<CompAwesomeInventoryLoadout>();
+
+            if (AwesomeInvnetoryMod.Settings.UseLoadout && __instance.IsColonistPlayerControlled && comp != null)
+                yield return new ChangeCostumeInPlace(__instance);
         }
     }
 }

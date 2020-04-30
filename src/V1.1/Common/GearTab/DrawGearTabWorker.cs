@@ -426,8 +426,10 @@ namespace AwesomeInventory.UI
         {
             ValidateArg.NotNull(selPawn, nameof(selPawn));
 
+            CompAwesomeInventoryLoadout comp = selPawn.TryGetComp<CompAwesomeInventoryLoadout>();
+
             bool openLoadout = false;
-            if (AwesomeInvnetoryMod.Settings.UseLoadout)
+            if (AwesomeInvnetoryMod.Settings.UseLoadout && comp != null)
             {
                 List<FloatMenuOption> loadoutOptions = BuildMenuOptions(LoadoutManager.Loadouts.Where(l => l.GetType() == typeof(AwesomeInventoryLoadout)).OfType<Outfit>().ToList()).ToList();
                 List<FloatMenuOption> outfitOptions = BuildMenuOptions(Current.Game.outfitDatabase.AllOutfits.Where(o => o.GetType() != typeof(AwesomeInventoryCostume)).ToList());

@@ -37,26 +37,33 @@ namespace AwesomeInventory
         public ChangeCostumeInPlace(Pawn pawn)
         {
             _pawn = pawn;
-            this.action = ChangeCostume;
 
             _comp = _pawn.TryGetComp<CompAwesomeInventoryLoadout>();
-
-            switch (_comp.HotswapState)
+            if (_comp != null)
             {
-                case HotSwapState.Active:
-                    this.icon = TexResource.ChangeClothActive;
-                    break;
-                case HotSwapState.Inactive:
-                    this.icon = TexResource.ChangeClothInactive;
-                    break;
-                case HotSwapState.Interuppted:
-                    this.icon = TexResource.ChangeClothInterrupted;
-                    break;
-            }
+                this.action = ChangeCostume;
+                switch (_comp.HotswapState)
+                {
+                    case HotSwapState.Active:
+                        this.icon = TexResource.ChangeClothActive;
+                        break;
+                    case HotSwapState.Inactive:
+                        this.icon = TexResource.ChangeClothInactive;
+                        break;
+                    case HotSwapState.Interuppted:
+                        this.icon = TexResource.ChangeClothInterrupted;
+                        break;
+                }
 
-            this.defaultDesc = _comp.HotSwapCostume == null
-                ? UIText.CurrentHotSwapCostume.Translate(UIText.None.TranslateSimple())
-                : UIText.CurrentHotSwapCostume.Translate(_comp.HotSwapCostume.label);
+                this.defaultDesc = _comp.HotSwapCostume == null
+                                ? UIText.CurrentHotSwapCostume.Translate(UIText.None.TranslateSimple())
+                                : UIText.CurrentHotSwapCostume.Translate(_comp.HotSwapCostume.label);
+
+                if (_comp.HotswapState == HotSwapState.Interuppted)
+                {
+                    this.defaultDesc = string.Concat(this.defaultDesc, Environment.NewLine, UIText.HotSwapInterrupted.TranslateSimple());
+                }
+            }
         }
 
         /// <inheritdoc/>
@@ -64,37 +71,37 @@ namespace AwesomeInventory
         {
             get
             {
-                if (_comp.HotSwapCostume != null || ApparelOptionUtility.CapableOfWearing(_pawn))
+                if (_comp != null)
                 {
-                    yield return new FloatMenuOption(
-                        UIText.ForceHotSwap.TranslateSimple()
-                        , () =>
-                        {
-                            if (_comp.HotswapState == HotSwapState.Inactive)
+                    if (_comp.HotSwapCostume != null && _comp.HotswapState == HotSwapState.Inactive && ApparelOptionUtility.CapableOfWearing(_pawn))
+                    {
+                        yield return new FloatMenuOption(
+                            UIText.ForceHotSwap.TranslateSimple()
+                            , () =>
                             {
                                 ApparelOptionUtility.StopDressingJobs(_pawn);
                                 _pawn.SetLoadout(_comp.HotSwapCostume);
                                 _comp.HotswapState = HotSwapState.Active;
-                            }
-                        });
-                }
-
-                if (Find.Selector.SingleSelectedThing is Pawn && _comp.Loadout != null)
-                {
-                    IEnumerable<AwesomeInventoryCostume> costumes = _comp.Loadout is AwesomeInventoryCostume aiCostume
-                                                                     ? aiCostume.Base.Costumes
-                                                                     : _comp.Loadout.Costumes;
-
-                    foreach (AwesomeInventoryCostume costume in costumes)
-                    {
-                        yield return new FloatMenuOption(
-                            costume.label
-                            , () => _comp.HotSwapCostume = costume);
+                            });
                     }
 
-                    if (!costumes.Any())
+                    if (Find.Selector.SingleSelectedThing is Pawn && _comp.Loadout != null)
                     {
-                        yield return new FloatMenuOption(UIText.NoCostumeForHotSwap.TranslateSimple(), null);
+                        IEnumerable<AwesomeInventoryCostume> costumes = _comp.Loadout is AwesomeInventoryCostume aiCostume
+                                                                         ? aiCostume.Base.Costumes
+                                                                         : _comp.Loadout.Costumes;
+
+                        foreach (AwesomeInventoryCostume costume in costumes)
+                        {
+                            yield return new FloatMenuOption(
+                                costume.label
+                                , () => _comp.HotSwapCostume = costume);
+                        }
+
+                        if (!costumes.Any())
+                        {
+                            yield return new FloatMenuOption(UIText.NoCostumeForHotSwap.TranslateSimple(), null);
+                        }
                     }
                 }
                 else
