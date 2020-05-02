@@ -34,6 +34,7 @@
     <AwesomeInventory_EmptyLoadout>빈 소지품목</AwesomeInventory_EmptyLoadout>
     <AwesomeInventory_GlobalApparelSetting>전체 의류 설정</AwesomeInventory_GlobalApparelSetting>
     <AwesomeInventory_GlobalOutfitSettingWarning>주의 사항: 여기의 설정은 소지품목 창의 의류 설정보다 우선합니다. (무기 및 기타 항목은 영향을 받지 않습니다)</AwesomeInventory_GlobalOutfitSettingWarning>
+	 <AwesomeInventory_ImportLoadout>다른 소지품목으로부터 물품 가져오기</AwesomeInventory_ImportLoadout>
     <AwesomeInventory_LoadoutName>{0}의 소지품목</AwesomeInventory_LoadoutName>
     <AwesomeInventory_MouseOverNumbersForDetails>자세한 내용은 숫자 위로 마우스를 가져가십시오</AwesomeInventory_MouseOverNumbersForDetails>
     <AwesomeInventory_NewLoadout>새 소지품목</AwesomeInventory_NewLoadout>
@@ -45,6 +46,7 @@
     <AwesomeInventory_RestockAlways>사용 후 바로 채우기</AwesomeInventory_RestockAlways>
     <AwesomeInventory_RestockBottomThreshold>재고 수량이 지정 갯수가 되었을 때 채우기:</AwesomeInventory_RestockBottomThreshold>
     <AwesomeInventory_SelectLoadout>소지품목 선택</AwesomeInventory_SelectLoadout>
+	 <AwesomeInventory_SortListAlphabetically>이름순으로 정렬</AwesomeInventory_SortListAlphabetically>
     <AwesomeInventory_SourceAllTip>모든 품목</AwesomeInventory_SourceAllTip>
     <AwesomeInventory_SourceApparelTip>의류</AwesomeInventory_SourceApparelTip>
     <AwesomeInventory_SourceFilterTip>검색</AwesomeInventory_SourceFilterTip>
@@ -57,6 +59,7 @@
     <AwesomeInventory_StockMode>재고 모드</AwesomeInventory_StockMode>
     <AwesomeInventory_StuffSource>품목 재료</AwesomeInventory_StuffSource>
     <AwesomeInventory_TryToDeleteLastLoadout>마지막 소지품목은 삭제할 수 없습니다.</AwesomeInventory_TryToDeleteLastLoadout>
+	 <AwesomeInventory_UseGenericStuff>소지품목의, 모든 의류에 일반 등급 적용</AwesomeInventory_UseGenericStuff>
     <AwesomeInventory_Weight>무게</AwesomeInventory_Weight>
     <AwesomeInventory_Wishlist>선호품목</AwesomeInventory_Wishlist>
   
@@ -83,14 +86,25 @@
     <AwesomeInventory_AIGenericRawFood_Description>날 음식에 대한 공간 예약입니다. 동물을 훈련시키기 위해 날 음식을 자동으로 줍는 정착민과의 호환성을 목적으로 합니다.</AwesomeInventory_AIGenericRawFood_Description>
     <AwesomeInventory_AIGenericDrugs_Description>모든 약물의 공간 예약입니다. 의료적 약물을 포함하고, 플레이크와 같은 무게를 가지고 있습니다.</AwesomeInventory_AIGenericDrugs_Description>
     <AwesomeInventory_AIGenericMedicine_Description>모든 약품의 공간 예약입니다. 의사가 가장 일반적으로 사용합니다.</AwesomeInventory_AIGenericMedicine_Description>
+	
+	 <!-- Gizmo -->
+    <AwesomeInventory_CurrentHotSwapCostume>현재 빠른 교체 의상: {0}</AwesomeInventory_CurrentHotSwapCostume>
+	 <AwesomeInventory_HotSwapInterrupted>빠른 교체가 중단되었습니다</AwesomeInventory_HotSwapInterrupted>
+    <AwesomeInventory_NotCapaleChangingApparel>{0}(은)는 의류를 변경할 수 없습니다. </AwesomeInventory_NotCapaleChangingApparel>
+    <AwesomeInventory_NoCostumeForHotSwap>활성화된 의상이 없습니다. 의상이 있는 정착민의 소지품목을 선택하십시오</AwesomeInventory_NoCostumeForHotSwap>
+    <AwesomeInventory_ForceHotSwap>강제 빠른 교체</AwesomeInventory_ForceHotSwap>
+    <AwesomeInventory_SameCostumeForHotSwap>현재 활성 의상이 빠른 교체 의상과 동일</AwesomeInventory_SameCostumeForHotSwap>
     
     <!-- Mod settings -->
     <AwesomeInventory_AutoEquipWeapon>무기 자동 장비</AwesomeInventory_AutoEquipWeapon>
     <AwesomeInventory_ChooseThemeColorForQuality>품질 색상 테마 선택:</AwesomeInventory_ChooseThemeColorForQuality>
+	 <AwesomeInventory_ExplainFeatures>소지품목/의상에 대한 설명</AwesomeInventory_ExplainFeatures>
     <AwesomeInventory_GearTabHeight>장비 창 높이:</AwesomeInventory_GearTabHeight>
     <AwesomeInventory_GearTabWidht>장비 창 너비:</AwesomeInventory_GearTabWidht>
     <AwesomeInventory_GoNuts>니 맘대로 해봐!</AwesomeInventory_GoNuts>
     <AwesomeInventory_PatchAllRaces>모든 종족 패치</AwesomeInventory_PatchAllRaces>
+	 <AwesomeInventory_TipsOnCostume>의상 사용법</AwesomeInventory_TipsOnCostume>
+	 <AwesomeInventory_TipsForHotSwap>빠른 교체 의상 사용법</AwesomeInventory_TipsForHotSwap>
     <AwesomeInventory_ToggleGearTab>장비 창 열기</AwesomeInventory_ToggleGearTab>
     <AwesomeInventory_UseGearTabToggle>장비 창 버튼/열기</AwesomeInventory_UseGearTabToggle>
     <AwesomeInventory_UseLoadout>소지품목 사용</AwesomeInventory_UseLoadout>

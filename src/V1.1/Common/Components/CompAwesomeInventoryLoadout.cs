@@ -544,6 +544,11 @@ namespace AwesomeInventory.Loadout
         {
             ValidateArg.NotNull(thing, nameof(thing));
 
+            if (thing.stackCount <= 0)
+            {
+                Log.Error(string.Concat(AIDebug.Header, "Thing count is equal to or less than 0, reset to 1"));
+                thing.stackCount = 1;
+            }
             this.Restock(thing, thing.stackCount);
         }
 

@@ -208,6 +208,12 @@ namespace AwesomeInventory
         }
 
         // Most part is from the source code
+        /// <summary>
+        /// Order <paramref name="pawn"/> to wear new apparel.
+        /// </summary>
+        /// <param name="pawn"> Pawn who is about to wear <paramref name="newApparel"/>. </param>
+        /// <param name="newApparel"> Apparel to wear. </param>
+        /// <param name="dropReplacedApparel"> If true, drop the old apparel. </param>
         public static void Wear(Pawn pawn, Apparel newApparel, bool dropReplacedApparel = true)
         {
             ValidateArg.NotNull(newApparel, nameof(newApparel));
@@ -256,12 +262,7 @@ namespace AwesomeInventory
                 Log.Warning(pawn + " is trying to wear " + newApparel + " but this apparel already has a wearer (" + newApparel.Wearer + "). This may or may not cause bugs.");
             }
 
-            // Circumvene accessibility restriction and add apparel directly to inner list.
-            object wornApparel = pawn.apparel
-                                     .GetType()
-                                     .GetField("wornApparel", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                                     .GetValue(pawn.apparel);
-            wornApparel.GetType().GetMethod("TryAdd", new Type[] { typeof(Thing), typeof(bool) }).Invoke(wornApparel, new object[] { newApparel, false });
+            pawn.apparel.GetDirectlyHeldThings().TryAdd(newApparel);
         }
 
         private static string formatArmorValue(float value, string unit)
