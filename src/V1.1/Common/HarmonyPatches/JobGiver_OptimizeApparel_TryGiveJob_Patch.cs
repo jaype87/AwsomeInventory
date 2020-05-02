@@ -4,11 +4,16 @@
 // </copyright>
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using AwesomeInventory.Jobs;
 using AwesomeInventory.Loadout;
 using HarmonyLib;
 using RimWorld;
@@ -35,6 +40,8 @@ namespace AwesomeInventory.HarmonyPatches
         /// </summary>
         /// <param name="pawn"> Pawn who is about to doing a job.</param>
         /// <param name="__result"> A scheduled job. </param>
+        [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Harmony patch")]
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Required to catch all")]
         public static void Postfix(Pawn pawn, ref Job __result)
         {
             if (__result == null)
@@ -44,17 +51,58 @@ namespace AwesomeInventory.HarmonyPatches
             if (comp == null)
                 return;
 
+            Job job = __result;
+            Thing targetThingA = job.targetA.Thing;
             if (comp.Loadout is AwesomeInventoryCostume costume)
             {
                 if (__result.def == JobDefOf.Wear)
                 {
-                    Job job = __result;
-                    if (__result.targetA.HasThing && !costume.CostumeItems.Any(s => s.Allows(job.targetA.Thing, out _)))
+                    if (targetThingA != null && !costume.CostumeItems.Any(s => s.Allows(targetThingA, out _)))
                     {
                         __result = null;
                         JobMaker.ReturnToPool(job);
                         return;
                     }
+                }
+            }
+            else if (comp.Loadout is AwesomeInventoryLoadout loadout)
+            {
+                CancellationTokenSource source = new CancellationTokenSource();
+                CancellationToken token = source.Token;
+                try
+                {
+                    bool conflict = false;
+
+                    Parallel.ForEach(
+                        Partitioner.Create(pawn.apparel.WornApparel)
+                        , (Apparel apparel) =>
+                        {
+                            if (!token.IsCancellationRequested
+                                && targetThingA != null
+                                && apparel.def != targetThingA.def
+                                && !ApparelUtility.CanWearTogether(apparel.def, targetThingA.def, BodyDefOf.Human))
+                            {
+                                if (comp.Loadout.Any(selector => selector.Allows(apparel, out _)))
+                                {
+                                    conflict = true;
+                                    source.Cancel();
+                                }
+                            }
+                        });
+
+                    if (conflict)
+                    {
+                        __result = new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, targetThingA, false);
+                        JobMaker.ReturnToPool(job);
+                    }
+                }
+                catch (Exception e)
+                {
+                    __result = JobMaker.MakeJob(JobDefOf.Wear, targetThingA);
+                }
+                finally
+                {
+                    source.Dispose();
                 }
             }
         }

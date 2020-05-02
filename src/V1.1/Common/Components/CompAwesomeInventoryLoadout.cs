@@ -549,6 +549,7 @@ namespace AwesomeInventory.Loadout
                 Log.Error(string.Concat(AIDebug.Header, "Thing count is equal to or less than 0, reset to 1"));
                 thing.stackCount = 1;
             }
+
             this.Restock(thing, thing.stackCount);
         }
 

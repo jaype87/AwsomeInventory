@@ -207,7 +207,6 @@ namespace AwesomeInventory
             GUI.DrawTexture(rect, PortraitsCache.Get(pawn, pos, PawnTextureCameraOffset, 1.18f));
         }
 
-        // Most part is from the source code
         /// <summary>
         /// Order <paramref name="pawn"/> to wear new apparel.
         /// </summary>
