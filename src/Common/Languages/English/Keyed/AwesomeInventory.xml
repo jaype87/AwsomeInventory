@@ -62,6 +62,9 @@
     <AwesomeInventory_UseGenericStuff>Use generic stuff for all apparel in loadout</AwesomeInventory_UseGenericStuff>
     <AwesomeInventory_Weight>Weight</AwesomeInventory_Weight>
     <AwesomeInventory_Wishlist>Wishlist</AwesomeInventory_Wishlist>
+        <!-- Combat Extended -->
+        <AwesomeInventory_SelectedWeapon>Selected Weapon: </AwesomeInventory_SelectedWeapon>
+        <AwesomeInventory_SelectedAmmo>Selected Ammo: </AwesomeInventory_SelectedAmmo>
 
     <!-- Costume Window -->
     <AwesomeInventory_CreateCostume>Create Costume</AwesomeInventory_CreateCostume>

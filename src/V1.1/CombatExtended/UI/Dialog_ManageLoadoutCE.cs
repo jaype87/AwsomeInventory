@@ -183,6 +183,8 @@ namespace AwesomeInventory.UI
                                     _currentLoadout.Add(groupSelector);
                                 else
                                     _currentLoadout.AddToBlacklist(groupSelector);
+
+                                Find.WindowStack.Add(new Dialog_AddAmmoPerMagSize(groupSelector, thingDef, ammoUser.magazineSize));
                             }));
                 }
 

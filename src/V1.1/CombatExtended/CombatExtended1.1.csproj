@@ -71,6 +71,8 @@
     <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\CombatExtended\Assemblies\</OutputPath>
     <DebugType>portable</DebugType>
     <DocumentationFile>G:\SteamLibrary\steamapps\common\RimWorld\Mods\AwesomeInventory\v1.1\CombatExtended\Assemblies\AwesomeInventoryCE1.1.xml</DocumentationFile>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CE Build|AnyCPU'">
     <OutputPath>..\..\Assemblies\</OutputPath>
@@ -139,6 +141,7 @@
     <Compile Include="Resources\CEStrings.cs" />
     <Compile Include="Resources\ImageResource.cs" />
     <Compile Include="Services\CEServicesRegistration.cs" />
+    <Compile Include="UI\Dialog_AddAmmoPerMagSize.cs" />
     <Compile Include="UI\Dialog_ManageLoadoutCE.cs" />
     <Compile Include="Utilities\BulkUtility.cs" />
     <None Include="packages.config" />
