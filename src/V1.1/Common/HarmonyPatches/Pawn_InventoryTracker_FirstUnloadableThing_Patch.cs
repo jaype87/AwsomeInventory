@@ -164,6 +164,11 @@ namespace AwesomeInventory.HarmonyPatches
                         return true;
                 }
 
+                if (SimpleSidearmUtility.IsActive)
+                {
+                    return SimpleSidearmUtility.InMemory(inventory.pawn, inventory.innerContainer[index]);
+                }
+
                 return false;
             }
             else if (comp != null)

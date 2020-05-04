@@ -6,6 +6,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -19,6 +20,7 @@ namespace AwesomeInventory.Loadout
     /// <summary>
     /// A gorup of <see cref="ThingSelector"/> that shares a common <see cref="ThingDef"/>.
     /// </summary>
+    [DebuggerDisplay("{AllowedThing}")]
     public class ThingGroupSelector : ICollection<ThingSelector>, IExposable, ILoadReferenceable, IReset
     {
         private List<ThingSelector> _selectors = new List<ThingSelector>();

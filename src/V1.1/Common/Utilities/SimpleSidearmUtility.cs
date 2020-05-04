@@ -4,9 +4,12 @@
 // </copyright>
 
 using System;
+using System.CodeDom;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Verse;
@@ -18,17 +21,53 @@ namespace AwesomeInventory
     /// </summary>
     public static class SimpleSidearmUtility
     {
+        private const string _assemblyName = "SimpleSidearms";
+
         [SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase", Justification = "Lower case is required.")]
         private static string _packageID = "PeteTimesSix.SimpleSidearms".ToLowerInvariant();
+
+        private static Type _compSidearmMemory;
+        private static PropertyInfo _pawnMemory;
+        private static MethodInfo _toThingDefStuffDefPair;
 
         static SimpleSidearmUtility()
         {
             IsActive = LoadedModManager.RunningModsListForReading.Any(m => m.PackageId == _packageID);
+            if (IsActive)
+            {
+                Assembly assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == _assemblyName);
+                if (assembly != null)
+                {
+                    _compSidearmMemory = assembly.GetType("SimpleSidearms.rimworld.CompSidearmMemory");
+                    _pawnMemory = _compSidearmMemory.GetProperty("RememberedWeapons", BindingFlags.Public | BindingFlags.Instance);
+                    _toThingDefStuffDefPair = assembly.GetType("SimpleSidearms.Extensions").GetMethod("toThingDefStuffDefPair", BindingFlags.Static | BindingFlags.Public);
+                }
+            }
         }
 
         /// <summary>
         /// Gets a value indicating whether simple sidearm is actived in this save.
         /// </summary>
         public static bool IsActive { get; private set; }
+
+        /// <summary>
+        /// Check if <paramref name="thing"/> is in Simple Sidearms's memory.
+        /// </summary>
+        /// <param name="pawn"> Pawn who has <paramref name="thing"/>. </param>
+        /// <param name="thing"> Thing to check. </param>
+        /// <returns> True, if <paramref name="thing"/> is in SS memory. </returns>
+        public static bool InMemory(Pawn pawn, Thing thing)
+        {
+            ValidateArg.NotNull(pawn, nameof(pawn));
+
+            ThingComp comp = pawn.AllComps.FirstOrDefault(t => t.GetType() == _compSidearmMemory);
+            if (comp != null)
+            {
+                IList memory = (IList)_pawnMemory.GetValue(comp);
+                return memory.Contains(_toThingDefStuffDefPair.Invoke(null, new[] { thing }));
+            }
+
+            return false;
+        }
     }
 }
