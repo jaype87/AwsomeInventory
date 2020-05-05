@@ -219,6 +219,7 @@
     <Compile Include="UnitTest\UI\UnitTestButton.cs" />
     <Compile Include="Utilities\ApparelOptionUtility.cs" />
     <Compile Include="Utilities\BetterPawnControlUtility.cs" />
+    <Compile Include="Utilities\CombatExtendedUtility.cs" />
     <Compile Include="Utilities\DefUtility.cs" />
     <Compile Include="Utilities\GenBar.cs" />
     <Compile Include="Plugins\CustomRace.cs" />
@@ -242,6 +243,7 @@
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
+    <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
       <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>

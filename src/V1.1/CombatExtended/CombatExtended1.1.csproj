@@ -131,6 +131,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\DynamicAmmoDefManager.cs" />
     <Compile Include="DefOfs\CEApparelLayerDefOf.cs" />
     <Compile Include="DynamicDefs\GenericAmmo.cs" />
     <Compile Include="GeatTab\AwesomeInventoryTab.cs" />

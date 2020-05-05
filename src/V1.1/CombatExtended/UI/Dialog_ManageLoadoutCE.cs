@@ -162,7 +162,12 @@ namespace AwesomeInventory.UI
             {
                 CompProperties_AmmoUser ammoUser = thingDef.GetCompProperties<CompProperties_AmmoUser>();
 
-                GenericAmmo genericAmmo = this.CreateGenericAmmoDef(thingDef);
+                AIGenericDef genericAmmo = DefDatabase<AIGenericDef>.GetNamedSilentFail(CEStrings.GenericAmmoPrefix + thingDef.defName);
+                if (genericAmmo == null)
+                {
+                    genericAmmo = this.CreateGenericAmmoDef(thingDef);
+                    DefDatabase<AIGenericDef>.Add(genericAmmo);
+                }
 
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
                 foreach (ThingDef ammoDef in ammoUser.ammoSet?.ammoTypes.Select(al => al.ammo as ThingDef).Concat(genericAmmo as ThingDef))
@@ -174,7 +179,10 @@ namespace AwesomeInventory.UI
                             {
                                 ThingGroupSelector groupSelector = new ThingGroupSelector(ammoDef);
                                 ThingSelector thingSelector;
-                                thingSelector = AwesomeInventoryServiceProvider.MakeInstanceOf<SingleThingSelector>(ammoDef, null);
+                                if (ammoDef is GenericAmmo)
+                                    thingSelector = AwesomeInventoryServiceProvider.MakeInstanceOf<GenericThingSelector>(ammoDef);
+                                else
+                                    thingSelector = AwesomeInventoryServiceProvider.MakeInstanceOf<SingleThingSelector>(ammoDef, null);
 
                                 groupSelector.SetStackCount(ammoUser.magazineSize);
                                 groupSelector.Add(thingSelector);

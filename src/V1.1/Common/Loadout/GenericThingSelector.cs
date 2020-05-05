@@ -21,6 +21,7 @@ namespace AwesomeInventory.Loadout
     public class GenericThingSelector : ThingSelector
     {
         private AIGenericDef _genericDef;
+        private string _defName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericThingSelector"/> class.
@@ -54,6 +55,11 @@ namespace AwesomeInventory.Loadout
             _genericDef.ThingCategoryDefs.ToList().ForEach(t => _thingFilter.SetAllow(t, true, _genericDef.ExcepDefs));
         }
 
+        /// <summary>
+        /// Gets the generic def this selector is about.
+        /// </summary>
+        public AIGenericDef GenericDef => _genericDef;
+
         /// <inheritdoc/>
         public override string LabelCapNoCount => _genericDef.label.Colorize(QualityColor.Instance.Generic);
 
@@ -74,12 +80,15 @@ namespace AwesomeInventory.Loadout
         public override void ExposeData()
         {
             base.ExposeData();
-            string defName = _genericDef?.defName ?? string.Empty;
-            Scribe_Values.Look(ref defName, nameof(defName));
-
-            if (Scribe.mode == LoadSaveMode.LoadingVars)
+            if (Scribe.mode == LoadSaveMode.Saving || Scribe.mode == LoadSaveMode.LoadingVars)
             {
-                _genericDef = DefDatabase<AIGenericDef>.GetNamed(defName);
+                _defName = _genericDef?.defName ?? string.Empty;
+                Scribe_Values.Look(ref _defName, nameof(_defName));
+            }
+
+            if (Scribe.mode == LoadSaveMode.ResolvingCrossRefs)
+            {
+                _genericDef = DefDatabase<AIGenericDef>.GetNamed(_defName);
             }
         }
     }

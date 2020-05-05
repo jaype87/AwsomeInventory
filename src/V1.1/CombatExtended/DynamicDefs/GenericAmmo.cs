@@ -17,8 +17,16 @@ namespace AwesomeInventory.Loadout
     /// <summary>
     /// Generic def for ammo.
     /// </summary>
-    public class GenericAmmo : AIGenericDef
+    public class GenericAmmo : AIGenericDef, IExposable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenericAmmo"/> class.
+        /// </summary>
+        /// <remarks> Only used for deserialization. </remarks>
+        public GenericAmmo()
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericAmmo"/> class.
         /// </summary>
@@ -43,6 +51,39 @@ namespace AwesomeInventory.Loadout
                     stat = CE_StatDefOf.Bulk, value = ammoDefs.Average(t => t.GetStatValueAbstract(CE_StatDefOf.Bulk)),
                 },
             };
+        }
+
+        /// <summary>
+        /// Save ammo def.
+        /// </summary>
+        public void ExposeData()
+        {
+            Scribe_Values.Look(ref this.defName, nameof(this.defName));
+            Scribe_Values.Look(ref this.description, nameof(this.description));
+            Scribe_Values.Look(ref this.label, nameof(this.label));
+            Scribe_Collections.Look(ref this.thingCategories, nameof(thingCategories), LookMode.Def);
+
+            string thingClass = string.Empty;
+
+            if (Scribe.mode == LoadSaveMode.Saving)
+            {
+                thingClass = this.thingClass.AssemblyQualifiedName;
+
+                Scribe_Values.Look(ref thingClass, nameof(thingClass));
+            }
+            else if (Scribe.mode == LoadSaveMode.LoadingVars)
+            {
+                Scribe_Values.Look(ref thingClass, nameof(thingClass));
+                this.thingClass = Type.GetType(thingClass);
+            }
+            else if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                this.Includes = (thingDef) => this.AvailableDefs.Contains(thingDef);
+                this.AvailableDefs = from thingDef in this.ThingCategoryDefs.SelectMany(t => t.DescendantThingDefs).Distinct()
+                                     where this.ExcepDefs.EnumerableNullOrEmpty() || !this.ExcepDefs.Contains(thingDef)
+                                     select thingDef;
+                this.tradeability = Tradeability.None;
+            }
         }
     }
 }

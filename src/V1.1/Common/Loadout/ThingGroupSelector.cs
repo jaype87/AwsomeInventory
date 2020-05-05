@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using AwesomeInventory.UI;
 using RimWorld;
 using Verse;
@@ -24,6 +25,7 @@ namespace AwesomeInventory.Loadout
     public class ThingGroupSelector : ICollection<ThingSelector>, IExposable, ILoadReferenceable, IReset
     {
         private List<ThingSelector> _selectors = new List<ThingSelector>();
+        private bool _isGenericDef;
 
         /// <summary>
         /// When true, pawn will not restock until stack count drop to _bottomThresholdCount.
@@ -362,17 +364,7 @@ namespace AwesomeInventory.Loadout
             else if (Scribe.mode == LoadSaveMode.LoadingVars)
             {
                 Scribe_Values.Look(ref isGenericDef, nameof(isGenericDef));
-                if (isGenericDef)
-                {
-                    AIGenericDef aIGenericDef = null;
-                    Scribe_Defs.Look(ref aIGenericDef, nameof(this.AllowedThing));
-                    this.AllowedThing = aIGenericDef;
-                }
-                else
-                {
-                    Scribe_Defs.Look(ref thingDef, nameof(this.AllowedThing));
-                    this.AllowedThing = thingDef;
-                }
+                _isGenericDef = isGenericDef;
             }
 
             Scribe_Values.Look(ref _useBottomThreshold, nameof(_useBottomThreshold));
@@ -380,6 +372,18 @@ namespace AwesomeInventory.Loadout
             Scribe_Values.Look(ref allowedStackCount, nameof(this.AllowedStackCount));
             Scribe_Values.Look(ref groupID, nameof(this.GroupID));
             Scribe_Collections.Look(ref _selectors, nameof(_selectors), LookMode.Deep);
+
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                if (_isGenericDef)
+                {
+                    this.AllowedThing = (_selectors.First() as GenericThingSelector).GenericDef;
+                }
+                else
+                {
+                    this.AllowedThing = (_selectors.First() as SingleThingSelector).AllowedThing;
+                }
+            }
 
             if (Scribe.mode == LoadSaveMode.LoadingVars)
             {

@@ -20,6 +20,13 @@ namespace AwesomeInventory.Loadout
         /// <summary>
         /// Initializes a new instance of the <see cref="AIGenericDef"/> class.
         /// </summary>
+        public AIGenericDef()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AIGenericDef"/> class.
+        /// </summary>
         /// <param name="defName"> Def Name. </param>
         /// <param name="description"> Description for this def. </param>
         /// <param name="label"> Label to display. </param>
@@ -36,19 +43,15 @@ namespace AwesomeInventory.Loadout
             this.ThingCategoryDefs = thingCategoryDefs;
             this.Includes = (thingDef) => this.AvailableDefs.Contains(thingDef);
             this.AvailableDefs = from thingDef in this.ThingCategoryDefs.SelectMany(t => t.DescendantThingDefs).Distinct()
-                                 where !this.ExcepDefs.EnumerableNullOrEmpty() && !this.ExcepDefs.Contains(thingDef)
+                                 where this.ExcepDefs.EnumerableNullOrEmpty() || !this.ExcepDefs.Contains(thingDef)
                                  select thingDef;
             this.tradeability = Tradeability.None;
         }
 
-        public AIGenericDef()
-        {
-        }
-
         /// <summary>
-        /// Gets available <see cref="ThingDef"/> in this generic category.
+        /// Gets or sets available <see cref="ThingDef"/> in this generic category.
         /// </summary>
-        public IEnumerable<ThingDef> AvailableDefs { get; }
+        public IEnumerable<ThingDef> AvailableDefs { get; protected set; }
 
         /// <summary>
         /// Gets a group used for requesting things from <see cref="ListerThings"/>.
@@ -56,9 +59,9 @@ namespace AwesomeInventory.Loadout
         public IEnumerable<ThingCategoryDef> ThingCategoryDefs { get => thingCategories; private set => thingCategories = value.ToList(); }
 
         /// <summary>
-        /// Gets a predicate function which returns true if <see cref="ThingDef"/> belongs.
+        /// Gets or sets a predicate function which returns true if <see cref="ThingDef"/> belongs.
         /// </summary>
-        public virtual Predicate<ThingDef> Includes { get; }
+        public virtual Predicate<ThingDef> Includes { get; protected set; }
 
         /// <summary>
         /// Gets a filter that rules out <see cref="ThingDef"/> that does not belong.
