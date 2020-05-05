@@ -31,8 +31,6 @@ namespace AwesomeInventory.HarmonyPatches
         {
             MethodInfo original = AccessTools.Method(typeof(Pawn_JobTracker), "ClearQueuedJobs");
             MethodInfo prefix = AccessTools.Method(typeof(Pawn_JobTracker_CleanQueuedJobs), "Prefix");
-            Log.Warning("Original is " + original == null ? "null" : "not null");
-            Log.Warning("Prefix is " + prefix == null ? "null" : "not null");
             Utility.Harmony.Patch(original, new HarmonyMethod(prefix));
         }
 

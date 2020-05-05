@@ -432,7 +432,7 @@ namespace AwesomeInventory.UI
             if (AwesomeInvnetoryMod.Settings.UseLoadout && comp != null)
             {
                 List<FloatMenuOption> loadoutOptions = BuildMenuOptions(LoadoutManager.Loadouts.Where(l => l.GetType() == typeof(AwesomeInventoryLoadout)).OfType<Outfit>().ToList());
-                List<FloatMenuOption> outfitOptions = BuildMenuOptions(Current.Game.outfitDatabase.AllOutfits.Where(o => o.GetType() != typeof(AwesomeInventoryCostume)).ToList());
+                List<FloatMenuOption> outfitOptions = BuildMenuOptions(Current.Game.outfitDatabase.AllOutfits.Where(o => o.GetType() != typeof(AwesomeInventoryCostume)).ToList() ?? Enumerable.Empty<Outfit>().ToList());
 
                 WidgetRow row = new WidgetRow(x, rollingY, UIDirection.LeftThenDown, width);
                 if (row.ButtonText(UIText.OpenLoadout.TranslateSimple()))
@@ -911,6 +911,7 @@ namespace AwesomeInventory.UI
         protected virtual void DrawArmorStatsWorker(WidgetRow row, Pawn pawn, StatDef stat, Func<float, string> numToString, Texture2D icon, string altIconText, bool apparelChanged, bool changeLine)
         {
             ValidateArg.NotNull(row, nameof(row));
+            ValidateArg.NotNull(numToString, nameof(numToString));
 
             Tuple<float, string> tuple = this.GetArmorStat(pawn, stat, apparelChanged);
 
