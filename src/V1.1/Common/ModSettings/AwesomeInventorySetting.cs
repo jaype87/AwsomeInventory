@@ -61,6 +61,11 @@ namespace AwesomeInventory
         public float CostumeWindowHeight = 350f;
 
         /// <summary>
+        /// If true, open the loadout window after user chooses to equip items from the context menu on spawned items.
+        /// </summary>
+        public bool OpenLoadoutInContextMenu = true;
+
+        /// <summary>
         /// Save state.
         /// </summary>
         public override void ExposeData()
@@ -72,6 +77,7 @@ namespace AwesomeInventory
             Scribe_Values.Look(ref PatchAllRaces, nameof(PatchAllRaces), false);
             Scribe_Values.Look(ref GearTabWidth, nameof(GearTabWidth), 575f);
             Scribe_Values.Look(ref GearTabHeight, nameof(GearTabHeight), 500f);
+            Scribe_Values.Look(ref OpenLoadoutInContextMenu, nameof(OpenLoadoutInContextMenu), true);
         }
     }
 

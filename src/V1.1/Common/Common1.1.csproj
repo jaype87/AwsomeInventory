@@ -220,10 +220,12 @@
     <Compile Include="Utilities\ApparelOptionUtility.cs" />
     <Compile Include="Utilities\BetterPawnControlUtility.cs" />
     <Compile Include="Utilities\CombatExtendedUtility.cs" />
+    <Compile Include="Utilities\ContextMenuUtility.cs" />
     <Compile Include="Utilities\DefUtility.cs" />
     <Compile Include="Utilities\GenBar.cs" />
     <Compile Include="Plugins\CustomRace.cs" />
     <Compile Include="Utilities\InventoryUtility.cs" />
+    <Compile Include="Utilities\PawnUtility.cs" />
     <Compile Include="Utilities\PickUpAndHaulUtility.cs" />
     <Compile Include="Utilities\RectUtility.cs" />
     <Compile Include="Utilities\SimpleSidearmUtility.cs" />

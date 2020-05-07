@@ -79,6 +79,8 @@ namespace AwesomeInventory.UI
 
         /****************** AwesomeInventory texts ********************/
 
+        public const string AddToLoadout = "AwesomeInventory_AddToLoadout";
+
         public const string AIDefault = "AwesomeInventory_Default";
 
         public const string AIEquip = "AwesomeInventory_Equip";
@@ -140,6 +142,8 @@ namespace AwesomeInventory.UI
         public const string DeleteCostume = "AwesomeInventory_DeleteCostume";
 
         public const string DeleteLoadout = "AwesomeInventory_DeleteLoadout";
+
+        public const string DisableWindowInModSetting = "AwesomeInventory_DisableWindowInModSetting";
 
         public const string DontUseCostume = "AwesomeInventory_DontUseCostume";
 
@@ -207,6 +211,10 @@ namespace AwesomeInventory.UI
 
         public const string OpenLoadout = "AwesomeInventory_OpenLoadout";
 
+        public const string OpenLoadoutFromContextMenu = "AwesomeInventory_OpenLoadoutFromContextMenu";
+
+        public const string OpenLoadoutFromContextMenuTooltip = "AwesomeInventory_OpenLoadoutFromContextMenuTooltip";
+
         public const string Pant = "AwesomeInventory_Pants";
 
         public const string PatchAllRaces = "AwesomeInventory_PatchAllRaces";
@@ -222,6 +230,8 @@ namespace AwesomeInventory.UI
         public const string PreviewQualityTooltip = "AwesomeInventory_PreviewQuality_Tooltip";
 
         public const string PutAway = "AwesomeInventory_PutAway";
+
+        public const string RemoveFromLoadout = "AwesomeInventory_RemoveFromLoadout";
 
         public const string RestockAlways = "AwesomeInventory_RestockAlways";
 

@@ -199,6 +199,11 @@ namespace AwesomeInventory.Loadout
             return thing;
         }
 
+        /// <summary>
+        /// Make <see cref="ThingStuffPairWithQuality"/> from <paramref name="thing"/>.
+        /// </summary>
+        /// <param name="thing"> Thing to be made to pair. </param>
+        /// <returns> A struct contains thing def, stuff def and quality information about <paramref name="thing"/>. </returns>
         public static ThingStuffPairWithQuality MakeThingStuffPairWithQuality(this Thing thing)
         {
             if (thing == null)
@@ -217,6 +222,23 @@ namespace AwesomeInventory.Loadout
                 stuff = thing.Stuff,
                 quality = null,
             };
+        }
+
+        /// <summary>
+        /// Make <see cref="ThingGroupSelector"/> from <paramref name="thing"/>. The selector doen't contain reference to <paramref name="thing"/>.
+        /// </summary>
+        /// <param name="thing"> Source for <see cref="ThingGroupSelector"/>. </param>
+        /// <returns> A <see cref="ThingGroupSelector"/> made from <paramref name="thing"/>. </returns>
+        public static ThingGroupSelector MakeThingGrouopSelector(this Thing thing)
+        {
+            SingleThingSelector singleThingSelector = AwesomeInventoryServiceProvider.MakeInstanceOf<SingleThingSelector>(new[] { thing });
+            ThingGroupSelector thingSelectors = new ThingGroupSelector(thing.def)
+            {
+                singleThingSelector,
+            };
+
+            thingSelectors.SetStackCount(1);
+            return thingSelectors;
         }
     }
 }

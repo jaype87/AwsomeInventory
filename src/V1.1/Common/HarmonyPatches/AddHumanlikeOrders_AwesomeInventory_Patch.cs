@@ -26,6 +26,8 @@ namespace AwesomeInventory.Common.HarmonyPatches
     [StaticConstructorOnStartup]
     public static class AddHumanlikeOrders_AwesomeInventory_Patch
     {
+        private static Vector2 _size = new Vector2(400, 150);
+
         static AddHumanlikeOrders_AwesomeInventory_Patch()
         {
             MethodInfo original = AccessTools.Method(typeof(FloatMenuMakerMap), "AddHumanlikeOrders");
@@ -69,53 +71,7 @@ namespace AwesomeInventory.Common.HarmonyPatches
                                 text3 += " " + UIText.EquipWarningBrawler.Translate();
                             }
 
-                            var option = FloatMenuUtility.DecoratePrioritizedTask(
-                                new FloatMenuOption(
-                                    text3,
-                                    () =>
-                                    {
-                                        TaggedString equipWeaponConfirmationDialogText = ThingRequiringRoyalPermissionUtility.GetEquipWeaponConfirmationDialogText(equipment, pawn);
-                                        CompBladelinkWeapon compBladelinkWeapon = equipment.TryGetComp<CompBladelinkWeapon>();
-                                        if (compBladelinkWeapon != null && compBladelinkWeapon.bondedPawn != pawn)
-                                        {
-                                            if (!equipWeaponConfirmationDialogText.NullOrEmpty())
-                                            {
-                                                equipWeaponConfirmationDialogText += "\n\n";
-                                            }
-
-                                            equipWeaponConfirmationDialogText += "BladelinkEquipWarning".Translate();
-                                        }
-
-                                        if (!equipWeaponConfirmationDialogText.NullOrEmpty())
-                                        {
-                                            equipWeaponConfirmationDialogText += "\n\n" + "RoyalWeaponEquipConfirmation".Translate();
-                                            Find.WindowStack.Add(
-                                                new Dialog_MessageBox(
-                                                    equipWeaponConfirmationDialogText,
-                                                    "Yes".Translate(),
-                                                    () =>
-                                                    {
-                                                        Equip();
-                                                    },
-                                                    "No".Translate()));
-                                        }
-                                        else
-                                        {
-                                            Equip();
-                                        }
-                                    },
-                                    MenuOptionPriority.High),
-                                pawn,
-                                equipment);
-                            opts.Add(option);
-                        }
-
-                        void Equip()
-                        {
-                            equipment.SetForbidden(value: false);
-                            pawn.jobs.TryTakeOrderedJob(JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_MapEquip, equipment));
-                            MoteMaker.MakeStaticMote(equipment.DrawPos, equipment.Map, ThingDefOf.Mote_FeedbackEquip);
-                            PlayerKnowledgeDatabase.KnowledgeDemonstrated(ConceptDefOf.EquippingWeapons, KnowledgeAmount.Total);
+                            opts.Add(ContextMenuUtility.MakeDecoratedEquipOption(pawn, equipment, text3, () => AddToLoadoutDialog(equipment)));
                         }
                     }
                 }
@@ -132,42 +88,28 @@ namespace AwesomeInventory.Common.HarmonyPatches
                         && !MassUtility.WillBeOverEncumberedAfterPickingUp(pawn, apparel, apparel.stackCount)
                         && ApparelOptionUtility.CanWear(pawn, apparel))
                     {
-                        FloatMenuOption option = FloatMenuUtility.DecoratePrioritizedTask(
-                            new FloatMenuOption(
-                                UIText.AIForceWear.Translate(apparel.LabelShort),
-                                () =>
-                                {
-                                    DressJob dressJob = SimplePool<DressJob>.Get();
-                                    dressJob.def = AwesomeInventory_JobDefOf.AwesomeInventory_Dress;
-                                    dressJob.targetA = apparel;
-                                    dressJob.ForceWear = true;
+                        opts.Add(
+                            ContextMenuUtility.MakeDecoratedWearApparelOption(
+                                pawn, apparel, UIText.AIForceWear.Translate(apparel.LabelShort), true, () => AddToLoadoutDialog(apparel)));
 
-                                    apparel.SetForbidden(value: false);
-                                    pawn.jobs.TryTakeOrderedJob(dressJob);
-                                },
-                                MenuOptionPriority.High),
-                            pawn,
-                            apparel);
-                        opts.Add(option);
-
-                        option = FloatMenuUtility.DecoratePrioritizedTask(
-                            new FloatMenuOption(
-                                UIText.AIWear.Translate(apparel.LabelShort),
-                                () =>
-                                {
-                                    DressJob dressJob = SimplePool<DressJob>.Get();
-                                    dressJob.def = AwesomeInventory_JobDefOf.AwesomeInventory_Dress;
-                                    dressJob.targetA = apparel;
-                                    dressJob.ForceWear = false;
-
-                                    apparel.SetForbidden(value: false);
-                                    pawn.jobs.TryTakeOrderedJob(dressJob);
-                                },
-                                MenuOptionPriority.High),
-                            pawn,
-                            apparel);
-                        opts.Add(option);
+                        opts.Add(
+                            ContextMenuUtility.MakeDecoratedWearApparelOption(
+                                pawn, apparel, UIText.AIWear.Translate(apparel.LabelShort), false, () => AddToLoadoutDialog(apparel)));
                     }
+                }
+            }
+
+            void AddToLoadoutDialog(Thing thing1)
+            {
+                if (AwesomeInvnetoryMod.Settings.OpenLoadoutInContextMenu && pawn.UseLoadout(out Loadout.CompAwesomeInventoryLoadout comp))
+                {
+                    Find.WindowStack.Add(
+                        new Dialog_InstantMessage(
+                            UIText.AddToLoadout.Translate(comp.Loadout.label) + Environment.NewLine + $"({UIText.DisableWindowInModSetting.TranslateSimple()})"
+                            , _size
+                            , "Yes".TranslateSimple()
+                            , () => ContextMenuUtility.AddToLoadoutDialog(pawn, comp, thing1)
+                            , "No".TranslateSimple()));
                 }
             }
         }

@@ -26,6 +26,7 @@ namespace AwesomeInventory.UI
         /// Initializes a new instance of the <see cref="Dialog_AddAmmoPerMagSize"/> class.
         /// </summary>
         /// <param name="selector"> Selector for ammo. </param>
+        /// <param name="ammoUser"> The user of ammo. </param>
         /// <param name="magazineSize"> Size of the magazine. </param>
         public Dialog_AddAmmoPerMagSize(ThingGroupSelector selector, ThingDef ammoUser, int magazineSize)
         {

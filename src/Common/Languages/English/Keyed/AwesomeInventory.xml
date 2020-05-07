@@ -103,10 +103,12 @@
     <!-- Mod settings -->
     <AwesomeInventory_AutoEquipWeapon>Find and equip weapon</AwesomeInventory_AutoEquipWeapon>
     <AwesomeInventory_ChooseThemeColorForQuality>Choose theme for quality color:</AwesomeInventory_ChooseThemeColorForQuality>
+    <AwesomeInventory_DisableWindowInModSetting>Disable this window in mod setting</AwesomeInventory_DisableWindowInModSetting>
     <AwesomeInventory_ExplainFeatures>Explanations on Loadout/Costume</AwesomeInventory_ExplainFeatures>
     <AwesomeInventory_GearTabHeight>Gear tab height:</AwesomeInventory_GearTabHeight>
     <AwesomeInventory_GearTabWidht>Gear tab width:</AwesomeInventory_GearTabWidht>
     <AwesomeInventory_GoNuts>Go Nuts!</AwesomeInventory_GoNuts>
+    <AwesomeInventory_OpenLoadoutFromContextMenu>Allow pop-up window</AwesomeInventory_OpenLoadoutFromContextMenu>
     <AwesomeInventory_PatchAllRaces>Patch all races</AwesomeInventory_PatchAllRaces>
     <AwesomeInventory_TipsOnCostume>How to use costume</AwesomeInventory_TipsOnCostume>
     <AwesomeInventory_TipsForHotSwap>How to hot swap costume</AwesomeInventory_TipsForHotSwap>
@@ -115,11 +117,13 @@
     <AwesomeInventory_UseLoadout>Use Loadout</AwesomeInventory_UseLoadout>
 
     <!-- Option texts on context menu -->
+    <AwesomeInventory_AddToLoadout>Add to {0}</AwesomeInventory_AddToLoadout>
     <AwesomeInventory_Default>Awesome Inventory Default</AwesomeInventory_Default>
     <AwesomeInventory_Equip>Equip {0} and keep the retired</AwesomeInventory_Equip>
     <AwesomeInventory_ForceWear>Force wear {0} and keep the replaced</AwesomeInventory_ForceWear>
     <AwesomeInventory_Pickup>Pick up {0}</AwesomeInventory_Pickup>
     <AwesomeInventory_PutAway>Put Away {0}</AwesomeInventory_PutAway>
+    <AwesomeInventory_RemoveFromLoadout>Remove from {0}</AwesomeInventory_RemoveFromLoadout>
     <AwesomeInventory_Wear>Wear {0} and keep the replaced</AwesomeInventory_Wear>
     <AwesomeInventory_VanillaWear>Wear {0}</AwesomeInventory_VanillaWear>
 
@@ -128,6 +132,7 @@
     <AwesomeInventory_AutoEquipWeaponTooltip>Allows Awesome Inventory choose and equip weapons for unarmed pawns.</AwesomeInventory_AutoEquipWeaponTooltip>
     <AwesomeInventory_BlacklistTooltip>Items that fit in blacklist will not be considered for the Wishlist. Blacklist will not come into effect if items in it do not fit the Wishlist.</AwesomeInventory_BlacklistTooltip>
     <AwesomeInventory_CurrentTemperature>Current Temperature</AwesomeInventory_CurrentTemperature>
+    <AwesomeInventory_OpenLoadoutFromContextMenuTooltip> Open loadout window when you equip/wear items on the map</AwesomeInventory_OpenLoadoutFromContextMenuTooltip>
     <AwesomeInventory_PatchAllRacesTooltip>Patch all races to use Awesome Inventory's gear tab.</AwesomeInventory_PatchAllRacesTooltip>
     <AwesomeInventory_PreviewQuality_Tooltip>Choose quality level for preview item. </AwesomeInventory_PreviewQuality_Tooltip>
     <AwesomeInventory_Separate_Tooltip>Set quality and hit points for each selected stuff separately.</AwesomeInventory_Separate_Tooltip>

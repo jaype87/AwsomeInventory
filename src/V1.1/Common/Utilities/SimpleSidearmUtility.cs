@@ -29,7 +29,9 @@ namespace AwesomeInventory
         private static Type _compSidearmMemory;
         private static PropertyInfo _pawnMemory;
         private static MethodInfo _toThingDefStuffDefPair;
+        private static MethodInfo _forgetSidearmMemory;
 
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Handled by Log.Error")]
         static SimpleSidearmUtility()
         {
             IsActive = LoadedModManager.RunningModsListForReading.Any(m => m.PackageId == _packageID);
@@ -38,9 +40,17 @@ namespace AwesomeInventory
                 Assembly assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == _assemblyName);
                 if (assembly != null)
                 {
-                    _compSidearmMemory = assembly.GetType("SimpleSidearms.rimworld.CompSidearmMemory");
-                    _pawnMemory = _compSidearmMemory.GetProperty("RememberedWeapons", BindingFlags.Public | BindingFlags.Instance);
-                    _toThingDefStuffDefPair = assembly.GetType("SimpleSidearms.Extensions").GetMethod("toThingDefStuffDefPair", BindingFlags.Static | BindingFlags.Public);
+                    try
+                    {
+                        _compSidearmMemory = assembly.GetType("SimpleSidearms.rimworld.CompSidearmMemory");
+                        _pawnMemory = _compSidearmMemory.GetProperty("RememberedWeapons", BindingFlags.Public | BindingFlags.Instance);
+                        _toThingDefStuffDefPair = assembly.GetType("SimpleSidearms.Extensions").GetMethod("toThingDefStuffDefPair", BindingFlags.Static | BindingFlags.Public);
+                        _forgetSidearmMemory = _compSidearmMemory.GetMethod("ForgetSidearmMemory", BindingFlags.Public | BindingFlags.Instance);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error(e.ToString());
+                    }
                 }
             }
         }
@@ -68,6 +78,22 @@ namespace AwesomeInventory
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Remove weaspon from sidearm memory.
+        /// </summary>
+        /// <param name="pawn"> Pawn who carries <paramref name="thing"/>. </param>
+        /// <param name="thing"> Weapon to remove. </param>
+        public static void RemoveWeaponFromMemory(Pawn pawn, Thing thing)
+        {
+            ValidateArg.NotNull(pawn, nameof(pawn));
+
+            ThingComp comp = pawn.AllComps.FirstOrDefault(t => t.GetType() == _compSidearmMemory);
+            if (comp != null)
+            {
+                _forgetSidearmMemory.Invoke(comp, new[] { _toThingDefStuffDefPair.Invoke(null, new[] { thing }) });
+            }
         }
     }
 }

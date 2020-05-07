@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using AwesomeInventory.Loadout;
 using AwesomeInventory.Resources;
 using RimWorld;
@@ -772,14 +773,15 @@ namespace AwesomeInventory.UI
             for (int i = from; i < to && i < _source.Count; i++)
             {
                 Color baseColor = GUI.color;
+                ThingDef thingDef = _source[i].ThingDef;
 
                 // gray out weapons not in stock
                 if (_source[i].IsVisible)
                     GUI.color = Color.gray;
 
                 Rect row = new Rect(0f, i * GenUI.ListSpacing, canvas.width, GenUI.ListSpacing);
-                Rect labelRect = new Rect(row);
-                TooltipHandler.TipRegion(row, _source[i].ThingDef.GetDetailedTooltip());
+                Rect labelRect = new Rect(row).ReplaceWidth(row.width - GenUI.SmallIconSize - GenUI.ScrollBarWidth);
+                TooltipHandler.TipRegion(row, thingDef.GetDetailedTooltip());
 
                 labelRect.xMin += GenUI.GapTiny;
                 if (i % 2 == 0)
@@ -788,10 +790,9 @@ namespace AwesomeInventory.UI
                 int j = i;
                 DrawUtility.DrawLabelButton(
                     labelRect
-                    , _source[j].ThingDef.LabelCap
+                    , thingDef.LabelCap
                     , () =>
                     {
-                        ThingDef thingDef = _source[j].ThingDef;
                         ThingGroupSelector groupSelector = new ThingGroupSelector(thingDef);
 
                         ThingSelector thingSelector;
@@ -814,6 +815,13 @@ namespace AwesomeInventory.UI
                     });
 
                 GUI.color = baseColor;
+
+                Rect infoRect = new Rect(labelRect.xMax, labelRect.y, GenUI.SmallIconSize, GenUI.ListSpacing);
+                if (!(thingDef is AIGenericDef) && Widgets.ButtonImage(infoRect, TexResource.Info))
+                {
+                    ThingStuffPair pair = new ThingStuffPair(thingDef, GenStuff.DefaultStuffFor(thingDef));
+                    Find.WindowStack.Add(new Dialog_InfoCard(pair.MakeThingWithoutID()));
+                }
             }
 
             Widgets.EndScrollView();

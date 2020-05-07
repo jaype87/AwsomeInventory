@@ -199,6 +199,11 @@ namespace AwesomeInventory.Jobs
                             UIText.NoEmptyPlaceLower.TranslateSimple()
                             , new TargetInfo(this.pawn.PositionHeld, this.pawn.MapHeld), MessageTypeDefOf.NeutralEvent);
                     }
+
+                    if (SimpleSidearmUtility.IsActive)
+                    {
+                        SimpleSidearmUtility.RemoveWeaponFromMemory(this.pawn, TargetThingA);
+                    }
                 });
 
             yield return statusCheck;

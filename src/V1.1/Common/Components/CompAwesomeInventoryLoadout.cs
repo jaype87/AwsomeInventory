@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using AwesomeInventory.Jobs;
@@ -299,6 +300,48 @@ namespace AwesomeInventory.Loadout
         }
 
         /// <summary>
+        /// Find <see cref="ThingGroupSelector"/> that allows <paramref name="thing"/>.
+        /// </summary>
+        /// <param name="thing"> Thing to check if there is any selector fits. </param>
+        /// <param name="groupSelectors"> A list of fiiting selectors. </param>
+        /// <returns> A data packet that contains all information needed to find the best suited selector for <paramref name="thing"/>. </returns>
+        public virtual ThingGroupSelectorPool FindPotentialThingGroupSelectors(Thing thing, IEnumerable<ThingGroupSelector> groupSelectors)
+        {
+            ValidateArg.NotNull(thing, nameof(thing));
+
+            return this.FindPotentialThingGroupSelectors(thing, thing.stackCount, groupSelectors);
+        }
+
+        /// <summary>
+        /// Find <see cref="ThingGroupSelector"/> that allows <paramref name="thing"/>.
+        /// </summary>
+        /// <param name="thing"> Thing to check if there is any selector fits. </param>
+        /// <param name="stackCount"> Stack count of <paramref name="thing"/>. </param>
+        /// <param name="groupSelectors"> A list of fiiting selectors. </param>
+        /// <returns> A data packet that contains all information needed to find the best suited selector for <paramref name="thing"/>. </returns>
+        public virtual ThingGroupSelectorPool FindPotentialThingGroupSelectors(Thing thing, int stackCount, IEnumerable<ThingGroupSelector> groupSelectors)
+        {
+            ValidateArg.NotNull(groupSelectors, nameof(groupSelectors));
+
+            ThingGroupSelectorPool pool = new ThingGroupSelectorPool()
+            {
+                Thing = thing,
+                StackCount = stackCount,
+                OrderedSelectorTuples = new List<Tuple<ThingSelector, ThingGroupSelector>>(),
+            };
+            foreach (ThingGroupSelector groupSelector in groupSelectors)
+            {
+                if (groupSelector.Allows(thing, out ThingSelector thingSelector))
+                    pool.OrderedSelectorTuples.Add(Tuple.Create(thingSelector, groupSelector));
+            }
+
+            if (pool.OrderedSelectorTuples.Count > 1)
+                pool.OrderedSelectorTuples = pool.OrderedSelectorTuples.OrderBy(t => t.Item1, ThingSelectorComparer.Instance).ToList();
+
+            return pool;
+        }
+
+        /// <summary>
         /// Change getup when switch loadout.
         /// </summary>
         /// <param name="newLoadout"> New loadout pawn switch to. </param>
@@ -492,48 +535,6 @@ namespace AwesomeInventory.Loadout
         {
             this.InventoryMargins.Remove(groupSelector);
             _bottomThresholdLookup.Remove(groupSelector);
-        }
-
-        /// <summary>
-        /// Find <see cref="ThingGroupSelector"/> that allows <paramref name="thing"/>.
-        /// </summary>
-        /// <param name="thing"> Thing to check if there is any selector fits. </param>
-        /// <param name="groupSelectors"> A list of fiiting selectors. </param>
-        /// <returns> A data packet that contains all information needed to find the best suited selector for <paramref name="thing"/>. </returns>
-        protected virtual ThingGroupSelectorPool FindPotentialThingGroupSelectors(Thing thing, IEnumerable<ThingGroupSelector> groupSelectors)
-        {
-            ValidateArg.NotNull(thing, nameof(thing));
-
-            return this.FindPotentialThingGroupSelectors(thing, thing.stackCount, groupSelectors);
-        }
-
-        /// <summary>
-        /// Find <see cref="ThingGroupSelector"/> that allows <paramref name="thing"/>.
-        /// </summary>
-        /// <param name="thing"> Thing to check if there is any selector fits. </param>
-        /// <param name="stackCount"> Stack count of <paramref name="thing"/>. </param>
-        /// <param name="groupSelectors"> A list of fiiting selectors. </param>
-        /// <returns> A data packet that contains all information needed to find the best suited selector for <paramref name="thing"/>. </returns>
-        protected virtual ThingGroupSelectorPool FindPotentialThingGroupSelectors(Thing thing, int stackCount, IEnumerable<ThingGroupSelector> groupSelectors)
-        {
-            ValidateArg.NotNull(groupSelectors, nameof(groupSelectors));
-
-            ThingGroupSelectorPool pool = new ThingGroupSelectorPool()
-            {
-                Thing = thing,
-                StackCount = stackCount,
-                OrderedSelectorTuples = new List<Tuple<ThingSelector, ThingGroupSelector>>(),
-            };
-            foreach (ThingGroupSelector groupSelector in groupSelectors)
-            {
-                if (groupSelector.Allows(thing, out ThingSelector thingSelector))
-                    pool.OrderedSelectorTuples.Add(Tuple.Create(thingSelector, groupSelector));
-            }
-
-            if (pool.OrderedSelectorTuples.Count > 1)
-                pool.OrderedSelectorTuples = pool.OrderedSelectorTuples.OrderBy(t => t.Item1, ThingSelectorComparer.Instance).ToList();
-
-            return pool;
         }
 
         /// <summary>
@@ -771,7 +772,7 @@ namespace AwesomeInventory.Loadout
         [SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types", Justification = "Not in design.")]
         [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:Elements should be ordered by access", Justification = "Convention")]
         [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:Elements should appear in the correct order", Justification = "Convention")]
-        protected struct ThingGroupSelectorPool
+        public struct ThingGroupSelectorPool
         {
             /// <summary>
             /// The thing for inventory operation.

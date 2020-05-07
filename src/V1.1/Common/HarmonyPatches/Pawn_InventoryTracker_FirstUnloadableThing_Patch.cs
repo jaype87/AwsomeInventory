@@ -158,9 +158,10 @@ namespace AwesomeInventory.HarmonyPatches
             CompAwesomeInventoryLoadout comp = inventory?.pawn?.TryGetComp<CompAwesomeInventoryLoadout>();
             if (comp?.Loadout != null)
             {
+                Thing thingToUnload = inventory.innerContainer[index];
                 foreach (ThingGroupSelector groupSelector in comp.Loadout)
                 {
-                    if (groupSelector.Allows(inventory.innerContainer[index], out _))
+                    if (groupSelector.Allows(thingToUnload, out _) && !(comp.InventoryMargins[groupSelector] > 0))
                         return true;
                 }
 

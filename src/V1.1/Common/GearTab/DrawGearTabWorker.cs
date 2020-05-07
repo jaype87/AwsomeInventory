@@ -1258,6 +1258,10 @@ namespace AwesomeInventory.UI
                     if (thing is Apparel apparel)
                         this.AddApparelOption(selPawn, apparel, floatOptionList);
 
+                    // Loadout option
+                    if (selPawn.UseLoadout(out CompAwesomeInventoryLoadout comp))
+                        floatOptionList.Add(ContextMenuUtility.OptionForThingOnPawn(selPawn, thing, comp));
+
                     if (floatOptionList.Count > 0)
                     {
                         FloatMenu window = new FloatMenu(floatOptionList);

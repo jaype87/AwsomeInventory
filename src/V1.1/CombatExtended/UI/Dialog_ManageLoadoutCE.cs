@@ -184,7 +184,9 @@ namespace AwesomeInventory.UI
                                 else
                                     thingSelector = AwesomeInventoryServiceProvider.MakeInstanceOf<SingleThingSelector>(ammoDef, null);
 
-                                groupSelector.SetStackCount(ammoUser.magazineSize);
+                                // Bows have no magazine.
+                                int magazineSize = ammoUser.magazineSize > 0 ? ammoUser.magazineSize : 1;
+                                groupSelector.SetStackCount(magazineSize);
                                 groupSelector.Add(thingSelector);
 
                                 if (WhiteBlacklistView.IsWishlist)
@@ -192,7 +194,7 @@ namespace AwesomeInventory.UI
                                 else
                                     _currentLoadout.AddToBlacklist(groupSelector);
 
-                                Find.WindowStack.Add(new Dialog_AddAmmoPerMagSize(groupSelector, thingDef, ammoUser.magazineSize));
+                                Find.WindowStack.Add(new Dialog_AddAmmoPerMagSize(groupSelector, thingDef, magazineSize));
                             }));
                 }
 
