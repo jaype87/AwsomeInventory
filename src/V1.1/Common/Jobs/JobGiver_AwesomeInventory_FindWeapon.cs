@@ -33,6 +33,11 @@ namespace AwesomeInventory.Jobs
             ValidateArg.NotNull(pawn, nameof(pawn));
             Log.Message(pawn.Name + "Looking for weapons");
 #endif
+            if (CombatExtendedUtility.IsActive)
+            {
+                return null;
+            }
+
             ValidateArg.NotNull(pawn, nameof(pawn));
 
             if (!pawn.Faction.IsPlayer)

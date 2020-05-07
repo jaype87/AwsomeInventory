@@ -226,13 +226,11 @@ namespace AwesomeInventory.UI
                 if (selPawn.IsColonist)
                     this.DrawLoadoutButtons(selPawn, viewRect.xMax, ref rollingY, viewRect.width);
 
-                Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Inventory.Translate());
-
                 ThingOwner<Thing> things = selPawn.inventory.innerContainer;
-                for (int i = 0; i < things.Count; i++)
-                {
-                    this.DrawThingRow(selPawn, ref rollingY, viewRect.width, things[i], true);
-                }
+                if (!things.Any())
+                    Widgets.ListSeparator(ref rollingY, viewRect.width, UIText.Inventory.Translate());
+
+                this.DrawInventory(things, selPawn, ref rollingY, viewRect.width);
             }
             #endregion Draw Inventory
 
@@ -1146,8 +1144,14 @@ namespace AwesomeInventory.UI
 
                             if (selPawn.equipment.Primary == null)
                             {
+                                Thing thingToEquip;
+                                if (equipment.stackCount > 1)
+                                    thingToEquip = equipment.SplitOff(1);
+                                else
+                                    thingToEquip = equipment;
+
                                 // unregister new weapon in the inventory list and register it in equipment list.
-                                selPawn.equipment.GetDirectlyHeldThings().TryAddOrTransfer(equipment);
+                                selPawn.equipment.GetDirectlyHeldThings().TryAddOrTransfer(thingToEquip);
                             }
                             else
                             {
@@ -1565,6 +1569,40 @@ namespace AwesomeInventory.UI
             }
 
             return showDropButton;
+        }
+
+        protected virtual void DrawInventory(ThingOwner<Thing> things, Pawn selPawn, ref float rollingY, float width)
+        {
+            ValidateArg.NotNull(things, nameof(things));
+
+            List<Thing> weapons = new List<Thing>();
+            List<Thing> apparels = new List<Thing>();
+            List<Thing> items = new List<Thing>();
+
+            foreach (Thing thing in things)
+            {
+                if (thing.def.IsWeapon)
+                    weapons.Add(thing);
+                else if (thing.def.IsApparel)
+                    apparels.Add(thing);
+                else
+                    items.Add(thing);
+            }
+
+            if (weapons.Any())
+                Widgets.ListSeparator(ref rollingY, width, UIText.StatWeaponName.TranslateSimple());
+            foreach (Thing thing in weapons)
+                this.DrawThingRow(selPawn, ref rollingY, width, thing, true);
+
+            if (apparels.Any())
+                Widgets.ListSeparator(ref rollingY, width, UIText.Apparel.TranslateSimple());
+            foreach (Thing thing in apparels)
+                this.DrawThingRow(selPawn, ref rollingY, width, thing, true);
+
+            if (items.Any())
+                Widgets.ListSeparator(ref rollingY, width, UIText.Items.TranslateSimple());
+            foreach (Thing thing in items)
+                this.DrawThingRow(selPawn, ref rollingY, width, thing, true);
         }
     }
 }

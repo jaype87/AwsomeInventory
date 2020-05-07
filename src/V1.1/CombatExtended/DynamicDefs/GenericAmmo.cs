@@ -83,6 +83,18 @@ namespace AwesomeInventory.Loadout
                                      where this.ExcepDefs.EnumerableNullOrEmpty() || !this.ExcepDefs.Contains(thingDef)
                                      select thingDef;
                 this.tradeability = Tradeability.None;
+                IEnumerable<AmmoDef> ammoDefs = this.thingCategories.SelectMany(t => t.DescendantThingDefs).OfType<AmmoDef>();
+                this.statBases = new List<StatModifier>()
+                {
+                    new StatModifier()
+                    {
+                        stat = StatDefOf.Mass, value = ammoDefs.Average(t => t.GetStatValueAbstract(StatDefOf.Mass)),
+                    },
+                    new StatModifier()
+                    {
+                        stat = CE_StatDefOf.Bulk, value = ammoDefs.Average(t => t.GetStatValueAbstract(CE_StatDefOf.Bulk)),
+                    },
+                };
             }
         }
     }

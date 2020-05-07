@@ -27,6 +27,8 @@ namespace AwesomeInventory.UI
             public static Color Highlight = GenColor.FromHex("5F758E");
             public static Color DarkForeGround = GenColor.FromHex("3B1F2B");
             public static Color Warning = GenColor.FromHex("DB162F");
+
+            public static Texture2D BGTex = SolidColorMaterials.NewSolidColorTexture(BackGround);
         }
 
 #pragma warning restore SA1600 // Elements should be documented

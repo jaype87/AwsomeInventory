@@ -57,6 +57,8 @@ namespace AwesomeInventory.UI
 
         public const string IsIncapableOfViolenceLower = "IsIncapableOfViolenceLower";
 
+        public const string Items = "ItemsTab";
+
         public const string Mass = "Mass";
 
         public const string MassCarried = "MassCarried";
@@ -76,6 +78,8 @@ namespace AwesomeInventory.UI
         public const string ReportHaulingToGrave = "ReportHaulingToGrave";
 
         public const string ReportHaulingUnknown = "ReportHaulingUnknown";
+
+        public const string StatWeaponName = "Stat_Weapon_Name";
 
         /****************** AwesomeInventory texts ********************/
 

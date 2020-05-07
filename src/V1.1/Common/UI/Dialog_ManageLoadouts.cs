@@ -735,7 +735,7 @@ namespace AwesomeInventory.UI
                         WindowLayer.Super,
                         () =>
                         {
-                            GUI.DrawTexture(dragRect.AtZero(), SolidColorMaterials.NewSolidColorTexture(Theme.MilkySlicky.BackGround));
+                            GUI.DrawTexture(dragRect.AtZero(), Theme.MilkySlicky.BGTex);
                             this.DrawItemRow(dragRect.AtZero(), index, groupSelectors, 0, true);
                         }, false);
                 });

@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Verse;
 
-namespace AwesomeInventory.Utilities
+namespace AwesomeInventory
 {
     /// <summary>
     /// Utility class for supporting Combat Extended.
