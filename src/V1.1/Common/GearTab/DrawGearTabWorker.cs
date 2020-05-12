@@ -1571,6 +1571,13 @@ namespace AwesomeInventory.UI
             return showDropButton;
         }
 
+        /// <summary>
+        /// Draw items in pawn's inventory in a list style.
+        /// </summary>
+        /// <param name="things"> Things to draw. </param>
+        /// <param name="selPawn"> Selected pawn. </param>
+        /// <param name="rollingY"> Y position. </param>
+        /// <param name="width"> Width of the drawing rect. </param>
         protected virtual void DrawInventory(ThingOwner<Thing> things, Pawn selPawn, ref float rollingY, float width)
         {
             ValidateArg.NotNull(things, nameof(things));

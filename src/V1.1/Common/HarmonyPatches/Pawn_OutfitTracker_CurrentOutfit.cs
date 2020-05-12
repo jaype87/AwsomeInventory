@@ -11,7 +11,7 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 
-namespace AwesomeInventory.Common.HarmonyPatches
+namespace AwesomeInventory.HarmonyPatches
 {
     /// <summary>
     /// Patch into the setter of <see cref="Pawn_OutfitTracker.CurrentOutfit"/>, so to synchronize with AILoadout.

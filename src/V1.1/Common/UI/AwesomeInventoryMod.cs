@@ -57,10 +57,10 @@ namespace AwesomeInventory
             listingStandard.CheckboxLabeled(UIText.OpenLoadoutFromContextMenu.TranslateSimple(), ref _settings.OpenLoadoutInContextMenu, UIText.OpenLoadoutFromContextMenuTooltip.TranslateSimple());
             listingStandard.CheckboxLabeled(UIText.PatchAllRaces.TranslateSimple(), ref _settings.PatchAllRaces, UIText.PatchAllRacesTooltip.TranslateSimple());
 
-            if (!CombatExtendedUtility.IsActive)
-            {
+            if (CombatExtendedUtility.IsActive)
+                _settings.AutoEquipWeapon = false;
+            else
                 listingStandard.CheckboxLabeled(UIText.AutoEquipWeapon.TranslateSimple(), ref _settings.AutoEquipWeapon, UIText.AutoEquipWeaponTooltip.TranslateSimple());
-            }
 
             listingStandard.CheckboxLabeled(UIText.UseGearTabToggle.TranslateSimple(), ref _settings.UseToggleGizmo, UIText.UseGearTabToggleTooltip.TranslateSimple());
 
