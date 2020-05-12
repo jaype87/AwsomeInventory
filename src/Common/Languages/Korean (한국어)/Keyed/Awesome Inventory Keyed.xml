@@ -62,6 +62,9 @@
 	 <AwesomeInventory_UseGenericStuff>소지품목의, 모든 의류에 일반 등급 적용</AwesomeInventory_UseGenericStuff>
     <AwesomeInventory_Weight>무게</AwesomeInventory_Weight>
     <AwesomeInventory_Wishlist>선호품목</AwesomeInventory_Wishlist>
+	     <!-- Combat Extended -->
+        <AwesomeInventory_SelectedWeapon>선택한 무기: </AwesomeInventory_SelectedWeapon>
+        <AwesomeInventory_SelectedAmmo>선택한 탄약: </AwesomeInventory_SelectedAmmo>
   
       <!-- Costume Window -->
     <AwesomeInventory_CreateCostume>의상 만들기</AwesomeInventory_CreateCostume>
@@ -98,10 +101,12 @@
     <!-- Mod settings -->
     <AwesomeInventory_AutoEquipWeapon>무기 자동 장비</AwesomeInventory_AutoEquipWeapon>
     <AwesomeInventory_ChooseThemeColorForQuality>품질 색상 테마 선택:</AwesomeInventory_ChooseThemeColorForQuality>
+	 <AwesomeInventory_DisableWindowInModSetting>모드 설정에서 이 창을 비활성할 수 있습니다</AwesomeInventory_DisableWindowInModSetting>
 	 <AwesomeInventory_ExplainFeatures>소지품목/의상에 대한 설명</AwesomeInventory_ExplainFeatures>
     <AwesomeInventory_GearTabHeight>장비 창 높이:</AwesomeInventory_GearTabHeight>
     <AwesomeInventory_GearTabWidht>장비 창 너비:</AwesomeInventory_GearTabWidht>
     <AwesomeInventory_GoNuts>니 맘대로 해봐!</AwesomeInventory_GoNuts>
+	 <AwesomeInventory_OpenLoadoutFromContextMenu>팝업창 허용</AwesomeInventory_OpenLoadoutFromContextMenu>
     <AwesomeInventory_PatchAllRaces>모든 종족 패치</AwesomeInventory_PatchAllRaces>
 	 <AwesomeInventory_TipsOnCostume>의상 사용법</AwesomeInventory_TipsOnCostume>
 	 <AwesomeInventory_TipsForHotSwap>빠른 교체 의상 사용법</AwesomeInventory_TipsForHotSwap>
@@ -110,7 +115,8 @@
     <AwesomeInventory_UseLoadout>소지품목 사용</AwesomeInventory_UseLoadout>
 
     <!-- Option texts on context menu -->
-    <AwesomeInventory_Default>굉장한 소지품 기본값</AwesomeInventory_Default>
+    <AwesomeInventory_AddToLoadout>{0}에 추가</AwesomeInventory_AddToLoadout>
+	 <AwesomeInventory_Default>굉장한 소지품 기본값</AwesomeInventory_Default>
     <AwesomeInventory_Equip>장착: {0}\n이전 장비 소지품 보관</AwesomeInventory_Equip>
     <AwesomeInventory_ForceWear>강제 착용: {0}\n이전 장비 소지품 보관</AwesomeInventory_ForceWear>
     <AwesomeInventory_Pickup>{0} 줍기</AwesomeInventory_Pickup>
@@ -123,6 +129,7 @@
     <AwesomeInventory_AutoEquipWeaponTooltip>굉장한 소지품이 자동으로, 비무장 정착민이 무기를 선택하고 장비하도록 합니다.</AwesomeInventory_AutoEquipWeaponTooltip>
     <AwesomeInventory_BlacklistTooltip>차단품목에 등록된 물품은, 선호품목으로 간주되지 않습니다.\n차단품목과 선호품목의 설정이 일치하지 않으면, 차단품목에도 적용되지 않습니다.</AwesomeInventory_BlacklistTooltip>
     <AwesomeInventory_CurrentTemperature>현재 온도</AwesomeInventory_CurrentTemperature>
+	 <AwesomeInventory_OpenLoadoutFromContextMenuTooltip>지도상에서 물품 장착/착용시 소지품목 창을 엽니다</AwesomeInventory_OpenLoadoutFromContextMenuTooltip>
     <AwesomeInventory_PatchAllRacesTooltip>모든 종족이 굉장한 소지품의 장비 창을 사용하도록 패치합니다.</AwesomeInventory_PatchAllRacesTooltip>
     <AwesomeInventory_PreviewQuality_Tooltip>미리보기 품목의 품질 수준을 선택하세요.</AwesomeInventory_PreviewQuality_Tooltip>
     <AwesomeInventory_Separate_Tooltip>선택한 각 재료에 대한 품질 및 내구도를 개별적으로 설정하세요.</AwesomeInventory_Separate_Tooltip>

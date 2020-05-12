@@ -41,7 +41,7 @@ namespace AwesomeInventory.HarmonyPatches
             if (tabBases.EnumerableNullOrEmpty())
                 yield break;
 
-            if (AwesomeInvnetoryMod.Settings.PatchAllRaces && __instance is Pawn pawn && pawn.IsColonist)
+            if (AwesomeInventoryMod.Settings.PatchAllRaces && __instance is Pawn pawn && pawn.IsColonist)
             {
                 foreach (InspectTabBase tabBase in tabBases)
                 {

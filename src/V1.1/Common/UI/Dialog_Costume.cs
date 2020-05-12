@@ -57,7 +57,7 @@ namespace AwesomeInventory.UI
         /// <summary>
         /// Gets initial size for the window.
         /// </summary>
-        public override Vector2 InitialSize => new Vector2(AwesomeInvnetoryMod.Settings.CostumeWindowWidth, AwesomeInvnetoryMod.Settings.CostumeWindowHeight);
+        public override Vector2 InitialSize => new Vector2(AwesomeInventoryMod.Settings.CostumeWindowWidth, AwesomeInventoryMod.Settings.CostumeWindowHeight);
 
         /// <summary>
         /// Invoked once before the window is closed.
@@ -72,9 +72,9 @@ namespace AwesomeInventory.UI
                     BetterPawnControlUtility.SaveState(new List<Pawn> { _pawn });
             }
 
-            AwesomeInvnetoryMod.Settings.CostumeWindowHeight = windowRect.height;
-            AwesomeInvnetoryMod.Settings.CostumeWindowWidth = windowRect.width;
-            AwesomeInvnetoryMod.Settings.Write();
+            AwesomeInventoryMod.Settings.CostumeWindowHeight = windowRect.height;
+            AwesomeInventoryMod.Settings.CostumeWindowWidth = windowRect.width;
+            AwesomeInventoryMod.Settings.Write();
         }
 
         /// <summary>

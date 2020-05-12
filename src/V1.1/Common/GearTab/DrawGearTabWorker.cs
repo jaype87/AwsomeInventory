@@ -300,7 +300,7 @@ namespace AwesomeInventory.UI
 
             if ((bool)AwesomeInventoryTabBase.ShouldShowInventory.Invoke(_gearTab, new object[] { selPawn }))
             {
-                if (AwesomeInvnetoryMod.Settings.UseLoadout && selPawn.IsColonist)
+                if (AwesomeInventoryMod.Settings.UseLoadout && selPawn.IsColonist)
                 {
                     this.DrawLoadoutButtons(selPawn, viewRect.xMax, ref rollingY, viewRect.width);
                 }
@@ -427,7 +427,7 @@ namespace AwesomeInventory.UI
             CompAwesomeInventoryLoadout comp = selPawn.TryGetComp<CompAwesomeInventoryLoadout>();
 
             bool openLoadout = false;
-            if (AwesomeInvnetoryMod.Settings.UseLoadout && comp != null)
+            if (AwesomeInventoryMod.Settings.UseLoadout && comp != null)
             {
                 List<FloatMenuOption> loadoutOptions = BuildMenuOptions(LoadoutManager.Loadouts.Where(l => l.GetType() == typeof(AwesomeInventoryLoadout)).OfType<Outfit>().ToList());
                 List<FloatMenuOption> outfitOptions = BuildMenuOptions(Current.Game.outfitDatabase.AllOutfits.Where(o => o.GetType() != typeof(AwesomeInventoryCostume)).ToList() ?? Enumerable.Empty<Outfit>().ToList());

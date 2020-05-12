@@ -27,7 +27,7 @@ namespace AwesomeInventory
         public static bool UseLoadout(this Pawn pawn, out CompAwesomeInventoryLoadout comp)
         {
             comp = pawn.TryGetComp<CompAwesomeInventoryLoadout>();
-            return comp?.Loadout != null && AwesomeInvnetoryMod.Settings.UseLoadout;
+            return comp?.Loadout != null && AwesomeInventoryMod.Settings.UseLoadout;
         }
     }
 }

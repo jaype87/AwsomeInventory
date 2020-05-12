@@ -44,7 +44,7 @@ namespace AwesomeInventory.HarmonyPatches
                 yield return gizmo;
             }
 
-            if (AwesomeInvnetoryMod.Settings.UseToggleGizmo)
+            if (AwesomeInventoryMod.Settings.UseToggleGizmo)
             {
                 if (Find.Selector.SingleSelectedThing is Pawn pawn)
                 {
@@ -61,7 +61,7 @@ namespace AwesomeInventory.HarmonyPatches
 
             var comp = __instance.TryGetComp<CompAwesomeInventoryLoadout>();
 
-            if (AwesomeInvnetoryMod.Settings.UseLoadout && __instance.IsColonistPlayerControlled && comp != null)
+            if (AwesomeInventoryMod.Settings.UseLoadout && __instance.IsColonistPlayerControlled && comp != null)
                 yield return new ChangeCostumeInPlace(__instance);
         }
     }

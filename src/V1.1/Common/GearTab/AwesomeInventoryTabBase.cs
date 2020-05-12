@@ -143,7 +143,7 @@ namespace AwesomeInventory.UI
         /// </summary>
         protected override void UpdateSize()
         {
-            this.size = new Vector2(AwesomeInvnetoryMod.Settings.GearTabWidth, AwesomeInvnetoryMod.Settings.GearTabHeight);
+            this.size = new Vector2(AwesomeInventoryMod.Settings.GearTabWidth, AwesomeInventoryMod.Settings.GearTabHeight);
         }
 
         /// <summary>

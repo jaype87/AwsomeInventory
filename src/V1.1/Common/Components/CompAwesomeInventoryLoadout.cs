@@ -89,7 +89,7 @@ namespace AwesomeInventory.Loadout
         {
             get
             {
-                if (!AwesomeInvnetoryMod.Settings.UseLoadout || _initialized == false)
+                if (!AwesomeInventoryMod.Settings.UseLoadout || _initialized == false)
                 {
                     return false;
                 }

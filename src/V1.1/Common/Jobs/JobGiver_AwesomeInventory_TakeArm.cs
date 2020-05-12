@@ -31,7 +31,7 @@ namespace AwesomeInventory.Jobs
 #if DEBUG
             Log.Message(pawn.Name + "Take arm");
 #endif
-            if (!AwesomeInvnetoryMod.Settings.AutoEquipWeapon)
+            if (!AwesomeInventoryMod.Settings.AutoEquipWeapon)
             {
                 return null;
             }

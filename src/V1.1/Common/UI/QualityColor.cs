@@ -35,7 +35,7 @@ namespace AwesomeInventory.UI
             {
                 if (_instance == null && !AwesomeInventoryServiceProvider.Plugins.Values.OfType<QualityColor>().EnumerableNullOrEmpty())
                 {
-                    _instance = AwesomeInventoryServiceProvider.GetPlugin<QualityColor>(AwesomeInvnetoryMod.Settings.QualityColorPluginID);
+                    _instance = AwesomeInventoryServiceProvider.GetPlugin<QualityColor>(AwesomeInventoryMod.Settings.QualityColorPluginID);
                 }
 
                 return _instance;

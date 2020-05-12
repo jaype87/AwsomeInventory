@@ -17,7 +17,7 @@ namespace AwesomeInventory
     /// <summary>
     /// A dialog window for configuring mod settings.
     /// </summary>
-    public class AwesomeInvnetoryMod : Mod
+    public class AwesomeInventoryMod : Mod
     {
         private static Vector2 _qualityColorScrollListHeight;
         private static Rect _qualityColorViewRect;
@@ -26,10 +26,10 @@ namespace AwesomeInventory
         private static AwesomeInventorySetting _settings;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AwesomeInvnetoryMod"/> class.
+        /// Initializes a new instance of the <see cref="AwesomeInventoryMod"/> class.
         /// </summary>
         /// <param name="content"> Includes metadata of a mod. </param>
-        public AwesomeInvnetoryMod(ModContentPack content)
+        public AwesomeInventoryMod(ModContentPack content)
             : base(content)
         {
             _settings = this.GetSettings<AwesomeInventorySetting>();
@@ -57,7 +57,7 @@ namespace AwesomeInventory
             listingStandard.CheckboxLabeled(UIText.OpenLoadoutFromContextMenu.TranslateSimple(), ref _settings.OpenLoadoutInContextMenu, UIText.OpenLoadoutFromContextMenuTooltip.TranslateSimple());
             listingStandard.CheckboxLabeled(UIText.PatchAllRaces.TranslateSimple(), ref _settings.PatchAllRaces, UIText.PatchAllRacesTooltip.TranslateSimple());
 
-            if (CombatExtendedUtility.IsActive)
+            if (!CombatExtendedUtility.IsActive)
             {
                 listingStandard.CheckboxLabeled(UIText.AutoEquipWeapon.TranslateSimple(), ref _settings.AutoEquipWeapon, UIText.AutoEquipWeaponTooltip.TranslateSimple());
             }

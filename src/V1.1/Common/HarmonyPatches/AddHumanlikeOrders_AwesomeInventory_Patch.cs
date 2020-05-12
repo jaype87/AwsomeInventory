@@ -101,7 +101,7 @@ namespace AwesomeInventory.Common.HarmonyPatches
 
             void AddToLoadoutDialog(Thing thing1)
             {
-                if (AwesomeInvnetoryMod.Settings.OpenLoadoutInContextMenu && pawn.UseLoadout(out Loadout.CompAwesomeInventoryLoadout comp))
+                if (AwesomeInventoryMod.Settings.OpenLoadoutInContextMenu && pawn.UseLoadout(out Loadout.CompAwesomeInventoryLoadout comp))
                 {
                     Find.WindowStack.Add(
                         new Dialog_InstantMessage(
