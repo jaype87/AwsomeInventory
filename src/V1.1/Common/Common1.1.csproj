@@ -181,6 +181,7 @@
     <Compile Include="UI\Dialog_StuffAndQuality.cs" />
     <Compile Include="UI\AwesomeInventoryTex.cs" />
     <Compile Include="UI\OverviewTabs\LoadoutTab.cs" />
+    <Compile Include="UI\OverviewTabs\OverviewTab.cs" />
     <Compile Include="UI\QualityColor.cs" />
     <Compile Include="UI\QualityColorDefault.cs" />
     <Compile Include="UI\QualityColorPlugins\QualityColorCCMB.cs" />

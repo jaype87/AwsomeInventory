@@ -78,6 +78,9 @@
     <AwesomeInventory_NoCostumeSelected>Please select a costume.</AwesomeInventory_NoCostumeSelected>
     <AwesomeInventory_SelectCostume>Select Costume</AwesomeInventory_SelectCostume>
 
+    <!-- Overview Window -->
+    <AwesomeInventory_Loadouts>Loadouts</AwesomeInventory_Loadouts>
+
     <!-- Labels -->
     <AwesomeInventory_GenericMeal_Label>Generic Meals</AwesomeInventory_GenericMeal_Label>
     <AwesomeInventory_AIGenericRawFood_Label>Generic RawFood</AwesomeInventory_AIGenericRawFood_Label>

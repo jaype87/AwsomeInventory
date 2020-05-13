@@ -189,6 +189,8 @@ namespace AwesomeInventory.UI
 
         public const string JealousTab = "AwesomeInventory_JealousTab";
 
+        public const string Loadouts = "AwesomeInventory_Loadouts";
+
         public const string LoadoutName = "AwesomeInventory_LoadoutName";
 
         public const string MakeEmptyLoadout = "AwesomeInventory_MakeEmptyLoadout";

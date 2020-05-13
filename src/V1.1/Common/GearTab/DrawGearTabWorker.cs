@@ -338,9 +338,11 @@ namespace AwesomeInventory.UI
         /// </summary>
         /// <param name="thing"> Target item. </param>
         /// <param name="rect"> Position on screen. </param>
-        protected static void DrawQualityFrame(ThingWithComps thing, Rect rect)
+        public static void DrawQualityFrame(ThingWithComps thing, Rect rect)
         {
-            // TODO: use a mod setting to determine which theme to use
+            if (thing == null)
+                return;
+
             if (thing.TryGetQuality(out QualityCategory c))
             {
                 switch (c)
