@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AwesomeInventory.Loadout;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -54,8 +55,18 @@ namespace AwesomeInventory.UI
         {
             Rect labelRect = inRect.ReplaceHeight(GenUI.ListSpacing * 2);
             Widgets.TextArea(labelRect, UIText.GlobalOutfitSettingWarning.TranslateSimple(), true);
+
+            Rect importRect = labelRect.ReplaceY(labelRect.yMax).ReplaceHeight(GenUI.ListSpacing);
+            if (Widgets.ButtonText(importRect, UIText.ImportLoadout.TranslateSimple()))
+            {
+                FloatMenuUtility.MakeMenu(
+                    LoadoutManager.Loadouts.Where(t => t.GetType() == typeof(AwesomeInventoryLoadout))
+                    , (loadout) => loadout.label
+                    , (loadout) => () => { _filter.CopyAllowancesFrom(loadout.filter); });
+            }
+
             ThingFilterUI.DoThingFilterConfigWindow(
-                inRect.ReplaceyMin(inRect.y + GenUI.ListSpacing * 2 + GenUI.GapSmall)
+                inRect.ReplaceyMin(importRect.yMax + GenUI.GapSmall)
                 , ref _scrollPosition
                 , _filter
                 , _apparelGlobalFilter
