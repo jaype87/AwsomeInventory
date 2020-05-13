@@ -123,7 +123,11 @@ namespace AwesomeInventory.Loadout
             this.AddItems(pawn.equipment?.AllEquipmentListForReading);
             this.AddItems(pawn.apparel?.WornApparel);
             this.AddItems(pawn.inventory?.innerContainer);
-            this.filter.SetAllow(ThingCategoryDefOf.Apparel, true);
+
+            if (pawn.outfits?.CurrentOutfit?.filter is ThingFilter filter)
+                this.filter.CopyAllowancesFrom(filter);
+            else
+                this.filter.SetAllow(ThingCategoryDefOf.Apparel, true);
 
             this.uniqueId = Current.Game.outfitDatabase.AllOutfits.Max(o => o.uniqueId) + 1;
             CompAwesomeInventoryLoadout compLoadout = pawn.TryGetComp<CompAwesomeInventoryLoadout>();
