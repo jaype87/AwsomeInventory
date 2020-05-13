@@ -173,12 +173,14 @@
     <Compile Include="Resources\TexResource.cs" />
     <Compile Include="UI\Dialog_Costume.cs" />
     <Compile Include="UI\Dialog_InstantMessage.cs" />
+    <Compile Include="UI\Dialog_InventoryOverview.cs" />
     <Compile Include="UI\Dialog_ManageLoadouts.cs" />
     <Compile Include="UI\Dialog_ManageOutfitSettings.cs" />
     <Compile Include="UI\Dialog_RestockTrigger.cs" />
     <Compile Include="UI\Dialog_Settings.cs" />
     <Compile Include="UI\Dialog_StuffAndQuality.cs" />
     <Compile Include="UI\AwesomeInventoryTex.cs" />
+    <Compile Include="UI\OverviewTabs\LoadoutTab.cs" />
     <Compile Include="UI\QualityColor.cs" />
     <Compile Include="UI\QualityColorDefault.cs" />
     <Compile Include="UI\QualityColorPlugins\QualityColorCCMB.cs" />
