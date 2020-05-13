@@ -109,7 +109,7 @@
     <Compile Include="Loadout\ThingSelectorComparer.cs" />
     <Compile Include="Services\Logger.cs" />
     <Compile Include="Services\ServiceRegistration.cs" />
-    <Compile Include="UI\AwesomeInvnetoryMod.cs" />
+    <Compile Include="UI\AwesomeInventoryMod.cs" />
     <Compile Include="ModSettings\AwesomeInventorySetting.cs" />
     <Compile Include="Components\CompAwesomeInventoryLoadout.cs" />
     <Compile Include="Components\GameComponents\DefManager.cs" />

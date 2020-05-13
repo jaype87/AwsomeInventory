@@ -54,7 +54,7 @@ namespace AwesomeInventory.Jobs
             {
                 groupSelector = pair.Key;
                 stackcount = pair.Value;
-                if (!groupSelector.AllowedThing.IsApparel && !groupSelector.AllowedThing.IsWeapon)
+                if (!groupSelector.AllowedThing.IsApparel && (!groupSelector.AllowedThing.IsWeapon || groupSelector.AllowedThing.IsDrug))
                 {
                     if (groupSelector.AllowedThing is AIGenericDef genericDef)
                     {
