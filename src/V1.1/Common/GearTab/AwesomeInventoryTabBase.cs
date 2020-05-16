@@ -199,6 +199,11 @@ namespace AwesomeInventory.UI
                 Find.WindowStack.Add(new Dialog_Settings());
             }
 
+            if (Widgets.ButtonImage(headerRect.ReplaceX(headerRect.x - GenUI.SmallIconSize), TexResource.Checklist))
+            {
+                Find.WindowStack.Add(new Dialog_InventoryOverview());
+            }
+
             /*
                 // Draw checkbox option for Ascetic
                 translatedText = UIText.AsceticTab.TranslateSimple();

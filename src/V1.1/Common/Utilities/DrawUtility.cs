@@ -180,15 +180,47 @@ namespace AwesomeInventory.UI
         /// <summary>
         /// Get the index range for a list whose content will be rendered on screen.
         /// </summary>
-        /// <param name="totalLength"> The length of a scrollable list. </param>
+        /// <param name="viewRectLength"> The length of view rect. </param>
         /// <param name="scrollPosition"> Scroll position for the list view. </param>
         /// <param name="from"> Start index of a list where drawing begins. </param>
         /// <param name="to"> <paramref name="to"/> is positioned at one element behind the index where drawing should stop. </param>
         /// <param name="unitLength"> The length of a unit elemnt in the list. </param>
-        public static void GetIndexRangeFromScrollPosition(float totalLength, float scrollPosition, out int from, out int to, float unitLength)
+        public static void GetIndexRangeFromScrollPosition(float viewRectLength, float scrollPosition, out int from, out int to, float unitLength)
         {
             from = Mathf.FloorToInt(scrollPosition / unitLength);
-            to = from + (int)Math.Ceiling(totalLength / unitLength);
+            to = from + (int)Math.Ceiling(viewRectLength / unitLength);
+        }
+
+        public static void DrawMouseAttachmentWithThing(this ThingDef thingDef, ThingDef stuffDef)
+        {
+            if (!(thingDef.uiIcon == null) && !(thingDef.uiIcon == BaseContent.BadTex))
+            {
+                Color color;
+
+                if (stuffDef != null)
+                    color = thingDef.GetColorForStuff(stuffDef);
+                else
+                    color = thingDef.MadeFromStuff ? thingDef.GetColorForStuff(GenStuff.DefaultStuffFor(thingDef)) : thingDef.uiIconColor;
+
+                Rect dragRect = new Rect(Verse.UI.GUIToScreenPoint(Event.current.mousePosition) + new Vector2(GenUI.SmallIconSize / 2, 0), new Vector2(GenUI.SmallIconSize, GenUI.SmallIconSize));
+                Find.WindowStack.ImmediateWindow(
+                    Rand.Int,
+                    dragRect,
+                    WindowLayer.Super,
+                    () =>
+                    {
+                        GUI.color = color;
+                        GUI.DrawTexture(dragRect.AtZero(), thingDef.uiIcon);
+                        GUI.color = Color.white;
+                    }, false);
+            }
+        }
+
+        public static void TextMiddleLeft(Func<float> func, out float rollingY)
+        {
+            Text.Anchor = TextAnchor.MiddleLeft;
+            rollingY = func?.Invoke() ?? 0;
+            Text.Anchor = TextAnchor.UpperLeft;
         }
     }
 }

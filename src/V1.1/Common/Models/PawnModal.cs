@@ -16,14 +16,14 @@ namespace AwesomeInventory.UI
     /// <summary>
     /// A pawn modal used for drawing gear tab.
     /// </summary>
-    public class PawnModal
+    public class PawnModel
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PawnModal"/> class.
+        /// Initializes a new instance of the <see cref="PawnModel"/> class.
         /// </summary>
         /// <param name="selPawn"> Selected pawn. </param>
         /// <param name="selThing"> Selected corpse. </param>
-        public PawnModal(Pawn selPawn, Thing selThing)
+        public PawnModel(Pawn selPawn, Thing selThing)
         {
             ValidateArg.NotNull(selPawn, nameof(selPawn));
 
@@ -47,7 +47,7 @@ namespace AwesomeInventory.UI
         public bool CanControlColonist { get; }
 
         /// <summary>
-        /// Gets the pawn used in this modal.
+        /// Gets or sets the pawn used in this modal.
         /// </summary>
         public Pawn Pawn { get; set; }
 

@@ -23,6 +23,8 @@ namespace AwesomeInventory.UI
 
         public static readonly Texture2D ButtonBGAtlasClick = ContentFinder<Texture2D>.Get("UI/Widgets/ButtonBGClick");
 
+        public static readonly Texture2D Checklist = ContentFinder<Texture2D>.Get("UI/Icons/Checklist");
+
         public static readonly Texture2D CloseXBig = ContentFinder<Texture2D>.Get("UI/Widgets/CloseX", true);
 
         public static readonly Texture2D CloseXSmall = ContentFinder<Texture2D>.Get("UI/Widgets/CloseXSmall", true);

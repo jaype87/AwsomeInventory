@@ -338,9 +338,11 @@ namespace AwesomeInventory.UI
         /// </summary>
         /// <param name="thing"> Target item. </param>
         /// <param name="rect"> Position on screen. </param>
-        protected static void DrawQualityFrame(ThingWithComps thing, Rect rect)
+        public static void DrawQualityFrame(ThingWithComps thing, Rect rect)
         {
-            // TODO: use a mod setting to determine which theme to use
+            if (thing == null)
+                return;
+
             if (thing.TryGetQuality(out QualityCategory c))
             {
                 switch (c)
@@ -438,12 +440,12 @@ namespace AwesomeInventory.UI
                     if (selPawn.outfits?.CurrentOutfit is AwesomeInventoryLoadout)
                     {
                         Find.WindowStack.Add(
-                            AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(selPawn.outfits.CurrentOutfit, selPawn));
+                            AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(selPawn.outfits.CurrentOutfit, selPawn, false));
                     }
                     else
                     {
                         openLoadout = true;
-                        Find.WindowStack.Add(new FloatMenu(MakeActionableLoadoutOption().Concat(loadoutOptions).ToList(), UIText.ChooseLoadut.TranslateSimple()));
+                        Find.WindowStack.Add(new FloatMenu(selPawn.MakeActionableLoadoutOption().Concat(loadoutOptions).ToList(), UIText.ChooseLoadut.TranslateSimple()));
                     }
                 }
 
@@ -524,7 +526,7 @@ namespace AwesomeInventory.UI
                             if (openLoadout && outfits[local_i] is AwesomeInventoryLoadout loadout)
                             {
                                 Find.WindowStack.Add(
-                                    AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(loadout, selPawn));
+                                    AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(loadout, selPawn, false));
                             }
 
                             if (BetterPawnControlUtility.IsActive)
@@ -533,39 +535,6 @@ namespace AwesomeInventory.UI
                 }
 
                 return options;
-            }
-
-            List<FloatMenuOption> MakeActionableLoadoutOption()
-            {
-                return new List<FloatMenuOption>()
-                {
-                    new FloatMenuOption(
-                        UIText.MakeEmptyLoadout.Translate(selPawn.NameShortColored)
-                        , () =>
-                        {
-                            AwesomeInventoryLoadout emptyLoadout = AwesomeInventoryLoadout.MakeEmptyLoadout(selPawn);
-                            LoadoutManager.AddLoadout(emptyLoadout);
-                            selPawn.SetLoadout(emptyLoadout);
-                            Find.WindowStack.Add(
-                                AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(emptyLoadout, selPawn));
-
-                            if (BetterPawnControlUtility.IsActive)
-                                BetterPawnControlUtility.SaveState(new List<Pawn> { selPawn });
-                        }),
-                    new FloatMenuOption(
-                         UIText.MakeNewLoadout.Translate(selPawn.NameShortColored)
-                        , () =>
-                        {
-                            AwesomeInventoryLoadout loadout = new AwesomeInventoryLoadout(selPawn);
-                            LoadoutManager.AddLoadout(loadout);
-                            selPawn.SetLoadout(loadout);
-                            Find.WindowStack.Add(
-                                AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(loadout, selPawn));
-
-                            if (BetterPawnControlUtility.IsActive)
-                                BetterPawnControlUtility.SaveState(new List<Pawn> { selPawn });
-                        }),
-                };
             }
         }
 
@@ -1582,33 +1551,21 @@ namespace AwesomeInventory.UI
         {
             ValidateArg.NotNull(things, nameof(things));
 
-            List<Thing> weapons = new List<Thing>();
-            List<Thing> apparels = new List<Thing>();
-            List<Thing> items = new List<Thing>();
+            ThingGroupModel thingGroup = things.MakeThingGroup();
 
-            foreach (Thing thing in things)
-            {
-                if (thing.def.IsWeapon)
-                    weapons.Add(thing);
-                else if (thing.def.IsApparel)
-                    apparels.Add(thing);
-                else
-                    items.Add(thing);
-            }
-
-            if (weapons.Any())
+            if (thingGroup.Weapons.Any())
                 Widgets.ListSeparator(ref rollingY, width, UIText.StatWeaponName.TranslateSimple());
-            foreach (Thing thing in weapons)
+            foreach (Thing thing in thingGroup.Weapons)
                 this.DrawThingRow(selPawn, ref rollingY, width, thing, true);
 
-            if (apparels.Any())
+            if (thingGroup.Apparels.Any())
                 Widgets.ListSeparator(ref rollingY, width, UIText.Apparel.TranslateSimple());
-            foreach (Thing thing in apparels)
+            foreach (Thing thing in thingGroup.Apparels)
                 this.DrawThingRow(selPawn, ref rollingY, width, thing, true);
 
-            if (items.Any())
+            if (thingGroup.Miscellaneous.Any())
                 Widgets.ListSeparator(ref rollingY, width, UIText.Items.TranslateSimple());
-            foreach (Thing thing in items)
+            foreach (Thing thing in thingGroup.Miscellaneous)
                 this.DrawThingRow(selPawn, ref rollingY, width, thing, true);
         }
     }
