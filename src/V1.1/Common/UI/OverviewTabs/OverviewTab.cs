@@ -31,6 +31,11 @@ namespace AwesomeInventory.UI
         /// <summary>
         /// Initialize states for tab.
         /// </summary>
-        public abstract void Init();
+        public abstract void PreOpen();
+
+        /// <summary>
+        /// Invoke before a tabs is swicthed to.
+        /// </summary>
+        public abstract void PreSwitch();
     }
 }

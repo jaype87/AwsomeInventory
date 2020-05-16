@@ -4,6 +4,7 @@
 // </copyright>
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -239,6 +240,111 @@ namespace AwesomeInventory.Loadout
 
             thingSelectors.SetStackCount(1);
             return thingSelectors;
+        }
+
+        /// <summary>
+        /// Divide <paramref name="things"/> into different groups.
+        /// </summary>
+        /// <param name="things"> Things to sort. </param>
+        /// <returns> A sorted data entity on things. </returns>
+        public static ThingGroupModel MakeThingGroup(this IEnumerable<Thing> things)
+        {
+            ValidateArg.NotNull(things, nameof(things));
+
+            List<Thing> weapons = new List<Thing>();
+            List<Thing> apparels = new List<Thing>();
+            List<Thing> items = new List<Thing>();
+
+            foreach (Thing thing in things)
+            {
+                if (thing == null)
+                    continue;
+                else if (thing.def.IsWeapon && !thing.def.IsDrug)
+                    weapons.Add(thing);
+                else if (thing.def.IsApparel)
+                    apparels.Add(thing);
+                else
+                    items.Add(thing);
+            }
+
+            return new ThingGroupModel(weapons.OfType<ThingWithComps>().ToList(), apparels.OfType<Apparel>().ToList(), items);
+        }
+
+        /// <summary>
+        /// Compare things based on their categories: weapon, apparel or miscellaneous.
+        /// </summary>
+        public class ThingTypeComparer : IComparer<Thing>
+        {
+            /// <inheritdoc/>
+            public int Compare(Thing x, Thing y)
+            {
+                if (ReferenceEquals(x, y))
+                    return 0;
+                else if (x == null)
+                    return -1;
+                else if (y == null)
+                    return 1;
+                else if (this.GetOrderIfWeapon(x, y, out int result))
+                    return result;
+                else if (this.GetOrderIfApparel(x, y, out result))
+                    return result;
+                else if (x.thingIDNumber > y.thingIDNumber)
+                    return 1;
+                else if (x.thingIDNumber == y.thingIDNumber)
+                    return 0;
+                else return -1;
+            }
+
+            private bool GetOrderIfWeapon(Thing x, Thing y, out int result)
+            {
+                return this.Comparer(
+                    x
+                    , y
+                    , (thing) => thing.def.IsWeapon && !thing.def.IsDrug
+                    , (thingX, thingY) =>
+                    {
+                        this.Comparer(thingX, thingY, (t) => t.def.IsRangedWeapon, (a, b) => 0, out int r);
+                        return r;
+                    }
+                    , out result);
+            }
+
+            private bool GetOrderIfApparel(Thing x, Thing y, out int result)
+            {
+                return this.Comparer(
+                    x
+                    , y
+                    , (thing) => thing.def.IsApparel
+                    , (thingX, thingY) =>
+                    {
+                        int listOrderX = thingX.def.apparel.bodyPartGroups[0].listOrder;
+                        int listOrderY = thingY.def.apparel.bodyPartGroups[0].listOrder;
+                        if (listOrderX == listOrderY)
+                            return 0;
+                        else if (listOrderX > listOrderY)
+                            return 1;
+                        else
+                            return -1;
+                    }
+                    , out result);
+            }
+
+            private bool Comparer(Thing x, Thing y, Func<Thing, bool> filter, Func<Thing, Thing, int> worker, out int result)
+            {
+                bool flagX = filter(x);
+                bool flagY = filter(y);
+
+                if (flagX && flagY && worker != null)
+                    result = worker(x, y);
+                else if (flagX)
+                    result = 1;
+                else if (flagY)
+                    result = -1;
+                else
+                    result = 0;
+
+                return result != 0;
+            }
         }
     }
 }

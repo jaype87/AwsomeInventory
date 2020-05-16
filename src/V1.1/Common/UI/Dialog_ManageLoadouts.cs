@@ -49,6 +49,7 @@ namespace AwesomeInventory.UI
         private Vector2 _loadoutListScrollPosition = Vector2.zero;
         private List<ItemContext> _categorySource;
         private List<ItemContext> _source;
+        private bool _fixPawn;
 
         #region Constructors
 
@@ -57,7 +58,7 @@ namespace AwesomeInventory.UI
         /// </summary>
         /// <param name="loadout"> Selected loadout. </param>
         /// <param name="pawn"> Selected pawn. </param>
-        public Dialog_ManageLoadouts(AwesomeInventoryLoadout loadout, Pawn pawn)
+        public Dialog_ManageLoadouts(AwesomeInventoryLoadout loadout, Pawn pawn, bool fixPawn = false)
         {
             ValidateArg.NotNull(loadout, nameof(loadout));
             _pawn = pawn ?? throw new ArgumentNullException(nameof(pawn));
@@ -66,6 +67,7 @@ namespace AwesomeInventory.UI
             _initialSize = new Vector2(width, Verse.UI.screenHeight / 2f);
 
             _currentLoadout = loadout;
+            _fixPawn = fixPawn;
             _resettables.Add(this);
             _resettables.Add(new WhiteBlacklistView());
 
@@ -138,29 +140,32 @@ namespace AwesomeInventory.UI
             if (Event.current.type == EventType.Layout)
                 return;
 
-            if (Find.Selector.SingleSelectedThing is Pawn pawn && pawn.IsColonist && !pawn.Dead)
+            if (!_fixPawn)
             {
-                if (pawn != _pawn)
+                if (Find.Selector.SingleSelectedThing is Pawn pawn && pawn.IsColonist && !pawn.Dead)
                 {
-                    _pawn = pawn;
-                    AwesomeInventoryLoadout loadout = _pawn.GetLoadout();
-                    if (loadout == null)
+                    if (pawn != _pawn)
                     {
-                        this.Close();
-                        return;
-                    }
+                        _pawn = pawn;
+                        AwesomeInventoryLoadout loadout = _pawn.GetLoadout();
+                        if (loadout == null)
+                        {
+                            this.Close();
+                            return;
+                        }
 
-                    _currentLoadout = loadout;
-                    _resettables.ForEach(r => r.Reset());
+                        _currentLoadout = loadout;
+                        _resettables.ForEach(r => r.Reset());
+                    }
+                    else
+                    {
+                        _currentLoadout = _pawn.GetLoadout();
+                    }
                 }
                 else
                 {
-                    _currentLoadout = _pawn.GetLoadout();
+                    this.Close();
                 }
-            }
-            else
-            {
-                this.Close();
             }
 
             GUI.BeginGroup(canvas);

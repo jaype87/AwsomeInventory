@@ -24,6 +24,7 @@ namespace AwesomeInventory.UI
         static Dialog_InventoryOverview()
         {
             _tabs.Add(new LoadoutTab());
+            _tabs.Add(new InventoryTab());
         }
 
         /// <summary>
@@ -35,6 +36,8 @@ namespace AwesomeInventory.UI
             this.forcePause = true;
             this.absorbInputAroundWindow = true;
             this.closeOnClickedOutside = true;
+            this.resizeable = true;
+            this.draggable = true;
         }
 
         /// <summary>
@@ -48,7 +51,7 @@ namespace AwesomeInventory.UI
         public override void PreOpen()
         {
             base.PreOpen();
-            _tabs.ForEach(t => t.Init());
+            _tabs.ForEach(t => t.PreOpen());
         }
 
         /// <summary>
@@ -63,10 +66,14 @@ namespace AwesomeInventory.UI
                 if (widgetRow.ButtonText(tab.Label))
                 {
                     _activeTab = tab;
+                    _activeTab.PreSwitch();
                 }
             }
 
-            _activeTab.DoTabContent(inRect.ReplaceyMin(widgetRow.FinalY + GenUI.ListSpacing));
+            float rollingY = widgetRow.FinalY + GenUI.ListSpacing;
+            Widgets.DrawLineHorizontal(inRect.x, rollingY, inRect.width);
+
+            _activeTab.DoTabContent(inRect.ReplaceyMin(rollingY + GenUI.GapTiny));
         }
     }
 }

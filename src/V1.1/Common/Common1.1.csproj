@@ -107,6 +107,7 @@
     <Compile Include="Loadout\ThingGroupSelector.cs" />
     <Compile Include="Loadout\ThingSelector.cs" />
     <Compile Include="Loadout\ThingSelectorComparer.cs" />
+    <Compile Include="Models\ThingGroupModel.cs" />
     <Compile Include="Services\Logger.cs" />
     <Compile Include="Services\ServiceRegistration.cs" />
     <Compile Include="UI\AwesomeInventoryMod.cs" />
@@ -138,7 +139,7 @@
     <Compile Include="Loadout\LoadoutComparer.cs" />
     <Compile Include="DynamicDefs\AIGenericDefManager.cs" />
     <Compile Include="Loadout\LoadoutUtility.cs" />
-    <Compile Include="PawnModal.cs" />
+    <Compile Include="Models\PawnModal.cs" />
     <Compile Include="Resources\DefNames.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -180,12 +181,14 @@
     <Compile Include="UI\Dialog_Settings.cs" />
     <Compile Include="UI\Dialog_StuffAndQuality.cs" />
     <Compile Include="UI\AwesomeInventoryTex.cs" />
+    <Compile Include="UI\OverviewTabs\InventoryTab.cs" />
     <Compile Include="UI\OverviewTabs\LoadoutTab.cs" />
     <Compile Include="UI\OverviewTabs\OverviewTab.cs" />
     <Compile Include="UI\QualityColor.cs" />
     <Compile Include="UI\QualityColorDefault.cs" />
     <Compile Include="UI\QualityColorPlugins\QualityColorCCMB.cs" />
     <Compile Include="UI\QualityColorPlugins\QualityColorLCT.cs" />
+    <Compile Include="UI\SearchableList.cs" />
     <Compile Include="UI\StatPanelToggle.cs" />
     <Compile Include="UI\Theme.cs" />
     <Compile Include="UI\WindowOnMouseDrag.cs" />
@@ -227,11 +230,13 @@
     <Compile Include="Utilities\DefUtility.cs" />
     <Compile Include="Utilities\GenBar.cs" />
     <Compile Include="Plugins\CustomRace.cs" />
+    <Compile Include="Utilities\InputUtility.cs" />
     <Compile Include="Utilities\InventoryUtility.cs" />
     <Compile Include="Utilities\PawnUtility.cs" />
     <Compile Include="Utilities\PickUpAndHaulUtility.cs" />
     <Compile Include="Utilities\RectUtility.cs" />
     <Compile Include="Utilities\SimpleSidearmUtility.cs" />
+    <Compile Include="Utilities\ThingComparer.cs" />
     <Compile Include="Utilities\WidgetRowUtility.cs" />
     <Compile Include="Utilities\Utility.cs" />
     <Compile Include="Utilities\DrawUtility.cs" />

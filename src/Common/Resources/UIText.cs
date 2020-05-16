@@ -155,6 +155,8 @@ namespace AwesomeInventory.UI
 
         public const string DropThingLocked = "DropThingLocked";
 
+        public const string EquippedItems = "AwesomeInventory_EquippedItems";
+
         public const string ExtraApparels = "AwesomeInventory_ExtraApparels";
 
         public const string ExplainFeatures = "AwesomeInventory_ExplainFeatures";
@@ -177,6 +179,8 @@ namespace AwesomeInventory.UI
 
         public const string Head = "AwesomeInventory_Head";
 
+        public const string InventoryItems = "AwesomeInventory_InventoryItems";
+
         public const string HotSwapInterrupted = "AwesomeInventory_HotSwapInterrupted";
 
         public const string TipsOnCostume = "AwesomeInventory_TipsOnCostume";
@@ -184,6 +188,8 @@ namespace AwesomeInventory.UI
         public const string ItemsInCostume = "AwesomeInventory_ItemsInCostume";
 
         public const string ImportLoadout = "AwesomeInventory_ImportLoadout";
+
+        public const string InventoryView = "AwesomeInventory_InventoryView";
 
         public const string ApparelsInLoadout = "AwesomeInventory_ApparelsInLoadout";
 
@@ -193,9 +199,17 @@ namespace AwesomeInventory.UI
 
         public const string LoadoutName = "AwesomeInventory_LoadoutName";
 
+        public const string LoadoutView = "AwesomeInventory_LoadoutView";
+
         public const string MakeEmptyLoadout = "AwesomeInventory_MakeEmptyLoadout";
 
+        public const string MakeLoadout = "AwesomeInventory_MakeLoadout";
+
+        public const string MakeLoadoutFrom = "AwesomeInventory_MakeLoadoutFrom";
+
         public const string MakeNewLoadout = "AwesomeInventory_MakeNewLoadout";
+
+        public const string MissingItems = "AwesomeInventory_MissingItems";
 
         public const string MouseOverNumbersForDetails = "AwesomeInventory_MouseOverNumbersForDetails";
 

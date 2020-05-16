@@ -79,7 +79,14 @@
     <AwesomeInventory_SelectCostume>Select Costume</AwesomeInventory_SelectCostume>
 
     <!-- Overview Window -->
+    <AwesomeInventory_EquippedItems>Equipped items</AwesomeInventory_EquippedItems>
+    <AwesomeInventory_InventoryItems>Items in inventory</AwesomeInventory_InventoryItems>
+    <AwesomeInventory_InventoryView>Inventory View</AwesomeInventory_InventoryView>
     <AwesomeInventory_Loadouts>Loadouts</AwesomeInventory_Loadouts>
+    <AwesomeInventory_LoadoutView>Loadout View</AwesomeInventory_LoadoutView>
+    <AwesomeInventory_MakeLoadout>Make loadout</AwesomeInventory_MakeLoadout>
+    <AwesomeInventory_MakeLoadoutFrom>Make loadout from equipped items</AwesomeInventory_MakeLoadoutFrom>
+    <AwesomeInventory_MissingItems>Missing items</AwesomeInventory_MissingItems>
 
     <!-- Labels -->
     <AwesomeInventory_GenericMeal_Label>Generic Meals</AwesomeInventory_GenericMeal_Label>

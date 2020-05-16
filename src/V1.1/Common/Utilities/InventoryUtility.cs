@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RimWorld;
 using Verse;
 
 namespace AwesomeInventory.Loadout
@@ -24,12 +25,42 @@ namespace AwesomeInventory.Loadout
         /// <returns> A list of <see cref="Thing"/> on <paramref name="pawn"/>. </returns>
         public static List<Thing> MakeListForPawnGearAndInventory(Pawn pawn)
         {
+            ValidateArg.NotNull(pawn, nameof(pawn));
+
             List<Thing> things = new List<Thing>();
             things.AddRange(pawn.equipment.AllEquipmentListForReading.Cast<Thing>());
             things.AddRange(pawn.apparel.WornApparel.Cast<Thing>());
             things.AddRange(pawn.inventory.innerContainer);
 
             return things;
+        }
+
+        /// <summary>
+        /// Returns a list of things that merges identical things in <paramref name="things"/>.
+        /// </summary>
+        /// <typeparam name="TSort"> Key for sorting. </typeparam>
+        /// <param name="things"> Source of things. </param>
+        /// <param name="comparer"> A comparer used for finding identical things. </param>
+        /// <param name="sorter"> Used for sorting the result. </param>
+        /// <returns> A list with identical things merged. </returns>
+        public static List<Thing> GetMergedList<TSort>(this IEnumerable<Thing> things, IEqualityComparer<Thing> comparer, Func<Thing, TSort> sorter)
+        {
+            List<Thing> result = things.GroupBy(
+                                    (thing) => thing
+                                    , comparer)
+                                .Select(
+                                    (group) =>
+                                    {
+                                        Thing thing = group.Key.MakeThingStuffPairWithQuality().MakeThingWithoutID();
+                                        thing.stackCount = group.Sum(t => t.stackCount);
+                                        return thing;
+                                    })
+                                .ToList();
+
+            if (sorter != null)
+                result = result.OrderBy(sorter).ToList();
+
+            return result;
         }
     }
 }

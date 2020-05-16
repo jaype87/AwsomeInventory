@@ -157,7 +157,7 @@ namespace AwesomeInventory
 
         private static void OpenLoadoutWindow(Pawn pawn, CompAwesomeInventoryLoadout comp, ThingGroupSelector groupSelector)
         {
-            Find.WindowStack.Add(AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(new object[] { comp.Loadout, pawn }));
+            Find.WindowStack.Add(AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(new object[] { comp.Loadout, pawn, false }));
             ThingDef allowedThing = groupSelector.AllowedThing;
             if (allowedThing.MadeFromStuff || allowedThing.HasComp(typeof(CompQuality)) || allowedThing.useHitPoints)
             {

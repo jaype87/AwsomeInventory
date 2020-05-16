@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AwesomeInventory.Loadout;
+using AwesomeInventory.UI;
+using RimWorld;
 using Verse;
 
 namespace AwesomeInventory
@@ -19,6 +21,24 @@ namespace AwesomeInventory
     public static class PawnUtility
     {
         /// <summary>
+        /// Gets all player pawns in the game.
+        /// </summary>
+        public static List<Pawn> AllPlayerPawns
+        {
+            get
+            {
+                return Find.Maps
+                        .SelectMany(
+                            m => m.mapPawns.AllPawns.Where(p => p.Faction == Faction.OfPlayer))
+                        .Concat(
+                            Find.WorldPawns.AllPawnsAlive.Where(p => p.Faction == Faction.OfPlayer))
+                        .Where(
+                            p => p.UseLoadout(out _))
+                        .ToList();
+            }
+        }
+
+        /// <summary>
         /// Check if pawn uses loadout.
         /// </summary>
         /// <param name="pawn"> Pawn to check. </param>
@@ -28,6 +48,46 @@ namespace AwesomeInventory
         {
             comp = pawn.TryGetComp<CompAwesomeInventoryLoadout>();
             return comp?.Loadout != null && AwesomeInventoryMod.Settings.UseLoadout;
+        }
+
+        /// <summary>
+        /// Make float menu options for creating empty loadout or loadout derived from equipped items.
+        /// </summary>
+        /// <param name="selPawn"> Selected pawn. </param>
+        /// <returns> A list of options. </returns>
+        public static List<FloatMenuOption> MakeActionableLoadoutOption(this Pawn selPawn)
+        {
+            ValidateArg.NotNull(selPawn, nameof(selPawn));
+
+            return new List<FloatMenuOption>()
+                {
+                    new FloatMenuOption(
+                        UIText.MakeEmptyLoadout.Translate(selPawn.NameShortColored)
+                        , () =>
+                        {
+                            AwesomeInventoryLoadout emptyLoadout = AwesomeInventoryLoadout.MakeEmptyLoadout(selPawn);
+                            LoadoutManager.AddLoadout(emptyLoadout);
+                            selPawn.SetLoadout(emptyLoadout);
+                            Find.WindowStack.Add(
+                                AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(emptyLoadout, selPawn, true));
+
+                            if (BetterPawnControlUtility.IsActive)
+                                BetterPawnControlUtility.SaveState(new List<Pawn> { selPawn });
+                        }),
+                    new FloatMenuOption(
+                         UIText.MakeNewLoadout.Translate(selPawn.NameShortColored)
+                        , () =>
+                        {
+                            AwesomeInventoryLoadout loadout = new AwesomeInventoryLoadout(selPawn);
+                            LoadoutManager.AddLoadout(loadout);
+                            selPawn.SetLoadout(loadout);
+                            Find.WindowStack.Add(
+                                AwesomeInventoryServiceProvider.MakeInstanceOf<Dialog_ManageLoadouts>(loadout, selPawn, true));
+
+                            if (BetterPawnControlUtility.IsActive)
+                                BetterPawnControlUtility.SaveState(new List<Pawn> { selPawn });
+                        }),
+                };
         }
     }
 }
