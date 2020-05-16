@@ -191,6 +191,7 @@
     <Compile Include="UI\SearchableList.cs" />
     <Compile Include="UI\StatPanelToggle.cs" />
     <Compile Include="UI\Theme.cs" />
+    <Compile Include="UI\TipDisplayer.cs" />
     <Compile Include="UI\WindowOnMouseDrag.cs" />
     <Compile Include="UnitTest\Loadout\compRPGILoadout\TestcompRPGILoadout.cs" />
     <Compile Include="UnitTest\Loadout\compRPGILoadout\UpdateForNewLoadout\AssignLoadoutToNull.cs" />

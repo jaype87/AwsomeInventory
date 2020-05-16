@@ -199,6 +199,10 @@ namespace AwesomeInventory.UI
 
         public const string LoadoutName = "AwesomeInventory_LoadoutName";
 
+        public const string LoadoutTabTip1 = "AwesomeInventory_LoadoutTabTip1";
+
+        public const string LoadoutTabTip2 = "AwesomeInventory_LoadoutTabTip2";
+
         public const string LoadoutView = "AwesomeInventory_LoadoutView";
 
         public const string MakeEmptyLoadout = "AwesomeInventory_MakeEmptyLoadout";
@@ -314,6 +318,8 @@ namespace AwesomeInventory.UI
         public const string Traits = "Traits";
 
         public const string EmptyLoadout = "AwesomeInventory_EmptyLoadout";
+
+        public const string Tips = "AwesomeInventory_Tips";
 
         public const string UnloadNow = "AwesomeInventory_UnloadNow";
 

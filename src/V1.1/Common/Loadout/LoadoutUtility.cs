@@ -259,7 +259,7 @@ namespace AwesomeInventory.Loadout
             {
                 if (thing == null)
                     continue;
-                else if (thing.def.IsWeapon && !thing.def.IsDrug)
+                else if (thing.def.IsWeapon && !thing.def.IsDrug && !thing.def.IsStuff)
                     weapons.Add(thing);
                 else if (thing.def.IsApparel)
                     apparels.Add(thing);

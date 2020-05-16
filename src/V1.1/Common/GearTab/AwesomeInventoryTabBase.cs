@@ -199,7 +199,7 @@ namespace AwesomeInventory.UI
                 Find.WindowStack.Add(new Dialog_Settings());
             }
 
-            if (Widgets.ButtonImage(headerRect.ReplaceX(headerRect.x - GenUI.SmallIconSize), TexResource.Gear))
+            if (Widgets.ButtonImage(headerRect.ReplaceX(headerRect.x - GenUI.SmallIconSize), TexResource.Checklist))
             {
                 Find.WindowStack.Add(new Dialog_InventoryOverview());
             }

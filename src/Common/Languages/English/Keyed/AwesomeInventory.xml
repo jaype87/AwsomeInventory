@@ -83,6 +83,8 @@
     <AwesomeInventory_InventoryItems>Items in inventory</AwesomeInventory_InventoryItems>
     <AwesomeInventory_InventoryView>Inventory View</AwesomeInventory_InventoryView>
     <AwesomeInventory_Loadouts>Loadouts</AwesomeInventory_Loadouts>
+    <AwesomeInventory_LoadoutTabTip1>Ctrl+Drag to copy item from one loadout to another.</AwesomeInventory_LoadoutTabTip1>
+    <AwesomeInventory_LoadoutTabTip2>Right-Click to remove item from loadout.</AwesomeInventory_LoadoutTabTip2>
     <AwesomeInventory_LoadoutView>Loadout View</AwesomeInventory_LoadoutView>
     <AwesomeInventory_MakeLoadout>Make loadout</AwesomeInventory_MakeLoadout>
     <AwesomeInventory_MakeLoadoutFrom>Make loadout from equipped items</AwesomeInventory_MakeLoadoutFrom>
@@ -145,6 +147,7 @@
     <AwesomeInventory_OpenLoadoutFromContextMenuTooltip> Open loadout window when you equip/wear items on the map</AwesomeInventory_OpenLoadoutFromContextMenuTooltip>
     <AwesomeInventory_PatchAllRacesTooltip>Patch all races to use Awesome Inventory's gear tab.</AwesomeInventory_PatchAllRacesTooltip>
     <AwesomeInventory_PreviewQuality_Tooltip>Choose quality level for preview item. </AwesomeInventory_PreviewQuality_Tooltip>
+    <AwesomeInventory_Tips>Tips: {0}</AwesomeInventory_Tips>
     <AwesomeInventory_Separate_Tooltip>Set quality and hit points for each selected stuff separately.</AwesomeInventory_Separate_Tooltip>
     <AwesomeInventory_UseGearTabToggleTooltip>Gear tab toggle allows users to bind hotkey to open the gear tab.</AwesomeInventory_UseGearTabToggleTooltip>
     <AwesomeInventory_UseLoadoutTooltip>Use the loadout system provided by Awesome Inventory.</AwesomeInventory_UseLoadoutTooltip>

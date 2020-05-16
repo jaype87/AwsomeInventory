@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -19,6 +20,14 @@ namespace AwesomeInventory.UI
     public class Dialog_InventoryOverview : Window
     {
         private static List<OverviewTab> _tabs = new List<OverviewTab>();
+
+        private static TipDisplayer _tipDisplayer = new TipDisplayer(
+            new List<string>()
+            {
+                UIText.LoadoutTabTip1.TranslateSimple(),
+                UIText.LoadoutTabTip2.TranslateSimple(),
+            });
+
         private OverviewTab _activeTab = _tabs.First();
 
         static Dialog_InventoryOverview()
@@ -73,7 +82,10 @@ namespace AwesomeInventory.UI
             float rollingY = widgetRow.FinalY + GenUI.ListSpacing;
             Widgets.DrawLineHorizontal(inRect.x, rollingY, inRect.width);
 
-            _activeTab.DoTabContent(inRect.ReplaceyMin(rollingY + GenUI.GapTiny));
+            _activeTab.DoTabContent(inRect.ReplaceyMin(rollingY + GenUI.GapTiny).ReplaceyMax(inRect.yMax - GenUI.ListSpacing));
+
+            widgetRow = new WidgetRow(inRect.x, inRect.yMax - GenUI.ListSpacing, UIDirection.RightThenDown);
+            widgetRow.Label(UIText.Tips.Translate(_tipDisplayer.GetTip()));
         }
     }
 }

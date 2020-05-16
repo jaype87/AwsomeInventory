@@ -38,7 +38,7 @@ namespace AwesomeInventory.UI
             float listWidth = columnWidth - GenUI.GapSmall;
             rect.y += GenUI.GapTiny;
 
-            this.DrawInventoryList(
+            DrawInventoryList(
                 UIText.Equipment.TranslateSimple()
                 , rect.ReplaceWidth(listWidth)
                 , _thingGroupModel.Weapons.GetMergedList(ThingComparer.Instance, (thing) => thing.LabelCap)
@@ -46,7 +46,7 @@ namespace AwesomeInventory.UI
                 , _thingGroupModel.Weapons.Count * GenUI.ListSpacing
                 , ref _viewModel.EquipmentSearchText);
 
-            this.DrawInventoryList(
+            DrawInventoryList(
                 UIText.Apparel.TranslateSimple()
                 , new Rect(columnWidth, rect.y, listWidth, rect.height)
                 , _thingGroupModel.Apparels.GetMergedList(ThingComparer.Instance, (thing) => thing.LabelCap)
@@ -54,7 +54,7 @@ namespace AwesomeInventory.UI
                 , _thingGroupModel.Apparels.Count * GenUI.ListSpacing
                 , ref _viewModel.ApparelSearchText);
 
-            this.DrawInventoryList(
+            DrawInventoryList(
                 UIText.Inventory.TranslateSimple()
                 , new Rect(columnWidth * 2, rect.y, listWidth, rect.height)
                 , _thingGroupModel.Miscellaneous.GetMergedList(ThingComparer.Instance, (thing) => thing.LabelCap)
@@ -62,7 +62,7 @@ namespace AwesomeInventory.UI
                 , _thingGroupModel.Miscellaneous.Count * GenUI.ListSpacing
                 , ref _viewModel.MiscellanousSearchText);
 
-            this.DrawInventoryList(
+            DrawInventoryList(
                 UIText.MissingItems.TranslateSimple()
                 , new Rect(columnWidth * 3, rect.y, listWidth, rect.height)
                 , _missingItems
@@ -84,7 +84,13 @@ namespace AwesomeInventory.UI
             _thingGroupModel = _storedThing.MakeThingGroup();
         }
 
-        public void DrawInventoryList(string label, Rect rect, List<Thing> items, ref Vector2 scrollPos, float listLength, ref string searchText)
+        /// <inheritdoc/>
+        public override void PreSwitch()
+        {
+            _missingItems = this.GetMissingItems();
+        }
+
+        private static void DrawInventoryList(string label, Rect rect, List<Thing> items, ref Vector2 scrollPos, float listLength, ref string searchText)
         {
             Widgets.NoneLabelCenteredVertically(rect.ReplaceHeight(GenUI.ListSpacing), label);
             Text.Anchor = TextAnchor.MiddleLeft;
@@ -97,12 +103,6 @@ namespace AwesomeInventory.UI
                 , items
                 , ref searchText);
             Text.Anchor = TextAnchor.UpperLeft;
-        }
-
-        /// <inheritdoc/>
-        public override void PreSwitch()
-        {
-            _missingItems = this.GetMissingItems();
         }
 
         private List<Thing> GetMissingItems()
