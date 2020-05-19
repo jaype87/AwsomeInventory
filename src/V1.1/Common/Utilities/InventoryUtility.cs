@@ -46,7 +46,7 @@ namespace AwesomeInventory.Loadout
         public static List<Thing> GetMergedList<TSort>(this IEnumerable<Thing> things, IEqualityComparer<Thing> comparer, Func<Thing, TSort> sorter)
         {
             List<Thing> result = things.GroupBy(
-                                    (thing) => thing
+                                    (thing) => thing.GetInnerIfMinified()
                                     , comparer)
                                 .Select(
                                     (group) =>

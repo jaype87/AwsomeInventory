@@ -31,9 +31,10 @@ namespace AwesomeInventory.Loadout
         /// <param name="description"> Description for this def. </param>
         /// <param name="label"> Label to display. </param>
         /// <param name="thingClass"> Type of Thing that this def defines. </param>
-        /// <param name="thingCategoryDefs"> Group the this def belongs. </param>
+        /// <param name="thingCategoryDefs"> The group to which this def belongs. </param>
+        /// <param name="moreDefs"> Additinal defs to add. </param>
         /// <param name="exceptDefs"> Defs should not be in this category. </param>
-        protected AIGenericDef(string defName, string description, string label, Type thingClass, IEnumerable<ThingCategoryDef> thingCategoryDefs, IEnumerable<ThingDef> exceptDefs = null)
+        protected AIGenericDef(string defName, string description, string label, Type thingClass, IEnumerable<ThingCategoryDef> thingCategoryDefs, IEnumerable<ThingDef> moreDefs = null, IEnumerable<ThingDef> exceptDefs = null)
         {
             this.defName = defName;
             this.description = description;
@@ -42,9 +43,9 @@ namespace AwesomeInventory.Loadout
             this.ExcepDefs = exceptDefs;
             this.ThingCategoryDefs = thingCategoryDefs;
             this.Includes = (thingDef) => this.AvailableDefs.Contains(thingDef);
-            this.AvailableDefs = from thingDef in this.ThingCategoryDefs.SelectMany(t => t.DescendantThingDefs).Distinct()
+            this.AvailableDefs = (from thingDef in this.ThingCategoryDefs.SelectMany(t => t.DescendantThingDefs).Distinct()
                                  where this.ExcepDefs.EnumerableNullOrEmpty() || !this.ExcepDefs.Contains(thingDef)
-                                 select thingDef;
+                                 select thingDef).Concat(moreDefs ?? Enumerable.Empty<ThingDef>());
             this.tradeability = Tradeability.None;
         }
 

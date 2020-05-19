@@ -40,7 +40,8 @@ namespace AwesomeInventory.Loadout
             ValidateArg.NotNull(genericDef, nameof(genericDef));
 
             _genericDef = genericDef;
-            _genericDef.ThingCategoryDefs.ToList().ForEach(t => _thingFilter.SetAllow(t, true, _genericDef.ExcepDefs));
+            foreach (ThingDef def in _genericDef.AvailableDefs)
+                _thingFilter.SetAllow(def, true);
         }
 
         /// <summary>
@@ -52,7 +53,8 @@ namespace AwesomeInventory.Loadout
             ValidateArg.NotNull(other, nameof(other));
 
             _genericDef = other._genericDef;
-            _genericDef.ThingCategoryDefs.ToList().ForEach(t => _thingFilter.SetAllow(t, true, _genericDef.ExcepDefs));
+            foreach (ThingDef def in _genericDef.AvailableDefs)
+                _thingFilter.SetAllow(def, true);
         }
 
         /// <summary>
