@@ -100,6 +100,7 @@
     <Compile Include="Jobs\JobGiver_AwesomeInventory_TakeArm.cs" />
     <Compile Include="Jobs\JobGiver_FindItemByRadius.cs" />
     <Compile Include="Jobs\JobGiver_OptimizeApparel_Supplement.cs" />
+    <Compile Include="Jobs\JobGiver_UnloadExtraApparel.cs" />
     <Compile Include="Loadout\AwesomeInventoryCostume.cs" />
     <Compile Include="Loadout\AwesomeInventoryLoadout.cs" />
     <Compile Include="Loadout\GenericThingSelector.cs" />
@@ -225,8 +226,8 @@
     </Compile>
     <Compile Include="UnitTest\UI\UnitTestButton.cs" />
     <Compile Include="Utilities\ApparelOptionUtility.cs" />
-    <Compile Include="Utilities\BetterPawnControlUtility.cs" />
-    <Compile Include="Utilities\CombatExtendedUtility.cs" />
+    <Compile Include="Utilities\ThirdPartyMods\BetterPawnControlUtility.cs" />
+    <Compile Include="Utilities\ThirdPartyMods\CombatExtendedUtility.cs" />
     <Compile Include="Utilities\ContextMenuUtility.cs" />
     <Compile Include="Utilities\DefUtility.cs" />
     <Compile Include="Utilities\GenBar.cs" />
@@ -234,10 +235,11 @@
     <Compile Include="Utilities\InputUtility.cs" />
     <Compile Include="Utilities\InventoryUtility.cs" />
     <Compile Include="Utilities\PawnUtility.cs" />
-    <Compile Include="Utilities\PickUpAndHaulUtility.cs" />
+    <Compile Include="Utilities\ThirdPartyMods\PickUpAndHaulUtility.cs" />
     <Compile Include="Utilities\RectUtility.cs" />
-    <Compile Include="Utilities\SimpleSidearmUtility.cs" />
+    <Compile Include="Utilities\ThirdPartyMods\SimpleSidearmUtility.cs" />
     <Compile Include="Utilities\ThingComparer.cs" />
+    <Compile Include="Utilities\ThirdPartyMods\VGPGourmetUtility.cs" />
     <Compile Include="Utilities\WidgetRowUtility.cs" />
     <Compile Include="Utilities\Utility.cs" />
     <Compile Include="Utilities\DrawUtility.cs" />

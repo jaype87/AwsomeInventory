@@ -19,7 +19,7 @@
     <JobDef>
         <defName>AwesomeInventory_Dress</defName>
         <driverClass>AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Dress</driverClass>
-        <reportString></reportString>
+        <reportString>Wear TargetA.</reportString>
         <suspendable>false</suspendable>
         <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
     </JobDef>
@@ -27,7 +27,7 @@
     <JobDef>
         <defName>AwesomeInventory_Undress</defName>
         <driverClass>AwesomeInventory.Jobs.JobDriver_AwesomeInventory_Undress</driverClass>
-        <reportString>removing TargetA.</reportString>
+        <reportString>Removing TargetA.</reportString>
         <suspendable>false</suspendable>
         <allowOpportunisticPrefix>false</allowOpportunisticPrefix>
     </JobDef>
