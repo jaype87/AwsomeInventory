@@ -91,7 +91,8 @@ namespace AwesomeInventory.Jobs
                     foreach (KeyValuePair<ThingGroupSelector, int> pair in compLoadout.ItemsToRestock)
                     {
                         // Exclude beer and other drugs that are also categoried as weapon
-                        if (pair.Key.AllowedThing.IsWeapon && !pair.Key.AllowedThing.IsDrug)
+                        ThingDef thingDef = pair.Key.AllowedThing;
+                        if (thingDef.IsWeapon && !thingDef.IsDrug && !thingDef.IsStuff)
                         {
                             Thing targetThingA =
                                 _parent.FindItem(

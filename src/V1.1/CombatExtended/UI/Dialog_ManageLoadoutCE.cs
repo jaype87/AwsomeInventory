@@ -26,8 +26,9 @@ namespace AwesomeInventory.UI
         /// </summary>
         /// <param name="loadout"> Loadout to display. </param>
         /// <param name="pawn"> Pawn who wears the <paramref name="loadout"/>. </param>
-        public Dialog_ManageLoadoutCE(AwesomeInventoryLoadout loadout, Pawn pawn)
-            : base(loadout, pawn)
+        /// <param name="fixPawn"> Wheter the loadout window should display the same pawn even user selects another. </param>
+        public Dialog_ManageLoadoutCE(AwesomeInventoryLoadout loadout, Pawn pawn, bool fixPawn)
+            : base(loadout, pawn, fixPawn)
         {
         }
 

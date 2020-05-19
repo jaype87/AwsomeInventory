@@ -14,6 +14,7 @@ using AwesomeInventory.Loadout;
 using RimWorld;
 using UnityEngine;
 using Verse;
+using Verse.Noise;
 
 namespace AwesomeInventory.UI
 {
@@ -73,6 +74,7 @@ namespace AwesomeInventory.UI
             _tabHeight = _colonist.Count * GenUI.ListSpacing * 3;
         }
 
+        /// <inheritdoc/>
         public override void PreSwitch()
         {
             // no op.
@@ -125,6 +127,15 @@ namespace AwesomeInventory.UI
         private void DrawTabRow(Rect rect, Pawn pawn, PawnRowViewModel viewModel, ViewMode viewMode)
         {
             Rect nameRect = rect.ReplaceWidth(_pawnNameWidth).ReplaceHeight(GenUI.ListSpacing);
+            Rect selectRect = nameRect.ReplaceHeight(GenUI.ListSpacing * 2);
+            if (Widgets.ButtonInvisible(selectRect))
+            {
+                Selector selector = Find.Selector;
+                selector.ClearSelection();
+                selector.Select(pawn);
+            }
+
+            Widgets.DrawHighlightIfMouseover(selectRect);
             Widgets.Label(nameRect, pawn.NameFullColored);
             Widgets.Label(nameRect.ReplaceY(nameRect.yMax), pawn.LabelNoCountColored);
 
@@ -272,7 +283,7 @@ namespace AwesomeInventory.UI
             {
                 int index = Mathf.FloorToInt(Event.current.mousePosition.y / _rowHeight);
                 if (index > -1 && index < _colonist.Count && _colonist[index].UseLoadout(out CompAwesomeInventoryLoadout comp))
-                    comp.Loadout.Add(_groupSelectCopy);
+                    comp.Loadout.Add(new ThingGroupSelector(_groupSelectCopy));
 
                 _dragging = false;
                 Event.current.Use();

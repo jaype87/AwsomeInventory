@@ -58,6 +58,7 @@ namespace AwesomeInventory.UI
         /// </summary>
         /// <param name="loadout"> Selected loadout. </param>
         /// <param name="pawn"> Selected pawn. </param>
+        /// <param name="fixPawn"> Wheter the loadout window should display the same pawn even user selects another. </param>
         public Dialog_ManageLoadouts(AwesomeInventoryLoadout loadout, Pawn pawn, bool fixPawn = false)
         {
             ValidateArg.NotNull(loadout, nameof(loadout));

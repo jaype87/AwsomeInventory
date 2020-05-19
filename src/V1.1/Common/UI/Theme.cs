@@ -15,6 +15,7 @@ namespace AwesomeInventory.UI
     /// <summary>
     /// Color themes.
     /// </summary>
+    [StaticConstructorOnStartup]
     public static class Theme
     {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member

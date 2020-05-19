@@ -33,7 +33,7 @@
     <AwesomeInventory_DragToReorder>드래그로 정렬</AwesomeInventory_DragToReorder>
     <AwesomeInventory_EmptyLoadout>빈 소지품목</AwesomeInventory_EmptyLoadout>
     <AwesomeInventory_GlobalApparelSetting>전체 의류 설정</AwesomeInventory_GlobalApparelSetting>
-    <AwesomeInventory_GlobalOutfitSettingWarning>주의 사항: 여기의 설정은 소지품목 창의 의류 설정보다 우선합니다. (무기 및 기타 항목은 영향을 받지 않습니다)</AwesomeInventory_GlobalOutfitSettingWarning>
+    <AwesomeInventory_GlobalOutfitSettingWarning>주의 사항: 여기의 설정은 소지품목 창의 의류 설정보다 우선합니다.\n(무기 및 기타 항목은 영향을 받지 않습니다)</AwesomeInventory_GlobalOutfitSettingWarning>
 	 <AwesomeInventory_ImportLoadout>다른 소지품목으로부터 물품 가져오기</AwesomeInventory_ImportLoadout>
     <AwesomeInventory_LoadoutName>{0}의 소지품목</AwesomeInventory_LoadoutName>
     <AwesomeInventory_MouseOverNumbersForDetails>자세한 내용은 숫자 위로 마우스를 가져가십시오</AwesomeInventory_MouseOverNumbersForDetails>
@@ -78,6 +78,18 @@
     <AwesomeInventory_NoCostumeSelected>의상을 선택해주세요.</AwesomeInventory_NoCostumeSelected>
     <AwesomeInventory_SelectCostume>의상 선택</AwesomeInventory_SelectCostume>
   
+    <!-- Overview Window -->
+    <AwesomeInventory_EquippedItems>장착한 물품들</AwesomeInventory_EquippedItems>
+    <AwesomeInventory_InventoryItems>소지하고 있는 물품</AwesomeInventory_InventoryItems>
+    <AwesomeInventory_InventoryView>소지품 보기</AwesomeInventory_InventoryView>
+    <AwesomeInventory_Loadouts>소지품목들</AwesomeInventory_Loadouts>
+    <AwesomeInventory_LoadoutTabTip1>소지품목에서 다른 소지품목으로 물품을 복사하려면 Ctrl + 드래그 하세요.</AwesomeInventory_LoadoutTabTip1>
+    <AwesomeInventory_LoadoutTabTip2>소지품목에서 물품을 제거하려면 마우스 오른쪽 버튼을 클릭하세요.</AwesomeInventory_LoadoutTabTip2>
+    <AwesomeInventory_LoadoutView>소지품목 보기</AwesomeInventory_LoadoutView>
+    <AwesomeInventory_MakeLoadout>소지품목 만들기</AwesomeInventory_MakeLoadout>
+    <AwesomeInventory_MakeLoadoutFrom>장착한 물품들로 소지품목 만들기</AwesomeInventory_MakeLoadoutFrom>
+    <AwesomeInventory_MissingItems>누락된 물품</AwesomeInventory_MissingItems>
+  
     <!-- Labels -->
     <AwesomeInventory_GenericMeal_Label>일반 식사</AwesomeInventory_GenericMeal_Label>
     <AwesomeInventory_AIGenericRawFood_Label>일반 생식</AwesomeInventory_AIGenericRawFood_Label>
@@ -121,6 +133,7 @@
     <AwesomeInventory_ForceWear>강제 착용: {0}\n이전 장비 소지품 보관</AwesomeInventory_ForceWear>
     <AwesomeInventory_Pickup>{0} 줍기</AwesomeInventory_Pickup>
     <AwesomeInventory_PutAway>{0} 해제</AwesomeInventory_PutAway>
+	 <AwesomeInventory_RemoveFromLoadout>{0}에서 제거</AwesomeInventory_RemoveFromLoadout>
     <AwesomeInventory_Wear>착용: {0}\n이전 장비 소지품 보관</AwesomeInventory_Wear>
     <AwesomeInventory_VanillaWear>착용: {0}</AwesomeInventory_VanillaWear>
 
