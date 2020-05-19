@@ -44,6 +44,10 @@ namespace AwesomeInventory.Jobs
                             }
                         }
                     }
+                    else
+                    {
+                        return new ThinkResult(JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_Unload, thing), this, JobTag.UnloadingOwnInventory);
+                    }
                 }
             }
 

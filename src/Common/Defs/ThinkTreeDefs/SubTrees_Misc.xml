@@ -23,7 +23,11 @@
         <defName>AwesomeInventoryLoadoutSupplement</defName>
         <insertTag>Humanlike_PostDuty</insertTag>
         <insertPriority>101</insertPriority>
-        <thinkRoot Class="AwesomeInventory.Jobs.JobGiver_OptimizeApparel_Supplement">
+        <thinkRoot Class="ThinkNode_Priority">
+            <subNodes>
+                <li Class="AwesomeInventory.Jobs.JobGiver_OptimizeApparel_Supplement"></li>
+                <li Class="AwesomeInventory.Jobs.JobGiver_UnloadExtraApparel"></li>
+            </subNodes>
         </thinkRoot>
     </ThinkTreeDef>
 </Defs>
