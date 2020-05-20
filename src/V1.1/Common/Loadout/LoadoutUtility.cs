@@ -57,7 +57,7 @@ namespace AwesomeInventory.Loadout
         /// <param name="pawn"> Set loadout on this <paramref name="pawn"/>. </param>
         /// <param name="loadout"> Loadout to assign to <paramref name="pawn"/>. </param>
         /// <param name="delay"> If true, put jobs for changing apparel in job queue, otherwise, execute jobs immediately. </param>
-        /// <param name="forced"> If true, update for <paramref name="loadout"/> even though it is the same as current loadout. </param>
+        /// <param name="forced"> If true, update pawn's comp for <paramref name="loadout"/> even though it is the same as current loadout. </param>
         public static void SetLoadout(this Pawn pawn, AwesomeInventoryLoadout loadout, bool delay = false, bool forced = false)
         {
             if (pawn.TryGetComp<CompAwesomeInventoryLoadout>() is CompAwesomeInventoryLoadout comp)

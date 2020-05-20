@@ -89,5 +89,31 @@ namespace AwesomeInventory
                         }),
                 };
         }
+
+        /// <summary>
+        /// Check wheter pawn has an empty slot to wear <paramref name="newApparel"/>.
+        /// </summary>
+        /// <param name="pawn"> Selected pawn. </param>
+        /// <param name="newApparel"> Apparel to wear. </param>
+        /// <returns> Returns true if there is an empty slot. </returns>
+        public static bool IsOldApparelForced(this Pawn pawn, Apparel newApparel)
+        {
+            if (pawn.apparel?.WornApparel == null || newApparel == null)
+                return false;
+
+            foreach (Apparel wornApparel in pawn.apparel.WornApparel)
+            {
+                if (ApparelUtility.CanWearTogether(wornApparel.def, newApparel.def, BodyDefOf.Human))
+                {
+                    continue;
+                }
+                else if (pawn.outfits.forcedHandler.IsForced(wornApparel))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

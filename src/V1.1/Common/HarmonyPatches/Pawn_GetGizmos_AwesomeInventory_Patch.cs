@@ -24,7 +24,7 @@ namespace AwesomeInventory.HarmonyPatches
         {
             MethodInfo original = AccessTools.Method(typeof(Pawn), "GetGizmos");
             MethodInfo postfix = AccessTools.Method(typeof(Pawn_GetGizmos_AwesomeInventory_Patch), "Postfix");
-            Utility.Harmony.Patch(original, null, new HarmonyMethod(postfix));
+            //Utility.Harmony.Patch(original, null, new HarmonyMethod(postfix));
         }
 
         /// <summary>
@@ -43,26 +43,6 @@ namespace AwesomeInventory.HarmonyPatches
             {
                 yield return gizmo;
             }
-
-            if (AwesomeInventoryMod.Settings.UseToggleGizmo)
-            {
-                if (Find.Selector.SingleSelectedThing is Pawn pawn)
-                {
-                    if (AwesomeInventoryServiceProvider.TryGetImplementation<AwesomeInventoryTabBase>(out AwesomeInventoryTabBase tab))
-                    {
-                        if (tab.IsVisible)
-                        {
-                            ToggleGearTab toggleGearTab = new ToggleGearTab(tab.GetType());
-                            yield return toggleGearTab;
-                        }
-                    }
-                }
-            }
-
-            var comp = __instance.TryGetComp<CompAwesomeInventoryLoadout>();
-
-            if (AwesomeInventoryMod.Settings.UseLoadout && __instance.IsColonistPlayerControlled && comp != null)
-                yield return new ChangeCostumeInPlace(__instance);
         }
     }
 }

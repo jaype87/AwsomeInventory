@@ -28,12 +28,11 @@ namespace AwesomeInventory.Loadout
                   Labels.AIGenericMeal.TranslateSimple(),
                   typeof(ThingWithComps),
                   new[] { ThingCategoryDefOf.FoodMeals },
+                  null,
                   DefDatabase<ThingDef>.AllDefsListForReading.Where(
                       def => def.IsIngestible
-                             && def.ingestible.preferability > FoodPreferability.MealAwful
-                             && (VGPGourmetUtility.IsActive
-                                 ? !def.IsSweet()
-                                 : true)))
+                          && (VGPGardenUtility.IsActive
+                              && def.IsSweet())))
         {
             // Use fine meal for mass.
             this.statBases = new List<StatModifier>() { new StatModifier() { stat = StatDefOf.Mass, value = ThingDefOf.MealFine.BaseMass } };

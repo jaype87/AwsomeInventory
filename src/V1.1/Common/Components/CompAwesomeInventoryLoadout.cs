@@ -300,6 +300,31 @@ namespace AwesomeInventory.Loadout
         }
 
         /// <summary>
+        /// Return gizmos(Icon buttons when a pawn/thing is selected).
+        /// </summary>
+        /// <returns> A list of gizmo. </returns>
+        public override IEnumerable<Gizmo> CompGetGizmosExtra()
+        {
+            if (AwesomeInventoryMod.Settings.UseToggleGizmo)
+            {
+                if (Find.Selector.SingleSelectedThing is Pawn pawn)
+                {
+                    if (AwesomeInventoryServiceProvider.TryGetImplementation<AwesomeInventoryTabBase>(out AwesomeInventoryTabBase tab))
+                    {
+                        if (tab.IsVisible)
+                        {
+                            ToggleGearTab toggleGearTab = new ToggleGearTab(tab.GetType());
+                            yield return toggleGearTab;
+                        }
+                    }
+                }
+            }
+
+            if (AwesomeInventoryMod.Settings.UseLoadout && _pawn.IsColonistPlayerControlled)
+                yield return new ChangeCostumeInPlace(_pawn);
+        }
+
+        /// <summary>
         /// Find <see cref="ThingGroupSelector"/> that allows <paramref name="thing"/>.
         /// </summary>
         /// <param name="thing"> Thing to check if there is any selector fits. </param>
@@ -365,32 +390,49 @@ namespace AwesomeInventory.Loadout
 
                 if (ApparelOptionUtility.CapableOfWearing(_pawn))
                 {
-                    ConcurrentBag<Apparel> wornApparels = new ConcurrentBag<Apparel>();
-                    Parallel.ForEach(
-                        Partitioner.Create(_pawn.apparel.WornApparel)
-                        , (Apparel apparel) =>
-                        {
-                            if (!_pawn.outfits.forcedHandler.IsForced(apparel) && !costume.CostumeItems.Any(c => c.Allows(apparel, out _)))
-                            {
-                                wornApparels.Add(apparel);
-                            }
-                        });
-                    if (wornApparels.Any())
-                    {
-                        StartUndressJobs(wornApparels, _pawn);
-                    }
+                    //ConcurrentBag<Apparel> apparelToRemove = new ConcurrentBag<Apparel>();
+                    //Parallel.ForEach(
+                    //    Partitioner.Create(_pawn.apparel.WornApparel)
+                    //    , (Apparel apparel) =>
+                    //    {
+                    //        if (!_pawn.outfits.forcedHandler.IsForced(apparel) && !costume.CostumeItems.Any(c => c.Allows(apparel, out _)))
+                    //        {
+                    //            apparelToRemove.Add(apparel);
+                    //        }
+                    //    });
+                    //if (apparelToRemove.Any())
+                    //{
+                    //    StartUndressJobs(apparelToRemove, _pawn);
+                    //}
 
                     if (costume.CostumeItems.Any())
                     {
                         ConcurrentBag<Thing> things = new ConcurrentBag<Thing>();
+                        ConcurrentDictionary<Apparel, byte> apparelsToRemove = new ConcurrentDictionary<Apparel, byte>();
+
                         Parallel.ForEach(
                             Partitioner.Create(costume.CostumeItems)
                             , (ThingGroupSelector selector) =>
                             {
                                 Thing thing = _pawn.inventory.innerContainer.FirstOrDefault(t => selector.Allows(t, out _));
                                 if (thing != null)
+                                {
+                                    foreach (Apparel apparel in _pawn.apparel.WornApparel)
+                                    {
+                                        if (!ApparelUtility.CanWearTogether(apparel.def, thing.def, BodyDefOf.Human))
+                                        {
+                                            apparelsToRemove[apparel] = 1;
+                                        }
+                                    }
+
                                     things.Add(thing);
+                                }
                             });
+
+                        if (apparelsToRemove.Any())
+                        {
+                            StartUndressJobs(apparelsToRemove.Keys, _pawn);
+                        }
 
                         if (things.Any())
                         {

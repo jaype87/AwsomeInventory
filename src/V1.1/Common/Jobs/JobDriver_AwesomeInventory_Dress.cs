@@ -36,7 +36,7 @@ namespace AwesomeInventory.Jobs
         /// <returns> A report string. </returns>
         public override string GetReport()
         {
-            if ((this.job as DressJob).ForceWear)
+            if ((this.job as DressJob)?.ForceWear ?? false)
                 return UIText.AIForceWear.Translate(TargetThingA.LabelShort);
             else
                 return UIText.AIWear.Translate(TargetThingA.LabelShort);
@@ -83,7 +83,7 @@ namespace AwesomeInventory.Jobs
                     // Safe to call Remove even if the apparel is not in inventory.
                     pawn.inventory.innerContainer.Remove(_apparel);
                     Utility.Wear(pawn, _apparel, false);
-                    if ((this.job as DressJob).ForceWear)
+                    if ((this.job as DressJob)?.ForceWear ?? false)
                     {
                         pawn.outfits.forcedHandler.SetForced(_apparel, true);
                     }

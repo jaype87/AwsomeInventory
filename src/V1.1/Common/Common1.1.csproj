@@ -128,7 +128,7 @@
     <Compile Include="Gizmos\ToggleGearTab.cs" />
     <Compile Include="HarmonyPatches\OutfitDatabase_TryDelete.cs" />
     <Compile Include="DefOfs\AwesomeInventory_JobDefOf.cs" />
-    <Compile Include="HarmonyPatches\Pawn_GetGizmos_AwesomeInventory_Patch.cs" />
+    <None Include="HarmonyPatches\Pawn_GetGizmos_AwesomeInventory_Patch.cs" />
     <Compile Include="HarmonyPatches\Pawn_OutfitTracker_CurrentOutfit.cs" />
     <Compile Include="HarmonyPatches\Thing_RPGI_Patch.cs" />
     <Compile Include="Interfaces\IDrawGearTab.cs" />
@@ -239,7 +239,7 @@
     <Compile Include="Utilities\RectUtility.cs" />
     <Compile Include="Utilities\ThirdPartyMods\SimpleSidearmUtility.cs" />
     <Compile Include="Utilities\ThingComparer.cs" />
-    <Compile Include="Utilities\ThirdPartyMods\VGPGourmetUtility.cs" />
+    <Compile Include="Utilities\ThirdPartyMods\VGPGardenUtility.cs" />
     <Compile Include="Utilities\WidgetRowUtility.cs" />
     <Compile Include="Utilities\Utility.cs" />
     <Compile Include="Utilities\DrawUtility.cs" />

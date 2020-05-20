@@ -33,20 +33,26 @@ namespace AwesomeInventory.Jobs
             {
                 if (thing is Apparel apparel)
                 {
-                    IEnumerable<ThingGroupSelector> selectors = comp.Loadout.Where(selector => selector.Allows(thing, out _));
-                    if (selectors.Any())
+                    bool extra = true;
+                    CompAwesomeInventoryLoadout.ThingGroupSelectorPool pool = comp.FindPotentialThingGroupSelectors(thing, comp.Loadout);
+                    if (pool.OrderedSelectorTuples.Any())
                     {
-                        foreach (ThingGroupSelector selector in selectors)
+                        foreach (var tuple in pool.OrderedSelectorTuples)
                         {
-                            if (comp.InventoryMargins[selector] > 0)
+                            if (!(comp.InventoryMargins[tuple.Item2] > 0))
                             {
-                                return new ThinkResult(JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_Unload, thing), this, JobTag.UnloadingOwnInventory);
+                                extra = false;
+                                break;
                             }
                         }
                     }
-                    else
+
+                    if (extra)
                     {
-                        return new ThinkResult(JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_Unload, thing), this, JobTag.UnloadingOwnInventory);
+                        if (StoreUtility.TryFindBestBetterStorageFor(apparel, pawn, pawn.Map, StoreUtility.CurrentStoragePriorityOf(apparel), pawn.Faction, out _, out _))
+                        {
+                            return new ThinkResult(JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_Unload, thing), this, JobTag.UnloadingOwnInventory);
+                        }
                     }
                 }
             }

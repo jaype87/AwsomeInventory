@@ -57,7 +57,9 @@ namespace AwesomeInventory.HarmonyPatches
             {
                 if (__result.def == JobDefOf.Wear)
                 {
-                    if (targetThingA != null && !costume.CostumeItems.Any(s => s.Allows(targetThingA, out _)))
+                    if (targetThingA != null
+                        && !costume.CostumeItems.Any(s => s.Allows(targetThingA, out _))
+                        && !costume.CostumeItems.All(s => ApparelUtility.CanWearTogether(targetThingA.def, s.AllowedThing, BodyDefOf.Human)))
                     {
                         __result = null;
                         JobMaker.ReturnToPool(job);

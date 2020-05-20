@@ -5,9 +5,11 @@
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
+using System.Threading.Tasks;
 using AwesomeInventory.Loadout;
 using AwesomeInventory.Resources;
 using RimWorld;
@@ -238,25 +240,23 @@ namespace AwesomeInventory.UI
             base.PreOpen();
             HashSet<ThingDef> visibleDefs = new HashSet<ThingDef>(_allSuitableDefs);
             visibleDefs.IntersectWith(
-                Find.CurrentMap.listerThings.ThingsInGroup(ThingRequestGroup.HaulableEverOrMinifiable).Select(t => t.def));
+                Find.CurrentMap.listerThings.ThingsInGroup(ThingRequestGroup.HaulableEverOrMinifiable).Select(t => t.def).Distinct());
 
-            _itemContexts = new List<ItemContext>();
-            foreach (ThingDef td in _allSuitableDefs)
-            {
-                ItemContext itemContext = new ItemContext() { ThingDef = td };
-                if (td is AIGenericDef genericDef)
+            ConcurrentBag<ItemContext> itemContexts = new ConcurrentBag<ItemContext>();
+            Parallel.ForEach(
+                Partitioner.Create(_allSuitableDefs)
+                , (ThingDef thingDef) =>
                 {
-                    itemContext.IsVisible = !visibleDefs.Any(def => genericDef.Includes(def));
-                }
-                else
-                {
-                    itemContext.IsVisible = !visibleDefs.Contains(td);
-                }
+                    ItemContext itemContext = new ItemContext() { ThingDef = thingDef };
+                    if (thingDef is AIGenericDef genericDef)
+                        itemContext.IsVisible = visibleDefs.Any(def => genericDef.Includes(def));
+                    else
+                        itemContext.IsVisible = visibleDefs.Contains(thingDef);
 
-                _itemContexts.Add(itemContext);
-            }
+                    itemContexts.Add(itemContext);
+                });
 
-            _itemContexts = _itemContexts.OrderBy(td => td.ThingDef.label).ToList();
+            _itemContexts = itemContexts.OrderBy(td => td.ThingDef.label).ToList();
             SetCategory(CategorySelection.Ranged);
         }
 
@@ -781,8 +781,7 @@ namespace AwesomeInventory.UI
                 Color baseColor = GUI.color;
                 ThingDef thingDef = _source[i].ThingDef;
 
-                // gray out weapons not in stock
-                if (_source[i].IsVisible)
+                if (!_source[i].IsVisible)
                     GUI.color = Color.gray;
 
                 Rect row = new Rect(0f, i * GenUI.ListSpacing, canvas.width, GenUI.ListSpacing);

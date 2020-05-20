@@ -70,15 +70,15 @@ namespace AwesomeInventory.Jobs
                             {
                                 return new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, targetA, false);
                             }
-                            else
-                            {
-                                Job job = JobMaker.MakeJob(JobDefOf.TakeInventory, targetA);
-                                job.count = targetA.stackCount;
-                                return job;
-                            }
+                        }
+                        else if (!pawn.IsOldApparelForced(targetA as Apparel))
+                        {
+                            return new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, targetA, false);
                         }
 
-                        return new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, targetA, false);
+                        Job job = JobMaker.MakeJob(JobDefOf.TakeInventory, targetA);
+                        job.count = targetA.stackCount;
+                        return job;
                     }
                 }
             }
