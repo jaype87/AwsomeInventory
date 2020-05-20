@@ -167,7 +167,8 @@ namespace AwesomeInventory.Jobs
             });
             placeThing.AddFinishAction(() =>
             {
-                TargetThingA.SetForbidden(true, false);
+                if (!(this.job is UnloadApparelJob))
+                    TargetThingA.SetForbidden(true, false);
 
                 if (_container)
                 {

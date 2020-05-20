@@ -19,6 +19,7 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 using Verse.AI;
+using Verse.Noise;
 
 namespace AwesomeInventory.HarmonyPatches
 {
@@ -75,22 +76,24 @@ namespace AwesomeInventory.HarmonyPatches
                 {
                     bool conflict = false;
 
-                    Parallel.ForEach(
-                        Partitioner.Create(pawn.apparel.WornApparel)
-                        , (Apparel apparel) =>
-                        {
-                            if (!token.IsCancellationRequested
-                                && targetThingA != null
-                                && apparel.def != targetThingA.def
-                                && !ApparelUtility.CanWearTogether(apparel.def, targetThingA.def, BodyDefOf.Human))
+                    if (!comp.Loadout.Any(selector => selector.Allows(targetThingA, out _)))
+                    {
+                        Parallel.ForEach(
+                            Partitioner.Create(pawn.apparel.WornApparel)
+                            , (Apparel apparel) =>
                             {
-                                if (comp.Loadout.Any(selector => selector.Allows(apparel, out _)))
+                                if (!token.IsCancellationRequested
+                                    && targetThingA != null
+                                    && !ApparelUtility.CanWearTogether(apparel.def, targetThingA.def, BodyDefOf.Human))
                                 {
-                                    conflict = true;
-                                    source.Cancel();
+                                    if (comp.Loadout.Any(selector => selector.Allows(apparel, out _)))
+                                    {
+                                        conflict = true;
+                                        source.Cancel();
+                                    }
                                 }
-                            }
-                        });
+                            });
+                    }
 
                     if (conflict)
                     {

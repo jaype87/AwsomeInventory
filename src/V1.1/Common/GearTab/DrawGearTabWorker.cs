@@ -663,7 +663,7 @@ namespace AwesomeInventory.UI
                     {
                         // Draw unload now button
                         TooltipHandler.TipRegion(unloadButtonRect, UIText.UnloadNow.TranslateSimple());
-                        if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
+                        if (UnloadNowUtility.ThingInQueue(selPawn, thing))
                         {
                             if (Widgets.ButtonImage(unloadButtonRect, TexResource.DoubleDownArrow, AwesomeInventoryTex.HighlightBrown, AwesomeInventoryTex.HighlightGreen))
                             {
@@ -974,7 +974,7 @@ namespace AwesomeInventory.UI
                 if (this.ShowDropButton(selPawn, thing, false, out bool canDrop, out _) && canDrop && _gearTab.IsColonistPlayerControlled())
                 {
                     TooltipHandler.TipRegion(buttonRect, UIText.UnloadNow.Translate());
-                    if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
+                    if (UnloadNowUtility.ThingInQueue(selPawn, thing))
                     {
                         if (Widgets.ButtonImage(buttonRect, TexResource.DoubleDownArrow, AwesomeInventoryTex.HighlightBrown, AwesomeInventoryTex.HighlightGreen))
                         {
@@ -994,7 +994,7 @@ namespace AwesomeInventory.UI
 
                 GUI.color = Color.white;
             }
-            else if (AwesomeInventoryUnloadNow.ThingInQueue(selPawn, thing))
+            else if (UnloadNowUtility.ThingInQueue(selPawn, thing))
             {
                 if (Widgets.ButtonImage(buttonRect, TexResource.DoubleDownArrow, AwesomeInventoryTex.HighlightBrown, AwesomeInventoryTex.HighlightGreen))
                 {
@@ -1444,13 +1444,13 @@ namespace AwesomeInventory.UI
             ValidateArg.NotNull(thing, nameof(thing));
             ValidateArg.NotNull(pawn, nameof(pawn));
 
-            if (AwesomeInventoryUnloadNow.ThingInQueue(pawn, thing))
+            if (UnloadNowUtility.ThingInQueue(pawn, thing))
             {
-                AwesomeInventoryUnloadNow.StopJob(pawn, thing);
+                UnloadNowUtility.StopJob(pawn, thing);
             }
             else
             {
-                AwesomeInventoryUnloadNow.QueueJob(pawn, thing);
+                UnloadNowUtility.QueueJob(pawn, thing);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿// <copyright file="AwesomeInventoryUnloadNow.cs" company="Zizhen Li">
+﻿// <copyright file="UnloadNowUtility.cs" company="Zizhen Li">
 // Copyright (c) 2019 - 2020 Zizhen Li. All rights reserved.
 // Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -17,7 +17,7 @@ namespace AwesomeInventory.Jobs
     /// <summary>
     /// Handles the Unload Now functionality.
     /// </summary>
-    public static class AwesomeInventoryUnloadNow
+    public static class UnloadNowUtility
     {
         /// <summary>
         /// Check if <paramref name="thing"/> is already on an unload job assigned to <paramref name="pawn"/>.

@@ -102,6 +102,7 @@
     <Compile Include="Jobs\JobGiver_FindItemByRadius.cs" />
     <Compile Include="Jobs\JobGiver_OptimizeApparel_Supplement.cs" />
     <Compile Include="Jobs\JobGiver_UnloadExtraApparel.cs" />
+    <Compile Include="Jobs\UnloadApparelJob.cs" />
     <Compile Include="Loadout\AwesomeInventoryCostume.cs" />
     <Compile Include="Loadout\AwesomeInventoryLoadout.cs" />
     <Compile Include="Loadout\GenericThingSelector.cs" />
@@ -136,7 +137,7 @@
     <Compile Include="Interfaces\ILoadout.cs" />
     <Compile Include="Interfaces\ILoadoutManager.cs" />
     <Compile Include="Jobs\JobDriver_AwesomeInventory_MapEquip.cs" />
-    <Compile Include="Jobs\AwesomeInventoryUnloadNow.cs" />
+    <Compile Include="Jobs\UnloadNowUtility.cs" />
     <Compile Include="Jobs\ThinkNode_AwesomeInventory_Core.cs" />
     <Compile Include="Loadout\LoadoutComparer.cs" />
     <Compile Include="DynamicDefs\AIGenericDefManager.cs" />

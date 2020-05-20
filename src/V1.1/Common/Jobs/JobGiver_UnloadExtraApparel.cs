@@ -51,7 +51,8 @@ namespace AwesomeInventory.Jobs
                     {
                         if (StoreUtility.TryFindBestBetterStorageFor(apparel, pawn, pawn.Map, StoreUtility.CurrentStoragePriorityOf(apparel), pawn.Faction, out _, out _))
                         {
-                            return new ThinkResult(JobMaker.MakeJob(AwesomeInventory_JobDefOf.AwesomeInventory_Unload, thing), this, JobTag.UnloadingOwnInventory);
+                            UnloadApparelJob job = new UnloadApparelJob(thing);
+                            return new ThinkResult(job, this, JobTag.UnloadingOwnInventory);
                         }
                     }
                 }
