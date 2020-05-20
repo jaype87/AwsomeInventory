@@ -83,6 +83,8 @@ namespace AwesomeInventory.UI
 
         /****************** AwesomeInventory texts ********************/
 
+        public const string AddToAllLoadout = "AwesomeInventory_AddToAllLoadout";
+
         public const string AddToLoadout = "AwesomeInventory_AddToLoadout";
 
         public const string AIDefault = "AwesomeInventory_Default";

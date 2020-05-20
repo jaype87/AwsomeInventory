@@ -271,6 +271,21 @@ namespace AwesomeInventory.Loadout
         }
 
         /// <summary>
+        /// Add <paramref name="selector"/> to all loadout in <paramref name="loadouts"/>.
+        /// </summary>
+        /// <param name="selector"> Selector to add. </param>
+        /// <param name="loadouts"> A list of loadouts that <paramref name="selector"/> will be added to. </param>
+        public static void AddToLoadouts(this ThingGroupSelector selector, IEnumerable<AwesomeInventoryLoadout> loadouts)
+        {
+            ValidateArg.NotNull(loadouts, nameof(Loadout));
+
+            foreach (AwesomeInventoryLoadout loadout in loadouts)
+            {
+                loadout.Add(new ThingGroupSelector(selector));
+            }
+        }
+
+        /// <summary>
         /// Compare things based on their categories: weapon, apparel or miscellaneous.
         /// </summary>
         public class ThingTypeComparer : IComparer<Thing>

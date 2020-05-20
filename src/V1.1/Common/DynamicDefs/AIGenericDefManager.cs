@@ -22,6 +22,7 @@ namespace AwesomeInventory.Loadout
             DefDatabase<AIGenericDef>.Add(AIGenericRawFood.Instance);
             DefDatabase<AIGenericDef>.Add(AIGenericDrugs.Instance);
             DefDatabase<AIGenericDef>.Add(AIGenericMedicine.Instance);
+            DefDatabase<AIGenericDef>.Add(AIGenericMeat.Instance);
         }
     }
 }

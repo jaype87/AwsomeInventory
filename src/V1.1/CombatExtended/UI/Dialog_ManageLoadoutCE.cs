@@ -141,6 +141,17 @@ namespace AwesomeInventory.UI
                 if (Event.current.type == EventType.MouseDown)
                 {
                     TooltipHandler.ClearTooltipsFrom(labelRect);
+                    if (Event.current.button == 1)
+                    {
+                        FloatMenu floatMenu = new FloatMenu(
+                            new List<FloatMenuOption>()
+                            {
+                                new FloatMenuOption(
+                                    UIText.AddToAllLoadout.TranslateSimple()
+                                    , () => groupSelector.AddToLoadouts(Loadout.LoadoutManager.PlainLoadouts.Except(_currentLoadout))),
+                            });
+                        Find.WindowStack.Add(floatMenu);
+                    }
                 }
                 else
                 {

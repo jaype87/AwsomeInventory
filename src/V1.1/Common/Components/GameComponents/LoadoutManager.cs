@@ -50,6 +50,12 @@ namespace AwesomeInventory.Loadout
         public static List<AwesomeInventoryLoadout> Loadouts => _loadouts;
 
         /// <summary>
+        /// Gets a list of loadouts that are of type <see cref="AwesomeInventoryLoadout"/>.
+        /// </summary>
+        public static List<AwesomeInventoryLoadout> PlainLoadouts
+            => _loadouts.Where(l => l.GetType() == typeof(AwesomeInventoryLoadout)).ToList();
+
+        /// <summary>
         /// Add loadout to manager and the game's outfit database.
         /// </summary>
         /// <param name="loadout"> Loadout to add. </param>

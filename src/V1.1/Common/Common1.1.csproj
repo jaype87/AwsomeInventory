@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="Components\GameComponents\GameComponent_AwesomeInventory_Entry.cs" />
     <Compile Include="DefOfs\AwesomeInventorySoundDefOf.cs" />
+    <Compile Include="DynamicDefs\AIGenericMeat.cs" />
     <Compile Include="GearTab\IconRect.cs" />
     <Compile Include="GearTab\SmartRectList.cs" />
     <Compile Include="Gizmos\ChangeCostumeInPlace.cs" />

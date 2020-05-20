@@ -25,7 +25,8 @@ namespace AwesomeInventory
         static VGPGardenUtility()
         {
             IsActive = LoadedModManager.RunningModsListForReading.Any(m => m.PackageId == _packageID);
-            SweetMeals = DefDatabase<ThingCategoryDef>.GetNamed(_sweetMealDefName);
+            if (IsActive)
+                SweetMeals = DefDatabase<ThingCategoryDef>.GetNamed(_sweetMealDefName);
         }
 
         /// <summary>

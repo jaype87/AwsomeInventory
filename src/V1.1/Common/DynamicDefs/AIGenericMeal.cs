@@ -32,7 +32,8 @@ namespace AwesomeInventory.Loadout
                   DefDatabase<ThingDef>.AllDefsListForReading.Where(
                       def => def.IsIngestible
                           && (VGPGardenUtility.IsActive
-                              && def.IsSweet())))
+                              && def.IsSweet()))
+                  .ToList())
         {
             // Use fine meal for mass.
             this.statBases = new List<StatModifier>() { new StatModifier() { stat = StatDefOf.Mass, value = ThingDefOf.MealFine.BaseMass } };

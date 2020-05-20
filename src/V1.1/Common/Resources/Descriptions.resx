@@ -123,6 +123,9 @@
   <data name="AIGenericMeal" xml:space="preserve">
     <value>AwesomeInventory_AIGenericMeal_Description</value>
   </data>
+  <data name="AIGenericMeatRaw" xml:space="preserve">
+    <value>AwesomeInventory_AIGenericMeatRaw_Description</value>
+  </data>
   <data name="AIGenericMedicine" xml:space="preserve">
     <value>AwesomeInventory_AIGenericMedicine_Description</value>
   </data>

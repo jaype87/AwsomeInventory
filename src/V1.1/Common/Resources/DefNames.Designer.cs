@@ -79,6 +79,15 @@ namespace AwesomeInventory.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AIGenericMeatRaw.
+        /// </summary>
+        internal static string AIGenericMeatRaw {
+            get {
+                return ResourceManager.GetString("AIGenericMeatRaw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AIGenericMedicine.
         /// </summary>
         internal static string AIGenericMedicine {
