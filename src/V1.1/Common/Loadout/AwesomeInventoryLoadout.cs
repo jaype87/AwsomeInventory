@@ -391,6 +391,8 @@ namespace AwesomeInventory.Loadout
 
                 this.NotifySiblingsSelectorAdded(item);
             }
+
+            _addNewThingGroupSelectorCallbacks.ForEach(c => c.Invoke(item));
         }
 
         /// <inheritdoc/>
@@ -552,7 +554,6 @@ namespace AwesomeInventory.Loadout
             if (thingGroupSelector.AllowedStackCount == 0)
             {
                 this.Remove(thingGroupSelector);
-                _removeThingGroupSelectorCallbacks.ForEach(c => c.Invoke(thingGroupSelector));
             }
             else
             {
@@ -575,9 +576,14 @@ namespace AwesomeInventory.Loadout
         private void NotifySiblingsSelectorAdded(ThingGroupSelector selector)
         {
             if (this is AwesomeInventoryCostume costume)
-                costume.Base.Costumes.ForEach(c => c.Add(selector, true));
+            {
+                costume.Base.Costumes.Except(this).ToList().ForEach(c => c.Add(selector, true));
+                costume.Base.Add(selector, true);
+            }
             else
+            {
                 this.Costumes.ForEach(c => c.Add(selector, true));
+            }
         }
 
         private void NotifySiblingsSelectorRemoved(ThingGroupSelector selector)

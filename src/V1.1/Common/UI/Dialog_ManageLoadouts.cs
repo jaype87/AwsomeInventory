@@ -16,6 +16,7 @@ using RimWorld;
 using RPG_Inventory_Remake_Common;
 using UnityEngine;
 using Verse;
+using Verse.Noise;
 
 namespace AwesomeInventory.UI
 {
@@ -594,7 +595,14 @@ namespace AwesomeInventory.UI
                             {
                                 new FloatMenuOption(
                                     UIText.AddToAllLoadout.TranslateSimple()
-                                    , () => groupSelector.AddToLoadouts(LoadoutManager.PlainLoadouts.Except(_currentLoadout))),
+                                    , () =>
+                                    {
+                                        var loadout = _currentLoadout;
+                                        if (loadout is AwesomeInventoryCostume costume)
+                                            loadout = costume.Base;
+
+                                        groupSelector.AddToLoadouts(LoadoutManager.PlainLoadouts.Except(loadout));
+                                    }),
                             });
                         Find.WindowStack.Add(floatMenu);
                     }
@@ -705,8 +713,10 @@ namespace AwesomeInventory.UI
         {
             if (oldIndex != newIndex)
             {
-                groupSelectors.Insert(newIndex, groupSelectors[oldIndex]);
-                groupSelectors.RemoveAt((oldIndex >= newIndex) ? (oldIndex + 1) : oldIndex);
+                int index = newIndex > oldIndex ? newIndex - 1 : newIndex;
+                ThingGroupSelector selector = groupSelectors[oldIndex];
+                groupSelectors.RemoveAt(oldIndex);
+                groupSelectors.Insert(index, selector);
             }
         }
 

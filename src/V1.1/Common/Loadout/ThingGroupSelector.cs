@@ -239,7 +239,7 @@ namespace AwesomeInventory.Loadout
             int oldStackCount = this.AllowedStackCount;
             this.AllowedStackCount = stackCount;
             _selectors.ForEach(s => s.SetStackCount(stackCount));
-            this._stackCountChangedCallbacks.ForEach(action => action.Invoke(this, oldStackCount));
+            this._stackCountChangedCallbacks.ToList().ForEach(action => action.Invoke(this, oldStackCount));
         }
 
         /// <summary>

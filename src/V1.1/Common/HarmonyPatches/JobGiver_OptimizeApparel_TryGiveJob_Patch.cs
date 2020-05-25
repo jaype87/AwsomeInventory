@@ -29,6 +29,8 @@ namespace AwesomeInventory.HarmonyPatches
     [StaticConstructorOnStartup]
     public static class JobGiver_OptimizeApparel_TryGiveJob_Patch
     {
+        private static MethodInfo _setNextOptimizeTick = typeof(JobGiver_OptimizeApparel).GetMethod("SetNextOptimizeTick", BindingFlags.NonPublic | BindingFlags.Instance);
+
         static JobGiver_OptimizeApparel_TryGiveJob_Patch()
         {
             MethodInfo original = AccessTools.Method(typeof(JobGiver_OptimizeApparel), "TryGiveJob");
@@ -41,9 +43,10 @@ namespace AwesomeInventory.HarmonyPatches
         /// </summary>
         /// <param name="pawn"> Pawn who is about to doing a job.</param>
         /// <param name="__result"> A scheduled job. </param>
+        /// <param name="__instance"> Instance of type which this postfix patches. </param>
         [SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Harmony patch")]
         [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Required to catch all")]
-        public static void Postfix(Pawn pawn, ref Job __result)
+        public static void Postfix(Pawn pawn, ref Job __result, JobGiver_OptimizeApparel __instance)
         {
             if (__result == null)
                 return;
@@ -64,6 +67,7 @@ namespace AwesomeInventory.HarmonyPatches
                     {
                         __result = null;
                         JobMaker.ReturnToPool(job);
+                        _setNextOptimizeTick.Invoke(__instance, new[] { pawn });
                         return;
                     }
                 }
