@@ -4,9 +4,12 @@
 // </copyright>
 
 using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using AwesomeInventory.Loadout;
 using RimWorld;
@@ -20,13 +23,23 @@ namespace AwesomeInventory.UI
     /// </summary>
     public class InventoryTab : OverviewTab
     {
-        private List<Thing> _storedThing = new List<Thing>();
+        private static ConcurrentDictionary<Thing, ThingModel> _thingSlotGroup
+            = new ConcurrentDictionary<Thing, ThingModel>(ThingComparer.Instance);
 
         private ThingGroupModel _thingGroupModel;
 
         private InventoryViewModel _viewModel = new InventoryViewModel();
 
         private List<Thing> _missingItems = new List<Thing>();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InventoryTab"/> class.
+        /// </summary>
+        /// <param name="containerState"> State of the container. </param>
+        public InventoryTab(ContainerState containerState)
+            : base(containerState)
+        {
+        }
 
         /// <inheritdoc/>
         public override string Label => UIText.Inventory.TranslateSimple();
@@ -41,18 +54,20 @@ namespace AwesomeInventory.UI
             DrawInventoryList(
                 UIText.Equipment.TranslateSimple()
                 , rect.ReplaceWidth(listWidth)
-                , _thingGroupModel.Weapons.GetMergedList(ThingComparer.Instance, (thing) => thing.LabelCap)
+                , _thingGroupModel.Weapons
                 , ref _viewModel.EquipmentViewScrollPos
                 , _thingGroupModel.Weapons.Count * GenUI.ListSpacing
-                , ref _viewModel.EquipmentSearchText);
+                , ref _viewModel.EquipmentSearchText
+                , true);
 
             DrawInventoryList(
                 UIText.Apparel.TranslateSimple()
                 , new Rect(columnWidth, rect.y, listWidth, rect.height)
-                , _thingGroupModel.Apparels.GetMergedList(ThingComparer.Instance, (thing) => thing.LabelCap)
+                , _thingGroupModel.Apparels
                 , ref _viewModel.ApparelViewScrollPos
                 , _thingGroupModel.Apparels.Count * GenUI.ListSpacing
-                , ref _viewModel.ApparelSearchText);
+                , ref _viewModel.ApparelSearchText
+                , true);
 
             DrawInventoryList(
                 UIText.Inventory.TranslateSimple()
@@ -60,7 +75,8 @@ namespace AwesomeInventory.UI
                 , _thingGroupModel.Miscellaneous.GetMergedList(ThingComparer.Instance, (thing) => thing.LabelCap)
                 , ref _viewModel.MiscellanousScrollPos
                 , _thingGroupModel.Miscellaneous.Count * GenUI.ListSpacing
-                , ref _viewModel.MiscellanousSearchText);
+                , ref _viewModel.MiscellanousSearchText
+                , true);
 
             DrawInventoryList(
                 UIText.MissingItems.TranslateSimple()
@@ -68,20 +84,46 @@ namespace AwesomeInventory.UI
                 , _missingItems
                 , ref _viewModel.MissingItemsScrollPos
                 , _missingItems.Count * GenUI.ListSpacing
-                , ref _viewModel.MissingItemsSearchText);
+                , ref _viewModel.MissingItemsSearchText
+                , false);
         }
 
         /// <inheritdoc/>
         public override void PreOpen()
         {
-            _storedThing = Find.Maps.SelectMany(
-                map =>
-                    map.haulDestinationManager
-                       .AllGroupsListForReading
-                       .SelectMany(
-                       (slotGroup) => slotGroup.HeldThings)).ToList();
+            _thingSlotGroup.Clear();
+            var groups =
+                Find.Maps.SelectMany(map => map.haulDestinationManager.AllGroupsListForReading)
+                         .Select(
+                              (slotGroup) =>
+                                  new
+                                  {
+                                      SlotGroup = slotGroup,
+                                      Things = slotGroup.HeldThings.GetMergedList(ThingComparer.Instance, (thing) => thing.LabelCap),
+                                  });
+            Parallel.ForEach(
+                Partitioner.Create(groups)
+                , (group) =>
+                {
+                    foreach (Thing thing in group.Things)
+                    {
+                        _thingSlotGroup.AddOrUpdate(
+                            thing
+                            , new ThingModel()
+                            {
+                                StackCount = thing.stackCount,
+                                SlotGroups = new ConcurrentBag<SlotGroup>() { group.SlotGroup },
+                            }
+                            , (t, oldvalue) =>
+                            {
+                                Interlocked.Add(ref oldvalue.StackCount, thing.stackCount);
+                                oldvalue.SlotGroups.Add(group.SlotGroup);
+                                return oldvalue;
+                            });
+                    }
+                });
 
-            _thingGroupModel = _storedThing.MakeThingGroup();
+            _thingGroupModel = _thingSlotGroup.Keys.MakeThingGroup();
         }
 
         /// <inheritdoc/>
@@ -90,14 +132,36 @@ namespace AwesomeInventory.UI
             _missingItems = this.GetMissingItems();
         }
 
-        private static void DrawInventoryList(string label, Rect rect, List<Thing> items, ref Vector2 scrollPos, float listLength, ref string searchText)
+        private void DrawInventoryList(string label, Rect rect, List<Thing> items, ref Vector2 scrollPos, float listLength, ref string searchText, bool inSlot)
         {
             Widgets.NoneLabelCenteredVertically(rect.ReplaceHeight(GenUI.ListSpacing), label);
             Text.Anchor = TextAnchor.MiddleLeft;
             SearchableList.Draw(
                 rect.ReplaceyMin(rect.yMin + GenUI.ListSpacing)
                 , GenUI.ListSpacing
-                , (canvas, thing, index) => Widgets.Label(canvas, thing.LabelCap.ColorizeByQuality(thing))
+                , (canvas, thing, index) =>
+                {
+                    if (inSlot)
+                        thing.stackCount = _thingSlotGroup[thing].StackCount;
+
+                    Rect labelRect = canvas.ReplaceWidth(canvas.width - GenUI.SmallIconSize * 2 - GenUI.ScrollBarWidth);
+                    Widgets.Label(labelRect, thing.LabelCap.ColorizeByQuality(thing));
+                    if (inSlot && Widgets.ButtonImage(new Rect(labelRect.xMax, labelRect.y, GenUI.SmallIconSize, GenUI.ListSpacing), TexResource.ArrowBottom))
+                    {
+                        FloatMenuUtility.MakeMenu(
+                            _thingSlotGroup[thing].SlotGroups.Select(g => g.parent).Cast<Thing>()
+                            , t => $"{t.LabelCap} - {t.thingIDNumber}"
+                            , t => () =>
+                            {
+                                Find.Selector.ClearSelection();
+                                Find.Selector.Select(t);
+                                Find.CameraDriver.JumpToCurrentMapLoc(t.Position);
+                                _containerState.Minimizing = true;
+                            });
+                    }
+
+                    Widgets.InfoCardButton(labelRect.xMax + GenUI.SmallIconSize, labelRect.y, thing.def);
+                }
                 , ref scrollPos
                 , listLength
                 , items
@@ -142,6 +206,15 @@ namespace AwesomeInventory.UI
             public Vector2 MissingItemsScrollPos;
 
             public string MissingItemsSearchText;
+        }
+
+        private class ThingModel
+        {
+            public ConcurrentBag<SlotGroup> SlotGroups;
+
+            public int StackCount;
+
+            public int SlotIndex = 0;
         }
     }
 }

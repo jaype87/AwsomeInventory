@@ -21,6 +21,7 @@ namespace AwesomeInventory.UI
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable SA1600 // Elements should be documented
 
+        [StaticConstructorOnStartup]
         public static class MilkySlicky
         {
             public static Color BackGround = GenColor.FromHex("C7AF84C0");

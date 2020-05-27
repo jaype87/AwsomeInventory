@@ -19,7 +19,13 @@ namespace AwesomeInventory.UI
     /// </summary>
     public class Dialog_InventoryOverview : Window
     {
+        private static readonly float _windowWidth = UIText.TenCharsString.Times(12).GetWidthCached();
+
+        private static readonly Vector2 _initialSize = new Vector2(_windowWidth, Verse.UI.screenHeight / 2f);
+
         private static List<OverviewTab> _tabs = new List<OverviewTab>();
+
+        private static ContainerState _containerState = new ContainerState();
 
         private static TipDisplayer _tipDisplayer = new TipDisplayer(
             new List<string>()
@@ -30,10 +36,14 @@ namespace AwesomeInventory.UI
 
         private OverviewTab _activeTab = _tabs.First();
 
+        private float _minWindowWidth = 70f;
+
+        private Rect _windowRect;
+
         static Dialog_InventoryOverview()
         {
-            _tabs.Add(new LoadoutTab());
-            _tabs.Add(new InventoryTab());
+            _tabs.Add(new LoadoutTab(_containerState));
+            _tabs.Add(new InventoryTab(_containerState));
         }
 
         /// <summary>
@@ -52,7 +62,7 @@ namespace AwesomeInventory.UI
         /// <summary>
         /// Gets the initial size for the dialog window.
         /// </summary>
-        public override Vector2 InitialSize { get; } = new Vector2(GenUI.GetWidthCached(UIText.TenCharsString.Times(11)), Verse.UI.screenHeight / 2f);
+        public override Vector2 InitialSize { get; } = _initialSize;
 
         /// <summary>
         /// Called once before the window is opened.
@@ -69,6 +79,29 @@ namespace AwesomeInventory.UI
         /// <param name="inRect"> Rect for drawing. </param>
         public override void DoWindowContents(Rect inRect)
         {
+            if (_containerState.Minimizing)
+            {
+                this.Minimized();
+                _containerState.Minimized = true;
+                _containerState.Minimizing = false;
+
+                return;
+            }
+            else if (_containerState.Minimized)
+            {
+                Rect buttonRect = inRect;
+                if (Widgets.ButtonImage(buttonRect, TexResource.Resize))
+                {
+                    _containerState.Minimized = false;
+                    this.windowRect = _windowRect;
+                    this.resizeable = true;
+                    this.closeOnClickedOutside = true;
+                    this.forcePause = true;
+                }
+
+                return;
+            }
+
             WidgetRow widgetRow = new WidgetRow(inRect.x, inRect.y, UIDirection.RightThenDown);
             foreach (OverviewTab tab in _tabs)
             {
@@ -86,6 +119,25 @@ namespace AwesomeInventory.UI
 
             widgetRow = new WidgetRow(inRect.x, inRect.yMax - GenUI.ListSpacing, UIDirection.RightThenDown);
             widgetRow.Label(UIText.Tips.Translate(_tipDisplayer.GetTip()));
+        }
+
+        /// <summary>
+        /// It is invoked before this window is about to be removed from the window stack.
+        /// </summary>
+        public override void PreClose()
+        {
+            base.PreClose();
+            _containerState.Minimized = false;
+        }
+
+        private void Minimized()
+        {
+            _windowRect = new Rect(this.windowRect);
+            this.windowRect = new Rect(_windowRect.xMax - _minWindowWidth, _windowRect.y, GenUI.SmallIconSize, GenUI.SmallIconSize)
+                .ExpandedBy(DrawUtility.WindowPadding);
+            this.resizeable = false;
+            this.doCloseX = false;
+            this.forcePause = false;
         }
     }
 }

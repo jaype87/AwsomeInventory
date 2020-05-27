@@ -18,6 +18,20 @@ namespace AwesomeInventory.UI
     public abstract class OverviewTab
     {
         /// <summary>
+        /// State of its UI container.
+        /// </summary>
+        protected ContainerState _containerState;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OverviewTab"/> class.
+        /// </summary>
+        /// <param name="containerState"> State of the container. </param>
+        public OverviewTab(ContainerState containerState)
+        {
+            _containerState = containerState;
+        }
+
+        /// <summary>
         /// Gets the label for tab.
         /// </summary>
         public abstract string Label { get; }

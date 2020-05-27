@@ -267,7 +267,7 @@ namespace AwesomeInventory.Loadout
                     items.Add(thing);
             }
 
-            return new ThingGroupModel(weapons.OfType<ThingWithComps>().ToList(), apparels.OfType<Apparel>().ToList(), items);
+            return new ThingGroupModel(weapons, apparels, items);
         }
 
         /// <summary>

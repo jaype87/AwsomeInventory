@@ -25,13 +25,13 @@ namespace AwesomeInventory.UI
     {
         private static DrawHelper _drawHelper;
         private static bool _dragging;
+        private static float _pawnNameWidth = UIText.TenCharsString.Times(2).GetWidthCached();
+        private static float _tabHeight = 0;
+        private static float _rowHeight = GenUI.ListSpacing * 3;
 
-        private float _pawnNameWidth = UIText.TenCharsString.Times(2).GetWidthCached();
         private List<Pawn> _colonist = new List<Pawn>();
         private List<PawnRowViewModel> _pawnRowScrollPos = new List<PawnRowViewModel>();
         private Vector2 _tabScrollPos = Vector2.zero;
-        private float _tabHeight = 0;
-        private float _rowHeight = GenUI.ListSpacing * 3;
         private ViewMode _mode = ViewMode.Loadout;
 
         private AwesomeInventoryLoadout _copy;
@@ -41,6 +41,15 @@ namespace AwesomeInventory.UI
         {
             if (!AwesomeInventoryServiceProvider.TryGetImplementation(out _drawHelper))
                 Log.Error("No implementation for DrawHelper");
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoadoutTab"/> class.
+        /// </summary>
+        /// <param name="containerState"> State of the container. </param>
+        public LoadoutTab(ContainerState containerState)
+            : base(containerState)
+        {
         }
 
         private enum ViewMode

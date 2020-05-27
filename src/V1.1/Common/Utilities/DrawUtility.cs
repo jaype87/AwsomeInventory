@@ -36,6 +36,11 @@ namespace AwesomeInventory.UI
         }
 
         /// <summary>
+        /// Gets window padding used by vanilla.
+        /// </summary>
+        public static float WindowPadding => 18f;
+
+        /// <summary>
         /// Draw a lable which doubles as a button.
         /// </summary>
         /// <param name="rect"> Rect for drawing. </param>

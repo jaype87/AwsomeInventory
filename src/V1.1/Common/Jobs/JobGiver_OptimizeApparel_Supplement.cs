@@ -54,8 +54,12 @@ namespace AwesomeInventory.Jobs
                 {
                     if (comp.Loadout is AwesomeInventoryCostume costume)
                     {
-                        if (!costume.CostumeItems.Any(c => c.Allows(apparel, out _)))
+                        if (costume.CostumeItems.Any(
+                                c => !(c.Allows(apparel, out _)
+                                || ApparelUtility.CanWearTogether(c.AllowedThing, apparel.def, BodyDefOf.Human))))
+                        {
                             continue;
+                        }
                     }
 
                     float score = JobGiver_OptimizeApparel.ApparelScoreGain(pawn, apparel);

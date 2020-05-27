@@ -220,6 +220,8 @@ namespace AwesomeInventory.UI
 
         public static readonly Texture2D ArmorHeat = ContentFinder<Texture2D>.Get("UI/Icons/Sandy_ArmorHeat_Icon");
 
+        public static readonly Texture2D Resize = ContentFinder<Texture2D>.Get("UI/Icons/Resize");
+
         public static readonly Texture2D SortLetterA = ContentFinder<Texture2D>.Get("UI/Icons/SortLetterA");
 
         public static readonly Texture2D ThermometerHot = ContentFinder<Texture2D>.Get("UI/Icons/Hot_Thermometer");
