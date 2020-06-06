@@ -175,7 +175,10 @@
     </Compile>
     <Compile Include="GearTab\SmartRect.cs" />
     <Compile Include="Resources\TexResource.cs" />
+    <Compile Include="UI\Checklist.cs" />
+    <Compile Include="UI\ChecklistItem.cs" />
     <Compile Include="UI\ContainerState.cs" />
+    <Compile Include="UI\Dialog_CopyToCostume.cs" />
     <Compile Include="UI\Dialog_Costume.cs" />
     <Compile Include="UI\Dialog_InstantMessage.cs" />
     <Compile Include="UI\Dialog_InventoryOverview.cs" />

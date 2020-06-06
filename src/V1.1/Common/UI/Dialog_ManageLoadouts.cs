@@ -425,6 +425,8 @@ namespace AwesomeInventory.UI
                                 {
                                     _currentLoadout.Add(new ThingGroupSelector(selector));
                                 }
+
+                                _currentLoadout.CopyCostumeFrom(loadout);
                             }));
                 }
 

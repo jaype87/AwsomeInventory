@@ -106,6 +106,8 @@ namespace AwesomeInventory.Loadout
                 }
 
                 this.filter.CopyAllowancesFrom(other.filter);
+
+                this.CopyCostumeFrom(other);
             }
 
             this.uniqueId = Current.Game.outfitDatabase.AllOutfits.Max(o => o.uniqueId) + 1;
@@ -485,6 +487,28 @@ namespace AwesomeInventory.Loadout
             ValidateArg.NotNull(groupSelector, nameof(groupSelector));
 
             groupSelector.AddRemoveThingSelectorCallback(this.RemoveThingSelectorCallback);
+        }
+
+        /// <summary>
+        /// Copy costume from <paramref name="loadout"/>.
+        /// </summary>
+        /// <param name="loadout"> Loadout from which costumes are copied. </param>
+        public void CopyCostumeFrom(AwesomeInventoryLoadout loadout)
+        {
+            ValidateArg.NotNull(loadout, nameof(loadout));
+
+            foreach (AwesomeInventoryCostume costume in loadout.Costumes)
+            {
+                AwesomeInventoryCostume cos = new AwesomeInventoryCostume(this);
+                cos.label = $"{this.label} {costume.label}";
+                this.Costumes.Add(cos);
+                LoadoutManager.AddLoadout(cos);
+
+                foreach (ThingGroupSelector selector in costume.CostumeItems)
+                {
+                    cos.CostumeItems.Add(new ThingGroupSelector(selector));
+                }
+            }
         }
 
         /// <summary>
