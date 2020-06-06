@@ -72,6 +72,11 @@ namespace AwesomeInventory.Loadout
         }
 
         /// <summary>
+        /// Gets or sets what drug to take for the Take-Drug gizmo.
+        /// </summary>
+        public ThingDef DrugToTake { get; set; }
+
+        /// <summary>
         /// Gets a dictionary acts as a inventory margin tracker. If the amount set in loadout is met, the margin is 0.
         /// Excessive amount has a positive margin, and vice versa.
         /// </summary>
@@ -291,12 +296,17 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         public override void PostExposeData()
         {
+            ThingDef drugDef = this.DrugToTake;
+
             base.PostExposeData();
             Scribe_Collections.Look(ref _bottomThresholdLookup, nameof(_bottomThresholdLookup), LookMode.Reference, LookMode.Deep, ref _thingSelectors, ref _thresholdStates);
             Scribe_Collections.Look(ref _apparelsBeforeChanged, nameof(_apparelsBeforeChanged), LookMode.Reference);
             Scribe_Values.Look(ref _hotswapActive, nameof(_hotswapActive), HotSwapState.Inactive);
             Scribe_References.Look(ref _hotswapCostume, nameof(_hotswapCostume));
             Scribe_References.Look(ref _loadoutBeforeHotSwap, nameof(_loadoutBeforeHotSwap));
+            Scribe_Defs.Look(ref drugDef, nameof(this.DrugToTake));
+
+            this.DrugToTake = drugDef;
         }
 
         /// <summary>
@@ -322,6 +332,9 @@ namespace AwesomeInventory.Loadout
 
             if (AwesomeInventoryMod.Settings.UseLoadout && _pawn.IsColonistPlayerControlled)
                 yield return new ChangeCostumeInPlace(_pawn);
+
+            if (AwesomeInventoryMod.Settings.UseTakeDrugs && _pawn.IsColonistPlayerControlled)
+                yield return Command_Action_Cacheable.Cache<TakeDrug>.Get(_pawn, _pawn);
         }
 
         /// <summary>

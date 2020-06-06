@@ -214,6 +214,8 @@ namespace AwesomeInventory.UI
 
         public static readonly Texture2D MinTemperature = ContentFinder<Texture2D>.Get("UI/Icons/min_temperature");
 
+        public static readonly Texture2D NoDrug = ContentFinder<Texture2D>.Get("UI/Icons/NoDrug");
+
         public static readonly Texture2D ArmorBlunt = ContentFinder<Texture2D>.Get("UI/Icons/Sandy_ArmorBlunt_Icon");
 
         public static readonly Texture2D ArmorSharp = ContentFinder<Texture2D>.Get("UI/Icons/Sandy_ArmorSharp_Icon");

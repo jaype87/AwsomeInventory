@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -123,6 +124,8 @@ namespace AwesomeInventory.UI
 
         public const string ChooseThemeColorForQuality = "AwesomeInventory_ChooseThemeColorForQuality";
 
+        public const string ClearDrugSelection = "AwesomeInventory_ClearDrugSelection";
+
         public const string ComfyTemperatureRange = "ComfyTemperatureRange";
 
         public const string CopyCostume = "AwesomeInventory_CopyCostume";
@@ -136,6 +139,8 @@ namespace AwesomeInventory.UI
         public const string CostumeSettings = "AwesomeInventory_CostumeSettings";
 
         public const string CountFieldTip = "AwesomeInventory_CountFieldTip";
+
+        public const string Consume = "AwesomeInventory_Consume";
 
         public const string CreateCostume = "AwesomeInventory_CreateCostume";
 
@@ -228,6 +233,10 @@ namespace AwesomeInventory.UI
         public const string NoCostumeForHotSwap = "AwesomeInventory_NoCostumeForHotSwap";
 
         public const string NoCostumeSelected = "AwesomeInventory_NoCostumeSelected";
+
+        public const string NoDrugSelected = "AwesomeInventory_NoDrugSelected";
+
+        public const string NoDrugInInventory = "AwesomeInventory_NoDrugInInventory";
 
         public const string NoLoadout = "AwesomeInventory_NoLoadout";
 
@@ -334,6 +343,10 @@ namespace AwesomeInventory.UI
         public const string UseLoadout = "AwesomeInventory_UseLoadout";
 
         public const string UseLoadoutTooltip = "AwesomeInventory_UseLoadoutTooltip";
+
+        public const string UseTakeDrug = "AwesomeInventory_UseTakeDrug";
+
+        public const string UseTakeDrugTooltip = "AwesomeInventory_UseTakeDrugTooltip";
 
         public const string VanillaWear = "AwesomeInventory_VanillaWear";
 

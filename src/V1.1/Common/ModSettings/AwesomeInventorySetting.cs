@@ -26,6 +26,11 @@ namespace AwesomeInventory
         public bool UseToggleGizmo = true;
 
         /// <summary>
+        /// Use take-drug gizmo.
+        /// </summary>
+        public bool UseTakeDrugs = true;
+
+        /// <summary>
         /// Allow AwesomeInventory to choose appropriate weapons for pawns.
         /// </summary>
         public bool AutoEquipWeapon = true;
@@ -71,6 +76,7 @@ namespace AwesomeInventory
         public override void ExposeData()
         {
             Scribe_Values.Look(ref UseLoadout, nameof(UseLoadout), true);
+            Scribe_Values.Look(ref UseTakeDrugs, nameof(UseTakeDrugs), true);
             Scribe_Values.Look(ref AutoEquipWeapon, nameof(AutoEquipWeapon), true);
             Scribe_Values.Look(ref QualityColorPluginID, nameof(QualityColorPluginID));
             Scribe_Values.Look(ref UseToggleGizmo, nameof(UseToggleGizmo), true);

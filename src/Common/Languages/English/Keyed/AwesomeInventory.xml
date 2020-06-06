@@ -107,10 +107,13 @@
 
 
     <!-- Gizmo -->
+    <AwesomeInventory_Consume>Consume {0}</AwesomeInventory_Consume>
+    <AwesomeInventory_ClearDrugSelection>Clear drug selection.</AwesomeInventory_ClearDrugSelection>
     <AwesomeInventory_CurrentHotSwapCostume>Current hot swap costume: {0}</AwesomeInventory_CurrentHotSwapCostume>
     <AwesomeInventory_HotSwapInterrupted>Hot swap was interrupted</AwesomeInventory_HotSwapInterrupted>
     <AwesomeInventory_NotCapaleChangingApparel>{0} is not capable of changing apparel. </AwesomeInventory_NotCapaleChangingApparel>
     <AwesomeInventory_NoCostumeForHotSwap>No costume available. Choose a loadout for pawn that has costumes</AwesomeInventory_NoCostumeForHotSwap>
+    <AwesomeInventory_NoDrugSelected>No drug selected</AwesomeInventory_NoDrugSelected>
     <AwesomeInventory_ForceHotSwap>Force hot swap</AwesomeInventory_ForceHotSwap>
     <AwesomeInventory_SameCostumeForHotSwap>Current active costume is the same as hot-swap costume</AwesomeInventory_SameCostumeForHotSwap>
 
@@ -130,6 +133,7 @@
     <AwesomeInventory_ToggleGearTab>Toggle Gear Tab</AwesomeInventory_ToggleGearTab>
     <AwesomeInventory_UseGearTabToggle>Use gear tab gizmo/toggle</AwesomeInventory_UseGearTabToggle>
     <AwesomeInventory_UseLoadout>Use Loadout</AwesomeInventory_UseLoadout>
+    <AwesomeInventory_UseTakeDrug>Use Take Drug gizmo</AwesomeInventory_UseTakeDrug>
 
     <!-- Option texts on context menu -->
     <AwesomeInventory_AddToLoadout>Add to {0}</AwesomeInventory_AddToLoadout>
@@ -154,10 +158,12 @@
     <AwesomeInventory_Separate_Tooltip>Set quality and hit points for each selected stuff separately.</AwesomeInventory_Separate_Tooltip>
     <AwesomeInventory_UseGearTabToggleTooltip>Gear tab toggle allows users to bind hotkey to open the gear tab.</AwesomeInventory_UseGearTabToggleTooltip>
     <AwesomeInventory_UseLoadoutTooltip>Use the loadout system provided by Awesome Inventory.</AwesomeInventory_UseLoadoutTooltip>
+    <AwesomeInventory_UseTakeDrugTooltip>Use the Take Drug gizmo which gives pawns a shortcut to ingest drugs in their inventory.</AwesomeInventory_UseTakeDrugTooltip>
     <AwesomeInventory_WishlistTooltip>Pawn will actively looking for items in the Wishlist.</AwesomeInventory_WishlistTooltip>
 
     <!-- Messages -->
     <AwesomeInventory_FailToDrop>{0} failed to drop {1}</AwesomeInventory_FailToDrop>
+    <AwesomeInventory_NoDrugInInventory>No {0} in {1}'s inventory</AwesomeInventory_NoDrugInInventory>
 
 
 </LanguageData>

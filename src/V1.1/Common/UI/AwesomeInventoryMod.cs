@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Configuration;
 using System.Reflection;
 using System.Text;
 using AwesomeInventory.UI;
@@ -63,6 +64,8 @@ namespace AwesomeInventory
                 listingStandard.CheckboxLabeled(UIText.AutoEquipWeapon.TranslateSimple(), ref _settings.AutoEquipWeapon, UIText.AutoEquipWeaponTooltip.TranslateSimple());
 
             listingStandard.CheckboxLabeled(UIText.UseGearTabToggle.TranslateSimple(), ref _settings.UseToggleGizmo, UIText.UseGearTabToggleTooltip.TranslateSimple());
+
+            listingStandard.CheckboxLabeled(UIText.UseTakeDrug.TranslateSimple(), ref _settings.UseTakeDrugs, UIText.UseTakeDrugTooltip.TranslateSimple());
 
             listingStandard.NewColumn();
 
