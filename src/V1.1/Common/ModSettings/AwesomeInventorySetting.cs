@@ -31,6 +31,11 @@ namespace AwesomeInventory
         public bool UseTakeDrugs = true;
 
         /// <summary>
+        /// Use restart button.
+        /// </summary>
+        public bool ShowRestartButton = true;
+
+        /// <summary>
         /// Allow AwesomeInventory to choose appropriate weapons for pawns.
         /// </summary>
         public bool AutoEquipWeapon = true;
@@ -84,6 +89,7 @@ namespace AwesomeInventory
             Scribe_Values.Look(ref GearTabWidth, nameof(GearTabWidth), 575f);
             Scribe_Values.Look(ref GearTabHeight, nameof(GearTabHeight), 500f);
             Scribe_Values.Look(ref OpenLoadoutInContextMenu, nameof(OpenLoadoutInContextMenu), true);
+            Scribe_Values.Look(ref ShowRestartButton, nameof(ShowRestartButton), true);
         }
     }
 

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using AwesomeInventory;
 using HarmonyLib;
 using RimWorld;
 using UnityEngine;
@@ -30,7 +31,7 @@ namespace RPG_Inventory_Remake_Common.UnitTest
 
         public static void Draw()
         {
-            if (Prefs.DevMode)
+            if (Prefs.DevMode && AwesomeInventoryMod.Settings.ShowRestartButton)
             {
                 Vector2 vector = new Vector2((float)UI.screenWidth * 0.5f - WidgetRow.IconSize, 3f);
                 Find.WindowStack.ImmediateWindow(

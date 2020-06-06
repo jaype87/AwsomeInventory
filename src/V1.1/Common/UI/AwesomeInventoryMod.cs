@@ -67,6 +67,8 @@ namespace AwesomeInventory
 
             listingStandard.CheckboxLabeled(UIText.UseTakeDrug.TranslateSimple(), ref _settings.UseTakeDrugs, UIText.UseTakeDrugTooltip.TranslateSimple());
 
+            listingStandard.CheckboxLabeled(UIText.ShowRestartButton.TranslateSimple(), ref _settings.ShowRestartButton, UIText.ShowRestartButtonTooltip.TranslateSimple());
+
             listingStandard.NewColumn();
 
             this.DrawQualityColorScrollableList(listingStandard);

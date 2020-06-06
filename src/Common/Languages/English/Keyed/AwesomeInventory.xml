@@ -133,6 +133,7 @@
     <AwesomeInventory_ToggleGearTab>Toggle Gear Tab</AwesomeInventory_ToggleGearTab>
     <AwesomeInventory_UseGearTabToggle>Use gear tab gizmo/toggle</AwesomeInventory_UseGearTabToggle>
     <AwesomeInventory_UseLoadout>Use Loadout</AwesomeInventory_UseLoadout>
+    <AwesomeInventory_ShowRestartButton>Show Restart button</AwesomeInventory_ShowRestartButton>
     <AwesomeInventory_UseTakeDrug>Use Take Drug gizmo</AwesomeInventory_UseTakeDrug>
 
     <!-- Option texts on context menu -->
@@ -156,6 +157,7 @@
     <AwesomeInventory_PreviewQuality_Tooltip>Choose quality level for preview item. </AwesomeInventory_PreviewQuality_Tooltip>
     <AwesomeInventory_Tips>Tips: {0}</AwesomeInventory_Tips>
     <AwesomeInventory_Separate_Tooltip>Set quality and hit points for each selected stuff separately.</AwesomeInventory_Separate_Tooltip>
+    <AwesomeInventory_ShowRestartButtonTooltip>Show the restart button when in dev mode.</AwesomeInventory_ShowRestartButtonTooltip>
     <AwesomeInventory_UseGearTabToggleTooltip>Gear tab toggle allows users to bind hotkey to open the gear tab.</AwesomeInventory_UseGearTabToggleTooltip>
     <AwesomeInventory_UseLoadoutTooltip>Use the loadout system provided by Awesome Inventory.</AwesomeInventory_UseLoadoutTooltip>
     <AwesomeInventory_UseTakeDrugTooltip>Use the Take Drug gizmo which gives pawns a shortcut to ingest drugs in their inventory.</AwesomeInventory_UseTakeDrugTooltip>

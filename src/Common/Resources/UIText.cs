@@ -344,6 +344,10 @@ namespace AwesomeInventory.UI
 
         public const string UseLoadoutTooltip = "AwesomeInventory_UseLoadoutTooltip";
 
+        public const string ShowRestartButton = "AwesomeInventory_ShowRestartButton";
+
+        public const string ShowRestartButtonTooltip = "AwesomeInventory_ShowRestartButtonTooltip";
+
         public const string UseTakeDrug = "AwesomeInventory_UseTakeDrug";
 
         public const string UseTakeDrugTooltip = "AwesomeInventory_UseTakeDrugTooltip";
