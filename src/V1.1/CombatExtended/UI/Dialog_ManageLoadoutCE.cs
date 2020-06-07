@@ -177,7 +177,7 @@ namespace AwesomeInventory.UI
                 AIGenericDef genericAmmo = DefDatabase<AIGenericDef>.GetNamedSilentFail(CEStrings.GenericAmmoPrefix + thingDef.defName);
                 if (genericAmmo == null)
                 {
-                    genericAmmo = this.CreateGenericAmmoDef(thingDef);
+                    genericAmmo = CreateGenericAmmoDef(thingDef);
                     DefDatabase<AIGenericDef>.Add(genericAmmo);
                 }
 
@@ -231,7 +231,7 @@ namespace AwesomeInventory.UI
             }
         }
 
-        private GenericAmmo CreateGenericAmmoDef(ThingDef gun)
+        private static GenericAmmo CreateGenericAmmoDef(ThingDef gun)
         {
             return new GenericAmmo(
                 CEStrings.GenericAmmoPrefix + gun.defName

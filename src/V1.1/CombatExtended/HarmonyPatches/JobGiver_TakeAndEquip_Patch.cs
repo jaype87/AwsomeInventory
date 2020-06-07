@@ -21,8 +21,6 @@ namespace AwesomeInventory.HarmonyPatches
     [StaticConstructorOnStartup]
     public static class JobGiver_TakeAndEquip_Patch
     {
-        //private static Type _workPriority = typeof(JobGiver_TakeAndEquip).GetNestedType("WorkPriority", BindingFlags.NonPublic);
-
         static JobGiver_TakeAndEquip_Patch()
         {
             MethodInfo original = typeof(JobGiver_TakeAndEquip).GetMethod("GetPriorityWork", BindingFlags.Instance | BindingFlags.NonPublic);

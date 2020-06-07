@@ -25,8 +25,6 @@ namespace AwesomeInventory.UI
 
         private Checklist<AwesomeInventoryCostume> _costumeList;
 
-        private Checklist<AwesomeInventoryLoadout> _loadoutList;
-
         private Checklist<ThingGroupSelector> _costumeItemList;
 
         private AwesomeInventoryCostume _selectedCostume;

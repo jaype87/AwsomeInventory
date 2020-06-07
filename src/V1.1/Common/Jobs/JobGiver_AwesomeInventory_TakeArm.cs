@@ -135,7 +135,7 @@ namespace AwesomeInventory.Jobs
                 Thing closestWeapon = _parent.FindItem(
                     pawn
                     , pawn.Map.listerThings.ThingsInGroup(ThingRequestGroup.Weapon)
-                    , null
+                    , this.Validator
                     , (Thing x) => preferRanged ? (x.def.IsRangedWeapon ? 2f : 1f) : (x.def.IsMeleeWeapon ? 2f : 1f));
 
                 if (closestWeapon == null)
@@ -147,6 +147,11 @@ namespace AwesomeInventory.Jobs
             }
 
             return null;
+        }
+
+        private bool Validator(Thing thing)
+        {
+            return true;
         }
 
         private void TrySwitchToWeapon(ThingWithComps newEq, Pawn pawn)

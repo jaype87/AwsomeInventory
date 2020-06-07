@@ -137,8 +137,6 @@
     <Compile Include="HarmonyPatches\Pawn_OutfitTracker_CurrentOutfit.cs" />
     <Compile Include="HarmonyPatches\Thing_RPGI_Patch.cs" />
     <Compile Include="Interfaces\IDrawGearTab.cs" />
-    <Compile Include="Interfaces\ILoadout.cs" />
-    <Compile Include="Interfaces\ILoadoutManager.cs" />
     <Compile Include="Jobs\JobDriver_AwesomeInventory_MapEquip.cs" />
     <Compile Include="Jobs\UnloadNowUtility.cs" />
     <Compile Include="Jobs\ThinkNode_AwesomeInventory_Core.cs" />

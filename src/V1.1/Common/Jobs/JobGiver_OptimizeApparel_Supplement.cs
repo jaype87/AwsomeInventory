@@ -21,8 +21,9 @@ namespace AwesomeInventory.Jobs
     /// <remarks> Vanilla optimizaiton only looks for better apparels on the map. </remarks>
     public class JobGiver_OptimizeApparel_Supplement : ThinkNode
     {
+        private const int _optmizedInterval = GenDate.TicksPerDay / GenDate.HoursPerDay * 2;
+
         private int _optimizedTick;
-        private int _optmizedInterval = 6000;
 
         /// <inheritdoc/>
         public override ThinkResult TryIssueJobPackage(Pawn pawn, JobIssueParams jobParams)
@@ -46,40 +47,66 @@ namespace AwesomeInventory.Jobs
                 return ThinkResult.NoJob;
             }
 
-            float bestScore = 0f;
-            Thing thing = null;
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (list[i] is Apparel apparel && ApparelOptionUtility.CanWear(pawn, apparel))
-                {
-                    if (comp.Loadout is AwesomeInventoryCostume costume)
-                    {
-                        if (costume.CostumeItems.Any(
-                                c => !(c.Allows(apparel, out _)
-                                || ApparelUtility.CanWearTogether(c.AllowedThing, apparel.def, BodyDefOf.Human))))
-                        {
-                            continue;
-                        }
-                    }
+            AwesomeInventoryCostume costume = comp.Loadout as AwesomeInventoryCostume;
 
-                    float score = JobGiver_OptimizeApparel.ApparelScoreGain(pawn, apparel);
-                    if (!(score < 0.05f) && !(score < bestScore))
-                    {
-                        thing = apparel;
-                        bestScore = score;
-                    }
-                }
-            }
+            var thingList = list
+                .Where(t => t is Apparel apparel && ApparelOptionUtility.CanWear(pawn, apparel))
+                .Select(t => new { thing = t, score = JobGiver_OptimizeApparel.ApparelScoreGain(pawn, (Apparel)t) })
+                .OrderByDescending(s => s.score)
+                .ToList();
 
-            if (thing == null)
+            if (!thingList.Any())
             {
                 _optimizedTick = _optmizedInterval + Find.TickManager.TicksGame;
                 return ThinkResult.NoJob;
             }
-            else
+
+            List<Apparel> wornCostume = null;
+            if (costume != null)
             {
-                return new ThinkResult(new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, thing, false), this, JobTag.ChangingApparel);
+                wornCostume = pawn.apparel.WornApparel
+                    .AsParallel()
+                    .Where(a => costume.CostumeItems.Any(c => c.Allows(a, out _)))
+                    .ToList();
             }
+
+            foreach (var t in thingList)
+            {
+                Thing thing = null;
+
+                if (costume == null)
+                {
+                    thing = t.thing;
+                }
+                else
+                {
+                    foreach (ThingGroupSelector selector in costume.CostumeItems)
+                    {
+                        if (selector.Allows(t.thing, out _))
+                        {
+                            thing = t.thing;
+                            break;
+                        }
+                    }
+
+                    if (thing == null)
+                    {
+                        if (wornCostume.NullOrEmpty() || wornCostume.All(c => ApparelUtility.CanWearTogether(c.def, t.thing.def, BodyDefOf.Human)))
+                            thing = t.thing;
+                    }
+                }
+
+                if (thing != null)
+                {
+                    return new ThinkResult(
+                        new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, thing, false)
+                        , this
+                        , JobTag.ChangingApparel);
+                }
+            }
+
+            _optimizedTick = _optmizedInterval + Find.TickManager.TicksGame;
+            return ThinkResult.NoJob;
         }
     }
 }
