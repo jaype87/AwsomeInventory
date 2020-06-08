@@ -72,7 +72,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo1.cs" />
-    <Compile Include="Components\GameComponents\GameComponent_AwesomeInventory_Entry.cs" />
     <Compile Include="DefOfs\AwesomeInventorySoundDefOf.cs" />
     <Compile Include="DynamicDefs\AIGenericMeat.cs" />
     <Compile Include="GearTab\IconRect.cs" />

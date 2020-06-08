@@ -223,7 +223,7 @@ namespace AwesomeInventory.UI
 
                 rollingY += Utility.StandardLineHeight;
 
-                if (selPawn.IsColonist)
+                if (AwesomeInventoryMod.Settings.UseLoadout && selPawn.IsColonist && !selPawn.IsQuestLodger())
                     this.DrawLoadoutButtons(selPawn, viewRect.xMax, ref rollingY, viewRect.width);
 
                 ThingOwner<Thing> things = selPawn.inventory.innerContainer;
@@ -300,7 +300,7 @@ namespace AwesomeInventory.UI
 
             if ((bool)AwesomeInventoryTabBase.ShouldShowInventory.Invoke(_gearTab, new object[] { selPawn }))
             {
-                if (AwesomeInventoryMod.Settings.UseLoadout && selPawn.IsColonist)
+                if (AwesomeInventoryMod.Settings.UseLoadout && selPawn.IsColonist && !selPawn.IsQuestLodger())
                 {
                     this.DrawLoadoutButtons(selPawn, viewRect.xMax, ref rollingY, viewRect.width);
                 }
@@ -1074,6 +1074,11 @@ namespace AwesomeInventory.UI
                         {
                             selPawn.equipment.TryTransferEquipmentToContainer(selPawn.equipment.Primary, selPawn.inventory.innerContainer);
                         });
+
+                    menuOptions.Add(
+                        new FloatMenuOption(
+                            UIText.DropThing.TranslateSimple()
+                            , () => AwesomeInventoryTabBase.InterfaceDrop.Invoke(_gearTab, new object[] { equipment })));
                 }
                 else if (selPawn.story.DisabledWorkTagsBackstoryAndTraits.HasFlag(WorkTags.Violent))
                 {
@@ -1083,7 +1088,7 @@ namespace AwesomeInventory.UI
                 {
                     equipOption = new FloatMenuOption(UIText.CannotEquip.Translate(labelShort) + " (" + UIText.Incapable.Translate() + ")", null);
                 }
-                else if (EquipmentUtility.CanEquip(equipment, selPawn))
+                else if (selPawn.inventory.Contains(equipment) && EquipmentUtility.CanEquip(equipment, selPawn))
                 {
                     // Add equip option
                     string text5 = UIText.Equip.Translate(labelShort);

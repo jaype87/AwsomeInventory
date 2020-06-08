@@ -88,7 +88,7 @@ namespace AwesomeInventory.Jobs
             bool hasPrimary = pawn.equipment.Primary != null;
 
             // Switch to better suited weapon
-            if (!GameComponent_AwesomeInventory_Entry.HasSimpleSidearm && pawn.inventory.innerContainer.Any())
+            if (!SimpleSidearmUtility.IsActive && pawn.inventory.innerContainer.Any())
             {
                 IEnumerable<Thing> weapons = from thing in pawn.inventory.innerContainer.InnerListForReading
                                              where thing.def.IsWeapon
