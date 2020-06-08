@@ -5,7 +5,6 @@
 
 using System.Collections.Generic;
 using AwesomeInventory.UI;
-using AwesomeInventory.Utilities;
 using RimWorld;
 using Verse;
 using Verse.AI;

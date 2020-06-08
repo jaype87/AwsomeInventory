@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading.Tasks;
 using AwesomeInventory.Loadout;
 using AwesomeInventory.UI;
-using AwesomeInventory.Utilities;
 
 namespace AwesomeInventory
 {

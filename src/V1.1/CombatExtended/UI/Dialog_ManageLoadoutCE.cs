@@ -138,7 +138,7 @@ namespace AwesomeInventory.UI
 
                 // Tooltips && Highlights
                 Widgets.DrawHighlightIfMouseover(row);
-                if (Event.current.type == EventType.MouseDown)
+                if (Event.current.type == EventType.MouseDown && Mouse.IsOver(row))
                 {
                     TooltipHandler.ClearTooltipsFrom(labelRect);
                     if (Event.current.button == 1)
@@ -148,14 +148,24 @@ namespace AwesomeInventory.UI
                             {
                                 new FloatMenuOption(
                                     UIText.AddToAllLoadout.TranslateSimple()
-                                    , () => groupSelector.AddToLoadouts(Loadout.LoadoutManager.PlainLoadouts.Except(_currentLoadout))),
+                                    , () =>
+                                    {
+                                        var loadout = _currentLoadout;
+                                        if (loadout is AwesomeInventoryCostume costume)
+                                            loadout = costume.Base;
+
+                                        groupSelector.AddToLoadouts(Loadout.LoadoutManager.PlainLoadouts.Except(loadout));
+                                    }),
                             });
                         Find.WindowStack.Add(floatMenu);
                     }
                 }
                 else
                 {
-                    TooltipHandler.TipRegion(labelRect, UIText.DragToReorder.Translate());
+
+                    TooltipHandler.TipRegion(
+                        labelRect
+                        , UIText.DragToReorder.TranslateSimple() + Environment.NewLine + UIText.RigthClickForMoreOptions.TranslateSimple());
                 }
             }
         }

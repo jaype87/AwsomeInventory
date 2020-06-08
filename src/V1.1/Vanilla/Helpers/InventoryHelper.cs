@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using RimWorld;
 using Verse;
 
-namespace AwesomeInventory.Utilities
+namespace AwesomeInventory
 {
     /// <summary>
     /// Helper class for inventory management.

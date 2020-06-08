@@ -9,7 +9,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using AwesomeInventory.Loadout;
-using AwesomeInventory.Utilities;
 using HarmonyLib;
 using RimWorld;
 using Verse;

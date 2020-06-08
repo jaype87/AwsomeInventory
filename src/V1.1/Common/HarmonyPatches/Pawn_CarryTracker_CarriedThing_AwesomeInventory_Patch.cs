@@ -5,7 +5,6 @@
 
 using System.Reflection;
 using AwesomeInventory.Jobs;
-using AwesomeInventory.Utilities;
 using HarmonyLib;
 using Verse;
 using Verse.AI;

@@ -78,6 +78,9 @@ namespace AwesomeInventory.Loadout
         {
             ValidateArg.NotNull(other, nameof(other));
 
+            this.uniqueId = Current.Game.outfitDatabase.AllOutfits.Max(o => o.uniqueId) + 1;
+            this.label = LoadoutManager.GetIncrementalLabel(other.label);
+
             if (shallow)
             {
                 _thingGroupSelectors = other._thingGroupSelectors;
@@ -109,9 +112,6 @@ namespace AwesomeInventory.Loadout
 
                 this.CopyCostumeFrom(other);
             }
-
-            this.uniqueId = Current.Game.outfitDatabase.AllOutfits.Max(o => o.uniqueId) + 1;
-            this.label = LoadoutManager.GetIncrementalLabel(other.label);
         }
 
         /// <summary>
@@ -506,7 +506,7 @@ namespace AwesomeInventory.Loadout
 
                 foreach (ThingGroupSelector selector in costume.CostumeItems)
                 {
-                    cos.CostumeItems.Add(new ThingGroupSelector(selector));
+                    cos.AddItemToCostume(new ThingGroupSelector(selector));
                 }
             }
         }

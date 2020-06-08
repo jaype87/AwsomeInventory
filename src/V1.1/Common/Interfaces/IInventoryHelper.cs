@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Verse;
 
-namespace AwesomeInventory.Utilities
+namespace AwesomeInventory
 {
     /// <summary>
     /// Helper class for inventory management.

@@ -46,6 +46,8 @@
     <AwesomeInventory_PreviewQuality>Preview Quality: </AwesomeInventory_PreviewQuality>
     <AwesomeInventory_RestockAlways>Restock at first opportunity</AwesomeInventory_RestockAlways>
     <AwesomeInventory_RestockBottomThreshold>Only restock when inventory level drops to:</AwesomeInventory_RestockBottomThreshold>
+
+    <AwesomeInventory_RightClickForMoreOptions>Right click for more options</AwesomeInventory_RightClickForMoreOptions>
     <AwesomeInventory_SelectLoadout>Select Loadout</AwesomeInventory_SelectLoadout>
     <AwesomeInventory_SortListAlphabetically>Sort list alphabetically</AwesomeInventory_SortListAlphabetically>
     <AwesomeInventory_SourceAllTip>All items</AwesomeInventory_SourceAllTip>

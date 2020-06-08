@@ -408,13 +408,17 @@ namespace AwesomeInventory.UI
             }
         }
 
+        /// <summary>
+        /// Import items from other loadouts.
+        /// </summary>
+        /// <param name="importRect"> Rect for drawing. </param>
         protected virtual void DrawImportLoadout(Rect importRect)
         {
             TooltipHandler.TipRegion(importRect, UIText.ImportLoadout.TranslateSimple());
             if (Widgets.ButtonImage(importRect, TexResource.ImportLoadout))
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
-                foreach (var loadout in LoadoutManager.Loadouts.OfType<AwesomeInventoryLoadout>())
+                foreach (var loadout in LoadoutManager.Loadouts.Where(l => l.GetType() == typeof(AwesomeInventoryLoadout)))
                 {
                     options.Add(
                         new FloatMenuOption(
@@ -478,7 +482,8 @@ namespace AwesomeInventory.UI
 
             if (row.ButtonText(UIText.CopyLoadout.TranslateSimple()))
             {
-                _currentLoadout = new AwesomeInventoryLoadout(_currentLoadout);
+                var loadout = _currentLoadout is AwesomeInventoryCostume costume ? costume.Base : _currentLoadout;
+                _currentLoadout = new AwesomeInventoryLoadout(loadout);
                 LoadoutManager.AddLoadout(_currentLoadout);
                 _pawn.SetLoadout(_currentLoadout);
             }
@@ -587,7 +592,7 @@ namespace AwesomeInventory.UI
 
                 // Tooltips && Highlights
                 Widgets.DrawHighlightIfMouseover(row);
-                if (Event.current.type == EventType.MouseDown)
+                if (Event.current.type == EventType.MouseDown && Mouse.IsOver(row))
                 {
                     TooltipHandler.ClearTooltipsFrom(labelRect);
                     if (Event.current.button == 1)
@@ -611,7 +616,9 @@ namespace AwesomeInventory.UI
                 }
                 else
                 {
-                    TooltipHandler.TipRegion(labelRect, UIText.DragToReorder.Translate());
+                    TooltipHandler.TipRegion(
+                        labelRect
+                        , UIText.DragToReorder.TranslateSimple() + Environment.NewLine + UIText.RigthClickForMoreOptions.TranslateSimple());
                 }
             }
         }

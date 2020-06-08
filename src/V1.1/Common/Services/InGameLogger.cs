@@ -1,4 +1,4 @@
-﻿// <copyright file="Logger.cs" company="Zizhen Li">
+﻿// <copyright file="InGameLogger.cs" company="Zizhen Li">
 // Copyright (c) 2019 - 2020 Zizhen Li. All rights reserved.
 // Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
@@ -17,27 +17,23 @@ namespace AwesomeInventory
     /// Implementation of <see cref="ILogger"/>.
     /// </summary>
     [StaticConstructorOnStartup]
-    public class Logger : ILogger
+    public class InGameLogger : ILogger
     {
-        static Logger()
+        static InGameLogger()
         {
-            AwesomeInventoryServiceProvider.AddService(typeof(ILogger), new Logger());
+            AwesomeInventoryServiceProvider.AddService(typeof(ILogger), new InGameLogger());
         }
 
         /// <inheritdoc/>
         public void Message(string message)
         {
-#if DEBUG
             Log.Message(message, true);
-#endif
         }
 
         /// <inheritdoc/>
         public void Warning(string warning)
         {
-#if DEBUG
             Log.Warning(warning, true);
-#endif
         }
     }
 }

@@ -5,7 +5,6 @@
 
 using AwesomeInventory.Loadout;
 using AwesomeInventory.UI;
-using AwesomeInventory.Utilities;
 using Verse;
 
 namespace AwesomeInventory

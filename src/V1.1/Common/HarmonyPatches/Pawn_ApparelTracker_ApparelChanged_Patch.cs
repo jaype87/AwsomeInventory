@@ -10,7 +10,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using AwesomeInventory.UI;
-using AwesomeInventory.Utilities;
 using HarmonyLib;
 using RimWorld;
 using Verse;

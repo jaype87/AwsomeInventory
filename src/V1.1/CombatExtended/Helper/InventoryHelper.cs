@@ -8,12 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AwesomeInventory.Utilities;
 using CombatExtended;
 using RimWorld;
 using Verse;
 
-namespace AwesomeInventory.Loadout
+namespace AwesomeInventory
 {
     /// <summary>
     /// Helper class for inventory management.

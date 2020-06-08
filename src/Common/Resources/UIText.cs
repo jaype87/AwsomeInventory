@@ -272,6 +272,8 @@ namespace AwesomeInventory.UI
 
         public const string RestockBottomThreshold = "AwesomeInventory_RestockBottomThreshold";
 
+        public const string RigthClickForMoreOptions = "AwesomeInventory_RightClickForMoreOptions";
+
         public const string SameCostumeForHotSwap = "AwesomeInventory_SameCostumeForHotSwap";
 
         public const string SelectCostume = "AwesomeInventory_SelectCostume";

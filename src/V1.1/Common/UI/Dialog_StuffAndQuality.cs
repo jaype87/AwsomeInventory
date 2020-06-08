@@ -9,7 +9,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AwesomeInventory.Loadout;
-using AwesomeInventory.Utilities;
 using RimWorld;
 using UnityEngine;
 using Verse;

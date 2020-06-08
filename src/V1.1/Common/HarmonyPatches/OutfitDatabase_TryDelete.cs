@@ -5,7 +5,6 @@
 
 using System.Reflection;
 using AwesomeInventory.Loadout;
-using AwesomeInventory.Utilities;
 using HarmonyLib;
 using RimWorld;
 using Verse;

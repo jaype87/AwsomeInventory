@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,16 +21,14 @@ namespace AwesomeInventory
         /// <summary>
         /// Header for message output.
         /// </summary>
-        public const string Header = "[AIDebug]";
+        public static readonly string Header = $"[AI v{Assembly.GetExecutingAssembly().GetName().Version}]: ";
 
         static AIDebug()
         {
-#if DEBUG
             if (AwesomeInventoryServiceProvider.TryGetImplementation(out ILogger logger))
             {
                 Init(logger);
             }
-#endif
         }
 
         /// <summary>
@@ -48,10 +47,8 @@ namespace AwesomeInventory
         /// <param name="logger"> Logger used in <see cref="AIDebug"/> to record messages. </param>
         public static void Init(ILogger logger)
         {
-#if DEBUG
             Logger = logger;
             Timer = new Timer(logger);
-#endif
         }
     }
 }

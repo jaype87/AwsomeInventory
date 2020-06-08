@@ -11,7 +11,6 @@ using System.Reflection;
 using AwesomeInventory.Jobs;
 using AwesomeInventory.Resources;
 using AwesomeInventory.UI;
-using AwesomeInventory.Utilities;
 using HarmonyLib;
 using RimWorld;
 using UnityEngine;
