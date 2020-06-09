@@ -146,7 +146,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\CEStrings.cs" />
     <Compile Include="Resources\ImageResource.cs" />
-    <Compile Include="Services\CEServicesRegistration.cs" />
     <Compile Include="UI\Dialog_AddAmmoPerMagSize.cs" />
     <Compile Include="UI\Dialog_ManageLoadoutCE.cs" />
     <Compile Include="Utilities\BulkUtility.cs" />
@@ -161,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Defs\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\..\..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.3.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />

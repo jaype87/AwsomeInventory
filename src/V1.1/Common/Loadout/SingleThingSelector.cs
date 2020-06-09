@@ -18,6 +18,7 @@ namespace AwesomeInventory.Loadout
     /// <summary>
     /// Select suitable thing for <see cref="AwesomeInventoryLoadout"/>.
     /// </summary>
+    [RegisterType(typeof(SingleThingSelector), typeof(SingleThingSelector))]
     public class SingleThingSelector : ThingSelector, IEquatable<SingleThingSelector>
     {
         private ThingDef _allowedStuff;
@@ -27,6 +28,7 @@ namespace AwesomeInventory.Loadout
         /// Initializes a new instance of the <see cref="SingleThingSelector"/> class.
         /// Used by xml serialization, should not be called anywhere else.
         /// </summary>
+        [Obsolete(ErrorText.NoDirectCall, true)]
         public SingleThingSelector()
         {
         }
@@ -36,6 +38,7 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         /// <param name="thingDef"> <see cref="ThingDef"/> this selector is for. </param>
         /// <param name="stuff"> Stuff to make <paramref name="thingDef"/>. </param>
+        [Obsolete(ErrorText.NoDirectCall, true)]
         public SingleThingSelector(ThingDef thingDef, ThingDef stuff = null)
         {
             _thingFilter.SetAllow(thingDef, true);
@@ -47,6 +50,7 @@ namespace AwesomeInventory.Loadout
         /// Initializes a new instance of the <see cref="SingleThingSelector"/> class.
         /// </summary>
         /// <param name="thing"> A template for initializing the selector. </param>
+        [Obsolete(ErrorText.NoDirectCall, true)]
         public SingleThingSelector(Thing thing)
         {
             ValidateArg.NotNull(thing, nameof(thing));
@@ -77,6 +81,7 @@ namespace AwesomeInventory.Loadout
         /// Initializes a new instance of the <see cref="SingleThingSelector"/> class.
         /// </summary>
         /// <param name="other"> Copy <paramref name="other"/> to this selector. </param>
+        [Obsolete(ErrorText.NoDirectCall, true)]
         public SingleThingSelector(SingleThingSelector other)
         {
             ValidateArg.NotNull(other, nameof(other));

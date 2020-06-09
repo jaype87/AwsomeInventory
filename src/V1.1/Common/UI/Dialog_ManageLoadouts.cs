@@ -23,6 +23,7 @@ namespace AwesomeInventory.UI
     /// <summary>
     /// A dialog window for managing loadouts.
     /// </summary>
+    [RegisterType(typeof(Dialog_ManageLoadouts), typeof(Dialog_ManageLoadouts))]
     public class Dialog_ManageLoadouts : Window, IReset
     {
         /// <summary>
@@ -37,7 +38,6 @@ namespace AwesomeInventory.UI
 
         private const float _paneDivider = 5 / 9f;
         private const int _loadoutNameMaxLength = 50;
-        private static readonly HashSet<ThingDef> _allSuitableDefs = DefManager.SuitableDefs;
 
         /// <summary>
         /// Controls the window size and position.
@@ -62,6 +62,7 @@ namespace AwesomeInventory.UI
         /// <param name="loadout"> Selected loadout. </param>
         /// <param name="pawn"> Selected pawn. </param>
         /// <param name="fixPawn"> Wheter the loadout window should display the same pawn even user selects another. </param>
+        [Obsolete(ErrorText.NoDirectCall, true)]
         public Dialog_ManageLoadouts(AwesomeInventoryLoadout loadout, Pawn pawn, bool fixPawn = false)
         {
             ValidateArg.NotNull(loadout, nameof(loadout));
@@ -124,6 +125,8 @@ namespace AwesomeInventory.UI
         /// Gets initial window size for this dialog.
         /// </summary>
         public override Vector2 InitialSize => _initialSize;
+
+        private static HashSet<ThingDef> AllSuitableDefs => DefManager.SuitableDefs;
 
         #region Methods
 
@@ -239,13 +242,13 @@ namespace AwesomeInventory.UI
         public override void PreOpen()
         {
             base.PreOpen();
-            HashSet<ThingDef> visibleDefs = new HashSet<ThingDef>(_allSuitableDefs);
+            HashSet<ThingDef> visibleDefs = new HashSet<ThingDef>(AllSuitableDefs);
             visibleDefs.IntersectWith(
                 Find.CurrentMap.listerThings.ThingsInGroup(ThingRequestGroup.HaulableEverOrMinifiable).Select(t => t.def).Distinct());
 
             ConcurrentBag<ItemContext> itemContexts = new ConcurrentBag<ItemContext>();
             Parallel.ForEach(
-                Partitioner.Create(_allSuitableDefs)
+                Partitioner.Create(AllSuitableDefs)
                 , (ThingDef thingDef) =>
                 {
                     ItemContext itemContext = new ItemContext() { ThingDef = thingDef };

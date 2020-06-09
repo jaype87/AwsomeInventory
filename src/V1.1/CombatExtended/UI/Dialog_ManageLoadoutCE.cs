@@ -17,6 +17,7 @@ using Verse;
 namespace AwesomeInventory.UI
 {
     /// <inheritdoc/>
+    [RegisterType(typeof(Dialog_ManageLoadouts), typeof(Dialog_ManageLoadoutCE))]
     public class Dialog_ManageLoadoutCE : Dialog_ManageLoadouts
     {
         private bool _drawWeight = true;
@@ -27,6 +28,7 @@ namespace AwesomeInventory.UI
         /// <param name="loadout"> Loadout to display. </param>
         /// <param name="pawn"> Pawn who wears the <paramref name="loadout"/>. </param>
         /// <param name="fixPawn"> Wheter the loadout window should display the same pawn even user selects another. </param>
+        [Obsolete(ErrorText.NoDirectCall, true)]
         public Dialog_ManageLoadoutCE(AwesomeInventoryLoadout loadout, Pawn pawn, bool fixPawn)
             : base(loadout, pawn, fixPawn)
         {

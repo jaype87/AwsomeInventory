@@ -16,8 +16,17 @@ namespace AwesomeInventory.UI
     /// A helper class for drawing in game.
     /// It only consists of member methods while <see cref="DrawUtility"/> only has static methods.
     /// </summary>
+    [RegisterService(typeof(DrawHelper), typeof(DrawHelper))]
     public class DrawHelper
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DrawHelper"/> class.
+        /// </summary>
+        [Obsolete(ErrorText.NoDirectCall, false)]
+        public DrawHelper()
+        {
+        }
+
         /// <summary>
         /// Build tooltip text for <paramref name="thing"/>.
         /// </summary>

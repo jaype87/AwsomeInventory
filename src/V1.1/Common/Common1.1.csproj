@@ -72,6 +72,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo1.cs" />
+    <Compile Include="Attributes\RegisterServiceAttribute.cs" />
+    <Compile Include="Attributes\RegisterTypeAttribute.cs" />
     <Compile Include="DefOfs\AwesomeInventorySoundDefOf.cs" />
     <Compile Include="DynamicDefs\AIGenericMeat.cs" />
     <Compile Include="GearTab\IconRect.cs" />
@@ -114,7 +116,6 @@
     <Compile Include="Loadout\ThingSelectorComparer.cs" />
     <Compile Include="Models\ThingGroupModel.cs" />
     <Compile Include="Services\InGameLogger.cs" />
-    <Compile Include="Services\ServiceRegistration.cs" />
     <Compile Include="UI\AwesomeInventoryMod.cs" />
     <Compile Include="ModSettings\AwesomeInventorySetting.cs" />
     <Compile Include="Components\CompAwesomeInventoryLoadout.cs" />

@@ -568,7 +568,7 @@ namespace AwesomeInventory.Loadout
                 Thing innerThing = thing.GetInnerIfMinified();
                 ThingGroupSelector groupSelector = new ThingGroupSelector(innerThing.def);
                 groupSelector.SetStackCount(innerThing.stackCount);
-                groupSelector.Add(new SingleThingSelector(innerThing));
+                groupSelector.Add(AwesomeInventoryServiceProvider.MakeInstanceOf<SingleThingSelector>(innerThing));
                 this.Add(groupSelector);
             }
         }

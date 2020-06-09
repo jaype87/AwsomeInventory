@@ -27,13 +27,19 @@ namespace AwesomeInventory
         /// <inheritdoc/>
         public void Message(string message)
         {
-            Log.Message(message, true);
+            Log.Message(AIDebug.Header + message, true);
         }
 
         /// <inheritdoc/>
         public void Warning(string warning)
         {
-            Log.Warning(warning, true);
+            Log.Warning(AIDebug.Header + warning, true);
+        }
+
+        /// <inheritdoc/>
+        public void WriteError(string errorMsg)
+        {
+            Log.Error(AIDebug.Header + errorMsg, true);
         }
     }
 }

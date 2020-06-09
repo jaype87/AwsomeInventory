@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CombatExtended;
 using RimWorld;
-using UnityEngine;
 using Verse;
 
 namespace AwesomeInventory.UI
@@ -18,8 +17,17 @@ namespace AwesomeInventory.UI
     /// A helper class for drawing in game.
     /// It only consists of member methods while <see cref="DrawUtility"/> only has static methods.
     /// </summary>
+    [RegisterService(typeof(DrawHelper), typeof(DrawHelperCE))]
     public class DrawHelperCE : DrawHelper
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DrawHelperCE"/> class.
+        /// </summary>
+        [Obsolete(ErrorText.NoDirectCall, false)]
+        public DrawHelperCE()
+        {
+        }
+
         /// <summary>
         /// Build a tooltip string for gears worn by <paramref name="pawn"/>.
         /// </summary>

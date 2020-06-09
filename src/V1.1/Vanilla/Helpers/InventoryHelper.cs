@@ -16,8 +16,17 @@ namespace AwesomeInventory
     /// <summary>
     /// Helper class for inventory management.
     /// </summary>
+    [RegisterService(typeof(IInventoryHelper), typeof(InventoryHelper))]
     public class InventoryHelper : IInventoryHelper
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InventoryHelper"/> class.
+        /// </summary>
+        [Obsolete(ErrorText.NoDirectCall, false)]
+        public InventoryHelper()
+        {
+        }
+
         /// <inheritdoc/>
         public bool WillBeOverEncumberedAfterPickingUp(Pawn pawn, Thing thing, int count)
         {

@@ -18,6 +18,7 @@ namespace AwesomeInventory.Loadout
     /// <summary>
     /// Selector for generic things, e.g., generic meals and generic medicines.
     /// </summary>
+    [RegisterType(typeof(GenericThingSelector), typeof(GenericThingSelector))]
     public class GenericThingSelector : ThingSelector
     {
         private AIGenericDef _genericDef;
@@ -27,6 +28,7 @@ namespace AwesomeInventory.Loadout
         /// Initializes a new instance of the <see cref="GenericThingSelector"/> class.
         /// Reserved for xml serialization, should not be called anywhere else.
         /// </summary>
+        [Obsolete(ErrorText.NoDirectCall, true)]
         public GenericThingSelector()
         {
         }
@@ -35,6 +37,7 @@ namespace AwesomeInventory.Loadout
         /// Initializes a new instance of the <see cref="GenericThingSelector"/> class.
         /// </summary>
         /// <param name="genericDef"> The generic def used for this selector. </param>
+        [Obsolete(ErrorText.NoDirectCall, true)]
         public GenericThingSelector(AIGenericDef genericDef)
         {
             ValidateArg.NotNull(genericDef, nameof(genericDef));
@@ -48,6 +51,7 @@ namespace AwesomeInventory.Loadout
         /// Initializes a new instance of the <see cref="GenericThingSelector"/> class.
         /// </summary>
         /// <param name="other"> Copy <paramref name="other"/> to this selector. </param>
+        [Obsolete(ErrorText.NoDirectCall, true)]
         public GenericThingSelector(GenericThingSelector other)
         {
             ValidateArg.NotNull(other, nameof(other));
