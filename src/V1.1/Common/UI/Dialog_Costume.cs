@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AwesomeInventory.Loadout;
+using RimWorld;
 using UnityEngine;
 using Verse;
 
@@ -21,6 +22,7 @@ namespace AwesomeInventory.UI
     {
         private AwesomeInventoryLoadout _loadout;
         private AwesomeInventoryCostume _costume;
+        private List<ThingGroupSelector> _apparelInLoadout;
         private Pawn _pawn;
         private Vector2 _loadoutScrollPos;
         private Vector2 _getupdetailScrollPos;
@@ -44,6 +46,11 @@ namespace AwesomeInventory.UI
             {
                 _loadout = loadout;
             }
+
+            _apparelInLoadout = _loadout.ThingGroupSelectors
+                .Where(t => t.AllowedThing.IsApparel)
+                .OrderBy(t => t.LabelCapNoCount)
+                .ToList();
 
             _pawn = pawn;
 
@@ -211,7 +218,7 @@ namespace AwesomeInventory.UI
 
             bool alternate = true;
             Rect labelRect = new Rect(viewRect).ReplaceHeight(GenUI.ListSpacing).ReplaceX(viewRect.x + GenUI.GapTiny);
-            foreach (ThingGroupSelector selector in _loadout.Where(t => t.AllowedThing.IsApparel))
+            foreach (ThingGroupSelector selector in _apparelInLoadout)
             {
                 Text.WordWrap = false;
                 GUI.DrawTexture(labelRect, (alternate ^= true) ? TexUI.TextBGBlack : TexUI.GrayTextBG);
@@ -255,6 +262,7 @@ namespace AwesomeInventory.UI
             {
                 bool alternate = true;
                 Rect labelRect = new Rect(viewRect.x + GenUI.GapTiny, viewRect.y, viewRect.width - GenUI.ListSpacing - GenUI.ScrollBarWidth, GenUI.ListSpacing);
+                _costume.CostumeItems.SortBy(c => c.LabelCapNoCount);
                 for (int i = 0; i < _costume.CostumeItems.Count; i++)
                 {
                     ThingGroupSelector selector = _costume.CostumeItems[i];

@@ -18,7 +18,8 @@
     <AwesomeInventory_UnloadNow>즉시 운반</AwesomeInventory_UnloadNow>
 
     <!-- Loadout Window -->
-    <AwesomeInventory_Assorted>분류된 {0}</AwesomeInventory_Assorted>
+    <AwesomeInventory_AddToAllLoadout>모든 소지품목에 추가</AwesomeInventory_AddToAllLoadout>
+	 <AwesomeInventory_Assorted>분류된 {0}</AwesomeInventory_Assorted>
     <AwesomeInventory_DisplayName>굉장한 소지품</AwesomeInventory_DisplayName>
     <AwesomeInventory_Blacklist>차단품목</AwesomeInventory_Blacklist>
     <AwesomeInventory_CantExceedStackCount>재고 수량을 초과할 수 없습니다.</AwesomeInventory_CantExceedStackCount>
@@ -45,6 +46,8 @@
     <AwesomeInventory_PreviewQuality>품질 미리보기: </AwesomeInventory_PreviewQuality>
     <AwesomeInventory_RestockAlways>사용 후 바로 채우기</AwesomeInventory_RestockAlways>
     <AwesomeInventory_RestockBottomThreshold>재고 수량이 지정 갯수가 되었을 때 채우기:</AwesomeInventory_RestockBottomThreshold>
+	
+	 <AwesomeInventory_RightClickForMoreOptions>더 많은 설정을 보려면 마우스 오른쪽 버튼을 클릭하세요</AwesomeInventory_RightClickForMoreOptions>
     <AwesomeInventory_SelectLoadout>소지품목 선택</AwesomeInventory_SelectLoadout>
 	 <AwesomeInventory_SortListAlphabetically>이름순으로 정렬</AwesomeInventory_SortListAlphabetically>
     <AwesomeInventory_SourceAllTip>모든 품목</AwesomeInventory_SourceAllTip>
@@ -95,19 +98,23 @@
     <AwesomeInventory_AIGenericRawFood_Label>일반 생식</AwesomeInventory_AIGenericRawFood_Label>
     <AwesomeInventory_AIGenericDrugs_Label>일반 약물</AwesomeInventory_AIGenericDrugs_Label>
     <AwesomeInventory_AIGenericMedicine_Label>일반 약품</AwesomeInventory_AIGenericMedicine_Label>
+	 <AwesomeInventory_AIGenericMeatRaw_Label>일반 고기</AwesomeInventory_AIGenericMeatRaw_Label>
 
     <!-- Descriptions -->
     <AwesomeInventory_AIGenericMeal_Description>부패하기 쉬운 식사를 위한 공간 예약입니다. 정착민이 자동으로 식사를 줍는 것과 호환되도록 고안되었습니다. 훌륭한 식사와 같은 무게를 가집니다.</AwesomeInventory_AIGenericMeal_Description>
     <AwesomeInventory_AIGenericRawFood_Description>날 음식에 대한 공간 예약입니다. 동물을 훈련시키기 위해 날 음식을 자동으로 줍는 정착민과의 호환성을 목적으로 합니다.</AwesomeInventory_AIGenericRawFood_Description>
     <AwesomeInventory_AIGenericDrugs_Description>모든 약물의 공간 예약입니다. 의료적 약물을 포함하고, 플레이크와 같은 무게를 가지고 있습니다.</AwesomeInventory_AIGenericDrugs_Description>
     <AwesomeInventory_AIGenericMedicine_Description>모든 약품의 공간 예약입니다. 의사가 가장 일반적으로 사용합니다.</AwesomeInventory_AIGenericMedicine_Description>
+	 <AwesomeInventory_AIGenericMeatRaw_Description>모든 생고기에 대한 공간 예약입니다. 동물 조련사가 가장 일반적으로 사용합니다.</AwesomeInventory_AIGenericMeatRaw_Description>
 	
 	 <!-- Gizmo -->
     <AwesomeInventory_CurrentHotSwapCostume>현재 빠른 교체 의상: {0}</AwesomeInventory_CurrentHotSwapCostume>
+	 <AwesomeInventory_ClearDrugSelection>약물 선택을 취소합니다.</AwesomeInventory_ClearDrugSelection>
 	 <AwesomeInventory_HotSwapInterrupted>빠른 교체가 중단되었습니다</AwesomeInventory_HotSwapInterrupted>
     <AwesomeInventory_NotCapaleChangingApparel>{0}(은)는 의류를 변경할 수 없습니다. </AwesomeInventory_NotCapaleChangingApparel>
     <AwesomeInventory_NoCostumeForHotSwap>활성화된 의상이 없습니다. 의상이 있는 정착민의 소지품목을 선택하십시오</AwesomeInventory_NoCostumeForHotSwap>
     <AwesomeInventory_ForceHotSwap>강제 빠른 교체</AwesomeInventory_ForceHotSwap>
+	 <AwesomeInventory_NoDrugSelected>선택된 약물 없음</AwesomeInventory_NoDrugSelected>
     <AwesomeInventory_SameCostumeForHotSwap>현재 활성 의상이 빠른 교체 의상과 동일</AwesomeInventory_SameCostumeForHotSwap>
     
     <!-- Mod settings -->
@@ -125,6 +132,8 @@
     <AwesomeInventory_ToggleGearTab>장비 창 열기</AwesomeInventory_ToggleGearTab>
     <AwesomeInventory_UseGearTabToggle>장비 창 버튼/열기</AwesomeInventory_UseGearTabToggle>
     <AwesomeInventory_UseLoadout>소지품목 사용</AwesomeInventory_UseLoadout>
+	 <AwesomeInventory_ShowRestartButton>재시작 버튼 표시</AwesomeInventory_ShowRestartButton>
+	 <AwesomeInventory_UseTakeDrug>약물복용 단축버튼 사용</AwesomeInventory_UseTakeDrug>
 
     <!-- Option texts on context menu -->
     <AwesomeInventory_AddToLoadout>{0}에 추가</AwesomeInventory_AddToLoadout>
@@ -145,13 +154,17 @@
 	 <AwesomeInventory_OpenLoadoutFromContextMenuTooltip>지도상에서 물품 장착/착용시 소지품목 창을 엽니다</AwesomeInventory_OpenLoadoutFromContextMenuTooltip>
     <AwesomeInventory_PatchAllRacesTooltip>모든 종족이 굉장한 소지품의 장비 창을 사용하도록 패치합니다.</AwesomeInventory_PatchAllRacesTooltip>
     <AwesomeInventory_PreviewQuality_Tooltip>미리보기 품목의 품질 수준을 선택하세요.</AwesomeInventory_PreviewQuality_Tooltip>
+	 <AwesomeInventory_Tips>도움말: {0}</AwesomeInventory_Tips>
     <AwesomeInventory_Separate_Tooltip>선택한 각 재료에 대한 품질 및 내구도를 개별적으로 설정하세요.</AwesomeInventory_Separate_Tooltip>
+	 <AwesomeInventory_ShowRestartButtonTooltip>개발자 모드 사용시, 재시작 버튼을 표시합니다.</AwesomeInventory_ShowRestartButtonTooltip>
     <AwesomeInventory_UseGearTabToggleTooltip>단축 버튼을 표시하고, 단축키를 지정하여 장비 창을 열 수 있게 합니다.</AwesomeInventory_UseGearTabToggleTooltip>
     <AwesomeInventory_UseLoadoutTooltip>굉장한 소지품에서 제공하는 소지품목 기능을 사용합니다.</AwesomeInventory_UseLoadoutTooltip>
-    <AwesomeInventory_WishlistTooltip>정착민은 적극적으로 선호품목의 물품을 찾습니다.</AwesomeInventory_WishlistTooltip>
+    <AwesomeInventory_UseTakeDrugTooltip>정착민 소지품 안의 약물을 즉시 복용하는, 단축 버튼을 사용합니다.</AwesomeInventory_UseTakeDrugTooltip>
+	 <AwesomeInventory_WishlistTooltip>정착민은 적극적으로 선호품목의 물품을 찾습니다.</AwesomeInventory_WishlistTooltip>
 
     <!-- Messages -->
     <AwesomeInventory_FailToDrop>{0}(이)가 {1}(을)를 삭제하지 못했습니다</AwesomeInventory_FailToDrop>
+	 <AwesomeInventory_NoDrugInInventory>{1}의 소지품 안에 {0}(이)가 없습니다</AwesomeInventory_NoDrugInInventory>
 
 
 </LanguageData>

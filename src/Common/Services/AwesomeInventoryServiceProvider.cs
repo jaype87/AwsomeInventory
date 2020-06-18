@@ -99,7 +99,15 @@ namespace AwesomeInventory
             ValidateArg.NotNull(baseType, nameof(baseType));
             ValidateArg.NotNull(derivedType, nameof(derivedType));
 
-            _typeDictionary[baseType] = derivedType;
+            if (_typeDictionary.TryGetValue(baseType, out Type value))
+            {
+                if (derivedType.IsSubclassOf(value))
+                    _typeDictionary[baseType] = derivedType;
+            }
+            else
+            {
+                _typeDictionary[baseType] = derivedType;
+            }
         }
 
         /// <summary>

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
+using AwesomeInventory.UI;
 using RimWorld;
 using Verse;
 
@@ -75,21 +76,45 @@ namespace AwesomeInventory.Loadout
         /// <returns> Returns true if loadout is rmeoved successfully. </returns>
         public static bool TryRemoveLoadout(AwesomeInventoryLoadout loadout, bool fromOutfit = false)
         {
-            if (fromOutfit)
-            {
-                _loadouts.Remove(loadout);
-                return true;
-            }
-            else
-            {
-                AcceptanceReport report = Current.Game.outfitDatabase.TryDelete(loadout);
-                if (report.Accepted)
-                {
-                    return true;
-                }
+            ValidateArg.NotNull(loadout, nameof(loadout));
 
-                Messages.Message(report.Reason, MessageTypeDefOf.RejectInput, historical: false);
-                return false;
+            List<Pawn> pawns = PawnsFinder.AllMapsCaravansAndTravelingTransportPods_Alive_Colonists;
+            List<AwesomeInventoryLoadout> loadouts = loadout.Costumes.Concat(loadout).ToList();
+            foreach (var l in loadouts)
+            {
+                foreach (Pawn pawn in pawns)
+                {
+                    if (pawn.outfits?.CurrentOutfit == l)
+                    {
+                        Messages.Message("OutfitInUse".Translate(pawn), MessageTypeDefOf.RejectInput, false);
+                        return false;
+                    }
+                }
+            }
+
+            foreach (var l in loadouts)
+            {
+                _loadouts.Remove(l);
+                Current.Game.outfitDatabase.AllOutfits.Remove(l);
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Handle callback from <see cref="OutfitDatabase.TryDelete(Outfit)"/>.
+        /// </summary>
+        /// <param name="loadout"> Loadout to delete. </param>
+        public static void TryRemoveLoadoutCallback(AwesomeInventoryLoadout loadout)
+        {
+            _loadouts.Remove(loadout);
+            if (loadout?.GetType() == typeof(AwesomeInventoryLoadout))
+            {
+                foreach (AwesomeInventoryCostume costume in loadout.Costumes)
+                {
+                    _loadouts.Remove(costume);
+                    Current.Game.outfitDatabase.AllOutfits.Remove(costume);
+                }
             }
         }
 

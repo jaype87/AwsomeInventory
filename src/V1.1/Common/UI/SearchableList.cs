@@ -36,7 +36,17 @@ namespace AwesomeInventory.UI
             string formattedText = searchText.ToUpperInvariant();
             float listHeight = outRect.height - GenUI.ListSpacing;
 
-            List<T> searchResult = listItems.Where(t => t.LabelNoCount.ToUpperInvariant().Contains(formattedText)).ToList();
+            List<T> searchResult = listItems.Where(
+                t =>
+                {
+                    string label = string.Empty;
+                    if (t is Corpse corpse)
+                        label = corpse.Bugged ? corpse.ThingID : corpse.LabelCapNoCount;
+                    else
+                        label = t.LabelNoCount;
+
+                    return label.ToUpperInvariant().Contains(formattedText);
+                }).ToList();
             float modifiedListLength = searchResult.Count * rowHeight;
 
             Widgets.BeginScrollView(outRect.ReplaceyMin(GenUI.ListSpacing + outRect.yMin), ref scrollPos, new Rect(0, 0, outRect.width, modifiedListLength));

@@ -3,6 +3,7 @@
 // Licensed under the LGPL-3.0-only license. See LICENSE.md file in the project root for full license information.
 // </copyright>
 
+using System.Collections.Generic;
 using System.Reflection;
 using AwesomeInventory.Loadout;
 using HarmonyLib;
@@ -20,6 +21,7 @@ namespace AwesomeInventory.Common.HarmonyPatches
         static OutfitDatabase_TryDelete()
         {
             MethodInfo original = AccessTools.Method(typeof(OutfitDatabase), "TryDelete");
+            MethodInfo prefix = typeof(OutfitDatabase).GetMethod(nameof(OutfitDatabase.TryDelete));
             MethodInfo postfix = AccessTools.Method(typeof(OutfitDatabase_TryDelete), "Postfix");
             Utility.Harmony.Patch(original, null, new HarmonyMethod(postfix));
         }
@@ -35,9 +37,38 @@ namespace AwesomeInventory.Common.HarmonyPatches
             {
                 if (outfit is AwesomeInventoryLoadout loadout)
                 {
-                    LoadoutManager.TryRemoveLoadout(loadout, true);
+                    LoadoutManager.TryRemoveLoadoutCallback(loadout);
                 }
             }
+        }
+
+        /// <summary>
+        /// Add support for deleting loadout with costumes.
+        /// </summary>
+        /// <param name="outfit"> outfit to delete. </param>
+        /// <param name="__result"> Return value from <see cref="OutfitDatabase.TryDelete(Outfit)"/>. </param>
+        /// <returns> Returns true if continue to execute the original method. </returns>
+        public static bool Prefix(Outfit outfit, ref AcceptanceReport __result)
+        {
+            ValidateArg.NotNull(outfit, nameof(outfit));
+
+            if (outfit.GetType() == typeof(AwesomeInventoryLoadout))
+            {
+                List<Pawn> pawns = PawnsFinder.AllMapsCaravansAndTravelingTransportPods_Alive_Colonists;
+                foreach (var costume in (outfit as AwesomeInventoryLoadout).Costumes)
+                {
+                    foreach (Pawn pawn in pawns)
+                    {
+                        if (pawn.outfits?.CurrentOutfit == costume)
+                        {
+                            __result = new AcceptanceReport("OutfitInUse".Translate(pawn));
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }

@@ -506,9 +506,23 @@ namespace AwesomeInventory.Loadout
 
                 foreach (ThingGroupSelector selector in costume.CostumeItems)
                 {
-                    cos.AddItemToCostume(new ThingGroupSelector(selector));
+                    ThingGroupSelector copy = this.FirstOrDefault(s => s.AllowedThing == selector.AllowedThing);
+                    if (copy != null)
+                        cos.AddItemToCostume(copy);
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public virtual ThingFilter GetGlobalThingFilter()
+        {
+            if (this is AwesomeInventoryCostume costume)
+                return costume.Base.filter;
+
+            return this.filter;
         }
 
         /// <summary>

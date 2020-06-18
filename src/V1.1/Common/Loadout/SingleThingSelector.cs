@@ -274,7 +274,7 @@ namespace AwesomeInventory.Loadout
                     }
                     else
                     {
-                        return 01;
+                        return 1;
                     }
                 }
                 else

@@ -50,7 +50,7 @@ namespace AwesomeInventory
                 pawn.jobs.EndCurrentJob(JobCondition.InterruptForced, false);
             }
 
-            List<QueuedJob> queuedJobs = new List<QueuedJob>(pawn.jobs.jobQueue);
+            List<QueuedJob> queuedJobs = new List<QueuedJob>(pawn.jobs?.jobQueue ?? Enumerable.Empty<QueuedJob>());
             foreach (QueuedJob queuedJob in queuedJobs)
             {
                 if (IsDressingJob(queuedJob.job.def))

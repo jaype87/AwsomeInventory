@@ -421,7 +421,9 @@ namespace AwesomeInventory.UI
             if (Widgets.ButtonImage(importRect, TexResource.ImportLoadout))
             {
                 List<FloatMenuOption> options = new List<FloatMenuOption>();
-                foreach (var loadout in LoadoutManager.Loadouts.Where(l => l.GetType() == typeof(AwesomeInventoryLoadout)))
+                foreach (var loadout in LoadoutManager.Loadouts
+                    .Where(l => l.GetType() == typeof(AwesomeInventoryLoadout))
+                    .OrderBy(l => l.label))
                 {
                     options.Add(
                         new FloatMenuOption(
@@ -464,6 +466,9 @@ namespace AwesomeInventory.UI
                         {
                             if (loadouts.Count > 1)
                             {
+                                foreach (AwesomeInventoryCostume costume in loadouts[i].Costumes)
+                                    LoadoutManager.TryRemoveLoadout(costume, false);
+
                                 LoadoutManager.TryRemoveLoadout(loadouts[i], false);
                             }
                             else

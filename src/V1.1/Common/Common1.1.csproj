@@ -82,6 +82,7 @@
     <Compile Include="Gizmos\Command_Action_Cacheable.cs" />
     <Compile Include="Gizmos\TakeDrug.cs" />
     <Compile Include="HarmonyPatches\AddHumanlikeOrders_AwesomeInventory_Patch.cs" />
+    <Compile Include="HarmonyPatches\JobGiver_DropUnusedInventory_Patch.cs" />
     <Compile Include="HarmonyPatches\JobGiver_OptimizeApparel_TryGiveJob_Patch.cs" />
     <Compile Include="HarmonyPatches\Outfit_ExposeData.cs" />
     <Compile Include="HarmonyPatches\Pawn_ApparelTracker_ApparelChanged_Patch.cs" />

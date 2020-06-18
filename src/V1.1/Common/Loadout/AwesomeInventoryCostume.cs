@@ -35,7 +35,7 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         /// <param name="other"> Costume to copy from. </param>
         public AwesomeInventoryCostume(AwesomeInventoryCostume other)
-            : base(other, true)
+            : base(other?.Base, true)
         {
             foreach (ThingGroupSelector selector in other._costumeItems)
             {

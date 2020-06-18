@@ -72,7 +72,7 @@ namespace AwesomeInventory.UI
             DrawInventoryList(
                 UIText.Inventory.TranslateSimple()
                 , new Rect(columnWidth * 2, rect.y, listWidth, rect.height)
-                , _thingGroupModel.Miscellaneous.GetMergedList(ThingComparer.Instance, (thing) => thing.LabelCap)
+                , _thingGroupModel.Miscellaneous
                 , ref _viewModel.MiscellanousScrollPos
                 , _thingGroupModel.Miscellaneous.Count * GenUI.ListSpacing
                 , ref _viewModel.MiscellanousSearchText
@@ -99,7 +99,22 @@ namespace AwesomeInventory.UI
                                   new
                                   {
                                       SlotGroup = slotGroup,
-                                      Things = slotGroup.HeldThings.GetMergedList(ThingComparer.Instance, (thing) => thing.LabelCap),
+                                      Things = slotGroup.HeldThings.GetMergedList(
+                                          ThingComparer.Instance
+                                          , (thing) =>
+                                          {
+                                              if (thing is Corpse corpse)
+                                              {
+                                                  if (corpse.Bugged)
+                                                      return corpse.ThingID;
+                                                  else
+                                                      return corpse.LabelCapNoCount;
+                                              }
+                                              else
+                                              {
+                                                  return thing.LabelCapNoCount;
+                                              }
+                                          }),
                                   });
             Parallel.ForEach(
                 Partitioner.Create(groups)
@@ -145,12 +160,34 @@ namespace AwesomeInventory.UI
                         thing.stackCount = _thingSlotGroup[thing].StackCount;
 
                     Rect labelRect = canvas.ReplaceWidth(canvas.width - GenUI.SmallIconSize * 2 - GenUI.ScrollBarWidth);
-                    Widgets.Label(labelRect, thing.LabelCap.ColorizeByQuality(thing));
+
+                    string thingLabel = string.Empty;
+                    if (thing is Corpse corpse)
+                    {
+                        if (corpse.Bugged)
+                            thingLabel = corpse.ThingID;
+                        else
+                            thingLabel = corpse.InnerPawn.NameFullColored;
+                    }
+                    else
+                    {
+                        thingLabel = thing.LabelCap.ColorizeByQuality(thing);
+                    }
+
+                    Widgets.Label(labelRect, thingLabel);
                     if (inSlot && Widgets.ButtonImage(new Rect(labelRect.xMax, labelRect.y, GenUI.SmallIconSize, GenUI.ListSpacing), TexResource.ArrowBottom))
                     {
                         FloatMenuUtility.MakeMenu(
-                            _thingSlotGroup[thing].SlotGroups.Select(g => g.parent).Cast<Thing>()
-                            , t => $"{t.LabelCap} - {t.thingIDNumber}"
+                            _thingSlotGroup[thing].SlotGroups.Select(g => g.parent)
+                            , g =>
+                            {
+                                if (g is Thing t)
+                                    return $"{t.LabelCap} - {t.thingIDNumber}";
+                                else if (g is Zone zone)
+                                    return zone.label;
+                                else
+                                    return g.ToString();
+                            }
                             , t => () =>
                             {
                                 Find.Selector.ClearSelection();
@@ -214,7 +251,9 @@ namespace AwesomeInventory.UI
 
             public int StackCount;
 
-            public int SlotIndex = 0;
+            public string HolderName;
+
+            public IntVec3 Position;
         }
     }
 }
