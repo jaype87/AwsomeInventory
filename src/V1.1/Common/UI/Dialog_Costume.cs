@@ -149,10 +149,12 @@ namespace AwesomeInventory.UI
                             costume.label
                             , () =>
                             {
-                                _loadout.Costumes.Remove(costume);
-                                _costume = null;
-                                _pawn.outfits.CurrentOutfit = _loadout;
-                                LoadoutManager.TryRemoveLoadout(costume);
+                                if (LoadoutManager.TryRemoveLoadout(costume))
+                                {
+                                    _loadout.Costumes.Remove(costume);
+                                    _costume = null;
+                                    _pawn.outfits.CurrentOutfit = _loadout;
+                                }
                             }));
                 }
 

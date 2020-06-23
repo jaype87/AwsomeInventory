@@ -8,25 +8,22 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Security.Policy;
-using System.Text;
 using System.Threading.Tasks;
 using AwesomeInventory.Jobs;
 using AwesomeInventory.UI;
 using RimWorld;
-using UnityEngine;
 using Verse;
 using Verse.AI;
 
 namespace AwesomeInventory.Loadout
 {
     /// <summary>
-    /// Save loudout information and its current state.
+    /// Save loadout information and its current state.
     /// </summary>
     /// <remarks>
     ///     Another way to monitor things added or removed is to add a thingComp to every qualified thingDef
-    /// and take advantage of the PreAbsorbStack(), PostSplitoff() function, etc..
-    ///     The correct initiate state for this clas is both Loadout and InventoryTracker are null. After moving
+    /// and take advantage of the PreAbsorbStack(), PostSplitOff() function, etc..
+    ///     The correct initiate state for this class is both Loadout and InventoryTracker are null. After moving
     /// to other states, none of them can be null.
     /// </remarks>
     public class CompAwesomeInventoryLoadout : ThingComp
@@ -225,10 +222,10 @@ namespace AwesomeInventory.Loadout
         }
 
         /// <summary>
-        /// Update internal tracking info when notified <paramref name="thing"/> has splitted off.
+        /// Update internal tracking info when notified <paramref name="thing"/> has split off.
         /// </summary>
-        /// <param name="thing"> <see cref="Thing"/> that has splitted off. </param>
-        /// <param name="count"> Number of splitted <paramref name="thing"/>. </param>
+        /// <param name="thing"> <see cref="Thing"/> that has split off. </param>
+        /// <param name="count"> Number of split <paramref name="thing"/>. </param>
         public void NotifiedSplitOff(Thing thing, int count)
         {
             if (_initialized)
@@ -240,7 +237,7 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         /// <param name="newLoadout"> The new loadout assigned to pawn. </param>
         /// <param name="delay"> If true, pawn will queue changing costume jobs after the current job. </param>
-        /// <param name="respawn"> If true, thie method is invoked while the pawn is being respawn. </param>
+        /// <param name="respawn"> If true, this method is invoked while the pawn is being respawn. </param>
         /// <param name="forced"> If true, update for <paramref name="newLoadout"/> even though it is the same as current loadout. </param>
         public void UpdateForNewLoadout(AwesomeInventoryLoadout newLoadout, bool delay = false, bool respawn = false, bool forced = false)
         {
@@ -273,6 +270,7 @@ namespace AwesomeInventory.Loadout
             this.Loadout = newLoadout;
             _initialized = true;
 
+            LoadoutManager.Comps.Add(this);
             this.ChangeCostume(newLoadout, oldLoadout, delay, respawn || forced);
         }
 
@@ -341,7 +339,7 @@ namespace AwesomeInventory.Loadout
         /// Find <see cref="ThingGroupSelector"/> that allows <paramref name="thing"/>.
         /// </summary>
         /// <param name="thing"> Thing to check if there is any selector fits. </param>
-        /// <param name="groupSelectors"> A list of fiiting selectors. </param>
+        /// <param name="groupSelectors"> A list of fitting selectors. </param>
         /// <returns> A data packet that contains all information needed to find the best suited selector for <paramref name="thing"/>. </returns>
         public virtual ThingGroupSelectorPool FindPotentialThingGroupSelectors(Thing thing, IEnumerable<ThingGroupSelector> groupSelectors)
         {
@@ -355,7 +353,7 @@ namespace AwesomeInventory.Loadout
         /// </summary>
         /// <param name="thing"> Thing to check if there is any selector fits. </param>
         /// <param name="stackCount"> Stack count of <paramref name="thing"/>. </param>
-        /// <param name="groupSelectors"> A list of fiiting selectors. </param>
+        /// <param name="groupSelectors"> A list of fitting selectors. </param>
         /// <returns> A data packet that contains all information needed to find the best suited selector for <paramref name="thing"/>. </returns>
         public virtual ThingGroupSelectorPool FindPotentialThingGroupSelectors(Thing thing, int stackCount, IEnumerable<ThingGroupSelector> groupSelectors)
         {
@@ -390,7 +388,7 @@ namespace AwesomeInventory.Loadout
         {
             ValidateArg.NotNull(newLoadout, nameof(newLoadout));
 
-            if (newLoadout is AwesomeInventoryCostume costume)
+            if (newLoadout is AwesomeInventoryCostume costume && newLoadout != oldLoadout)
             {
                 if (oldLoadout != null && oldLoadout.GetType() == typeof(AwesomeInventoryLoadout))
                 {
@@ -502,7 +500,7 @@ namespace AwesomeInventory.Loadout
                         }
 
                         if (!(_pawn.CurJobDef == AwesomeInventory_JobDefOf.AwesomeInventory_Undress || delay))
-                            _pawn.jobs.StopAll(true);
+                            _pawn.jobs?.StopAll(true);
 
                         foreach (Apparel apparel1 in _apparelsBeforeChanged)
                         {
@@ -510,9 +508,9 @@ namespace AwesomeInventory.Loadout
                             {
                                 Job job = new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, apparel1, false);
                                 if (_pawn.CurJob == null)
-                                    _pawn.jobs.StartJob(job);
+                                    _pawn.jobs?.StartJob(job);
                                 else
-                                    _pawn.jobs.jobQueue.EnqueueLast(job);
+                                    _pawn.jobs?.jobQueue.EnqueueLast(job);
                             }
                         }
 

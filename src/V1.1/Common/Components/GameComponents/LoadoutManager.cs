@@ -20,7 +20,9 @@ namespace AwesomeInventory.Loadout
     public class LoadoutManager : GameComponent
     {
         private static readonly List<AwesomeInventoryLoadout> _loadouts = new List<AwesomeInventoryLoadout>();
+
         private static readonly Regex _pattern = new Regex(@"^(.*?)(\d*)$");
+
         private static int _thingGroupSelectorID = 0;
 
         /// <summary>
@@ -44,6 +46,11 @@ namespace AwesomeInventory.Loadout
         /// Gets an ID for <see cref="ThingGroupSelector"/>.
         /// </summary>
         public static int ThingGroupSelectorID => _thingGroupSelectorID++;
+
+        /// <summary>
+        /// Gets a list of CompAwesomeInventory used by pawns.
+        /// </summary>
+        public static List<CompAwesomeInventoryLoadout> Comps { get; } = new List<CompAwesomeInventoryLoadout>();
 
         /// <summary>
         /// Gets a cache of loadouts used in this game.
@@ -80,7 +87,7 @@ namespace AwesomeInventory.Loadout
 
             List<Pawn> pawns = PawnsFinder.AllMapsCaravansAndTravelingTransportPods_Alive_Colonists;
             List<AwesomeInventoryLoadout> loadouts = loadout.Costumes.Concat(loadout).ToList();
-            foreach (var l in loadouts)
+            foreach (AwesomeInventoryLoadout l in loadouts)
             {
                 foreach (Pawn pawn in pawns)
                 {
@@ -92,10 +99,15 @@ namespace AwesomeInventory.Loadout
                 }
             }
 
-            foreach (var l in loadouts)
+            foreach (AwesomeInventoryLoadout l in loadouts)
             {
                 _loadouts.Remove(l);
                 Current.Game.outfitDatabase.AllOutfits.Remove(l);
+
+                if (l is AwesomeInventoryCostume costume)
+                {
+                    RemoveHotSwapCostume(costume);
+                }
             }
 
             return true;
@@ -137,12 +149,12 @@ namespace AwesomeInventory.Loadout
             foreach (AwesomeInventoryLoadout loadout in _loadouts)
             {
                 Match match = namePattern.Match(loadout.label);
-                if (match.Success)
+                if (!match.Success)
+                    continue;
+
+                if (int.TryParse(match.Groups[2].Value, out int result))
                 {
-                    if (int.TryParse(match.Groups[2].Value, out int result))
-                    {
-                        numsPostfix.Add(result);
-                    }
+                    numsPostfix.Add(result);
                 }
             }
 
@@ -159,6 +171,17 @@ namespace AwesomeInventory.Loadout
             }
 
             return string.Concat(onlyName, num);
+        }
+
+        public static void RemoveHotSwapCostume(AwesomeInventoryCostume costume)
+        {
+            foreach (CompAwesomeInventoryLoadout comp in Comps)
+            {
+                if (comp.HotSwapCostume == costume)
+                {
+                    comp.HotSwapCostume = null;
+                }
+            }
         }
 
         #region Override Methods

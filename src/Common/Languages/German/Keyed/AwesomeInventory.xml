@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+    <!-- Inventory Window -->
+    <AwesomeInventory_Belt>Gürtel</AwesomeInventory_Belt>
+    <AwesomeInventory_ChooseLoadout>Wähle ein Awesome-Inventory Loadout</AwesomeInventory_ChooseLoadout>
+    <AwesomeInventory_ExtraApparels>Extra ausgerüstete Kleidung</AwesomeInventory_ExtraApparels>
+    <AwesomeInventory_GreedyTab>Liste</AwesomeInventory_GreedyTab>
+    <AwesomeInventory_Head>Kopfbedeckung</AwesomeInventory_Head>
+    <AwesomeInventory_JealousTab>RPG Stil</AwesomeInventory_JealousTab>
+    <AwesomeInventory_MakeEmptyLoadout>Erstelle leeres Loadout für {0}</AwesomeInventory_MakeEmptyLoadout>
+    <AwesomeInventory_MakeNewLoadout>Erstelle neues Loadout für {0}</AwesomeInventory_MakeNewLoadout>
+    <AwesomeInventory_MassCarried>Getragenes Gewicht</AwesomeInventory_MassCarried>
+    <AwesomeInventory_Pants>Beine Haut Schicht</AwesomeInventory_Pants>
+    <AwesomeInventory_PrimaryWeapon>Primäre Waffe</AwesomeInventory_PrimaryWeapon>
+    <AwesomeInventory_TorsoMiddle>Torso mittlere Schicht</AwesomeInventory_TorsoMiddle>
+    <AwesomeInventory_TorsoOnSkin>Torso Haut Schicht</AwesomeInventory_TorsoOnSkin>
+    <AwesomeInventory_TorsoShell>Torso Außen Schicht</AwesomeInventory_TorsoShell>
+    <AwesomeInventory_UnloadNow>Jetzt ablegen</AwesomeInventory_UnloadNow>
+
+    <!-- Loadout Window -->
+    <AwesomeInventory_AddToAllLoadout>Zu allen Loadout hinzufügen</AwesomeInventory_AddToAllLoadout>
+    <AwesomeInventory_Assorted>Sortiert {0}</AwesomeInventory_Assorted>
+    <AwesomeInventory_DisplayName>Awesome Inventory</AwesomeInventory_DisplayName>
+    <AwesomeInventory_Blacklist>Sperrliste</AwesomeInventory_Blacklist>
+    <AwesomeInventory_CantExceedStackCount>Stapelanzahl kann nicht überschritten werden.</AwesomeInventory_CantExceedStackCount>
+    <AwesomeInventory_CantUnloadIncapableManipulation>Der Kolonist kann aufgrund seiner Unfähigkeit zur Manipulation keine Abladeaktion durchführen.</AwesomeInventory_CantUnloadIncapableManipulation>
+    <AwesomeInventory_ChooseMaterialAndQuality>Material und Qualität auswählen</AwesomeInventory_ChooseMaterialAndQuality>
+    <AwesomeInventory_CopyLoadout>Loadout kopieren</AwesomeInventory_CopyLoadout>
+    <AwesomeInventory_CostumeSettings>Kostüm Einstellungen</AwesomeInventory_CostumeSettings>
+    <AwesomeInventory_CountFieldTip>Anzahl der Gegenstände</AwesomeInventory_CountFieldTip>
+    <AwesomeInventory_Customize>Anpassen</AwesomeInventory_Customize>
+    <AwesomeInventory_DeleteLoadout>Loadout löschen</AwesomeInventory_DeleteLoadout>
+    <AwesomeInventory_DontUseCostume>Kein Kostüm verwenden</AwesomeInventory_DontUseCostume>
+    <AwesomeInventory_DragToReorder>Ziehen um neu zu ordnen</AwesomeInventory_DragToReorder>
+    <AwesomeInventory_EmptyLoadout>Leeres Loadout</AwesomeInventory_EmptyLoadout>
+    <AwesomeInventory_GlobalApparelSetting>Loadout Top Level Einstellung</AwesomeInventory_GlobalApparelSetting>
+    <AwesomeInventory_GlobalOutfitSettingWarning>Wichtig: Die Einstellungen hier haben Vorrang vor den Einstellungen der Kleidungsstücke im Loadout Fenster (Waffen und andere Gegenstände sind nicht betroffen).</AwesomeInventory_GlobalOutfitSettingWarning>
+    <AwesomeInventory_ImportLoadout>Importiere Gegenstände aus anderen Loadouts</AwesomeInventory_ImportLoadout>
+    <AwesomeInventory_LoadoutName>{0}'s Loadout</AwesomeInventory_LoadoutName>
+    <AwesomeInventory_MouseOverNumbersForDetails>Fahre mit Maus über die Zahlen für Details</AwesomeInventory_MouseOverNumbersForDetails>
+    <AwesomeInventory_NewLoadout>Neues Loadout</AwesomeInventory_NewLoadout>
+    <AwesomeInventory_NoLoadout>Kein Loadout</AwesomeInventory_NoLoadout>
+    <AwesomeInventory_NoLoadoutSelected>Kein Loadout ausgewählt</AwesomeInventory_NoLoadoutSelected>
+    <AwesomeInventory_NoMaterial>Kein Material verfügbar</AwesomeInventory_NoMaterial>
+    <AwesomeInventory_OpenLoadout>Loadout öffnen</AwesomeInventory_OpenLoadout>
+    <AwesomeInventory_PreviewQuality>Vorschau Qualität: </AwesomeInventory_PreviewQuality>
+    <AwesomeInventory_RestockAlways>Bei erster Gelegenheit auffüllen</AwesomeInventory_RestockAlways>
+    <AwesomeInventory_RestockBottomThreshold>Erst auffüllen, wenn Inventarbestand gesunken auf:</AwesomeInventory_RestockBottomThreshold>
+    <AwesomeInventory_SelectLoadout>Loadout wählen</AwesomeInventory_SelectLoadout>
+    <AwesomeInventory_SortListAlphabetically>Liste alphabetisch sortieren</AwesomeInventory_SortListAlphabetically>
+    <AwesomeInventory_SourceAllTip>Alle Gegenstände</AwesomeInventory_SourceAllTip>
+    <AwesomeInventory_SourceApparelTip>Kleidung</AwesomeInventory_SourceApparelTip>
+    <AwesomeInventory_SourceFilterTip>Filter</AwesomeInventory_SourceFilterTip>
+    <AwesomeInventory_SourceGenericTip>Generisch</AwesomeInventory_SourceGenericTip>
+    <AwesomeInventory_SourceMeleeTip>Nahkampfwaffen</AwesomeInventory_SourceMeleeTip>
+    <AwesomeInventory_SourceMinifiedTip>Größere Gegenstände</AwesomeInventory_SourceMinifiedTip>
+    <AwesomeInventory_SourceRangedTip>Fernkampfwaffen</AwesomeInventory_SourceRangedTip>
+    <AwesomeInventory_Separate>Trennen</AwesomeInventory_Separate>
+    <AwesomeInventory_SelectorStuff>Ausgewählte Sachen</AwesomeInventory_SelectorStuff>
+    <AwesomeInventory_StockMode>Inventarverwaltung</AwesomeInventory_StockMode>
+    <AwesomeInventory_StuffSource>Quelle des Materials</AwesomeInventory_StuffSource>
+    <AwesomeInventory_TryToDeleteLastLoadout>Das letzte Loadout kann nicht gelöscht werden</AwesomeInventory_TryToDeleteLastLoadout>
+    <AwesomeInventory_UseGenericStuff>Verwende generische Sachen für die Kleidung im Loadout</AwesomeInventory_UseGenericStuff>
+    <AwesomeInventory_Weight>Gewicht</AwesomeInventory_Weight>
+    <AwesomeInventory_Wishlist>Wunschliste</AwesomeInventory_Wishlist>
+        <!-- Combat Extended -->
+        <AwesomeInventory_SelectedWeapon>Ausgewählte Waffe: </AwesomeInventory_SelectedWeapon>
+        <AwesomeInventory_SelectedAmmo>Ausgewählte Munition: </AwesomeInventory_SelectedAmmo>
+
+    <!-- Costume Window -->
+    <AwesomeInventory_CreateCostume>Kostüm erstellen</AwesomeInventory_CreateCostume>
+    <AwesomeInventory_CopyCostume>Kostüm kopieren</AwesomeInventory_CopyCostume>
+    <AwesomeInventory_CopySuffix> - Kopieren</AwesomeInventory_CopySuffix>
+    <AwesomeInventory_Costume> Kostüm</AwesomeInventory_Costume>
+    <AwesomeInventory_DeleteCostume>Kostüm löschen</AwesomeInventory_DeleteCostume>
+    <AwesomeInventory_ItemsInCostume>Gegenstände im Kostüm</AwesomeInventory_ItemsInCostume>
+    <AwesomeInventory_ApparelsInLoadout>Kleidung im Loadout</AwesomeInventory_ApparelsInLoadout>
+    <AwesomeInventory_NoCostumeAvailable>Kein Kostüm verfügbar</AwesomeInventory_NoCostumeAvailable>
+    <AwesomeInventory_NoCostumeSelected>Bitte wähle ein Kostüm.</AwesomeInventory_NoCostumeSelected>
+    <AwesomeInventory_SelectCostume>Kostüm wählen</AwesomeInventory_SelectCostume>
+
+    <!-- Overview Window -->
+    <AwesomeInventory_EquippedItems>Ausgerüstete Gegenstände</AwesomeInventory_EquippedItems>
+    <AwesomeInventory_InventoryItems>Gegenstände im Inventar</AwesomeInventory_InventoryItems>
+    <AwesomeInventory_InventoryView>Inventaransicht</AwesomeInventory_InventoryView>
+    <AwesomeInventory_Loadouts>Loadouts</AwesomeInventory_Loadouts>
+    <AwesomeInventory_LoadoutTabTip1>Strg+Ziehen, um Gegenstände von einem Loadout zum anderen zu kopieren.</AwesomeInventory_LoadoutTabTip1>
+    <AwesomeInventory_LoadoutTabTip2>Rechtsklick um Gegenstände aus dem Loadout zu entfernen.</AwesomeInventory_LoadoutTabTip2>
+    <AwesomeInventory_LoadoutView>Loadout Ansicht</AwesomeInventory_LoadoutView>
+    <AwesomeInventory_MakeLoadout>Loadout erstellen</AwesomeInventory_MakeLoadout>
+    <AwesomeInventory_MakeLoadoutFrom>Erstelle Loadout aus ausgerüsteten Gegenständen</AwesomeInventory_MakeLoadoutFrom>
+    <AwesomeInventory_MissingItems>Fehlende Gegenstände</AwesomeInventory_MissingItems>
+
+    <!-- Labels -->
+    <AwesomeInventory_GenericMeal_Label>Mahlzeiten</AwesomeInventory_GenericMeal_Label>
+    <AwesomeInventory_AIGenericRawFood_Label>Rohe Nahrungsmittel</AwesomeInventory_AIGenericRawFood_Label>
+    <AwesomeInventory_AIGenericDrugs_Label>Drogen</AwesomeInventory_AIGenericDrugs_Label>
+    <AwesomeInventory_AIGenericMedicine_Label>Medizin</AwesomeInventory_AIGenericMedicine_Label>
+    <AwesomeInventory_AIGenericMeatRaw_Label>Fleisch</AwesomeInventory_AIGenericMeatRaw_Label>
+
+    <!-- Descriptions -->
+    <AwesomeInventory_AIGenericMeal_Description>Platzhalter für alle verderblichen Mahlzeiten. Vorgesehen für die Kompatibilität mit Kolonisten, die automatisch eine Mahlzeit für sich selbst holen. Es hat die gleiche Masse wie eine feine Mahlzeit.</AwesomeInventory_AIGenericMeal_Description>
+    <AwesomeInventory_AIGenericRawFood_Description>Platzhalter für rohe Nahrung.  Vorgesehen für die Kompatibilität mit Kolonisten, die automatisch rohe Nahrung aufnehmen, um Tiere zu trainieren.</AwesomeInventory_AIGenericRawFood_Description>
+    <AwesomeInventory_AIGenericDrugs_Description>Platzhalter für alle Drogen. Es umfasst Arzneimittel und hat die gleiche Masse wie eine Flocke.</AwesomeInventory_AIGenericDrugs_Description>
+    <AwesomeInventory_AIGenericMedicine_Description>Platzhalter für beliebige Medizin. Am häufigsten von Ärzten verwendet.</AwesomeInventory_AIGenericMedicine_Description>
+    <AwesomeInventory_AIGenericMeatRaw_Description>Platzhalter für beliebiges rohes Fleisch. Meistens von Tiertrainern verwendet.</AwesomeInventory_AIGenericMeatRaw_Description>
+
+
+    <!-- Gizmo -->
+    <AwesomeInventory_CurrentHotSwapCostume>Aktuelles Hot-Swap Kostüm: {0}</AwesomeInventory_CurrentHotSwapCostume>
+    <AwesomeInventory_HotSwapInterrupted>Hot Swap wurde unterbrochen</AwesomeInventory_HotSwapInterrupted>
+    <AwesomeInventory_NotCapaleChangingApparel>{0} ist nicht in der Lage, die Kleidung zu wechseln. </AwesomeInventory_NotCapaleChangingApparel>
+    <AwesomeInventory_NoCostumeForHotSwap>Kein Kostüm verfügbar. Wähle für den Kolonisten ein Loadout mti Kostüm</AwesomeInventory_NoCostumeForHotSwap>
+    <AwesomeInventory_ForceHotSwap>Hot Swap erzwingen</AwesomeInventory_ForceHotSwap>
+    <AwesomeInventory_SameCostumeForHotSwap>Das derzeit aktive Kostüm ist dasselbe wie das Hot-Swap Kostüm</AwesomeInventory_SameCostumeForHotSwap>
+
+
+    <!-- Mod settings -->
+    <AwesomeInventory_AutoEquipWeapon>Waffe finden und ausrüsten</AwesomeInventory_AutoEquipWeapon>
+    <AwesomeInventory_ChooseThemeColorForQuality>Wähle das Motiv für die Farbe der Qualität:</AwesomeInventory_ChooseThemeColorForQuality>
+    <AwesomeInventory_DisableWindowInModSetting>Deaktiviere dieses Fenster in der Mod-Einstellung</AwesomeInventory_DisableWindowInModSetting>
+    <AwesomeInventory_ExplainFeatures>Erklärungen zum Loadout/Kostüm</AwesomeInventory_ExplainFeatures>
+    <AwesomeInventory_GearTabHeight>Höhe des Ausrüstungs Tab:</AwesomeInventory_GearTabHeight>
+    <AwesomeInventory_GearTabWidht>Breite des Ausrüstungs Tab:</AwesomeInventory_GearTabWidht>
+    <AwesomeInventory_GoNuts>Irre werden!</AwesomeInventory_GoNuts>
+    <AwesomeInventory_OpenLoadoutFromContextMenu>Pop-Up Fenster erlauben</AwesomeInventory_OpenLoadoutFromContextMenu>
+    <AwesomeInventory_PatchAllRaces>Korrektur für alle Rassen</AwesomeInventory_PatchAllRaces>
+    <AwesomeInventory_TipsOnCostume>Wie man Kostüme verwendet</AwesomeInventory_TipsOnCostume>
+    <AwesomeInventory_TipsForHotSwap>Wie man HOT-SWAP für Kostüm benutzt</AwesomeInventory_TipsForHotSwap>
+    <AwesomeInventory_ToggleGearTab>Ausrüstungs Tab umschalten</AwesomeInventory_ToggleGearTab>
+    <AwesomeInventory_UseGearTabToggle>Ausrüstungs Tab umschalten</AwesomeInventory_UseGearTabToggle>
+    <AwesomeInventory_UseLoadout>Loadout benutzen</AwesomeInventory_UseLoadout>
+
+    <!-- Option texts on context menu -->
+    <AwesomeInventory_AddToLoadout>Hinzufügen zu {0}</AwesomeInventory_AddToLoadout>
+    <AwesomeInventory_Default>Awesome Inventory Voreinstellungen</AwesomeInventory_Default>
+    <AwesomeInventory_Equip>Rüste {0} aus und behalte den alten Gegenstand</AwesomeInventory_Equip>
+    <AwesomeInventory_ForceWear>Erzwinge tragen von {0}, behalte ersetzten Gegenstand</AwesomeInventory_ForceWear>
+    <AwesomeInventory_Pickup>{0} aufheben</AwesomeInventory_Pickup>
+    <AwesomeInventory_PutAway>{0} weglegen</AwesomeInventory_PutAway>
+    <AwesomeInventory_RemoveFromLoadout>Entferne von {0}</AwesomeInventory_RemoveFromLoadout>
+    <AwesomeInventory_Wear>Trage {0} und behalte das Ersetzte</AwesomeInventory_Wear>
+    <AwesomeInventory_VanillaWear>Trage {0}</AwesomeInventory_VanillaWear>
+
+    <!-- Tooltips -->
+    <AwesomeInventory_Ascetic>Asketisch</AwesomeInventory_Ascetic>
+    <AwesomeInventory_AutoEquipWeaponTooltip>Ermöglicht es Awesome Inventory, Waffen für unbewaffnete Kolonisten auszuwählen und auszurüsten.</AwesomeInventory_AutoEquipWeaponTooltip>
+    <AwesomeInventory_BlacklistTooltip>Gegenstände der Sperrliste, werden nicht für die Wunschliste berücksichtigt. Die Sperrliste hat keinen Effekt, wenn Gegenstände in ihr in der Wunschliste sind.</AwesomeInventory_BlacklistTooltip>
+    <AwesomeInventory_CurrentTemperature>Aktuelle Temperatur</AwesomeInventory_CurrentTemperature>
+    <AwesomeInventory_OpenLoadoutFromContextMenuTooltip> Öffne das Loadout Fenster, wenn du Gegenstände auf der Karte ausrüsten/tragen willst</AwesomeInventory_OpenLoadoutFromContextMenuTooltip>
+    <AwesomeInventory_PatchAllRacesTooltip>Korrigiere alle Rassen, um den Ausrüstungs Tabs von Awesome Inventory zu verwenden.</AwesomeInventory_PatchAllRacesTooltip>
+    <AwesomeInventory_PreviewQuality_Tooltip>Wähle die Qualitätsstufe für die Vorschau des Gegenstandes. </AwesomeInventory_PreviewQuality_Tooltip>
+    <AwesomeInventory_Tips>Tipps: {0}</AwesomeInventory_Tips>
+    <AwesomeInventory_Separate_Tooltip>Lege Qualität und Trefferpunkte für jedes ausgewählte Material separat fest.</AwesomeInventory_Separate_Tooltip>
+    <AwesomeInventory_UseGearTabToggleTooltip>Ausrüstungs Tab UMSCHALTEN erlaubt Spielern einen Hotkey zu belegen.</AwesomeInventory_UseGearTabToggleTooltip>
+    <AwesomeInventory_UseLoadoutTooltip>Verwende das Loadout System von Awesome Inventory.</AwesomeInventory_UseLoadoutTooltip>
+    <AwesomeInventory_WishlistTooltip>Kolonisten werden aktiv nach Gegenständen in der Wunschliste suchen.</AwesomeInventory_WishlistTooltip>
+
+    <!-- Messages -->
+    <AwesomeInventory_FailToDrop>{0} konnte {1} nicht fallen lassen</AwesomeInventory_FailToDrop>
+
+
+</LanguageData>

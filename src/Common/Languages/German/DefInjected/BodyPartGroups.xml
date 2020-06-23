@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Check AwesomeInventoryPartGroupDefOf.cs for a complete list of list order-->
+<!-- TODO Create PR to CE-->
+<LanguageData>
+
+    <Ears.label>Ohren</Ears.label>
+    <LeftArm.label>Linke Schulter</LeftArm.label>
+    <RightArm.label>Rechte Schulter</RightArm.label>
+    <LeftShoulder.label>Linker Arm</LeftShoulder.label>
+    <RightShoulder.label>Rechter Arm</RightShoulder.label>
+    <None.label>Hintern</None.label>
+
+
+    <!-- Patch CE -->
+
+    <Neck.label>Hals</Neck.label>
+    <Head.label>Kopf</Head.label>
+</LanguageData>
