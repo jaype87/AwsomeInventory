@@ -24,10 +24,11 @@ namespace AwesomeInventory.UI
         /// <param name="rect"> Position to draw. </param>
         /// <param name="fillPercent"> How much the bar is filled. </param>
         /// <param name="fillTex"> Texture for filler. </param>
-        /// <param name="label"> Label to prepand to the bar. </param>
+        /// <param name="label"> Label to prepend to the bar. </param>
         /// <param name="overlayText"> Text to draw over the bar. </param>
         /// <param name="tooltip"> A breakdown of weight carried by pawn. </param>
-        public static void BarWithOverlay(Rect rect, float fillPercent, Texture2D fillTex, string label, string overlayText, string tooltip)
+        /// <returns> Rect used for drawing bar. </returns>
+        public static Rect BarWithOverlay(Rect rect, float fillPercent, Texture2D fillTex, string label, string overlayText, string tooltip)
         {
             Text.Anchor = TextAnchor.MiddleLeft;
 
@@ -46,6 +47,8 @@ namespace AwesomeInventory.UI
             Text.Anchor = TextAnchor.MiddleCenter;
             Widgets.Label(rect, overlayText);
             Text.Anchor = TextAnchor.UpperLeft;
+
+            return rect;
         }
     }
 }

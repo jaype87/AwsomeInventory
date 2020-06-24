@@ -406,8 +406,10 @@ namespace AwesomeInventory.UI
         protected virtual void DrawWeightBar(Rect rect, Pawn selPawn)
         {
             Widgets.DrawLineHorizontal(rect.x, rect.y, rect.width);
+
+            Rect bar1 = rect.ReplaceY(rect.y + GenUI.GapTiny);
             GenBar.BarWithOverlay(
-                rect.ReplaceY(rect.y + GenUI.GapTiny),
+                bar1,
                 MassUtility.EncumbrancePercent(selPawn),
                 MassUtility.IsOverEncumbered(selPawn) ? AwesomeInventoryTex.ValvetTex as Texture2D : AwesomeInventoryTex.RWPrimaryTex as Texture2D,
                 UIText.Weight.TranslateSimple(),

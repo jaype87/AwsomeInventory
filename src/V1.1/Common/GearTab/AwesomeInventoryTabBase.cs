@@ -7,8 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Remoting.Messaging;
-using System.Threading;
 using AwesomeInventory.HarmonyPatches;
 using RimWorld;
 using UnityEngine;
@@ -22,7 +20,7 @@ namespace AwesomeInventory.UI
     public abstract class AwesomeInventoryTabBase : ITab_Pawn_Gear
     {
         /// <summary>
-        /// Gets or sets a value indicating whether apparel has chagned.
+        /// Gets or sets a value indicating whether apparel has changed.
         /// </summary>
         protected bool _apparelChanged;
 
@@ -36,11 +34,11 @@ namespace AwesomeInventory.UI
         private static bool _isJealous = true;
         private static bool _isGreedy = false;
         private static bool _isAscetic = false;
-        private static IEnumerable<CustomRace> _customRaces
+        private readonly IEnumerable<CustomRace> _customRaces
             = AwesomeInventoryServiceProvider.GetPluginsOfType<CustomRace>();
 
+        private readonly object _apparelChangedLock = new object();
         private Pawn _selPawn;
-        private object _apparelChangedLock = new object();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AwesomeInventoryTabBase"/> class.

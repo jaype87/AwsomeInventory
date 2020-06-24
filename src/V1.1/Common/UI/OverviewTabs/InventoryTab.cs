@@ -99,22 +99,23 @@ namespace AwesomeInventory.UI
                                   new
                                   {
                                       SlotGroup = slotGroup,
-                                      Things = slotGroup.HeldThings.GetMergedList(
-                                          ThingComparer.Instance
-                                          , (thing) =>
-                                          {
-                                              if (thing is Corpse corpse)
-                                              {
-                                                  if (corpse.Bugged)
-                                                      return corpse.ThingID;
-                                                  else
-                                                      return corpse.LabelCapNoCount;
-                                              }
-                                              else
-                                              {
-                                                  return thing.LabelCapNoCount;
-                                              }
-                                          }),
+                                      Things = slotGroup.HeldThings.Where(t => !t.LabelCapNoCount.NullOrEmpty())
+                                          .GetMergedList(
+                                             ThingComparer.Instance
+                                             , (thing) =>
+                                             {
+                                                 if (thing is Corpse corpse)
+                                                 {
+                                                     if (corpse.Bugged)
+                                                         return corpse.ThingID;
+                                                     else
+                                                         return corpse.LabelCapNoCount;
+                                                 }
+                                                 else
+                                                 {
+                                                     return thing.LabelCapNoCount;
+                                                 }
+                                             }),
                                   });
             Parallel.ForEach(
                 Partitioner.Create(groups)
