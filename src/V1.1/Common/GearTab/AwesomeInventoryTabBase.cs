@@ -38,6 +38,7 @@ namespace AwesomeInventory.UI
             = AwesomeInventoryServiceProvider.GetPluginsOfType<CustomRace>();
 
         private readonly object _apparelChangedLock = new object();
+        private readonly StatPanelToggle _statPanelToggle = new StatPanelToggle();
         private Pawn _selPawn;
 
         /// <summary>
@@ -94,7 +95,7 @@ namespace AwesomeInventory.UI
             typeof(ITab_Pawn_Gear).GetProperty("CanControlColonist", _nonPublicInstance);
 
         /// <summary>
-        /// Gets CanCaontrol property from base class.
+        /// Gets CanControl property from base class.
         /// </summary>
         public static PropertyInfo CanControl { get; } =
             typeof(ITab_Pawn_Gear).GetProperty("CanControl", _nonPublicInstance);
@@ -116,6 +117,14 @@ namespace AwesomeInventory.UI
         {
             base.OnOpen();
             _drawGearTab.Reset();
+            _statPanelToggle.SetPosition(new Vector2(this.TabRect.xMax, this.TabRect.y));
+        }
+
+        /// <inheritdoc />
+        public override void TabUpdate()
+        {
+            base.TabUpdate();
+            _statPanelToggle.SetPosition(new Vector2(this.TabRect.xMax, this.TabRect.y));
         }
 
         /// <summary>
@@ -241,8 +250,7 @@ namespace AwesomeInventory.UI
                 }
             }
 
-            // StatPanelToggle toggle = new StatPanelToggle(TabRect.xMax, TabRect.y);
-            // StatPanelToggle.Draw();
+            _statPanelToggle.Draw();
         }
 
         private Rect GetHeaderRect(float x, string translatedText)

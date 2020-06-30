@@ -100,12 +100,18 @@
     <PostBuildEvent>
             call "$(SolutionDir)SolutionItems\Deploy.bat" "$(ProjectDir)" "$(OutDir)" $(Configuration)
             xcopy /i /e /d /y "$(SolutionDir)src\About" "$(OutDir)..\..\About"
-</PostBuildEvent>
+        </PostBuildEvent>
   </PropertyGroup>
   <Target Name="CopyLoadFolderXML" AfterTargets="Build">
     <Copy Condition=" '$(Configuration)'=='debug' " SourceFiles="$(SolutionDir)src\LoadFoldersTest.xml" DestinationFiles="$(OutDir)..\..\LoadFolders.xml" SkipUnchangedFiles="false">
     </Copy>
     <Copy Condition=" '$(Configuration)'!='debug' " SourceFiles="$(SolutionDir)src\LoadFolders.xml" DestinationFiles="$(OutDir)..\..\LoadFolders.xml" SkipUnchangedFiles="false">
+    </Copy>
+  </Target>
+  <Target Name="CopyRimWorldUtility" AfterTargets="Build">
+    <Copy Condition=" '$(Configuration)'=='debug' " SourceFiles="$(SolutionDir)..\RimWorldUtility\bin\Debug\NotooShabby.RimWorldUtility.dll" DestinationFiles="$(OutDir)NotooShabby.RimWorldUtility.dll">
+    </Copy>
+    <Copy Condition=" '$(Configuration)'!='debug' " SourceFiles="$(SolutionDir)..\RimWorldUtility\bin\Release\NotooShabby.RimWorldUtility.dll" DestinationFiles="$(OutDir)NotooShabby.RimWorldUtility.dll">
     </Copy>
   </Target>
 </Project>

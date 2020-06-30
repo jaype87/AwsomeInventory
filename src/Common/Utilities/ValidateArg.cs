@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace AwesomeInventory
 {
@@ -19,6 +20,7 @@ namespace AwesomeInventory
         /// <param name="arg"> Argument to check. </param>
         /// <param name="argName"> Name of <paramref name="arg"/>. </param>
         /// <exception cref="ArgumentNullException"> Throws if arg is null. </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void NotNull(object arg, string argName)
         {
             if (arg == null)
@@ -30,6 +32,7 @@ namespace AwesomeInventory
         /// </summary>
         /// <param name="arg"> Argument to check. </param>
         /// <param name="argName"> Name of <paramref name="arg"/>. </param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void NotNullOrEmpty(object arg, string argName)
         {
             ValidateArg.NotNull(arg, argName);

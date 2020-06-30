@@ -32,6 +32,12 @@
     </Target>
 
     <Target Name="CompressFolder" AfterTargets="Build">
+        <Copy
+            SourceFiles="D:\Modding\RimWorldUtility\bin\Release\NotooShabby.RimWorldUtility.dll"
+            DestinationFiles="D:\Modding\AwesomeInventory\References\NotooShabby.RimWorldUtility.dll"
+            SkipUnchangedFiles="true"
+            />
+
         <!-- Compress mod folder -->
         <ZipDirectory
             Condition="'$(Configuration)'=='Release'"

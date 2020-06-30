@@ -84,6 +84,8 @@ namespace AwesomeInventory.UI
 
         /****************** AwesomeInventory texts ********************/
 
+        public const string AddRemoveStat = "AwesomeInventory_AddRemoveStat";
+
         public const string AddToAllLoadout = "AwesomeInventory_AddToAllLoadout";
 
         public const string AddToLoadout = "AwesomeInventory_AddToLoadout";
@@ -299,6 +301,8 @@ namespace AwesomeInventory.UI
         public const string SourceMinifiedTip = "AwesomeInventory_SourceMinifiedTip";
 
         public const string SourceRangedTip = "AwesomeInventory_SourceRangedTip";
+
+        public const string StatPanel = "AwesomeInventory_StatPanel";
 
         public const string StockMode = "AwesomeInventory_StockMode";
 

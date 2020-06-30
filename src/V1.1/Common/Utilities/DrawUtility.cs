@@ -41,7 +41,7 @@ namespace AwesomeInventory.UI
         public static float WindowPadding => 18f;
 
         /// <summary>
-        /// Draw a lable which doubles as a button.
+        /// Draw a label which doubles as a button.
         /// </summary>
         /// <param name="rect"> Rect for drawing. </param>
         /// <param name="label"> Label to draw in <paramref name="rect"/>. </param>
@@ -52,24 +52,24 @@ namespace AwesomeInventory.UI
         }
 
         /// <summary>
-        /// Draw a lable which doubles as a button.
+        /// Draw a label which doubles as a button.
         /// </summary>
         /// <param name="rect"> Rect for drawing. </param>
         /// <param name="label"> Label to draw in <paramref name="rect"/>. </param>
         /// <param name="action"> Action to take when it is clicked. </param>
         /// <param name="toggleable"> Indicates if button can be toggled and uses a selected texture if true. </param>
-        public static void DrawLabelButton(Rect rect, string label, Action action, bool toggleable)
+        public static void DrawLabelButton(Rect rect, string label, Action action, bool toggleable, bool drawHighlight = true)
         {
             Text.WordWrap = false;
             Text.Anchor = TextAnchor.MiddleLeft;
 
             Widgets.Label(rect, label);
-            if (toggleable)
+            if (toggleable && drawHighlight)
             {
                 if (Mouse.IsOver(rect))
                     Widgets.DrawHighlightSelected(rect);
             }
-            else
+            else if (drawHighlight)
             {
                 Widgets.DrawHighlightIfMouseover(rect);
             }
@@ -221,11 +221,24 @@ namespace AwesomeInventory.UI
             }
         }
 
-        public static void TextMiddleLeft(Func<float> func, out float rollingY)
+        public static void TextPosition(TextAnchor anchor, Action action)
         {
-            Text.Anchor = TextAnchor.MiddleLeft;
-            rollingY = func?.Invoke() ?? 0;
-            Text.Anchor = TextAnchor.UpperLeft;
+            TextAnchor old = Text.Anchor;
+            Text.Anchor = anchor;
+            action?.Invoke();
+            Text.Anchor = old;
+        }
+
+        public static T TextPosition<T>(TextAnchor anchor, Func<T> func)
+        {
+            ValidateArg.NotNull(func, nameof(func));
+
+            TextAnchor old = Text.Anchor;
+            Text.Anchor = anchor;
+            T result = func.Invoke();
+            Text.Anchor = old;
+
+            return result;
         }
     }
 }

@@ -64,7 +64,7 @@
     <AwesomeInventory_TryToDeleteLastLoadout>Cannot delete the last loadout</AwesomeInventory_TryToDeleteLastLoadout>
     <AwesomeInventory_UseGenericStuff>Use generic stuff for all apparel in loadout</AwesomeInventory_UseGenericStuff>
     <AwesomeInventory_Weight>Weight</AwesomeInventory_Weight>
-    <AwesomeInventory_Wishlist>Wishlist</AwesomeInventory_Wishlist>
+    <AwesomeInventory_Wishlist>Wish list</AwesomeInventory_Wishlist>
         <!-- Combat Extended -->
         <AwesomeInventory_SelectedWeapon>Selected Weapon: </AwesomeInventory_SelectedWeapon>
         <AwesomeInventory_SelectedAmmo>Selected Ammo: </AwesomeInventory_SelectedAmmo>
@@ -93,6 +93,10 @@
     <AwesomeInventory_MakeLoadoutFrom>Make loadout from equipped items</AwesomeInventory_MakeLoadoutFrom>
     <AwesomeInventory_MissingItems>Missing items</AwesomeInventory_MissingItems>
 
+    <!-- Stat Panel -->
+    <AwesomeInventory_StatPanel>Stat Panel</AwesomeInventory_StatPanel>
+    <AwesomeInventory_AddRemoveStat>Add\Remove Stat</AwesomeInventory_AddRemoveStat>
+
     <!-- Labels -->
     <AwesomeInventory_GenericMeal_Label>Generic Meals</AwesomeInventory_GenericMeal_Label>
     <AwesomeInventory_AIGenericRawFood_Label>Generic RawFood</AwesomeInventory_AIGenericRawFood_Label>
@@ -101,7 +105,7 @@
     <AwesomeInventory_AIGenericMeatRaw_Label>Generic Meat</AwesomeInventory_AIGenericMeatRaw_Label>
 
     <!-- Descriptions -->
-    <AwesomeInventory_AIGenericMeal_Description>Placeholder for any perishable meals. Intended for compatibility with pawns automatically picking up a meal for themself. It has the same mass as a fine meal.</AwesomeInventory_AIGenericMeal_Description>
+    <AwesomeInventory_AIGenericMeal_Description>Placeholder for any perishable meals. Intended for compatibility with pawns automatically picking up a meal for themselves. It has the same mass as a fine meal.</AwesomeInventory_AIGenericMeal_Description>
     <AwesomeInventory_AIGenericRawFood_Description>Placeholder for any raw food.  Intended for compatibility with pawns automatically picking up raw food to train animals.</AwesomeInventory_AIGenericRawFood_Description>
     <AwesomeInventory_AIGenericDrugs_Description>Placeholder for any drugs. It includes medical drugs and has the same mass as Flake.</AwesomeInventory_AIGenericDrugs_Description>
     <AwesomeInventory_AIGenericMedicine_Description>Placeholder for any medicine. Most commonly used by doctors.</AwesomeInventory_AIGenericMedicine_Description>
@@ -152,7 +156,7 @@
     <!-- Tooltips -->
     <AwesomeInventory_Ascetic>Ascetic</AwesomeInventory_Ascetic>
     <AwesomeInventory_AutoEquipWeaponTooltip>Allows Awesome Inventory choose and equip weapons for unarmed pawns.</AwesomeInventory_AutoEquipWeaponTooltip>
-    <AwesomeInventory_BlacklistTooltip>Items that fit in blacklist will not be considered for the Wishlist. Blacklist will not come into effect if items in it do not fit the Wishlist.</AwesomeInventory_BlacklistTooltip>
+    <AwesomeInventory_BlacklistTooltip>Items that fit in blacklist will not be considered for the Wish list. Blacklist will not come into effect if items in it do not fit the Wish list.</AwesomeInventory_BlacklistTooltip>
     <AwesomeInventory_CurrentTemperature>Current Temperature</AwesomeInventory_CurrentTemperature>
     <AwesomeInventory_OpenLoadoutFromContextMenuTooltip> Open loadout window when you equip/wear items on the map</AwesomeInventory_OpenLoadoutFromContextMenuTooltip>
     <AwesomeInventory_PatchAllRacesTooltip>Patch all races to use Awesome Inventory's gear tab.</AwesomeInventory_PatchAllRacesTooltip>
@@ -160,10 +164,10 @@
     <AwesomeInventory_Tips>Tips: {0}</AwesomeInventory_Tips>
     <AwesomeInventory_Separate_Tooltip>Set quality and hit points for each selected stuff separately.</AwesomeInventory_Separate_Tooltip>
     <AwesomeInventory_ShowRestartButtonTooltip>Show the restart button when in dev mode.</AwesomeInventory_ShowRestartButtonTooltip>
-    <AwesomeInventory_UseGearTabToggleTooltip>Gear tab toggle allows users to bind hotkey to open the gear tab.</AwesomeInventory_UseGearTabToggleTooltip>
+    <AwesomeInventory_UseGearTabToggleTooltip>Gear tab toggle allows users to bind hot key to open the gear tab.</AwesomeInventory_UseGearTabToggleTooltip>
     <AwesomeInventory_UseLoadoutTooltip>Use the loadout system provided by Awesome Inventory.</AwesomeInventory_UseLoadoutTooltip>
     <AwesomeInventory_UseTakeDrugTooltip>Use the Take Drug gizmo which gives pawns a shortcut to ingest drugs in their inventory.</AwesomeInventory_UseTakeDrugTooltip>
-    <AwesomeInventory_WishlistTooltip>Pawn will actively looking for items in the Wishlist.</AwesomeInventory_WishlistTooltip>
+    <AwesomeInventory_WishlistTooltip>Pawn will actively looking for items in the Wish list.</AwesomeInventory_WishlistTooltip>
 
     <!-- Messages -->
     <AwesomeInventory_FailToDrop>{0} failed to drop {1}</AwesomeInventory_FailToDrop>

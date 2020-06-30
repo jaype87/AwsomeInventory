@@ -74,6 +74,7 @@
     <Compile Include="AssemblyInfo1.cs" />
     <Compile Include="Attributes\RegisterServiceAttribute.cs" />
     <Compile Include="Attributes\RegisterTypeAttribute.cs" />
+    <Compile Include="Components\GameComponents\StatPanelManager.cs" />
     <Compile Include="DefOfs\AwesomeInventorySoundDefOf.cs" />
     <Compile Include="DynamicDefs\AIGenericMeat.cs" />
     <Compile Include="GearTab\IconRect.cs" />
@@ -198,7 +199,21 @@
     <Compile Include="UI\QualityColorPlugins\QualityColorCCMB.cs" />
     <Compile Include="UI\QualityColorPlugins\QualityColorLCT.cs" />
     <Compile Include="UI\SearchableList.cs" />
-    <Compile Include="UI\StatPanelToggle.cs" />
+    <Compile Include="UI\StatPanel\UpdateStat\Dialog_StatChoice.cs" />
+    <Compile Include="UI\StatPanel\StatButtonRect.cs" />
+    <Compile Include="UI\StatPanel\StatCacheKey.cs" />
+    <Compile Include="UI\StatPanel\StatCacheMaker.cs" />
+    <Compile Include="UI\StatPanel\StatPanel.cs" />
+    <Compile Include="UI\StatPanel\StatListRect.cs" />
+    <Compile Include="UI\StatPanel\StatPanelModel.cs" />
+    <Compile Include="UI\StatPanel\StatPanelRect.cs" />
+    <Compile Include="UI\StatPanel\StatPanelTitleRect.cs" />
+    <Compile Include="UI\StatPanel\StatPanelToggle.cs" />
+    <Compile Include="UI\StatPanel\StatRect.cs" />
+    <Compile Include="UI\StatPanel\UpdateStat\StatChoiceModel.cs" />
+    <Compile Include="UI\StatPanel\UpdateStat\StatEntryModel.cs" />
+    <Compile Include="UI\StatPanel\UpdateStat\StatChoiceRect.cs" />
+    <Compile Include="UI\StatPanel\UpdateStat\StatEntryRect.cs" />
     <Compile Include="UI\Theme.cs" />
     <Compile Include="UI\TipDisplayer.cs" />
     <Compile Include="UI\WindowOnMouseDrag.cs" />
@@ -259,6 +274,16 @@
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Condition=" '$(Configuration)'!='debug' " Include="NotooShabby.RimWorldUtility, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\RimWorldUtility\bin\Release\NotooShabby.RimWorldUtility.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Condition=" '$(Configuration)'=='debug' " Include="NotooShabby.RimWorldUtility, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\RimWorldUtility\bin\Debug\NotooShabby.RimWorldUtility.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
