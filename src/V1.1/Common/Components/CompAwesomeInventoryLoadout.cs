@@ -314,7 +314,9 @@ namespace AwesomeInventory.Loadout
         /// <returns> A list of gizmo. </returns>
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
-            if (AwesomeInventoryMod.Settings.UseToggleGizmo)
+            AwesomeInventorySetting setting = AwesomeInventoryMod.Settings;
+
+            if (setting.UseToggleGizmo)
             {
                 if (Find.Selector.SingleSelectedThing is Pawn pawn)
                 {
@@ -329,10 +331,10 @@ namespace AwesomeInventory.Loadout
                 }
             }
 
-            if (AwesomeInventoryMod.Settings.UseLoadout && _pawn.IsColonistPlayerControlled)
+            if (setting.UseLoadout && setting.UseHotSwap && _pawn.IsColonistPlayerControlled)
                 yield return new ChangeCostumeInPlace(_pawn);
 
-            if (AwesomeInventoryMod.Settings.UseTakeDrugs && _pawn.IsColonistPlayerControlled)
+            if (setting.UseTakeDrugs && _pawn.IsColonistPlayerControlled)
                 yield return Command_Action_Cacheable.Cache<TakeDrug>.Get(_pawn, _pawn);
         }
 

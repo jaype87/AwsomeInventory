@@ -65,6 +65,8 @@ namespace AwesomeInventory
 
             listingStandard.CheckboxLabeled(UIText.UseGearTabToggle.TranslateSimple(), ref _settings.UseToggleGizmo, UIText.UseGearTabToggleTooltip.TranslateSimple());
 
+            listingStandard.CheckboxLabeled(UIText.UseHotSwap.TranslateSimple(), ref _settings.UseHotSwap, string.Empty);
+
             listingStandard.CheckboxLabeled(UIText.UseTakeDrug.TranslateSimple(), ref _settings.UseTakeDrugs, UIText.UseTakeDrugTooltip.TranslateSimple());
 
             listingStandard.CheckboxLabeled(UIText.ShowRestartButton.TranslateSimple(), ref _settings.ShowRestartButton, UIText.ShowRestartButtonTooltip.TranslateSimple());

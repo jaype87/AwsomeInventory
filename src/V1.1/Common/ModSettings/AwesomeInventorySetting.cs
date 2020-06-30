@@ -21,6 +21,11 @@ namespace AwesomeInventory
         public bool UseLoadout = true;
 
         /// <summary>
+        /// Use hot-swap feature.
+        /// </summary>
+        public bool UseHotSwap = true;
+
+        /// <summary>
         /// Use toggle gizmo.
         /// </summary>
         public bool UseToggleGizmo = true;
@@ -81,6 +86,7 @@ namespace AwesomeInventory
         public override void ExposeData()
         {
             Scribe_Values.Look(ref UseLoadout, nameof(UseLoadout), true);
+            Scribe_Values.Look(ref UseHotSwap, nameof(UseHotSwap), true);
             Scribe_Values.Look(ref UseTakeDrugs, nameof(UseTakeDrugs), true);
             Scribe_Values.Look(ref AutoEquipWeapon, nameof(AutoEquipWeapon), true);
             Scribe_Values.Look(ref QualityColorPluginID, nameof(QualityColorPluginID));

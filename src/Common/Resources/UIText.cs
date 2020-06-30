@@ -346,6 +346,8 @@ namespace AwesomeInventory.UI
 
         public const string UseGearTabToggleTooltip = "AwesomeInventory_UseGearTabToggleTooltip";
 
+        public const string UseHotSwap = "AwesomeInventory_UseHotSwap";
+
         public const string UseLoadout = "AwesomeInventory_UseLoadout";
 
         public const string UseLoadoutTooltip = "AwesomeInventory_UseLoadoutTooltip";
