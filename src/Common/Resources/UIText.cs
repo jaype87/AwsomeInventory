@@ -166,6 +166,8 @@ namespace AwesomeInventory.UI
 
         public const string EquippedItems = "AwesomeInventory_EquippedItems";
 
+        public const string ErrorReport = "AwesomeInventory_ErrorReport";
+
         public const string ExtraApparels = "AwesomeInventory_ExtraApparels";
 
         public const string ExplainFeatures = "AwesomeInventory_ExplainFeatures";

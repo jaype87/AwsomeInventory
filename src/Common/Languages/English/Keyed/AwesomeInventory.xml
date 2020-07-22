@@ -173,6 +173,7 @@
     <!-- Messages -->
     <AwesomeInventory_FailToDrop>{0} failed to drop {1}</AwesomeInventory_FailToDrop>
     <AwesomeInventory_NoDrugInInventory>No {0} in {1}'s inventory</AwesomeInventory_NoDrugInInventory>
+    <AwesomeInventory_ErrorReport>Awesome Inventory has encountered an error, please report back to the author.</AwesomeInventory_ErrorReport>
 
 
 </LanguageData>

@@ -80,7 +80,7 @@ namespace AwesomeInventory.HarmonyPatches
                 {
                     bool conflict = false;
 
-                    if (!comp.Loadout.Any(selector => selector.Allows(targetThingA, out _)))
+                    if (!loadout.Any(selector => selector.Allows(targetThingA, out _)))
                     {
                         Parallel.ForEach(
                             Partitioner.Create(pawn.apparel.WornApparel)

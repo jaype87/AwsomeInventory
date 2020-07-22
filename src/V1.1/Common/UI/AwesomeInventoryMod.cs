@@ -26,6 +26,8 @@ namespace AwesomeInventory
 
         private static AwesomeInventorySetting _settings;
 
+        public static string BugReportUrl { get; } = "https://steamcommunity.com/workshop/filedetails/discussion/2050289408/2145343824305183281/";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AwesomeInventoryMod"/> class.
         /// </summary>

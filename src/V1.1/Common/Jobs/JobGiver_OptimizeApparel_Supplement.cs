@@ -18,7 +18,7 @@ namespace AwesomeInventory.Jobs
     /// <summary>
     /// Have optimization look into inventory.
     /// </summary>
-    /// <remarks> Vanilla optimizaiton only looks for better apparels on the map. </remarks>
+    /// <remarks> Vanilla optimization only looks for better apparels on the map. </remarks>
     public class JobGiver_OptimizeApparel_Supplement : ThinkNode
     {
         private const int _optmizedInterval = GenDate.TicksPerDay / GenDate.HoursPerDay * 2;
@@ -34,7 +34,7 @@ namespace AwesomeInventory.Jobs
                 return ThinkResult.NoJob;
 
             CompAwesomeInventoryLoadout comp = pawn.TryGetComp<CompAwesomeInventoryLoadout>();
-            if (comp == null || !(comp.Loadout is AwesomeInventoryLoadout))
+            if (comp?.Loadout == null || comp.Loadout.GetType() == typeof(AwesomeInventoryCostume))
                 return ThinkResult.NoJob;
 
             List<Thing> list = pawn.inventory?.innerContainer?.ToList();
@@ -47,11 +47,16 @@ namespace AwesomeInventory.Jobs
                 return ThinkResult.NoJob;
             }
 
+            List<Apparel> wornApparels = pawn.apparel?.WornApparel;
+            if (wornApparels == null)
+                return ThinkResult.NoJob;
+
             AwesomeInventoryCostume costume = comp.Loadout as AwesomeInventoryCostume;
 
             var thingList = list
                 .Where(t => t is Apparel apparel && ApparelOptionUtility.CanWear(pawn, apparel))
                 .Select(t => new { thing = t, score = JobGiver_OptimizeApparel.ApparelScoreGain(pawn, (Apparel)t) })
+                .Where(thingScore => thingScore.score > 0.05f)
                 .OrderByDescending(s => s.score)
                 .ToList();
 

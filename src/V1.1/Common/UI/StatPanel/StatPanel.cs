@@ -5,11 +5,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RimWorld;
 using RimWorldUtility.Logging;
+using RimWorldUtility.UI;
 using UnityEngine;
 using Verse;
 
@@ -78,23 +80,45 @@ namespace AwesomeInventory.UI
         }
 
         /// <inheritdoc />
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Designed to catch all")]
         public override void PreOpen()
         {
-            base.PreOpen();
-            this.windowRect.position = _position;
-            if (!(Find.Selector.SingleSelectedThing is Pawn pawn))
-                return;
+            try
+            {
+                base.PreOpen();
+                this.windowRect.position = _position;
+                if (!(Find.Selector.SingleSelectedThing is Pawn pawn))
+                    return;
 
-            _model = new StatPanelModel(pawn, UIText.StatPanel.TranslateSimple(), this.windowRect.size);
-            StatPanelManager.SelectedDefs.Register(_model.StatCacheKeys);
+                _model = new StatPanelModel(pawn, UIText.StatPanel.TranslateSimple(), this.windowRect.size);
+                StatPanelManager.SelectedDefs.Register(_model.StatCacheKeys);
 
-            _panel.Build(_model);
+                _panel.Build(_model);
+            }
+            catch (Exception e)
+            {
+                Find.WindowStack.Add(
+                    new Dialog_ErrorReporting(e.ToString(), UIText.ErrorReport.TranslateSimple(), AwesomeInventoryMod.BugReportUrl));
+                IsOpen = false;
+                this.Close();
+            }
         }
 
         /// <inheritdoc />
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Designed to catch all")]
         public override void DoWindowContents(Rect inRect)
         {
-            _panel.Draw(_model, inRect.position);
+            try
+            {
+                _panel.Draw(_model, inRect.position);
+            }
+            catch (Exception e)
+            {
+                Find.WindowStack.Add(
+                    new Dialog_ErrorReporting(e.ToString(), UIText.ErrorReport.TranslateSimple(), AwesomeInventoryMod.BugReportUrl));
+                IsOpen = false;
+                this.Close();
+            }
         }
 
         /// <inheritdoc />
