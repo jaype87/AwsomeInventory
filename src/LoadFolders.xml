@@ -1,13 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<!-- Forward slash is used to accomondate OS other than Windows. -->
+<!-- Forward slash is used to accomodate OS other than Windows. -->
 <loadFolders>
-    <default>
+    <v1.3>
         <li>Common</li>
-    </default>
-    <v1.1>
-        <li>Common</li>
-        <li>v1.1/Common</li>
-        <li IfModActive="CETeam.CombatExtended">v1.1/CombatExtended</li>
-        <li IfModNotActive="CETeam.CombatExtended">v1.1/Vanilla</li>
-    </v1.1>
+        <li>v1.3/Common</li>
+        <li>v1.3/Vanilla</li>
+    </v1.3>
 </loadFolders>

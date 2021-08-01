@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Custom rules for StyleCop -->
+  <Import Project="$(SolutionDir)SolutionItems\CustomStyleCopRules.props" Condition="Exists('$(SolutionDir)SolutionItems\CustomStyleCopRules.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9C99FF79-7175-48EC-A407-9D72950F2BC4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>AwesomeInventory</RootNamespace>
+    <AssemblyName>AwesomeInventoryVanilla1.3</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>false</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\..\AwesomeInventory\v1.3\Vanilla\Assemblies\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\..\AwesomeInventory\v1.3\Vanilla\Assemblies\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CE Build|AnyCPU'">
+    <OutputPath>bin\CE Build\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Vanilla Build|AnyCPU'">
+    <OutputPath>..\..\..\Vanilla\Assemblies\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;RPG_Inventory_Remake UnitTest</DefineConstants>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Test|AnyCPU'">
+    <OutputPath>bin\Test\</OutputPath>
+    <DefineConstants>TEST</DefineConstants>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityTest|AnyCPU'">
+    <OutputPath>G:\SteamLibrary\steamapps\common\RimWorld\Mods\RPG_Style_Inventory\v1.3\Vanilla\Assemblies\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="GearTab\AwesomeInventoryTab.cs" />
+    <Compile Include="GearTab\VanillaGearTabWorker.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="HarmonyPatches\AddPickupOption.cs" />
+    <Compile Include="Helpers\InventoryHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="NotooShabby.RimWorldUtility">
+      <HintPath>..\..\..\..\SmartColonistBar\References\NotooShabby.RimWorldUtility.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Components\" />
+    <Folder Include="Gizmos\" />
+    <Folder Include="Interface\" />
+    <Folder Include="Languages\" />
+    <Folder Include="Loadout\" />
+    <Folder Include="Patches\" />
+    <Folder Include="Resources\" />
+    <Folder Include="Services\" />
+    <Folder Include="UI\" />
+    <Folder Include="Utilities\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\AwesomeInventory.Base.csproj">
+      <Project>{b08984e0-c241-4fee-b9a1-fff9adef5bb2}</Project>
+      <Name>AwesomeInventory.Base</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common1.3.csproj">
+      <Project>{6629105c-6bed-491b-a49a-eb12b0710cf3}</Project>
+      <Name>Common1.3</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref">
+      <Version>1.3.3074</Version>
+    </PackageReference>
+    <PackageReference Include="Lib.Harmony">
+      <Version>2.1.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>call $(SolutionDir)SolutionItems\Deploy.bat $(ProjectDir) $(OutDir) $(Configuration)
+
+del $(Outdir)0Harmony.dll</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <CreateManifestResourceNamesDependsOn>
+            RunCustomToolOnResources
+            $(CreateManifestResourceNamesDependsOn)
+        </CreateManifestResourceNamesDependsOn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespaceOfRPGICommon>RPG_Inventory_Remake_Common</RootNamespaceOfRPGICommon>
+  </PropertyGroup>
+  <Target Name="RunCustomToolOnResources">
+    <ItemGroup>
+      <_Temporary Remove="@(_Temporary)" />
+    </ItemGroup>
+    <!-- Create custom ManifestResourceName -->
+    <CreateCSharpManifestResourceName ResourceFiles="@(EmbeddedResource)" RootNamespace="$(RootNamespaceOfRPGICommon)" UseDependentUponConvention="$(EmbeddedResourceUseDependentUponConvention)" Condition="'%(EmbeddedResource.ManifestResourceName)' == '' and ('%(EmbeddedResource.WithCulture)' == 'false' or '%(EmbeddedResource.Type)' == 'Resx')">
+      <Output TaskParameter="ResourceFilesWithManifestResourceNames" ItemName="_Temporary" />
+    </CreateCSharpManifestResourceName>
+    <Message Text="Manifest Name:   %(_Temporary.ManifestResourceName)" />
+    <ItemGroup>
+      <EmbeddedResource Remove="@(EmbeddedResource)" Condition="'%(EmbeddedResource.ManifestResourceName)' == ''" />
+      <EmbeddedResource Include="@(_Temporary)" />
+      <_Temporary Remove="@(_Temporary)" />
+    </ItemGroup>
+  </Target>
+  <!-- Import AwesomeInventory configs for IDE -->
+  <Import Project="$(SolutionDir)SolutionItems\GlobalEditorFiles.props" Condition="Exists('$(SolutionDir)SolutionItems\GlobalEditorFiles.props')" />
+</Project>

@@ -24,7 +24,7 @@ namespace AwesomeInventory
         /// <summary>
         /// Gets available plugins.
         /// </summary>
-        internal static Dictionary<int, object> Plugins => _pluginService;
+        public static Dictionary<int, object> Plugins => _pluginService;
 
         /// <summary>
         /// Get service of <typeparamref name="T"/>.
