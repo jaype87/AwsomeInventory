@@ -48,7 +48,7 @@ namespace AwesomeInventory.HarmonyPatches
         [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Required to catch all")]
         public static void Postfix(Pawn pawn, ref Job __result, JobGiver_OptimizeApparel __instance)
         {
-            if (__result == null)
+            if (__result == null || pawn == null || __instance == null)
                 return;
 
             CompAwesomeInventoryLoadout comp = pawn.TryGetComp<CompAwesomeInventoryLoadout>();
@@ -57,62 +57,62 @@ namespace AwesomeInventory.HarmonyPatches
 
             Job job = __result;
             Thing targetThingA = job.targetA.Thing;
-            if (comp.Loadout is AwesomeInventoryCostume costume)
+            switch (comp.Loadout)
             {
-                if (__result.def == JobDefOf.Wear)
-                {
-                    if (targetThingA != null
-                        && !costume.CostumeItems.Any(s => s.Allows(targetThingA, out _))
-                        && !costume.CostumeItems.All(s => ApparelUtility.CanWearTogether(targetThingA.def, s.AllowedThing, BodyDefOf.Human)))
-                    {
-                        __result = null;
-                        JobMaker.ReturnToPool(job);
-                        _setNextOptimizeTick.Invoke(__instance, new[] { pawn });
-                        return;
-                    }
-                }
-            }
-            else if (comp.Loadout is AwesomeInventoryLoadout loadout)
-            {
-                CancellationTokenSource source = new CancellationTokenSource();
-                CancellationToken token = source.Token;
-                try
-                {
-                    bool conflict = false;
+                case AwesomeInventoryCostume costume when __result.def != JobDefOf.Wear:
+                    return;
 
-                    if (!loadout.Any(selector => selector.Allows(targetThingA, out _)))
+                case AwesomeInventoryCostume costume when targetThingA == null || costume.CostumeItems.Any(s => s.Allows(targetThingA, out _)) || costume.CostumeItems.All(s => ApparelUtility.CanWearTogether(targetThingA.def, s.AllowedThing, BodyDefOf.Human)):
+                    return;
+
+                case AwesomeInventoryCostume costume:
+                    __result = null;
+                    JobMaker.ReturnToPool(job);
+                    _setNextOptimizeTick.Invoke(__instance, new[] { pawn });
+                    return;
+
+                case AwesomeInventoryLoadout loadout:
+                {
+                    var source = new CancellationTokenSource();
+                    var token  = source.Token;
+                    try
                     {
-                        Parallel.ForEach(
-                            Partitioner.Create(pawn.apparel.WornApparel)
-                            , (Apparel apparel) =>
-                            {
-                                if (!token.IsCancellationRequested
-                                    && targetThingA != null
-                                    && !ApparelUtility.CanWearTogether(apparel.def, targetThingA.def, BodyDefOf.Human))
+                        var conflict = false;
+
+                        if (!loadout.Any(selector => selector.Allows(targetThingA, out _)))
+                        {
+                            Parallel.ForEach(
+                                Partitioner.Create(pawn.apparel.WornApparel)
+                                , (Apparel apparel) =>
                                 {
-                                    if (comp.Loadout.Any(selector => selector.Allows(apparel, out _)))
-                                    {
-                                        conflict = true;
-                                        source.Cancel();
-                                    }
-                                }
-                            });
-                    }
+                                    if (token.IsCancellationRequested || targetThingA == null || ApparelUtility.CanWearTogether(apparel.def, targetThingA.def, BodyDefOf.Human))
+                                        return;
 
-                    if (conflict)
-                    {
+                                    if (!comp.Loadout.Any(selector => selector.Allows(apparel, out _)))
+                                        return;
+                                    
+                                    conflict = true;
+                                    source.Cancel();
+                                });
+                        }
+
+                        if (!conflict)
+                            return;
+                    
                         __result = new DressJob(AwesomeInventory_JobDefOf.AwesomeInventory_Dress, targetThingA, false);
                         JobMaker.ReturnToPool(job);
                     }
-                }
-                catch (Exception e)
-                {
-                    Log.Error(e.Message);
-                    __result = JobMaker.MakeJob(JobDefOf.Wear, targetThingA);
-                }
-                finally
-                {
-                    source.Dispose();
+                    catch (Exception e)
+                    {
+                        Log.ErrorOnce(e.Message, 129555056);
+                        __result = JobMaker.MakeJob(JobDefOf.Wear, targetThingA);
+                    }
+                    finally
+                    {
+                        source.Dispose();
+                    }
+
+                    break;
                 }
             }
         }

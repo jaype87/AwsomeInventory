@@ -12,8 +12,10 @@ namespace AwesomeInventory
     /// </summary>
     public class Timer
     {
+#if DEBUG
         private Stopwatch _stopwatch = new Stopwatch();
         private ILogger _logger;
+#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Timer"/> class.

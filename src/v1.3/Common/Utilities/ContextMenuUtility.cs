@@ -178,8 +178,8 @@ namespace AwesomeInventory
 
         private static void EquipWeaponDialog(Pawn pawn, Thing equipment)
         {
-            TaggedString equipWeaponConfirmationDialogText = ThingRequiringRoyalPermissionUtility.GetEquipWeaponConfirmationDialogText(equipment, pawn);
-            CompBladelinkWeapon compBladelinkWeapon = equipment.TryGetComp<CompBladelinkWeapon>();
+            var equipWeaponConfirmationDialogText = ThingRequiringRoyalPermissionUtility.GetEquipWeaponConfirmationDialogText(equipment, pawn);
+            var compBladelinkWeapon = equipment.TryGetComp<CompBladelinkWeapon>();
             if (compBladelinkWeapon != null && compBladelinkWeapon.CodedPawn != pawn)
             {
                 if (!equipWeaponConfirmationDialogText.NullOrEmpty())

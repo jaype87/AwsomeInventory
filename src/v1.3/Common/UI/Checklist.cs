@@ -20,7 +20,7 @@ namespace AwesomeInventory.UI
     /// <typeparam name="T">Generic type.</typeparam>
     public class Checklist<T>
     {
-        private List<ChecklistItem<T>> _items;
+        private readonly List<ChecklistItem<T>> _items;
         private string _searchText;
         private Vector2 _scrollPosition = Vector2.zero;
 
@@ -91,14 +91,11 @@ namespace AwesomeInventory.UI
         {
             IEnumerable<ChecklistItem<T>> items = _items;
 
-            int reorderableGroup = 0;
+            var reorderableGroup = 0;
             if (this.DragToReorder)
             {
-                reorderableGroup = ReorderableWidget.NewGroup(
-                    (int from, int to) =>
-                    {
-                        this.ReorderItems(from, to);
-                    }
+                reorderableGroup = ReorderableWidget.NewGroup_NewTemp(
+                    this.ReorderItems
                     , ReorderableDirection.Vertical
                     , -1
                     , (index, position) => this.ExtraReorderItemOnGUI?.Invoke(index, position));
@@ -106,9 +103,9 @@ namespace AwesomeInventory.UI
 
             if (this.SearchAble)
             {
-                Rect searchRect = new Rect(rect.x, rect.yMax - GenUI.ListSpacing, rect.width, GenUI.ListSpacing);
+                var searchRect = new Rect(rect.x, rect.yMax - GenUI.ListSpacing, rect.width, GenUI.ListSpacing);
                 _searchText = Widgets.TextField(searchRect, _searchText);
-                string upperText = _searchText.ToUpperInvariant();
+                var upperText = _searchText.ToUpperInvariant();
                 items = _items.Where(t => t.Label.ToUpperInvariant().Contains(upperText));
 
                 rect = rect.ReplaceHeight(rect.height - GenUI.ListSpacing);
@@ -119,11 +116,11 @@ namespace AwesomeInventory.UI
                 ref _scrollPosition,
                 new Rect(rect.position, new Vector2(rect.width - GenUI.ScrollBarWidth, this.Height)));
 
-            Vector2 pos = Vector2.zero;
+            var pos = Vector2.zero;
 
-            foreach (ChecklistItem<T> item in items)
+            foreach (var item in items)
             {
-                Rect itemRect = item.Draw(pos, item.Object);
+                var itemRect = item.Draw(pos, item.Object);
                 pos.x += item.Height;
 
                 if (this.DragToReorder)
@@ -183,7 +180,7 @@ namespace AwesomeInventory.UI
             }
             else
             {
-                ChecklistItem<T> item = _items[from];
+                var item = _items[from];
                 _items.Insert(to, item);
                 if (to < from)
                     _items.RemoveAt(++from);
