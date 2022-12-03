@@ -1,43 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Target Name="CopyLatestReferencingAssembly" BeforeTargets="Build">
-        <!-- Copy RimWorld Assembly -->
-        <Copy
-            SourceFiles="G:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll"
-            DestinationFiles="$(SolutionDir)References\Assembly-CSharp.dll"
-            SkipUnchangedFiles="true"
-            />
-
-        <ItemGroup>
-            <HarmonyFiles Include="G:\SteamLibrary\steamapps\workshop\content\294100\2009463077\**\*.*"/>
-        </ItemGroup>
-
-        <!-- Copy Harmony Assembly -->
-        <Copy
-            SourceFiles="@(HarmonyFiles)"
-            DestinationFiles="@(HarmonyFiles->'$(SolutionDir)References\Harmony\%(RecursiveDir)%(Filename)%(Extension)')"
-            SkipUnchangedFiles="true"
-            />
-
-        <ItemGroup>
-            <CEFiles Include="G:\SteamLibrary\steamapps\workshop\content\294100\1631756268\Assemblies\CombatExtended.dll"/>
-        </ItemGroup>
-
-        <!-- Copy CE Assembly -->
-        <Copy
-            SourceFiles="@(CEFiles)"
-            DestinationFiles="@(CEFiles->'$(SolutionDir)References\CombatExtended\CombatExtended.dll')"
-            SkipUnchangedFiles="true"
-            />
-    </Target>
-
     <Target Name="CompressFolder" AfterTargets="Build">
-        <Copy
-            SourceFiles="D:\Modding\RimWorldUtility\bin\Release\NotooShabby.RimWorldUtility.dll"
-            DestinationFiles="D:\Modding\AwesomeInventory\References\NotooShabby.RimWorldUtility.dll"
-            SkipUnchangedFiles="true"
-            />
-
         <!-- Compress mod folder -->
         <ZipDirectory
             Condition="'$(Configuration)'=='Release'"
